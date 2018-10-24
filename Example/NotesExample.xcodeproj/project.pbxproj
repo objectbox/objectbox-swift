@@ -28,6 +28,7 @@
 		5070AAFB218066C1002305F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5070AAFD218066C1002305F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5070AB1421809535002305F8 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		5070AB16218095DA002305F8 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		6A46AAAC066915AAC14D3A8B /* Pods-NotesExample-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8140F6069D933B39420AC659 /* Pods-NotesExample-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +65,7 @@
 		5070AAE3218066C0002305F8 = {
 			isa = PBXGroup;
 			children = (
+				5070AB16218095DA002305F8 /* Podfile */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5070AAED218066C0002305F8 /* Products */,
 				1816FA0D018BADD44A16C61F /* Pods */,
@@ -102,6 +104,7 @@
 			buildConfigurationList = 5070AB00218066C1002305F8 /* Build configuration list for PBXNativeTarget "NotesExample-iOS" */;
 			buildPhases = (
 				9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */,
+				5039EC912180964D0095204F /* Update Sourcery Generated Files */,
 				5070AAE8218066C0002305F8 /* Sources */,
 				5070AAE9218066C0002305F8 /* Frameworks */,
 				5070AAEA218066C0002305F8 /* Resources */,
@@ -186,6 +189,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		5039EC912180964D0095204F /* Update Sourcery Generated Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Update Sourcery Generated Files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n  \"$sourcery\"\nelse\n  echo \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\n  exit -1\nfi\n";
 		};
 		9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
