@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
 		5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAEF218066C0002305F8 /* AppDelegate.swift */; };
 		5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF1218066C0002305F8 /* MasterViewController.swift */; };
 		5070AAF4218066C0002305F8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF3218066C0002305F8 /* DetailViewController.swift */; };
@@ -19,6 +20,9 @@
 
 /* Begin PBXFileReference section */
 		022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5039EC92218097FC0095204F /* templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = templates; sourceTree = "<group>"; };
+		5039EC942180980C0095204F /* EntityInfo.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated.swift; sourceTree = "<group>"; };
+		5039EC96218099C10095204F /* .sourcery.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .sourcery.yml; sourceTree = "<group>"; };
 		5070AAEC218066C0002305F8 /* NotesExample-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5070AAEF218066C0002305F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5070AAF1218066C0002305F8 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -62,11 +66,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		5039EC932180980C0095204F /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				5039EC942180980C0095204F /* EntityInfo.generated.swift */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
 		5070AAE3218066C0002305F8 = {
 			isa = PBXGroup;
 			children = (
 				5070AB16218095DA002305F8 /* Podfile */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
+				5039EC96218099C10095204F /* .sourcery.yml */,
+				5039EC932180980C0095204F /* generated */,
+				5039EC92218097FC0095204F /* templates */,
 				5070AAED218066C0002305F8 /* Products */,
 				1816FA0D018BADD44A16C61F /* Pods */,
 				3DABC3C80306D2BD07D4938C /* Frameworks */,
@@ -241,6 +256,7 @@
 				5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */,
 				5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */,
 				5070AB1521809535002305F8 /* Note.swift in Sources */,
+				5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +410,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.objectbox.NotesExample;
+				PRODUCT_MODULE_NAME = NotesExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -412,6 +429,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.objectbox.NotesExample;
+				PRODUCT_MODULE_NAME = NotesExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

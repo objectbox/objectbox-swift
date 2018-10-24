@@ -1,0 +1,184 @@
+// swiftlint:disable all
+import ObjectBox
+
+{# We cannot iterate over built-in types and see if they conform to EntityPropertyTypeConvertible, so here's a string of their names: #}
+{% set objectBoxTypeScalarNames %}Bool;Int8;Int16;Int32;Int64;Int;Float;Double;Date;NSDate{% endset %}
+
+{#
+ # Reusable Id<T> property accessor
+ #}
+{% macro EntityIdGetter objName type returnsValue %}
+{% for var in type.storedVariables|annotated:"entityId" %}
+return {{ objName }}.{{ var.name }}{% if returnsValue == 1 %}.value{% endif %}
+{% empty %}
+{% set idTypeName %}Id<{{ type.name }}>{% endset %}
+{% for var in type.storedVariables where var.name == "id" and var.typeName.name == idTypeName %}
+return {{ objName }}.{{ var.name }}{% if returnsValue == 1 %}.value{% endif %}
+{% empty %}
+{% for var in type.storedVariables where var.typeName.name == idTypeName %}
+return {{ objName }}.{{ var.name }}{% if returnsValue == 1 %}.value{% endif %}
+{% empty %}
+#error("Implement an {{idTypeName}} property somewhere")
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endmacro %}
+
+// MARK: - Entity metadata
+
+{% for type in types.based.Entity %}
+extension {{ type.name }}: EntityInspectable {
+    static var entityInfo: EntityInfo {
+        return EntityInfo(
+            name: "{{ type.name }}",
+            cursorClass: {{ type.name }}Cursor.self)
+    }
+
+    fileprivate static func buildEntity(modelBuilder: ModelBuilder) {
+        let entityBuilder = modelBuilder.entityBuilder(for: entityInfo)
+        entityBuilder.addProperty(name: "id", type: Id<{{ type.name }}>.entityPropertyType, flags: [.id])
+        {% for prop in type.storedVariables %}
+        {% set objectBoxTypeName %}{{ prop.typeName.name }};{% endset %}
+        {% if objectBoxTypeScalarNames|contains:objectBoxTypeName or prop.typeName.name == "String" %}
+        entityBuilder.addProperty(name: "{{ prop.name }}", type: {{ prop.typeName }}.entityPropertyType)
+        {% elif prop.typeName.name|hasPrefix:"ToOne<" %}
+        entityBuilder.addRelation(name: "{{ prop.name }}", targetEntityInfo: {{ prop.typeName.name }}.Target.entityInfo)
+        {% endif %}
+        {% endfor %}
+    }
+}
+
+extension {{ type.name }} {
+    {% set idTypeName %}Id<{{ type.name }}>{% endset %}
+    {% for prop in type.storedVariables %}
+    {% if not prop.typeName.name|hasPrefix:"ToOne" and not prop.typeName.name|hasPrefix:"ToMany<" %}
+    static var {{ prop.name }}: Property<{{type.name}}, {{prop.typeName.name}}> { return Property<{{type.name}}, {{prop.typeName.name}}>(propertyId: {{ forloop.counter }}, isPrimaryKey: {% if prop.typeName.name == idTypeName %}true{% else %}false{% endif %}) }
+    {% elif prop.typeName.name|hasPrefix:"ToOne" %}
+    static var {{ prop.name }}Id: Property<{{type.name}}, Id<{{prop.typeName.name}}.Target>> { return Property(propertyId: {{ forloop.counter }}) }
+    {% endif %}
+    {% endfor %}
+
+    fileprivate {% if type.kind == "struct" %}mutating{% endif %} func __setId(identifier: EntityId) {
+        {% for var in type.storedVariables|annotated:"entityId" %}
+        self.{{ var.name }} = Id(identifier)
+        {% empty %}
+        {% set idTypeName %}Id<{{ type.name }}>{% endset %}
+        {% for var in type.storedVariables where var.name == "id" and var.typeName.name == idTypeName %}
+        self.{{ var.name }} = Id(identifier)
+        {% empty %}
+        {% for var in type.storedVariables where var.typeName.name == idTypeName %}
+        self.{{ var.name }} = Id(identifier)
+        {% empty %}
+        #error("Implement a mutable {{idTypeName}} property somewhere")
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+    }
+}
+
+class {{ type.name }}Cursor: NSObject, CursorBase {
+    func setEntityId(of entity: Any, to entityId: EntityId) {
+        let entity = entity as! {{type.name}}
+        entity.__setId(identifier: entityId)
+    }
+
+    func entityId(of entity: Any) -> EntityId {
+        let entity = entity as! {{type.name}}
+        {% call EntityIdGetter "entity" type 1 %}
+    }
+
+    func collect(fromEntity entity: Any, propertyCollector: PropertyCollector, store: Store) -> ObjectBox.EntityId {
+        let entity = entity as! {{ type.name }}
+
+        {# Avoid defining the `offsets` array when there are no fitting properties #}
+        {% set containsOffsets %}{% for prop in type.storedVariables %}{% if prop.typeName.name == "String" %}true{% endif %}{% endfor %}{% endset %}
+
+        {% if containsOffsets|hasPrefix:"true" %}
+        var offsets: [(offset: OBDataOffset, index: UInt16)] = []
+        {% for prop in type.storedVariables %}
+        {% if prop.typeName.name == "String" %}
+        offsets.append((propertyCollector.prepare(string: entity.{{ prop.name }}, at: 2 + 2*{{ forloop.counter }}), 2 + 2*{{ forloop.counter }}))
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        {% for prop in type.storedVariables %}
+        {% set objectBoxTypeName %}{{ prop.typeName }};{% endset %}
+        {% if objectBoxTypeScalarNames|contains:objectBoxTypeName %}
+        propertyCollector.collect(entity.{{ prop.name }}, at: 2 + 2*{{ forloop.counter }})
+        {% elif prop.typeName.name|hasPrefix:"ToOne<" %}
+        propertyCollector.collect(entity.{{ prop.name }}, at: 2 + 2*{{ forloop.counter }}, store: store)
+        {% endif %}
+        {% endfor %}
+
+        {% if containsOffsets|hasPrefix:"true" %}
+        for value in offsets {
+            propertyCollector.collect(dataOffset: value.offset, at: value.index)
+        }
+        {% endif %}
+
+        {% call EntityIdGetter "entity" type 1 %}
+    }
+
+    func createEntity(entityReader: EntityReader, store: Store) -> Any {
+        let entity = {{ type.name }}()
+
+        {% for var in type.storedVariables|annotated:"entityId" %}
+        entity.{{ var.name }} = entityReader.read(at: 2 + 2*1)
+        {% empty %}
+        {% set idTypeName %}Id<{{ type.name }}>{% endset %}
+        {% for var in type.storedVariables where var.name == "id" and var.typeName.name == idTypeName %}
+        entity.{{ var.name }} = entityReader.read(at: 2 + 2*1)
+        {% empty %}
+        {% for var in type.storedVariables where var.typeName.name == idTypeName %}
+        entity.{{ var.name }} = entityReader.read(at: 2 + 2*1)
+        {% empty %}
+        #error("Implement an {{idTypeName}} property somewhere")
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+
+        {% for prop in type.storedVariables %}
+        {% set objectBoxTypeName %}{{ prop.typeName.name }};{% endset %}
+        {#
+         # Scalar properties & Strings
+         #}
+        {% if objectBoxTypeScalarNames|contains:objectBoxTypeName or prop.typeName.name == "String" %}
+        entity.{{ prop.name }} = entityReader.read(at: 2 + 2*{{ forloop.counter }})
+        {% elif prop.typeName.name|hasPrefix:"ToMany<" %}
+        {% set backlinkTypeName %}{{ prop.typeName.name }}{% endset %}
+        {% set targetPropertyName %}{{ type.name|lowercase }}Id{% endset %}
+        entity.{{ prop.name }} = {{ backlinkTypeName }}.backlink(
+            sourceBox: store.box(for: {{ backlinkTypeName }}.Source.self),
+            sourceProperty: {{ backlinkTypeName }}.Source.{{ targetPropertyName }},
+            targetId: entity.id)
+        {% elif prop.typeName.name|hasPrefix:"ToOne<" %}
+        entity.{{ prop.name }} = entityReader.read(at: 2 + 2*{{ forloop.counter }}, store: store)
+        {% endif %}
+        {% endfor %}
+        return entity
+    }
+}
+
+{% endfor %}
+
+fileprivate func modelBytes() -> Data {
+    let modelBuilder = ModelBuilder()
+    {% for type in types.based.Entity %}
+    {{ type.name }}.buildEntity(modelBuilder: modelBuilder)
+    {% endfor %}
+    return modelBuilder.finish()
+}
+
+extension ObjectBox.Store {
+    /// Store with fully configured model.
+    convenience init(directoryPath: String, maxDbSizeInKByte: UInt64, fileMode: UInt32, maxReaders: UInt32) throws {
+        try self.init(
+            modelBytes: modelBytes(),
+            directory: directoryPath,
+            maxDbSizeInKByte: maxDbSizeInKByte,
+            fileMode: fileMode,
+            maxReaders: maxReaders)
+    }
+}
+// swiftlint:enable all
