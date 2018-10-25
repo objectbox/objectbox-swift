@@ -9,6 +9,10 @@ class Logger {
         return log.joined(separator: "\n")
     }
 
+    func display(viewController: NSViewController) {
+        viewController.representedObject = self.string
+    }
+
     func append(_ string: String) {
         log.append(string)
     }

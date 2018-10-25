@@ -27,3 +27,10 @@ extension Author: CustomStringConvertible {
     }
 }
 
+extension Author {
+    func writeNote(title: String, text: String) -> Note {
+        let note = Note(title: title, text: text)
+        note.author.target = self
+        return note
+    }
+}
