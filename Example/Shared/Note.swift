@@ -25,11 +25,19 @@ class Note: Entity {
 extension Note: CustomStringConvertible {
     var description: String {
         let authorDesc: String = {
-            if let id = author.targetId {
-                return "Id(\(id.value))"
+            if let author = author.target {
+                return "\(author.name) (id: \(author.id.value))"
             }
             return "(none)"
         }()
         return "Note(id: \(id.value), title: \"\(title)\", text: \"\(text)\", author: \(authorDesc))"
+    }
+}
+
+extension Array where Element: Note {
+    var readableDescription: String {
+        return "[\n"
+            + self.map({"  \($0.description)"}).joined(separator: "\n")
+            + "\n]"
     }
 }
