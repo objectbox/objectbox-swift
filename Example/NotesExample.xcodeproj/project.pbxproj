@@ -232,6 +232,11 @@
 				TargetAttributes = {
 					5039EC9C2181DA350095204F = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 					5070AAEB218066C0002305F8 = {
 						CreatedOnToolsVersion = 10.0;
@@ -476,7 +481,6 @@
 			baseConfigurationReference = 34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "NotesExample-macOS/NotesExample_macOS.entitlements";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -498,7 +502,6 @@
 			baseConfigurationReference = 0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "NotesExample-macOS/NotesExample_macOS.entitlements";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
