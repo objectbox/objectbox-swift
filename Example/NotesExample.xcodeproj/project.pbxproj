@@ -13,6 +13,7 @@
 		5039ECA42181DA360095204F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA32181DA360095204F /* Assets.xcassets */; };
 		5039ECA72181DA360095204F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA52181DA360095204F /* Main.storyboard */; };
 		5039ECAE2181DA560095204F /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AB1421809535002305F8 /* Note.swift */; };
+		5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
 		5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAEF218066C0002305F8 /* AppDelegate.swift */; };
 		5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF1218066C0002305F8 /* MasterViewController.swift */; };
 		5070AAF4218066C0002305F8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF3218066C0002305F8 /* DetailViewController.swift */; };
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCB054DFF31FB988F198A270 /* Pods_NotesExample_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +79,8 @@
 			children = (
 				6A46AAAC066915AAC14D3A8B /* Pods-NotesExample-iOS.debug.xcconfig */,
 				8140F6069D933B39420AC659 /* Pods-NotesExample-iOS.release.xcconfig */,
+				34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */,
+				0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -166,6 +170,7 @@
 			buildConfigurationList = 5039ECAA2181DA360095204F /* Build configuration list for PBXNativeTarget "NotesExample-macOS" */;
 			buildPhases = (
 				31490094811CB81E2781E223 /* [CP] Check Pods Manifest.lock */,
+				5039ECAF2181DB6C0095204F /* Update Sourcery Generated Files */,
 				5039EC992181DA350095204F /* Sources */,
 				5039EC9A2181DA350095204F /* Frameworks */,
 				5039EC9B2181DA350095204F /* Resources */,
@@ -324,6 +329,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n  \"$sourcery\"\nelse\n  echo \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\n  exit -1\nfi\n";
 		};
+		5039ECAF2181DB6C0095204F /* Update Sourcery Generated Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Update Sourcery Generated Files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n\"$sourcery\"\nelse\necho \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\nexit -1\nfi\n";
+		};
 		9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -380,6 +403,7 @@
 				5039ECA22181DA350095204F /* ViewController.swift in Sources */,
 				5039ECA02181DA350095204F /* AppDelegate.swift in Sources */,
 				5039ECAE2181DA560095204F /* Note.swift in Sources */,
+				5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
