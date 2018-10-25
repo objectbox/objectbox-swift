@@ -16,7 +16,7 @@ class ViewController: NSViewController {
     override var representedObject: Any? {
         didSet {
             guard let representedObject = representedObject else { return }
-            guard let string = representedObject as? String { preconditionFailure("representedObject must be a String") }
+            guard let string = representedObject as? String else { preconditionFailure("representedObject must be a String") }
             guard isViewLoaded else { return }
             textView.string = string
         }
