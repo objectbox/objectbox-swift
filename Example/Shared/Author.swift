@@ -12,4 +12,9 @@ class Author: Entity {
         self.name = ""
         self.notes = nil
     }
+
+    convenience init(name: String) {
+        self.init()
+        self.name = name
+    }
 }

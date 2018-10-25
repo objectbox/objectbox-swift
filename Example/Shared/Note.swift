@@ -14,4 +14,10 @@ class Note: Entity {
         self.text = ""
         self.author = nil
     }
+
+    convenience init(title: String, text: String) {
+        self.init()
+        self.title = title
+        self.text = text
+    }
 }
