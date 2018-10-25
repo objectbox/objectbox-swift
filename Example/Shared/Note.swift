@@ -21,3 +21,15 @@ class Note: Entity {
         self.text = text
     }
 }
+
+extension Note: CustomStringConvertible {
+    var description: String {
+        let authorDesc: String = {
+            if let id = author.targetId {
+                return "Id(\(id.value))"
+            }
+            return "(none)"
+        }()
+        return "Note(id: \(id.value), title: \"\(title)\", text: \"\(text)\", author: \(authorDesc))"
+    }
+}

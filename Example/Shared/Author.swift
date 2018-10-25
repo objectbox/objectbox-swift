@@ -18,3 +18,11 @@ class Author: Entity {
         self.name = name
     }
 }
+
+extension Author: CustomStringConvertible {
+    var description: String {
+        let noteTitles = notes.map { $0.title }
+        return "Author(id: \(id.value), name: \(name), notes: \(noteTitles))"
+    }
+}
+
