@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
+		5039ECAE2181DA560095204F /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AB1421809535002305F8 /* Note.swift */; };
 		5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAEF218066C0002305F8 /* AppDelegate.swift */; };
 		5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF1218066C0002305F8 /* MasterViewController.swift */; };
 		5070AAF4218066C0002305F8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF3218066C0002305F8 /* DetailViewController.swift */; };
@@ -74,10 +75,19 @@
 			path = generated;
 			sourceTree = "<group>";
 		};
+		5039ECAD2181DA4D0095204F /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5070AB1421809535002305F8 /* Note.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		5070AAE3218066C0002305F8 = {
 			isa = PBXGroup;
 			children = (
 				5070AB16218095DA002305F8 /* Podfile */,
+				5039ECAD2181DA4D0095204F /* Shared */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5039EC96218099C10095204F /* .sourcery.yml */,
 				5039EC932180980C0095204F /* generated */,
@@ -106,7 +116,6 @@
 				5070AAF8218066C1002305F8 /* Assets.xcassets */,
 				5070AAFA218066C1002305F8 /* LaunchScreen.storyboard */,
 				5070AAFD218066C1002305F8 /* Info.plist */,
-				5070AB1421809535002305F8 /* Note.swift */,
 			);
 			path = "NotesExample-iOS";
 			sourceTree = "<group>";
