@@ -14,6 +14,10 @@
 		5039ECA72181DA360095204F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA52181DA360095204F /* Main.storyboard */; };
 		5039ECAE2181DA560095204F /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AB1421809535002305F8 /* Note.swift */; };
 		5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
+		5039ECB52181DFFF0095204F /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB42181DFFF0095204F /* Author.swift */; };
+		5039ECB62181DFFF0095204F /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB42181DFFF0095204F /* Author.swift */; };
+		5039ECB82181E0250095204F /* Entities+ObjectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB72181E0250095204F /* Entities+ObjectBox.swift */; };
+		5039ECB92181E0250095204F /* Entities+ObjectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB72181E0250095204F /* Entities+ObjectBox.swift */; };
 		5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAEF218066C0002305F8 /* AppDelegate.swift */; };
 		5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF1218066C0002305F8 /* MasterViewController.swift */; };
 		5070AAF4218066C0002305F8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AAF3218066C0002305F8 /* DetailViewController.swift */; };
@@ -39,6 +43,8 @@
 		5039ECA62181DA360095204F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5039ECA82181DA360095204F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5039ECA92181DA360095204F /* NotesExample_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotesExample_macOS.entitlements; sourceTree = "<group>"; };
+		5039ECB42181DFFF0095204F /* Author.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
+		5039ECB72181E0250095204F /* Entities+ObjectBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entities+ObjectBox.swift"; sourceTree = "<group>"; };
 		5070AAEC218066C0002305F8 /* NotesExample-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5070AAEF218066C0002305F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5070AAF1218066C0002305F8 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +125,8 @@
 			isa = PBXGroup;
 			children = (
 				5070AB1421809535002305F8 /* Note.swift */,
+				5039ECB42181DFFF0095204F /* Author.swift */,
+				5039ECB72181E0250095204F /* Entities+ObjectBox.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -403,7 +411,9 @@
 				5039ECA22181DA350095204F /* ViewController.swift in Sources */,
 				5039ECA02181DA350095204F /* AppDelegate.swift in Sources */,
 				5039ECAE2181DA560095204F /* Note.swift in Sources */,
+				5039ECB92181E0250095204F /* Entities+ObjectBox.swift in Sources */,
 				5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */,
+				5039ECB62181DFFF0095204F /* Author.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,8 +421,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5039ECB52181DFFF0095204F /* Author.swift in Sources */,
 				5070AAF4218066C0002305F8 /* DetailViewController.swift in Sources */,
 				5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */,
+				5039ECB82181E0250095204F /* Entities+ObjectBox.swift in Sources */,
 				5070AAF0218066C0002305F8 /* AppDelegate.swift in Sources */,
 				5070AB1521809535002305F8 /* Note.swift in Sources */,
 				5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */,
