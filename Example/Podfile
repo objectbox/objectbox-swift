@@ -5,3 +5,9 @@ target 'NotesExample-iOS' do
   pod 'ObjectBox', :path => '../'
   pod 'Sourcery'
 end
+
+target 'NotesExample-macOS' do
+  platform :osx, :deployment_target => '10.10'
+  pod 'ObjectBox', :path => '../'
+  pod 'Sourcery'
+end
