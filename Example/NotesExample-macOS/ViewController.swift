@@ -1,27 +1,24 @@
-//
-//  ViewController.swift
-//  NotesExample-macOS
-//
-//  Created by Christian on 25.10.18.
 //  Copyright © 2018 ObjectBox. All rights reserved.
-//
 
 import Cocoa
 
 class ViewController: NSViewController {
+    @IBOutlet var textView: NSTextView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        if let string = representedObject as? String {
+            textView.string = string
+        }
     }
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
+            guard let representedObject = representedObject else { return }
+            guard let string = representedObject as? String { preconditionFailure("representedObject must be a String") }
+            guard isViewLoaded else { return }
+            textView.string = string
         }
     }
-
-
 }
-
