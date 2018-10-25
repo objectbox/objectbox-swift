@@ -22,7 +22,8 @@ class Author: Entity {
 extension Author: CustomStringConvertible {
     var description: String {
         let noteTitles = notes.map { $0.title }
-        return "Author(id: \(id.value), name: \(name), notes: \(noteTitles))"
+        let address = withUnsafePointer(to: self, { "\($0)" })
+        return "Author(id: \(id.value), name: \(name), notes: \(noteTitles)) @ \(address)"
     }
 }
 
