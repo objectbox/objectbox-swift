@@ -1,11 +1,28 @@
 //  Copyright © 2018 ObjectBox. All rights reserved.
 
 import UIKit
+import ObjectBox
 
 class MasterViewController: UITableViewController {
 
+    @IBOutlet var notesTableView: UITableView!
     var detailViewController: DetailViewController? = nil
+
     var notes = [Note]()
+
+    private func configureContent() {
+        if  let noteBox = noteBox,
+            let notesTableView = notesTableView {
+            notes = noteBox.all()
+            notesTableView.reloadData()
+        }
+    }
+
+    var noteBox: Box<Note>! {
+        didSet {
+            configureContent()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +35,8 @@ class MasterViewController: UITableViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
+
+        configureContent()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -27,10 +46,11 @@ class MasterViewController: UITableViewController {
 
     @objc
     func insertNewObject(_ sender: Any) {
-//        let note = Note()
-//        notes.insert(note, at: 0)
-//        let indexPath = IndexPath(row: 0, section: 0)
-//        tableView.insertRows(at: [indexPath], with: .automatic)
+        let note = Note()
+        try! noteBox.put(note)
+        notes.insert(note, at: 0)
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
     }
 
     // MARK: - Segues
@@ -79,6 +99,4 @@ class MasterViewController: UITableViewController {
         }
     }
 
-
 }
-
