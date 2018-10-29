@@ -4,31 +4,24 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+    @IBOutlet weak var contentTextView: UITextView!
 
     func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.description
-            }
+        if  let note = note,
+            let contentTextView = contentTextView {
+            contentTextView.text = note.text
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         configureView()
     }
 
-    var detailItem: NSDate? {
+    var note: Note? {
         didSet {
-            // Update the view.
             configureView()
         }
     }
 
-
 }
-
