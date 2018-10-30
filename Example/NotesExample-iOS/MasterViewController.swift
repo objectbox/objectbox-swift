@@ -12,10 +12,11 @@ class MasterViewController: UITableViewController {
     var noteBox: Box<Note> = Services.instance.noteBox
 
     private func configureContent() {
-        guard let notesTableView = notesTableView else { return }
         notes = noteBox.all()
-        notesTableView.reloadData()
+        refreshNotes()
     }
+
+    private var noteTitleChangeSubscription: NotificationToken!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,15 @@ class MasterViewController: UITableViewController {
         }
 
         configureContent()
+
+        noteTitleChangeSubscription = NotificationCenter.default.observe(name: .noteTitleDidChange, object: nil) { _ in
+            self.refreshNotes()
+        }
+    }
+
+    private func refreshNotes() {
+        guard let notesTableView = notesTableView else { return }
+        notesTableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -45,8 +55,12 @@ class MasterViewController: UITableViewController {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
     }
+    
+}
 
-    // MARK: - Segues
+// MARK: - Segues
+
+extension MasterViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
@@ -60,7 +74,11 @@ class MasterViewController: UITableViewController {
         }
     }
 
-    // MARK: - Table View
+}
+
+// MARK: - Table View
+
+extension MasterViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
