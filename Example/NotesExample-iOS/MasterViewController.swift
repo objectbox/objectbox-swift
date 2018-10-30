@@ -6,7 +6,7 @@ import ObjectBox
 class MasterViewController: UITableViewController {
 
     @IBOutlet var notesTableView: UITableView!
-    var detailViewController: DetailViewController? = nil
+    var noteViewController: NoteViewController? = nil
     var notes = [Note]()
 
     var noteBox: Box<Note> = Services.instance.noteBox
@@ -27,7 +27,7 @@ class MasterViewController: UITableViewController {
         navigationItem.rightBarButtonItem = addButton
         if let split = splitViewController {
             let controllers = split.viewControllers
-            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? NoteViewController
         }
 
         configureContent()
@@ -55,7 +55,7 @@ class MasterViewController: UITableViewController {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
     }
-    
+
 }
 
 // MARK: - Segues
@@ -66,7 +66,7 @@ extension MasterViewController {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let note = notes[indexPath.row]
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                let controller = (segue.destination as! UINavigationController).topViewController as! NoteViewController
                 controller.note = note
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true

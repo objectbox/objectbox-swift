@@ -7,7 +7,7 @@ extension Notification.Name {
     static var noteTitleDidChange: Notification.Name { return .init("OB_NoteTitleDidChange") }
 }
 
-class DetailViewController: UIViewController {
+class NoteViewController: UIViewController {
 
     @IBOutlet weak var contentTextView: UITextView!
 
@@ -42,7 +42,7 @@ class DetailViewController: UIViewController {
 
 // MARK: - Rename Note
 
-extension DetailViewController {
+extension NoteViewController {
 
     @objc
     func renameNote(_ sender: Any?) {
@@ -86,7 +86,7 @@ extension DetailViewController {
 
 // MARK: - Change Note Text
 
-extension DetailViewController: UITextViewDelegate {
+extension NoteViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         note?.text = textView.text
