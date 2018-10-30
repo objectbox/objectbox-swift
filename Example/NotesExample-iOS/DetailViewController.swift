@@ -1,10 +1,13 @@
 //  Copyright © 2018 ObjectBox. All rights reserved.
 
 import UIKit
+import ObjectBox
 
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var contentTextView: UITextView!
+
+    var noteBox: Box<Note> = Services.instance.noteBox
 
     func configureView() {
         if  let note = note,
@@ -15,6 +18,9 @@ class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        contentTextView.delegate = self
+
         configureView()
     }
 
@@ -22,6 +28,19 @@ class DetailViewController: UIViewController {
         didSet {
             configureView()
         }
+    }
+
+}
+
+extension DetailViewController: UITextViewDelegate {
+
+    func textViewDidChange(_ textView: UITextView) {
+        note?.text = textView.text
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+        guard let note = self.note else { return }
+        try! noteBox.put(note)
     }
 
 }

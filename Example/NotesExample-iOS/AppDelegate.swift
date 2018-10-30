@@ -24,30 +24,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var window: UIWindow?
 
-    var store: Store!
-    lazy var authorBox: Box<Author> = self.store.box(for: Author.self)
-    lazy var noteBox: Box<Note> = self.store.box(for: Note.self)
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        try! setupStore()
+        try! setupDemoNotes()
         setupSplitViewController()
-        setupContentViewControllers()
         
         return true
     }
 
-    private func setupStore() throws {
-        self.store = try Store.createStore()
-        self.store.register(entity: Author.self)
-        self.store.register(entity: Note.self)
+    private func setupDemoNotes() throws {
+        let noteBox = Services.instance.noteBox
+        let authorBox = Services.instance.authorBox
 
-        if noteBox.isEmpty && authorBox.isEmpty {
-            try insertDemoNotes()
-        }
-    }
+        guard noteBox.isEmpty && authorBox.isEmpty else { return }
 
-    private func insertDemoNotes() throws {
         let peterBrett = Author(name: "Peter V. Brett")
         let georgeMartin = Author(name: "George R. R. Martin")
         try authorBox.put([peterBrett, georgeMartin])
@@ -66,11 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
         splitViewController.delegate = self
-    }
-
-    private func setupContentViewControllers() {
-        let masterViewController = (splitViewController.viewControllers[0] as! UINavigationController).topViewController as! MasterViewController
-        masterViewController.noteBox = noteBox
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

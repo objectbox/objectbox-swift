@@ -7,21 +7,14 @@ class MasterViewController: UITableViewController {
 
     @IBOutlet var notesTableView: UITableView!
     var detailViewController: DetailViewController? = nil
-
     var notes = [Note]()
 
-    private func configureContent() {
-        if  let noteBox = noteBox,
-            let notesTableView = notesTableView {
-            notes = noteBox.all()
-            notesTableView.reloadData()
-        }
-    }
+    var noteBox: Box<Note> = Services.instance.noteBox
 
-    var noteBox: Box<Note>! {
-        didSet {
-            configureContent()
-        }
+    private func configureContent() {
+        guard let notesTableView = notesTableView else { return }
+        notes = noteBox.all()
+        notesTableView.reloadData()
     }
 
     override func viewDidLoad() {
