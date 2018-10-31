@@ -5,7 +5,6 @@ import ObjectBox
 
 class NotesOverviewViewontroller: UITableViewController {
 
-    @IBOutlet var notesTableView: UITableView!
     var noteViewController: NoteEditingViewController? = nil
     var notes = [Note]()
 
@@ -41,8 +40,8 @@ class NotesOverviewViewontroller: UITableViewController {
     }
 
     private func refreshNotes() {
-        guard let notesTableView = notesTableView else { return }
-        notesTableView.reloadData()
+        guard let tableView = self.tableView else { return }
+        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -86,11 +85,11 @@ extension NotesOverviewViewontroller {
         let note = notes[indexPath.row]
         cell.textLabel!.text = note.title
         cell.detailTextLabel!.text = note.author.target?.name ?? ""
+
         return cell
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
 
