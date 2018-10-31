@@ -97,7 +97,15 @@
                             <outlet property="delegate" destination="7bK-jq-Zjz" id="RA6-mI-bju"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="ObjectBox Demo" id="Zdf-7t-Un8"/>
+                    <navigationItem key="navigationItem" title="ObjectBox Demo" id="Zdf-7t-Un8">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="iud-0d-FY5">
+                            <connections>
+                                <segue destination="vC3-pB-5Vb" kind="popoverPresentation" identifier="createNote" popoverAnchorBarButtonItem="iud-0d-FY5" id="JXz-I2-P4l">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
@@ -219,11 +227,24 @@
                     <navigationItem key="navigationItem" id="UoJ-Wj-Sln"/>
                     <connections>
                         <outlet property="authorPickerView" destination="wiR-UB-CCr" id="6Rd-9j-tuQ"/>
+                        <outlet property="cancelDraftBarButtonItem" destination="sCG-Wh-e6e" id="OIb-iB-9Io"/>
                         <outlet property="contentTextView" destination="rjd-DA-ToB" id="cBg-ZM-Ieh"/>
+                        <outlet property="saveDraftBarButtonItem" destination="vlo-gg-HVH" id="ofd-N2-w72"/>
                         <outlet property="titleTextField" destination="S9h-nU-4h9" id="Tbq-Yw-e5c"/>
                     </connections>
                 </tableViewController>
+                <barButtonItem systemItem="cancel" id="sCG-Wh-e6e">
+                    <connections>
+                        <segue destination="AY2-Yw-i9F" kind="unwind" identifier="cancelDraft" unwindAction="unwindFromDraftingNoteWithSegue:" id="6q2-IV-X7N"/>
+                    </connections>
+                </barButtonItem>
+                <barButtonItem systemItem="save" id="vlo-gg-HVH">
+                    <connections>
+                        <segue destination="AY2-Yw-i9F" kind="unwind" identifier="saveDraft" unwindAction="unwindFromDraftingNoteWithSegue:" id="iaA-q3-HMP"/>
+                    </connections>
+                </barButtonItem>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dfh-5D-0ys" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="AY2-Yw-i9F" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="708" y="127.28635682158921"/>
         </scene>
@@ -279,6 +300,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="7s5-jb-PaF"/>
+        <segue reference="JXz-I2-P4l"/>
     </inferredMetricsTieBreakers>
 </document>

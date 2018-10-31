@@ -60,9 +60,8 @@ extension NotesOverviewViewontroller {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let note = notes[indexPath.row]
                 let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
+                controller.mode = .edit
                 controller.note = note
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }

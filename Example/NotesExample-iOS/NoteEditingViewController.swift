@@ -5,6 +5,20 @@ import ObjectBox
 
 class NoteEditingViewController: UITableViewController {
 
+    enum Mode {
+        case edit, draft
+    }
+
+    var mode: Mode = .edit {
+        didSet {
+            configureNavigationItemsForMode()
+        }
+    }
+
+    
+    @IBOutlet weak var cancelDraftBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var saveDraftBarButtonItem: UIBarButtonItem!
+
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var authorPickerView: UIPickerView!
     @IBOutlet weak var contentTextView: UITextView!
@@ -36,6 +50,22 @@ class NoteEditingViewController: UITableViewController {
         }
     }
 
+    func configureNavigationItemsForMode() {
+        switch mode {
+        case .edit:
+            navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            navigationItem.leftItemsSupplementBackButton = true
+
+            navigationItem.rightBarButtonItem = nil
+
+        case .draft:
+            navigationItem.leftBarButtonItem = cancelDraftBarButtonItem
+            navigationItem.leftItemsSupplementBackButton = false
+
+            navigationItem.rightBarButtonItem = saveDraftBarButtonItem
+        }
+    }
+
     private func refreshAuthors() {
         self.authorModel = AuthorModel(authorBox: Services.instance.authorBox)
     }
@@ -54,6 +84,21 @@ class NoteEditingViewController: UITableViewController {
     }
 }
 
+// MARK: Drafting Notes
+
+extension NoteEditingViewController {
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "cancelDraft" {
+            self.note = nil
+        } else if segue.identifier == "saveDraft" {
+            guard let note = self.note else { preconditionFailure() }
+            try! noteBox.put(note)
+        }
+    }
+
+}
+
 // MARK: - Rename Note
 
 extension NoteEditingViewController: UITextFieldDelegate {
@@ -68,6 +113,10 @@ extension NoteEditingViewController: UITextFieldDelegate {
 
         let oldTitle = note.title
         note.title = newTitle
+
+        // Do not autosave drafts
+        guard self.mode == .edit else { return }
+
         try! noteBox.put(note)
 
         NotificationCenter.default.post(
@@ -121,6 +170,10 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
 
         let oldAuthorId = note.author.targetId
         note.author.target = newAuthor
+
+        // Do not autosave drafts
+        guard self.mode == .edit else { return }
+
         try! noteBox.put(note)
 
         let changeUserInfo: [String: Any] = {
@@ -167,6 +220,8 @@ extension NoteEditingViewController: UITextViewDelegate {
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
+        // Do not autosave drafts
+        guard self.mode == .edit else { return }
         guard let note = self.note else { return }
         try! noteBox.put(note)
     }

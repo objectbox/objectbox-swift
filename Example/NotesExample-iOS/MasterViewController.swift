@@ -7,10 +7,6 @@ class MasterViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNote(_:)))
-        navigationItem.rightBarButtonItem = addButton
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -18,10 +14,6 @@ class MasterViewController: UITableViewController {
         super.viewWillAppear(animated)
     }
 
-    @objc
-    func createNote(_ sender: Any?) {
-        
-    }
 }
 
 // MARK: - Segues
@@ -31,7 +23,15 @@ extension MasterViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNotes" {
             // no op
+        } else if segue.identifier == "createNote" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
+            controller.mode = .draft
+            controller.note = Note()
         }
     }
 
+    @IBAction func unwindFromDraftingNote(segue: UIStoryboardSegue) {
+        // no op
+    }
+    
 }
