@@ -293,7 +293,7 @@
             </objects>
             <point key="canvasLocation" x="1412" y="175"/>
         </scene>
-        <!--Note Editing View Controller-->
+        <!--Create Note-->
         <scene sceneID="H5H-y8-dEK">
             <objects>
                 <tableViewController id="AQa-CG-VLn" customClass="NoteEditingViewController" customModule="NotesExample" customModuleProvider="target" sceneMemberID="viewController">
@@ -337,7 +337,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wiR-UB-CCr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="164.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="165"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="AQa-CG-VLn" id="Cmk-BA-Eh5"/>
                                                         <outlet property="delegate" destination="AQa-CG-VLn" id="2WS-Qc-YXR"/>
@@ -390,7 +390,7 @@
                             <outlet property="delegate" destination="AQa-CG-VLn" id="PsO-mq-pgH"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="UoJ-Wj-Sln"/>
+                    <navigationItem key="navigationItem" title="Create Note" id="UoJ-Wj-Sln"/>
                     <connections>
                         <outlet property="authorPickerView" destination="wiR-UB-CCr" id="6Rd-9j-tuQ"/>
                         <outlet property="cancelDraftBarButtonItem" destination="sCG-Wh-e6e" id="OIb-iB-9Io"/>

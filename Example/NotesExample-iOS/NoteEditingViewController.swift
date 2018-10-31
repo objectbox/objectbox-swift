@@ -29,7 +29,7 @@ class NoteEditingViewController: UITableViewController {
     func configureView() {
         guard let note = note else { return }
 
-        self.navigationItem.title = note.title
+        self.navigationItem.title = mode == .edit ? note.title : "Create Note"
 
         if let tableView = tableView {
             tableView.reloadData()
