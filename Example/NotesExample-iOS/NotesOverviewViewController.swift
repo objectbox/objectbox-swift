@@ -81,6 +81,7 @@ extension NotesOverviewViewontroller {
 
         let note = notes[indexPath.row]
         cell.textLabel!.text = note.title
+        cell.detailTextLabel!.text = note.author.target?.name ?? ""
         return cell
     }
 
