@@ -89,6 +89,9 @@ class NoteEditingViewController: UITableViewController {
 extension NoteEditingViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Commit editing the title before leaving
+        if titleTextField.isFirstResponder { titleTextField.resignFirstResponder() }
+
         if segue.identifier == "cancelDraft" {
             self.note = nil
         } else if segue.identifier == "saveDraft" {
@@ -104,9 +107,9 @@ extension NoteEditingViewController {
 
 extension NoteEditingViewController: UITextFieldDelegate {
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        changeNoteTitle(to: textField.text ?? "")
-        return true
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let title = textField.text ?? ""
+        changeNoteTitle(to: title)
     }
 
     func changeNoteTitle(to newTitle: String) {

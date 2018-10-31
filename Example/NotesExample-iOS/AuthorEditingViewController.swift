@@ -45,6 +45,9 @@ class AuthorEditingViewController: UITableViewController {
 extension AuthorEditingViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Commit editing the author name before leaving
+        if authorNameTextField.isFirstResponder { authorNameTextField.resignFirstResponder() }
+
         if segue.identifier == "showAuthorNotes" {
             guard let authorId = self.author?.id else { return }
             let controller = segue.destination as! NotesOverviewViewController

@@ -238,7 +238,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="qEo-4k-pcb" id="3e9-ai-99e"/>
+                                                        <outlet property="delegate" destination="qEo-4k-pcb" id="5vO-KO-nUt"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -270,6 +270,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="authorNameTextField" destination="eqz-If-1ng" id="Nyb-pk-445"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h0p-Vn-7Wu" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="BMm-Ja-UFL" userLabel="Exit" sceneMemberID="exit"/>
@@ -316,7 +319,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="t6O-un-xH1" id="rSs-Si-JzJ"/>
+                                                        <outlet property="delegate" destination="t6O-un-xH1" id="aVj-7q-laW"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -450,7 +453,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="AQa-CG-VLn" id="FzO-3a-NLR"/>
+                                                        <outlet property="delegate" destination="AQa-CG-VLn" id="Xyw-UR-JI8"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -622,7 +625,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="0WM-yw-OXz"/>
+        <segue reference="jF9-l9-MOM"/>
         <segue reference="JXz-I2-P4l"/>
     </inferredMetricsTieBreakers>
 </document>

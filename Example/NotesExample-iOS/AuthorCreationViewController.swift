@@ -4,6 +4,8 @@ import UIKit
 
 class AuthorCreationViewController: UITableViewController {
 
+    @IBOutlet weak var authorNameTextField: UITextField!
+
     var authorDraft: Author!
 
     override func viewDidLoad() {
@@ -20,9 +22,8 @@ class AuthorCreationViewController: UITableViewController {
 
 extension AuthorCreationViewController: UITextFieldDelegate {
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         authorDraft.name = textField.text ?? ""
-        return true
     }
 
 }
@@ -32,6 +33,9 @@ extension AuthorCreationViewController: UITextFieldDelegate {
 extension AuthorCreationViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Commit editing the author name before leaving
+        if authorNameTextField.isFirstResponder { authorNameTextField.resignFirstResponder() }
+
         if segue.identifier == "cancelAuthorDraft" {
             authorDraft = Author()
         } else if segue.identifier == "saveAuthorDraft" {
