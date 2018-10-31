@@ -95,6 +95,34 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Options" id="tOe-47-82W">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="FLN-2h-Ftf">
+                                        <rect key="frame" x="0.0" y="199.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FLN-2h-Ftf" id="e8S-sg-Kdv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ha-Qf-6K2">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <state key="normal" title="Replace with Demo Data"/>
+                                                    <connections>
+                                                        <action selector="replaceWithDemoData:" destination="7bK-jq-Zjz" eventType="touchUpInside" id="fkH-TI-K7V"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="2ha-Qf-6K2" secondAttribute="bottom" id="8v5-0U-Mlb"/>
+                                                <constraint firstAttribute="trailing" secondItem="2ha-Qf-6K2" secondAttribute="trailing" id="UCe-fB-mt3"/>
+                                                <constraint firstItem="2ha-Qf-6K2" firstAttribute="top" secondItem="e8S-sg-Kdv" secondAttribute="top" id="W5H-ds-9XH"/>
+                                                <constraint firstItem="2ha-Qf-6K2" firstAttribute="leading" secondItem="e8S-sg-Kdv" secondAttribute="leading" id="wo3-vO-RAY"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="7bK-jq-Zjz" id="Gho-Na-rnu"/>

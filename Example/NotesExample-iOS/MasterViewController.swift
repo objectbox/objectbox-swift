@@ -14,6 +14,11 @@ class MasterViewController: UITableViewController {
         super.viewWillAppear(animated)
     }
 
+    @IBAction func replaceWithDemoData(_ sender: Any?) {
+        try! Services.instance.replaceWithDemoData()
+        tableView.reloadData()
+    }
+
 }
 
 // MARK: - Segues
