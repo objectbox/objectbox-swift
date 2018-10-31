@@ -20,8 +20,9 @@ class AuthorCreationViewController: UITableViewController {
 
 extension AuthorCreationViewController: UITextFieldDelegate {
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         authorDraft.name = textField.text ?? ""
+        return true
     }
 
 }
