@@ -5,6 +5,8 @@ import ObjectBox
 
 class AuthorsOverviewViewController: UITableViewController {
 
+    @IBOutlet weak var createAuthorBarButtonItem: UIBarButtonItem!
+
     var authorEditingViewController: AuthorEditingViewController? = nil
     var authors = [Author]()
 
@@ -15,12 +17,16 @@ class AuthorsOverviewViewController: UITableViewController {
         refreshAuthors()
     }
 
+    private var authorAddedSubscription: NotificationToken!
     private var authorNameChangeSubscription: NotificationToken!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.rightBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItems = [
+            createAuthorBarButtonItem,
+            editButtonItem
+        ]
 
         if let split = splitViewController {
             let controllers = split.viewControllers
@@ -28,6 +34,10 @@ class AuthorsOverviewViewController: UITableViewController {
         }
 
         configureContent()
+
+        authorAddedSubscription = NotificationCenter.default.observe(name: .authorAdded, object: nil) { _ in
+            self.refreshAuthors()
+        }
 
         authorNameChangeSubscription = NotificationCenter.default.observe(name: .authorNameDidChange, object: nil) { _ in
             self.refreshAuthors()
@@ -64,6 +74,10 @@ extension AuthorsOverviewViewController {
                 controller.author = author
             }
         }
+    }
+
+    @IBAction func unwindFromDraftingAuthor(segue: UIStoryboardSegue) {
+        // no op
     }
 
 }

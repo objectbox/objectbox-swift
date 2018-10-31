@@ -157,10 +157,98 @@
                             <outlet property="delegate" destination="hQN-Fk-YiZ" id="L9r-yi-F5u"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="createAuthorBarButtonItem" destination="4iu-DW-v68" id="ZAh-tG-InC"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nUI-WV-D9s" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem systemItem="add" id="4iu-DW-v68">
+                    <connections>
+                        <segue destination="KbG-FH-oK3" kind="popoverPresentation" popoverAnchorBarButtonItem="4iu-DW-v68" id="b1x-CA-9BB">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="1466" y="-1303"/>
+        </scene>
+        <!--Create Author-->
+        <scene sceneID="CGV-UX-1N8">
+            <objects>
+                <tableViewController title="Create Author" id="qEo-4k-pcb" customClass="AuthorCreationViewController" customModule="NotesExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="7u0-iQ-PYw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Author Details" id="haN-f6-sqs">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="44" id="RiB-6l-vUo">
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RiB-6l-vUo" id="oO4-QZ-AF6">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eqz-If-1ng">
+                                                    <rect key="frame" x="16" y="6.5" width="343" height="30"/>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="qEo-4k-pcb" id="3e9-ai-99e"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="eqz-If-1ng" firstAttribute="top" secondItem="oO4-QZ-AF6" secondAttribute="top" constant="6.5" id="NSO-AT-vpb"/>
+                                                <constraint firstAttribute="trailing" secondItem="eqz-If-1ng" secondAttribute="trailing" constant="16" id="PUB-bn-ODH"/>
+                                                <constraint firstAttribute="bottom" secondItem="eqz-If-1ng" secondAttribute="bottom" constant="7" id="qDR-nG-CLA"/>
+                                                <constraint firstItem="eqz-If-1ng" firstAttribute="leading" secondItem="oO4-QZ-AF6" secondAttribute="leading" constant="16" id="vNh-3R-51N"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="qEo-4k-pcb" id="BMr-Wg-uNV"/>
+                            <outlet property="delegate" destination="qEo-4k-pcb" id="2Of-ij-Thp"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Create Author" id="vKl-os-ZcU">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="bNK-Sy-PNW">
+                            <connections>
+                                <segue destination="BMm-Ja-UFL" kind="unwind" identifier="cancelAuthorDraft" unwindAction="unwindFromDraftingAuthorWithSegue:" id="NG5-br-UhF"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="cOQ-HI-ySe">
+                            <connections>
+                                <segue destination="BMm-Ja-UFL" kind="unwind" identifier="saveAuthorDraft" unwindAction="unwindFromDraftingAuthorWithSegue:" id="00I-9z-dIL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h0p-Vn-7Wu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="BMm-Ja-UFL" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3247" y="-2038"/>
+        </scene>
+        <!--Author Creation Navigation Controller-->
+        <scene sceneID="bcS-HF-SPg">
+            <objects>
+                <navigationController id="KbG-FH-oK3" userLabel="Author Creation Navigation Controller" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hAx-Ae-nVh">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="qEo-4k-pcb" kind="relationship" relationship="rootViewController" id="xbT-jT-PAQ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PyD-c8-6Pz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2297" y="-2038"/>
         </scene>
         <!--Author Editing View Controller-->
         <scene sceneID="kNo-5Z-O4s">
@@ -231,7 +319,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GMf-5Q-k1I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3070" y="-1306"/>
+            <point key="canvasLocation" x="3247" y="-1282"/>
         </scene>
         <!--Placeholder Navigation Controller-->
         <scene sceneID="Iep-sh-1Pv">
@@ -475,7 +563,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F0X-YU-Wh1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2298" y="-1305"/>
+            <point key="canvasLocation" x="2297" y="-1282"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
