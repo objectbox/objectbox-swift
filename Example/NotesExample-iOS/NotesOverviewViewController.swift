@@ -11,18 +11,35 @@ class NotesOverviewViewController: UITableViewController {
     var notes = [Note]()
 
     var noteBox: Box<Note> = Services.instance.noteBox
-    private lazy var query: Query<Note> = self.noteBox.query()
+    private lazy var filter: Filter = .all
 
-    func filterBy(authorId: Id<Author>?) {
-        if let authorId = authorId {
-            query = noteBox.query { Note.authorId == authorId }
-        } else {
-            query = self.noteBox.query()
+    struct Filter {
+        static var all: Filter { return Filter(authorId: nil) }
+
+        let authorId: Id<Author>?
+        let query: Query<Note>
+
+        init(authorId: Id<Author>?, noteBox: Box<Note> = Services.instance.noteBox) {
+            self.authorId = authorId
+
+            if let authorId = authorId {
+                query = noteBox.query { Note.authorId == authorId }
+            } else {
+                query = noteBox.query()
+            }
+        }
+
+        func notes() -> [Note] {
+            return query.find()
         }
     }
 
+    func filterBy(authorId: Id<Author>?) {
+        filter = Filter(authorId: authorId)
+    }
+
     private func configureContent() {
-        notes = query.find()
+        notes = filter.notes()
         refreshNotes()
     }
 
@@ -86,7 +103,11 @@ extension NotesOverviewViewController {
         } else if segue.identifier == "createNote" {
             let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
             controller.mode = .draft
-            controller.note = Note()
+            controller.note = {
+                let draft = Note()
+                draft.author.targetId = filter.authorId
+                return draft
+            }()
         }
     }
 
