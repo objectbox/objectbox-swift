@@ -302,6 +302,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="c4l-8C-lCO" kind="show" identifier="showAuthorNotes" id="jF9-l9-MOM"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -567,6 +570,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="jF9-l9-MOM"/>
         <segue reference="JXz-I2-P4l"/>
     </inferredMetricsTieBreakers>
 </document>

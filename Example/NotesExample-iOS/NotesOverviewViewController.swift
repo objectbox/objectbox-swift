@@ -9,9 +9,18 @@ class NotesOverviewViewController: UITableViewController {
     var notes = [Note]()
 
     var noteBox: Box<Note> = Services.instance.noteBox
+    private lazy var query: Query<Note> = self.noteBox.query()
+
+    func filterBy(authorId: Id<Author>?) {
+        if let authorId = authorId {
+            query = noteBox.query { Note.authorId == authorId }
+        } else {
+            query = self.noteBox.query()
+        }
+    }
 
     private func configureContent() {
-        notes = noteBox.all()
+        notes = query.find()
         refreshNotes()
     }
 

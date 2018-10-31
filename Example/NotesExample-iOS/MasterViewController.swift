@@ -22,7 +22,8 @@ extension MasterViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNotes" {
-            // no op
+            let controller = segue.destination as! NotesOverviewViewController
+            controller.filterBy(authorId: nil)
         } else if segue.identifier == "createNote" {
             let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
             controller.mode = .draft

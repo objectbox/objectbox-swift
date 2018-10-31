@@ -46,7 +46,9 @@ extension AuthorEditingViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showAuthorNotes" {
-            // TODO: show notes
+            guard let authorId = self.author?.id else { return }
+            let controller = segue.destination as! NotesOverviewViewController
+            controller.filterBy(authorId: authorId)
         }
     }
 
