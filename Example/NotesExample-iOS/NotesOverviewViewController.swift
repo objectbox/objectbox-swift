@@ -38,11 +38,8 @@ class NotesOverviewViewController: UITableViewController {
         filter = Filter(authorId: authorId)
     }
 
-    private func configureContent() {
-        notes = filter.notes()
-        refreshNotes()
-    }
-
+    private var noteAddedSubscription: NotificationToken!
+    private var noteRemovedSubscription: NotificationToken!
     private var noteTitleChangeSubscription: NotificationToken!
     private var noteAuthorChangeSubscription: NotificationToken!
 
@@ -59,7 +56,15 @@ class NotesOverviewViewController: UITableViewController {
             noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? NoteEditingViewController
         }
 
-        configureContent()
+        refreshNotes()
+
+        noteAddedSubscription = NotificationCenter.default.observe(name: .noteAdded, object: nil) { _ in
+            self.refreshNotes()
+        }
+
+        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { _ in
+            self.refreshNotes()
+        }
 
         noteTitleChangeSubscription = NotificationCenter.default.observe(name: .noteTitleDidChange, object: nil) { _ in
             self.refreshNotes()
@@ -71,6 +76,7 @@ class NotesOverviewViewController: UITableViewController {
     }
 
     private func refreshNotes() {
+        notes = filter.notes()
         guard let tableView = self.tableView else { return }
         tableView.reloadData()
     }
