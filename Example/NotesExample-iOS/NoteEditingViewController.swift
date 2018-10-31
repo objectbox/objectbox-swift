@@ -89,8 +89,9 @@ class NoteEditingViewController: UITableViewController {
 extension NoteEditingViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Commit editing the title before leaving
+        // Commit editing changes before leaving
         if titleTextField.isFirstResponder { titleTextField.resignFirstResponder() }
+        if contentTextView.isFirstResponder { contentTextView.resignFirstResponder() }
 
         if segue.identifier == "cancelDraft" {
             self.note = nil
