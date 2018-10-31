@@ -547,8 +547,18 @@
                             <outlet property="delegate" destination="c4l-8C-lCO" id="hUx-UH-EQ6"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="createNoteBarButtonItem" destination="OfX-0t-ski" id="iXA-Zi-ngb"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8KS-ZR-Hli" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem systemItem="add" id="OfX-0t-ski">
+                    <connections>
+                        <segue destination="vC3-pB-5Vb" kind="popoverPresentation" identifier="createNote" popoverAnchorBarButtonItem="OfX-0t-ski" id="0ya-Jd-zMX">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="1455" y="-630"/>
         </scene>
@@ -571,6 +581,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="jF9-l9-MOM"/>
-        <segue reference="JXz-I2-P4l"/>
+        <segue reference="0ya-Jd-zMX"/>
     </inferredMetricsTieBreakers>
 </document>

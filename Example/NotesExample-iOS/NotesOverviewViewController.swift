@@ -5,6 +5,8 @@ import ObjectBox
 
 class NotesOverviewViewController: UITableViewController {
 
+    @IBOutlet weak var createNoteBarButtonItem: UIBarButtonItem!
+
     var noteViewController: NoteEditingViewController? = nil
     var notes = [Note]()
 
@@ -30,7 +32,10 @@ class NotesOverviewViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.rightBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItems = [
+            createNoteBarButtonItem,
+            editButtonItem
+        ]
 
         if let split = splitViewController {
             let controllers = split.viewControllers
@@ -78,7 +83,16 @@ extension NotesOverviewViewController {
                 controller.mode = .edit
                 controller.note = note
             }
+        } else if segue.identifier == "createNote" {
+            let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
+            controller.mode = .draft
+            controller.note = Note()
         }
+    }
+
+    @IBAction func unwindFromDraftingNote(segue: UIStoryboardSegue) {
+        // Same action name as in `MasterViewController` to intercept the action/response
+        // and unwind to this scene when it was presented from here.
     }
 
 }
