@@ -119,10 +119,10 @@
             </objects>
             <point key="canvasLocation" x="-45" y="129"/>
         </scene>
-        <!--Note View Controller-->
+        <!--Note Editing View Controller-->
         <scene sceneID="H5H-y8-dEK">
             <objects>
-                <tableViewController id="AQa-CG-VLn" customClass="NoteViewController" customModule="NotesExample" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="AQa-CG-VLn" customClass="NoteEditingViewController" customModule="NotesExample" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="xgQ-PC-fUM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -163,7 +163,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wiR-UB-CCr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="165"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="164.5"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="AQa-CG-VLn" id="Cmk-BA-Eh5"/>
                                                         <outlet property="delegate" destination="AQa-CG-VLn" id="2WS-Qc-YXR"/>

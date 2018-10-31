@@ -6,7 +6,7 @@ import ObjectBox
 class NotesOverviewViewontroller: UITableViewController {
 
     @IBOutlet var notesTableView: UITableView!
-    var noteViewController: NoteViewController? = nil
+    var noteViewController: NoteEditingViewController? = nil
     var notes = [Note]()
 
     var noteBox: Box<Note> = Services.instance.noteBox
@@ -26,7 +26,7 @@ class NotesOverviewViewontroller: UITableViewController {
 
         if let split = splitViewController {
             let controllers = split.viewControllers
-            noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? NoteViewController
+            noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? NoteEditingViewController
         }
 
         configureContent()
@@ -59,7 +59,7 @@ extension NotesOverviewViewontroller {
         if segue.identifier == "showNote" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let note = notes[indexPath.row]
-                let controller = (segue.destination as! UINavigationController).topViewController as! NoteViewController
+                let controller = (segue.destination as! UINavigationController).topViewController as! NoteEditingViewController
                 controller.note = note
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true

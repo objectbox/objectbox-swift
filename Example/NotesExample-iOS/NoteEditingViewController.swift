@@ -3,7 +3,7 @@
 import UIKit
 import ObjectBox
 
-class NoteViewController: UITableViewController {
+class NoteEditingViewController: UITableViewController {
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var authorPickerView: UIPickerView!
@@ -56,7 +56,7 @@ class NoteViewController: UITableViewController {
 
 // MARK: - Rename Note
 
-extension NoteViewController: UITextFieldDelegate {
+extension NoteEditingViewController: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         let title = textField.text ?? ""
@@ -79,7 +79,7 @@ extension NoteViewController: UITextFieldDelegate {
 
 // MARK: - Change Author
 
-extension NoteViewController: UIPickerViewDelegate  {
+extension NoteEditingViewController: UIPickerViewDelegate  {
 
     struct AuthorModel {
         private let authors: [Author]
@@ -141,7 +141,7 @@ extension NoteViewController: UIPickerViewDelegate  {
     }
 }
 
-extension NoteViewController: UIPickerViewDataSource {
+extension NoteEditingViewController: UIPickerViewDataSource {
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -160,7 +160,7 @@ extension NoteViewController: UIPickerViewDataSource {
 
 // MARK: - Change Note Text
 
-extension NoteViewController: UITextViewDelegate {
+extension NoteEditingViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         note?.text = textView.text
