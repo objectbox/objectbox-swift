@@ -35,8 +35,8 @@ extension AuthorCreationViewController {
         if segue.identifier == "cancelAuthorDraft" {
             authorDraft = Author()
         } else if segue.identifier == "saveAuthorDraft" {
-            try! Services.instance.authorBox.put(authorDraft)
-            NotificationCenter.default.post(name: .authorAdded, object: authorDraft)
+            let authorId = try! Services.instance.authorBox.put(authorDraft)
+            NotificationCenter.default.post(name: .authorAdded, object: authorDraft, userInfo: [ "authorId" : authorId.value ])
         }
     }
 
