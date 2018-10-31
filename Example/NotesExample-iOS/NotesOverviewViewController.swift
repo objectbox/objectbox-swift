@@ -3,7 +3,7 @@
 import UIKit
 import ObjectBox
 
-class NotesOverviewViewontroller: UITableViewController {
+class NotesOverviewViewController: UITableViewController {
 
     var noteViewController: NoteEditingViewController? = nil
     var notes = [Note]()
@@ -59,7 +59,7 @@ class NotesOverviewViewontroller: UITableViewController {
 
 // MARK: - Segues
 
-extension NotesOverviewViewontroller {
+extension NotesOverviewViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNote" {
@@ -76,7 +76,7 @@ extension NotesOverviewViewontroller {
 
 // MARK: - Table View
 
-extension NotesOverviewViewontroller {
+extension NotesOverviewViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
