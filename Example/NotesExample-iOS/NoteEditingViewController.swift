@@ -104,9 +104,9 @@ extension NoteEditingViewController {
 
 extension NoteEditingViewController: UITextFieldDelegate {
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let title = textField.text ?? ""
-        changeNoteTitle(to: title)
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        changeNoteTitle(to: textField.text ?? "")
+        return true
     }
 
     func changeNoteTitle(to newTitle: String) {
