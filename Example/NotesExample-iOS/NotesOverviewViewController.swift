@@ -62,7 +62,8 @@ class NotesOverviewViewController: UITableViewController {
             self.refreshNotes()
         }
 
-        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { _ in
+        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { notification in
+            guard notification.object as AnyObject !== self else { return }
             self.refreshNotes()
         }
 
@@ -90,7 +91,7 @@ class NotesOverviewViewController: UITableViewController {
         let noteId = notes[index].id
         notes.remove(at: index)
         try! noteBox.remove(noteId)
-        NotificationCenter.default.post(name: .noteRemoved, object: nil, userInfo: [ "noteId" : noteId.value ])
+        NotificationCenter.default.post(name: .noteRemoved, object: self, userInfo: [ "noteId" : noteId.value ])
     }
 
 }
