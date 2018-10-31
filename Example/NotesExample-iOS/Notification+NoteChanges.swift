@@ -9,4 +9,11 @@ extension Notification.Name {
     /// - If the note had an author before the change, `userInfo["oldValue"]` contains the old ID value.
     /// - If the note has an author after the change, `userInfo["newValue"]` contains the new ID value.
     static var noteAuthorDidChange: Notification.Name { return .init("OB_NoteAuthorDidChange") }
+
+    /// Its `userInfo` contains `noteId`.
+    static var noteAdded: Notification.Name { return .init("OB_NoteAdded") }
+
+    /// Its `userInfo` contains `noteId`.
+    static var noteRemoved: Notification.Name { return .init("OB_NoteRemoved") }
+
 }

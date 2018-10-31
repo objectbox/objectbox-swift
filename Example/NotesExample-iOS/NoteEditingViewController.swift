@@ -93,7 +93,8 @@ extension NoteEditingViewController {
             self.note = nil
         } else if segue.identifier == "saveDraft" {
             guard let note = self.note else { preconditionFailure() }
-            try! noteBox.put(note)
+            let noteId = try! noteBox.put(note)
+            NotificationCenter.default.post(name: .noteAdded, object: note, userInfo: [ "noteId" : noteId.value ])
         }
     }
 

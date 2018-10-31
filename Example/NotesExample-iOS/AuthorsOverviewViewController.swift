@@ -12,10 +12,6 @@ class AuthorsOverviewViewController: UITableViewController {
 
     var authorBox: Box<Author> = Services.instance.authorBox
 
-    private func configureContent() {
-        authors = authorBox.all()
-        refreshAuthors()
-    }
 
     private var authorAddedSubscription: NotificationToken!
     private var authorNameChangeSubscription: NotificationToken!
@@ -33,7 +29,7 @@ class AuthorsOverviewViewController: UITableViewController {
             authorEditingViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? AuthorEditingViewController
         }
 
-        configureContent()
+        self.refreshAuthors()
 
         authorAddedSubscription = NotificationCenter.default.observe(name: .authorAdded, object: nil) { _ in
             self.refreshAuthors()
@@ -45,6 +41,7 @@ class AuthorsOverviewViewController: UITableViewController {
     }
 
     private func refreshAuthors() {
+        authors = authorBox.all()
         guard let tableView = self.tableView else { return }
         tableView.reloadData()
     }
@@ -58,6 +55,7 @@ class AuthorsOverviewViewController: UITableViewController {
         let authorId = authors[index].id
         authors.remove(at: index)
         try! authorBox.remove(authorId)
+        NotificationCenter.default.post(name: .authorRemoved, object: nil, userInfo: [ "authorId" : authorId.value ])
     }
 
 }

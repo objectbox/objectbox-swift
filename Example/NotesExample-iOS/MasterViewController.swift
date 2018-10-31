@@ -8,8 +8,29 @@ class MasterViewController: UITableViewController {
     lazy var noteBox: Box<Note> = Services.instance.noteBox
     lazy var authorBox: Box<Author> = Services.instance.authorBox
 
+    private var noteAddedSubscription: NotificationToken!
+    private var noteRemovedSubscription: NotificationToken!
+    private var authorRemovedSubscription: NotificationToken!
+    private var authorAddedSubscription: NotificationToken!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        noteAddedSubscription = NotificationCenter.default.observe(name: .noteAdded, object: nil) { _ in
+            self.tableView.reloadData()
+        }
+
+        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { _ in
+            self.tableView.reloadData()
+        }
+
+        authorAddedSubscription = NotificationCenter.default.observe(name: .authorAdded, object: nil) { _ in
+            self.tableView.reloadData()
+        }
+
+        authorRemovedSubscription = NotificationCenter.default.observe(name: .authorRemoved, object: nil) { _ in
+            self.tableView.reloadData()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

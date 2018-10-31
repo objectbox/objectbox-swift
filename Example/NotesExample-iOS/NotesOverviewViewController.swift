@@ -84,6 +84,7 @@ class NotesOverviewViewController: UITableViewController {
         let noteId = notes[index].id
         notes.remove(at: index)
         try! noteBox.remove(noteId)
+        NotificationCenter.default.post(name: .noteRemoved, object: nil, userInfo: [ "noteId" : noteId.value ])
     }
 
 }
