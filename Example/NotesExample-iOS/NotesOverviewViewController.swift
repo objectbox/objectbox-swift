@@ -48,6 +48,13 @@ class NotesOverviewViewontroller: UITableViewController {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
     }
+
+    private func deleteNote(at index: Int) {
+        let noteId = notes[index].id
+        notes.remove(at: index)
+        try! noteBox.remove(noteId)
+    }
+
 }
 
 // MARK: - Segues
@@ -95,7 +102,7 @@ extension NotesOverviewViewontroller {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            notes.remove(at: indexPath.row)
+            deleteNote(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
