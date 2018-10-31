@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Master-->
+        <!--Master Navigation Controller-->
         <scene sceneID="pY4-Hu-kfo">
             <objects>
-                <navigationController title="Master" id="RMx-3f-FxP" sceneMemberID="viewController">
+                <navigationController title="Master" id="RMx-3f-FxP" userLabel="Master Navigation Controller" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Pmd-2v-anx">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -147,6 +147,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="FWF-qG-HTa" kind="showDetail" identifier="showAuthor" id="1l7-k1-Aip"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -159,10 +162,81 @@
             </objects>
             <point key="canvasLocation" x="1466" y="-1303"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Author Editing View Controller-->
+        <scene sceneID="kNo-5Z-O4s">
+            <objects>
+                <tableViewController id="t6O-un-xH1" customClass="AuthorEditingViewController" customModule="NotesExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="pcq-gz-ADx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Author Details" id="yZ2-Pc-U5T">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="44" id="7tE-ge-TUj">
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7tE-ge-TUj" id="JV1-45-Tx1">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Xt-Ug-iUY">
+                                                    <rect key="frame" x="16" y="7" width="343" height="30"/>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="t6O-un-xH1" id="rSs-Si-JzJ"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="3Xt-Ug-iUY" secondAttribute="bottom" constant="6.5" id="3og-KL-1wV"/>
+                                                <constraint firstAttribute="trailing" secondItem="3Xt-Ug-iUY" secondAttribute="trailing" constant="16" id="BRg-SV-yob"/>
+                                                <constraint firstItem="3Xt-Ug-iUY" firstAttribute="top" secondItem="JV1-45-Tx1" secondAttribute="top" constant="7" id="L6Y-nh-Xlx"/>
+                                                <constraint firstItem="3Xt-Ug-iUY" firstAttribute="leading" secondItem="JV1-45-Tx1" secondAttribute="leading" constant="16" id="nCQ-wj-YHd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="aBd-JZ-oRr" style="IBUITableViewCellStyleDefault" id="6jo-ED-LdL">
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6jo-ED-LdL" id="TVt-OJ-Uwv">
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aBd-JZ-oRr">
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="t6O-un-xH1" id="2Vy-e7-3rq"/>
+                            <outlet property="delegate" destination="t6O-un-xH1" id="ml4-yN-Htv"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="sAT-aH-eV8"/>
+                    <connections>
+                        <outlet property="authorNameTextField" destination="3Xt-Ug-iUY" id="Ogc-hv-A2K"/>
+                        <outlet property="noteCountLabel" destination="aBd-JZ-oRr" id="JSZ-D1-Xk9"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GMf-5Q-k1I" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3070" y="-1306"/>
+        </scene>
+        <!--Placeholder Navigation Controller-->
         <scene sceneID="Iep-sh-1Pv">
             <objects>
-                <navigationController storyboardIdentifier="PlaceholderNavController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="U9E-td-toa" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PlaceholderNavController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="U9E-td-toa" userLabel="Placeholder Navigation Controller" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Bot-Ph-lUD">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -175,10 +249,10 @@
             </objects>
             <point key="canvasLocation" x="-719" y="-104"/>
         </scene>
-        <!--View Controller-->
+        <!--Placeholder View Controller-->
         <scene sceneID="RSc-tO-wF0">
             <objects>
-                <viewController id="wHl-DX-ckZ" sceneMemberID="viewController">
+                <viewController id="wHl-DX-ckZ" userLabel="Placeholder View Controller" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U8e-MX-Gh5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -203,10 +277,10 @@
             </objects>
             <point key="canvasLocation" x="30" y="-105"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Note Editing Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
             <objects>
-                <navigationController id="vC3-pB-5Vb" sceneMemberID="viewController">
+                <navigationController id="vC3-pB-5Vb" userLabel="Note Editing Navigation Controller" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="DjV-YW-jjY">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -386,6 +460,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8KS-ZR-Hli" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1455" y="-630"/>
+        </scene>
+        <!--Author Editing Navigation Controller-->
+        <scene sceneID="0lx-9r-ZGR">
+            <objects>
+                <navigationController id="FWF-qG-HTa" userLabel="Author Editing Navigation Controller" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="eBS-dD-zAE">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="t6O-un-xH1" kind="relationship" relationship="rootViewController" id="XMU-iz-rcP"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F0X-YU-Wh1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2298" y="-1305"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

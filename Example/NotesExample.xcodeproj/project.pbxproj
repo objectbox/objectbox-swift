@@ -33,6 +33,8 @@
 		50DC4E9E2189961F00DF7253 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4E9D2189961F00DF7253 /* Array+Extensions.swift */; };
 		50DC4EA021899D5300DF7253 /* Notification+NoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4E9F21899D5300DF7253 /* Notification+NoteChanges.swift */; };
 		50DC4EA22189A7B200DF7253 /* AuthorsOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA12189A7B200DF7253 /* AuthorsOverviewViewController.swift */; };
+		50DC4EA42189AB9200DF7253 /* AuthorEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */; };
+		50DC4EA62189B74300DF7253 /* Notification+AuthorChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA52189B74300DF7253 /* Notification+AuthorChanges.swift */; };
 		CB92D5BA675B8E1D824A3EFC /* Pods_NotesExample_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */; };
 		FCB054DFF31FB988F198A270 /* Pods_NotesExample_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */; };
 /* End PBXBuildFile section */
@@ -71,6 +73,8 @@
 		50DC4E9D2189961F00DF7253 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		50DC4E9F21899D5300DF7253 /* Notification+NoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+NoteChanges.swift"; sourceTree = "<group>"; };
 		50DC4EA12189A7B200DF7253 /* AuthorsOverviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorsOverviewViewController.swift; sourceTree = "<group>"; };
+		50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorEditingViewController.swift; sourceTree = "<group>"; };
+		50DC4EA52189B74300DF7253 /* Notification+AuthorChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+AuthorChanges.swift"; sourceTree = "<group>"; };
 		6A46AAAC066915AAC14D3A8B /* Pods-NotesExample-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8140F6069D933B39420AC659 /* Pods-NotesExample-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,10 +186,12 @@
 				50DC4E862188963F00DF7253 /* NotesOverviewViewController.swift */,
 				5070AAF3218066C0002305F8 /* NoteEditingViewController.swift */,
 				50DC4EA12189A7B200DF7253 /* AuthorsOverviewViewController.swift */,
+				50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */,
 				50DC4E822188617A00DF7253 /* Services.swift */,
 				50DC4E842188932200DF7253 /* NotificationToken.swift */,
 				50DC4E9D2189961F00DF7253 /* Array+Extensions.swift */,
 				50DC4E9F21899D5300DF7253 /* Notification+NoteChanges.swift */,
+				50DC4EA52189B74300DF7253 /* Notification+AuthorChanges.swift */,
 				5070AAF5218066C0002305F8 /* Main.storyboard */,
 				5070AAF8218066C1002305F8 /* Assets.xcassets */,
 				5070AAFA218066C1002305F8 /* LaunchScreen.storyboard */,
@@ -453,9 +459,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5039ECB52181DFFF0095204F /* Author.swift in Sources */,
+				50DC4EA62189B74300DF7253 /* Notification+AuthorChanges.swift in Sources */,
 				5070AAF4218066C0002305F8 /* NoteEditingViewController.swift in Sources */,
 				50DC4EA22189A7B200DF7253 /* AuthorsOverviewViewController.swift in Sources */,
 				5070AAF2218066C0002305F8 /* MasterViewController.swift in Sources */,
+				50DC4EA42189AB9200DF7253 /* AuthorEditingViewController.swift in Sources */,
 				50DC4E9E2189961F00DF7253 /* Array+Extensions.swift in Sources */,
 				50DC4E872188963F00DF7253 /* NotesOverviewViewController.swift in Sources */,
 				50DC4E852188932200DF7253 /* NotificationToken.swift in Sources */,

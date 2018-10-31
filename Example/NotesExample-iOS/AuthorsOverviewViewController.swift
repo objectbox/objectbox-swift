@@ -5,6 +5,7 @@ import ObjectBox
 
 class AuthorsOverviewViewController: UITableViewController {
 
+    var authorEditingViewController: AuthorEditingViewController? = nil
     var authors = [Author]()
 
     var authorBox: Box<Author> = Services.instance.authorBox
@@ -14,17 +15,23 @@ class AuthorsOverviewViewController: UITableViewController {
         refreshAuthors()
     }
 
+    private var authorNameChangeSubscription: NotificationToken!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItem = editButtonItem
 
-//        if let split = splitViewController {
-//            let controllers = split.viewControllers
-//            noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? AuthorEditingViewController
-//        }
+        if let split = splitViewController {
+            let controllers = split.viewControllers
+            authorEditingViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? AuthorEditingViewController
+        }
 
         configureContent()
+
+        authorNameChangeSubscription = NotificationCenter.default.observe(name: .authorNameDidChange, object: nil) { _ in
+            self.refreshAuthors()
+        }
     }
 
     private func refreshAuthors() {
@@ -42,6 +49,23 @@ class AuthorsOverviewViewController: UITableViewController {
         authors.remove(at: index)
         try! authorBox.remove(authorId)
     }
+
+}
+
+// MARK: - Segues
+
+extension AuthorsOverviewViewController {
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showAuthor" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let author = authors[indexPath.row]
+                let controller = (segue.destination as! UINavigationController).topViewController as! AuthorEditingViewController
+                controller.author = author
+            }
+        }
+    }
+
 }
 
 // MARK: - Table View
