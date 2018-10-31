@@ -3,10 +3,6 @@
 import UIKit
 import ObjectBox
 
-extension Notification.Name {
-    static var noteTitleDidChange: Notification.Name { return .init("OB_NoteTitleDidChange") }
-}
-
 class NoteViewController: UITableViewController {
 
     @IBOutlet weak var titleTextField: UITextField!
@@ -122,8 +118,26 @@ extension NoteViewController: UIPickerViewDelegate  {
 
     func changeNoteAuthor(to newAuthor: Author?) {
         guard let note = self.note else { return }
+
+        let oldAuthorId = note.author.targetId
         note.author.target = newAuthor
         try! noteBox.put(note)
+
+        let changeUserInfo: [String: Any] = {
+            var result: [String: Any] = [:]
+            if let oldAuthorId = oldAuthorId {
+                result["oldValue"] = oldAuthorId.value
+            }
+            if let newAuthorId = newAuthor?.id {
+                result["newValue"] = newAuthorId.value
+            }
+            return result
+        }()
+
+        NotificationCenter.default.post(
+            name: .noteAuthorDidChange,
+            object: note,
+            userInfo: changeUserInfo)
     }
 }
 

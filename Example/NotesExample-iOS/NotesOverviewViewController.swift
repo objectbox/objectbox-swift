@@ -17,6 +17,7 @@ class NotesOverviewViewontroller: UITableViewController {
     }
 
     private var noteTitleChangeSubscription: NotificationToken!
+    private var noteAuthorChangeSubscription: NotificationToken!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,10 @@ class NotesOverviewViewontroller: UITableViewController {
         configureContent()
 
         noteTitleChangeSubscription = NotificationCenter.default.observe(name: .noteTitleDidChange, object: nil) { _ in
+            self.refreshNotes()
+        }
+
+        noteAuthorChangeSubscription = NotificationCenter.default.observe(name: .noteAuthorDidChange, object: nil) { _ in
             self.refreshNotes()
         }
     }
