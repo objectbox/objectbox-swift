@@ -15,6 +15,23 @@ class NoteEditingViewController: UITableViewController {
         }
     }
 
+    func configureNavigationItemsForMode() {
+        guard isViewLoaded else { return }
+
+        switch mode {
+        case .edit:
+            navigationItem.leftBarButtonItem = splitViewController!.displayModeButtonItem
+            navigationItem.leftItemsSupplementBackButton = true
+
+            navigationItem.rightBarButtonItem = nil
+
+        case .draft:
+            navigationItem.leftBarButtonItem = cancelDraftBarButtonItem
+            navigationItem.leftItemsSupplementBackButton = false
+
+            navigationItem.rightBarButtonItem = saveDraftBarButtonItem
+        }
+    }
     
     @IBOutlet weak var cancelDraftBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var saveDraftBarButtonItem: UIBarButtonItem!
@@ -50,22 +67,6 @@ class NoteEditingViewController: UITableViewController {
         }
     }
 
-    func configureNavigationItemsForMode() {
-        switch mode {
-        case .edit:
-            navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-            navigationItem.leftItemsSupplementBackButton = true
-
-            navigationItem.rightBarButtonItem = nil
-
-        case .draft:
-            navigationItem.leftBarButtonItem = cancelDraftBarButtonItem
-            navigationItem.leftItemsSupplementBackButton = false
-
-            navigationItem.rightBarButtonItem = saveDraftBarButtonItem
-        }
-    }
-
     private func refreshAuthors() {
         self.authorModel = AuthorModel(authorBox: Services.instance.authorBox)
     }
@@ -81,6 +82,11 @@ class NoteEditingViewController: UITableViewController {
         super.viewDidLoad()
 
         configureView()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        configureNavigationItemsForMode()
+        super.viewWillAppear(animated)
     }
 }
 

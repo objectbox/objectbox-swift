@@ -38,6 +38,11 @@ class AuthorEditingViewController: UITableViewController {
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationItem.leftBarButtonItem = splitViewController!.displayModeButtonItem
+        super.viewWillAppear(animated)
+    }
+
 }
 
 // MARK: - Navigation
