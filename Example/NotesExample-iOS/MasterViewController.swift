@@ -16,6 +16,8 @@ class MasterViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        clearsSelectionOnViewWillAppear = true
+        
         noteAddedSubscription = NotificationCenter.default.observe(name: .noteAdded, object: nil) { _ in
             self.tableView.reloadData()
         }
@@ -31,11 +33,6 @@ class MasterViewController: UITableViewController {
         authorRemovedSubscription = NotificationCenter.default.observe(name: .authorRemoved, object: nil) { _ in
             self.tableView.reloadData()
         }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
-        super.viewWillAppear(animated)
     }
 
     @IBAction func replaceWithDemoData(_ sender: Any?) {
