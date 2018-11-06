@@ -1,5 +1,6 @@
 /Frameworks/iOS
 /Frameworks/Mac
+Podfile.lock
 
 # OS X
 .DS_Store
