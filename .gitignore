@@ -1,3 +1,6 @@
+/Frameworks/iOS
+/Frameworks/Mac
+
 # OS X
 .DS_Store
 

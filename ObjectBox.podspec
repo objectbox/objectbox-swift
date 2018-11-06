@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
   spec.license      = "MIT"
   spec.social_media_url   = "https://twitter.com/objectbox_io"
 
-  spec.authors            = { "ObjectBox", "Christian Tietze" }
+  spec.authors            = [ "ObjectBox", "Christian Tietze" ]
 
   spec.ios.deployment_target = "10.0"
   spec.osx.deployment_target = "10.10"
