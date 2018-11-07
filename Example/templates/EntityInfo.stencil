@@ -94,7 +94,7 @@ class {{ type.name }}Cursor: NSObject, CursorBase {
         {% set containsOffsets %}{% for prop in type.storedVariables %}{% if prop.typeName.name == "String" %}true{% endif %}{% endfor %}{% endset %}
 
         {% if containsOffsets|hasPrefix:"true" %}
-        var offsets: [(offset: OBDataOffset, index: UInt16)] = []
+        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         {% for prop in type.storedVariables %}
         {% if prop.typeName.name == "String" %}
         offsets.append((propertyCollector.prepare(string: entity.{{ prop.name }}, at: 2 + 2*{{ forloop.counter }}), 2 + 2*{{ forloop.counter }}))
