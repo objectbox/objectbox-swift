@@ -28,6 +28,7 @@ return {{ objName }}.{{ var.name }}{% if returnsValue == 1 %}.value{% endif %}
 
 {% for type in types.based.Entity %}
 extension {{ type.name }}: EntityInspectable {
+    /// Generated metadata used by ObjectBox to persist the entity.
     static var entityInfo: EntityInfo {
         return EntityInfo(
             name: "{{ type.name }}",
@@ -52,9 +53,17 @@ extension {{ type.name }} {
     {% set idTypeName %}Id<{{ type.name }}>{% endset %}
     {% for prop in type.storedVariables %}
     {% if not prop.typeName.name|hasPrefix:"ToOne" and not prop.typeName.name|hasPrefix:"ToMany<" %}
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { {{type.name}}.{{prop.name}}{% if prop.typeName|hasPrefix:"Id<" %} == myId{% elif prop.typeName.name == "Double" %} > 12.34{% elif prop.typeName.name == "String" or prop.typeName.name == "NSString" %}.startsWith("X"){% elif prop.typeName.name == "Date" or prop.typeName.name == "NSDate" %}.isBefore(lastSunday){% elif prop.typeName.name == "Bool" %} != false{% else %} > 1234{% endif %} }
     static var {{ prop.name }}: Property<{{type.name}}, {{prop.typeName.name}}> { return Property<{{type.name}}, {{prop.typeName.name}}>(propertyId: {{ forloop.counter }}, isPrimaryKey: {% if prop.typeName.name == idTypeName %}true{% else %}false{% endif %}) }
+
     {% elif prop.typeName.name|hasPrefix:"ToOne" %}
+    /// Generated entity relation property information.
     static var {{ prop.name }}Id: Property<{{type.name}}, Id<{{prop.typeName.name}}.Target>> { return Property(propertyId: {{ forloop.counter }}) }
+
     {% endif %}
     {% endfor %}
 
@@ -76,6 +85,7 @@ extension {{ type.name }} {
     }
 }
 
+/// Generated service type to handle persisting and reading entity data. Exposed through `{{ type.name }}.entityInfo`.
 class {{ type.name }}Cursor: NSObject, CursorBase {
     func setEntityId(of entity: Any, to entityId: EntityId) {
         let entity = entity as! {{type.name}}
@@ -171,8 +181,14 @@ fileprivate func modelBytes() -> Data {
 }
 
 extension ObjectBox.Store {
-    /// Store with fully configured model.
-    convenience init(directoryPath: String, maxDbSizeInKByte: UInt64, fileMode: UInt32, maxReaders: UInt32) throws {
+    /// A store with a fully configured model. Created by the code generator with your model's metadata in place.
+    ///
+    /// - Parameters:
+    ///   - directoryPath: Directory path to store database files in.
+    ///   - maxDbSizeInKByte: Limit of on-disk space for the database files. Default is `1024 * 1024` (1 GiB).
+    ///   - fileMode: UNIX-style bit mask used for the database files; default is `0o755`.
+    ///   - maxReaders: Maximum amount of concurrent readers, tailored to your use case. Default is `0` (unlimited).
+    convenience init(directoryPath: String, maxDbSizeInKByte: UInt64 = 1024 * 1024, fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
         try self.init(
             modelBytes: modelBytes(),
             directory: directoryPath,
