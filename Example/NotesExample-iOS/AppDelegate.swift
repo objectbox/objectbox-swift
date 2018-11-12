@@ -11,11 +11,7 @@ extension Store {
             in: FileManager.SearchPathDomainMask.userDomainMask,
             appropriateFor: nil,
             create: true)
-        return try Store(
-            directoryPath: directory.path,
-            maxDbSizeInKByte: 500,
-            fileMode: 0o755,
-            maxReaders: 10)
+        return try Store(directoryPath: directory.path)
     }
 }
 

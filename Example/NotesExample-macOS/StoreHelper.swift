@@ -6,11 +6,7 @@ extension Store {
     /// Creates a new ObjectBox.Store in a temporary directory.
     static func createStoreInTemporaryDirectory() throws -> Store {
         let directory = try newTemporaryDirectory().path
-        return try Store(
-            directoryPath: directory,
-            maxDbSizeInKByte: 500,
-            fileMode: 0o755,
-            maxReaders: 10)
+        return try Store(directoryPath: directory)
     }
 }
 
