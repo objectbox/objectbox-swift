@@ -39,6 +39,7 @@ class AuthorEditingViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController!.displayModeButtonItem
         super.viewWillAppear(animated)
     }
