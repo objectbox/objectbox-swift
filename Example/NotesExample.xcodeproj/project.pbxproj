@@ -226,6 +226,7 @@
 				5039EC992181DA350095204F /* Sources */,
 				5039EC9A2181DA350095204F /* Frameworks */,
 				5039EC9B2181DA350095204F /* Resources */,
+				76FA826EA52D0B00B391844E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -351,18 +352,20 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh",
 				"${PODS_ROOT}/../../Frameworks/iOS/ObjectBox.framework",
+				"${PODS_ROOT}/../../Frameworks/iOS/ObjectBox.framework.dSYM",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/ObjectBox.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5039EC912180964D0095204F /* Update Sourcery Generated Files */ = {
@@ -400,6 +403,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n\"$sourcery\"\nelse\necho \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\nexit -1\nfi\n";
+		};
+		76FA826EA52D0B00B391844E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh",
+				"${PODS_ROOT}/../../Frameworks/macOS/ObjectBox.framework",
+				"${PODS_ROOT}/../../Frameworks/macOS/ObjectBox.framework.dSYM",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/ObjectBox.framework.dSYM",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
