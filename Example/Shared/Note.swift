@@ -3,16 +3,15 @@
 import ObjectBox
 
 class Note: Entity {
-    var id: Id<Note> = 0
+    var id: Id<Note> = 0 // An `Id<Note>` is required by ObjectBox
     var title: String = ""
     var text: String = ""
     var author: ToOne<Author> = nil
 
+    // An initializer with no parameters is required by ObjectBox
     required init() {
-        self.id = 0
-        self.title = ""
-        self.text = ""
-        self.author = nil
+        // Nothing to do since we initialize the properties upon declaration here.
+        // See `Author` for a different approach
     }
 
     convenience init(title: String, text: String) {
