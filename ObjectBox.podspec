@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   # How to obtain the contents
   spec.source = { 
-    :git => 'https://github.com/objectbox/objectbox-swift.git', 
+    :git => 'https://github.com/ObjectBox/objectbox-swift.git', 
     :tag => spec.version.to_s 
   }
   spec.ios.vendored_frameworks = "Frameworks/iOS/ObjectBox.framework"
