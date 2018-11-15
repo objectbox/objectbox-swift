@@ -26,7 +26,20 @@ return {{ objName }}.{{ var.name }}{% if returnsValue == 1 %}.value{% endif %}
 
 // MARK: - Entity metadata
 
-{% for type in types.based.Entity %}
+{% for type in types.all|annotated:"Entity" where type.based["Entity"] == nil %}
+extension {{ type.name }}: Entity {}
+{% endfor %}
+
+
+{% for type in types.all where type.based["Entity"] or type.annotations["Entity"] %}
+extension {{ type.name }}: __EntityRelatable {
+    typealias EntityType = {{ type.name }}
+
+    var _id: Id<{{ type.name }}> {
+        {% call EntityIdGetter "self" type 0 %}
+    }
+}
+
 extension {{ type.name }}: EntityInspectable {
     /// Generated metadata used by ObjectBox to persist the entity.
     static var entityInfo: EntityInfo {
@@ -174,7 +187,7 @@ class {{ type.name }}Cursor: NSObject, CursorBase {
 
 fileprivate func modelBytes() -> Data {
     let modelBuilder = ModelBuilder()
-    {% for type in types.based.Entity %}
+    {% for type in types.all where type.based["Entity"] or type.annotations["Entity"] %}
     {{ type.name }}.buildEntity(modelBuilder: modelBuilder)
     {% endfor %}
     return modelBuilder.finish()

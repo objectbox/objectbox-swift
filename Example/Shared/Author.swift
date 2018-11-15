@@ -2,7 +2,8 @@
 
 import ObjectBox
 
-class Author: Entity {
+// sourcery:Entity
+class Author {
     var id: Id<Author> // An `Id<Author>` is required by ObjectBox
     var name: String
     var notes: ToMany<Note, Author> // Backlinks
