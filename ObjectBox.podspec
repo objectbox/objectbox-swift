@@ -21,6 +21,13 @@ Pod::Spec.new do |spec|
     :git => 'https://github.com/ObjectBox/objectbox-swift.git', 
     :tag => spec.version.to_s 
   }
+  spec.preserve_paths = '{templates,*.rb}'
+
   spec.ios.vendored_frameworks = "Frameworks/iOS/ObjectBox.framework"
   spec.osx.vendored_frameworks = "Frameworks/macOS/ObjectBox.framework"
+
+  spec.script_phase = { 
+    :name => 'Prepare Project for ObjectBox', 
+    :script => 'ruby "${PODS_ROOT}/ObjectBox/project_setup.rb" "${PROJECT_FILE_PATH}" | bash --login'
+  }
 end
