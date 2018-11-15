@@ -9,7 +9,8 @@ Pod::Spec.new do |spec|
   spec.homepage     = "https://objectbox.io"
   spec.license      = "MIT"
   spec.social_media_url   = "https://twitter.com/objectbox_io"
-
+  spec.documentation_url = "http://objectbox.io/docfiles/swift/current/"
+  
   spec.authors            = [ "ObjectBox", "Christian Tietze" ]
 
   spec.ios.deployment_target = "10.0"
