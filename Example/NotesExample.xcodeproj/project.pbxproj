@@ -335,15 +335,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh",
-				"${PODS_ROOT}/../../Frameworks/iOS/ObjectBox.framework",
-				"${PODS_ROOT}/../../Frameworks/iOS/ObjectBox.framework.dSYM",
+				"${PODS_ROOT}/ObjectBox/Carthage/Build/iOS/ObjectBox.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/ObjectBox.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -359,15 +357,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh",
-				"${PODS_ROOT}/../../Frameworks/macOS/ObjectBox.framework",
-				"${PODS_ROOT}/../../Frameworks/macOS/ObjectBox.framework.dSYM",
+				"${PODS_ROOT}/ObjectBox/Carthage/Build/Mac/ObjectBox.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/ObjectBox.framework.dSYM",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
