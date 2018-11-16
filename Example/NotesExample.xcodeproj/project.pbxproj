@@ -44,8 +44,6 @@
 		03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated.swift; sourceTree = "<group>"; };
 		0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		5039EC92218097FC0095204F /* templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = templates; sourceTree = "<group>"; };
-		5039EC96218099C10095204F /* .sourcery.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .sourcery.yml; sourceTree = "<group>"; };
 		5039EC9D2181DA350095204F /* NotesExample-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9F2181DA350095204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5039ECA12181DA350095204F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 			children = (
 				03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */,
 			);
-			name = generated;
 			path = generated;
 			sourceTree = "<group>";
 		};
@@ -169,8 +166,6 @@
 				5039ECAD2181DA4D0095204F /* Shared */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5039EC9E2181DA350095204F /* NotesExample-macOS */,
-				5039EC96218099C10095204F /* .sourcery.yml */,
-				5039EC92218097FC0095204F /* templates */,
 				35F641D9D3E0492C65A63C84 /* generated */,
 				5070AAED218066C0002305F8 /* Products */,
 				1816FA0D018BADD44A16C61F /* Pods */,
@@ -219,7 +214,6 @@
 			buildConfigurationList = 5039ECAA2181DA360095204F /* Build configuration list for PBXNativeTarget "NotesExample-macOS" */;
 			buildPhases = (
 				31490094811CB81E2781E223 /* [CP] Check Pods Manifest.lock */,
-				BD1CBD53950AF28314061AFA /* [OBX] Update Sourcery Generated Files */,
 				5039EC992181DA350095204F /* Sources */,
 				5039EC9A2181DA350095204F /* Frameworks */,
 				5039EC9B2181DA350095204F /* Resources */,
@@ -239,7 +233,6 @@
 			buildConfigurationList = 5070AB00218066C1002305F8 /* Build configuration list for PBXNativeTarget "NotesExample-iOS" */;
 			buildPhases = (
 				9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */,
-				85154EF94DE0967FCE800AC4 /* [OBX] Update Sourcery Generated Files */,
 				5070AAE8218066C0002305F8 /* Sources */,
 				5070AAE9218066C0002305F8 /* Frameworks */,
 				5070AAEA218066C0002305F8 /* Resources */,
@@ -385,25 +378,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		85154EF94DE0967FCE800AC4 /* [OBX] Update Sourcery Generated Files */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[OBX] Update Sourcery Generated Files";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n  \"$sourcery\"\nelse\n  echo \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\n  exit -1\nfi\n";
-			showEnvVarsInLog = 1;
-		};
 		9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -425,25 +399,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		BD1CBD53950AF28314061AFA /* [OBX] Update Sourcery Generated Files */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[OBX] Update Sourcery Generated Files";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n  \"$sourcery\"\nelse\n  echo \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\n  exit -1\nfi\n";
-			showEnvVarsInLog = 1;
 		};
 /* End PBXShellScriptBuildPhase section */
 
