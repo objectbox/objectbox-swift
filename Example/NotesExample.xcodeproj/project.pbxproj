@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
 		5039ECA02181DA350095204F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC9F2181DA350095204F /* AppDelegate.swift */; };
 		5039ECA22181DA350095204F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECA12181DA350095204F /* ViewController.swift */; };
 		5039ECA42181DA360095204F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA32181DA360095204F /* Assets.xcassets */; };
 		5039ECA72181DA360095204F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA52181DA360095204F /* Main.storyboard */; };
 		5039ECAE2181DA560095204F /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070AB1421809535002305F8 /* Note.swift */; };
-		5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC942180980C0095204F /* EntityInfo.generated.swift */; };
 		5039ECB52181DFFF0095204F /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB42181DFFF0095204F /* Author.swift */; };
 		5039ECB62181DFFF0095204F /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECB42181DFFF0095204F /* Author.swift */; };
 		5039ECBB2181E2020095204F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECBA2181E2020095204F /* Logger.swift */; };
@@ -44,7 +42,6 @@
 		0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		5039EC92218097FC0095204F /* templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = templates; sourceTree = "<group>"; };
-		5039EC942180980C0095204F /* EntityInfo.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated.swift; sourceTree = "<group>"; };
 		5039EC96218099C10095204F /* .sourcery.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .sourcery.yml; sourceTree = "<group>"; };
 		5039EC9D2181DA350095204F /* NotesExample-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9F2181DA350095204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,14 +126,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5039EC932180980C0095204F /* generated */ = {
-			isa = PBXGroup;
-			children = (
-				5039EC942180980C0095204F /* EntityInfo.generated.swift */,
-			);
-			path = generated;
-			sourceTree = "<group>";
-		};
 		5039EC9E2181DA350095204F /* NotesExample-macOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,7 +158,6 @@
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5039EC9E2181DA350095204F /* NotesExample-macOS */,
 				5039EC96218099C10095204F /* .sourcery.yml */,
-				5039EC932180980C0095204F /* generated */,
 				5039EC92218097FC0095204F /* templates */,
 				5070AAED218066C0002305F8 /* Products */,
 				1816FA0D018BADD44A16C61F /* Pods */,
@@ -218,7 +206,6 @@
 			buildConfigurationList = 5039ECAA2181DA360095204F /* Build configuration list for PBXNativeTarget "NotesExample-macOS" */;
 			buildPhases = (
 				31490094811CB81E2781E223 /* [CP] Check Pods Manifest.lock */,
-				5039ECAF2181DB6C0095204F /* Update Sourcery Generated Files */,
 				5039EC992181DA350095204F /* Sources */,
 				5039EC9A2181DA350095204F /* Frameworks */,
 				5039EC9B2181DA350095204F /* Resources */,
@@ -238,7 +225,6 @@
 			buildConfigurationList = 5070AB00218066C1002305F8 /* Build configuration list for PBXNativeTarget "NotesExample-iOS" */;
 			buildPhases = (
 				9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */,
-				5039EC912180964D0095204F /* Update Sourcery Generated Files */,
 				5070AAE8218066C0002305F8 /* Sources */,
 				5070AAE9218066C0002305F8 /* Frameworks */,
 				5070AAEA218066C0002305F8 /* Resources */,
@@ -364,42 +350,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5039EC912180964D0095204F /* Update Sourcery Generated Files */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Update Sourcery Generated Files";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n  \"$sourcery\"\nelse\n  echo \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\n  exit -1\nfi\n";
-		};
-		5039ECAF2181DB6C0095204F /* Update Sourcery Generated Files */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Update Sourcery Generated Files";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\nsourcery=\"$PODS_ROOT/Sourcery/bin/sourcery\"\n\nif [ -f \"$sourcery\" ]; then\n\"$sourcery\"\nelse\necho \"error: Cannot find Sourcery in the expected location at '$sourcery'\"\nexit -1\nfi\n";
-		};
 		76FA826EA52D0B00B391844E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -458,7 +408,6 @@
 				5039ECA02181DA350095204F /* AppDelegate.swift in Sources */,
 				5039ECAE2181DA560095204F /* Note.swift in Sources */,
 				5039ECBB2181E2020095204F /* Logger.swift in Sources */,
-				5039ECB02181DC4C0095204F /* EntityInfo.generated.swift in Sources */,
 				5039ECB62181DFFF0095204F /* Author.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,7 +431,6 @@
 				50DC4E832188617A00DF7253 /* Services.swift in Sources */,
 				5070AB1521809535002305F8 /* Note.swift in Sources */,
 				50DC4EA021899D5300DF7253 /* Notification+NoteChanges.swift in Sources */,
-				5039EC952180980C0095204F /* EntityInfo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
