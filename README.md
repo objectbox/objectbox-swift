@@ -1,3 +1,5 @@
+<img width="466" src="https://raw.githubusercontent.com/objectbox/objectbox-swift/master/images/logo.png">
+
 ObjectBox Swift (Alpha)
 =======================
 
@@ -8,7 +10,8 @@ ObjectBox is a superfast, light-weight object persistence framework.
 This Swift API seamlessly persists objects on-device for iOS and macOS.
 
 ```swift
-try personBox.put(saintNick)
+let santa = Person(firstName: "Santa", lastName: "Claus")
+try personBox.put(santa)
 
 let query: Query<Person> = personBox.query {
     return (Person.firstName.contains("Santa") || Person.age > 100)
@@ -17,15 +20,14 @@ let query: Query<Person> = personBox.query {
 let oldClauses = query.find()
 ```
 
-- **[Read the guides](https://swift.objectbox.io/)** for detailed explanations
-- **[Check out the API docs](http://objectbox.io/docfiles/swift/current/)**
-- [Visit our blog](https://objectbox.io/blog)
+Want details? **[Read the guides](https://swift.objectbox.io/)** or
+**[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
 Installation
 ------------
 
 ObjectBox is available through [CocoaPods](https://cocoapods.org).
-To install it, simply add the following line to your Podfile:
+To install the [pod](https://cocoapods.org/pods/ObjectBox), simply add the following line to your Podfile:
 
 ```ruby
 pod 'ObjectBox'
@@ -52,10 +54,12 @@ Because your feedback is paramount!
 We want ObjectBox not only to be the fastest, but also to be the most Swift-friendly persistence solution.
 By releasing it early we can still make adjustments based on your input.
 
-Thus, this preview is really all about you: what do you love? What's amiss? Where do you struggle in everyday app development?
+Thus, this preview is really all about you: what do you love? What's amiss?
+Where do you struggle in everyday app development?
 
-We're looking forward to receive comments and requests:
+We're looking forward to receive your comments and requests:
 
+- (Coming soon: short alpha questionaire)
 - Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) and 
 - Upvote issues you find important by hitting the 👍/+1 reaction button!
 
@@ -75,8 +79,9 @@ Consider the following limitations:
 Keep in touch
 -------------
 We're obviously not finished here.
-[Sign up here](https://objectbox.io/ios-alpha/) for future updates on ObjectBox Swift. 
+[Sign up here](https://objectbox.io/ios-alpha/) for future updates on ObjectBox Swift.
 
+For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
 
 Background: Code generation
 ---------------------------
@@ -87,9 +92,9 @@ Other languages/bindings
 ------------------------
 ObjectBox is a multi platform database supporting [multiple languages](https://objectbox.io/dev-get-started/): 
 
-* [ObjectBox C API](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects
-* [ObjectBox Java](https://github.com/objectbox/objectbox-java)
-* ObjectBox Go: coming soon
+* [ObjectBox C API](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
+  also enables porting ObjectBox to other languages.
+* [ObjectBox Java](https://github.com/objectbox/objectbox-java): runs on Android, desktop and even servers.
 
 License
 -------
