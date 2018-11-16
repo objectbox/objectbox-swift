@@ -2,14 +2,19 @@ ObjectBox Swift (Alpha)
 =======================
 
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
-[![License](https://img.shields.io/cocoapods/l/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
 [![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
 
 ObjectBox is a superfast, light-weight object persistence framework.
 This Swift API seamlessly persists objects on-device for iOS and macOS.
 
 ```swift
-// TODO
+try personBox.put(saintNick)
+
+let query: Query<Person> = personBox.query {
+    return (Person.firstName.contains("Santa") || Person.age > 100)
+           && Person.lastName.isEqual(to: "Claus") 
+}
+let oldClauses = query.find()
 ```
 
 - **[Read the guides](https://swift.objectbox.io/)** for detailed explanations
