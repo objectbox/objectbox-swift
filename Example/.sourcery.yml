@@ -1,9 +1,0 @@
-project:
-  file: NotesExample.xcodeproj
-  target:
-    name: "NotesExample-iOS"
-    module: NotesExample
-templates:
-  - ./templates/
-output:
-  path: ./generated/
