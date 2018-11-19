@@ -44,6 +44,7 @@ To setup the example, use CocoaPods to acquire the framework:
 
     cd Example/
     pod install
+    Pods/ObjectBox/setup.rb
 
 This will generate a `NotesExample.xcworkspace` that you can launch to try out ObjectBox.
 
