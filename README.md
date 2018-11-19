@@ -59,9 +59,11 @@ Where do you struggle in everyday app development?
 
 We're looking forward to receive your comments and requests:
 
-- (Coming soon: short alpha questionaire)
+- Take this [short questionaire](https://docs.google.com/forms/d/e/1FAIpQLSd0neiviD0Yal0Tn7921w-XWI2d0ONpLm7TfVKp7OvwW2Tu2A/viewform?usp=sf_link) (takes only 1 or 2 minutes)
 - Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) and 
 - Upvote issues you find important by hitting the 👍/+1 reaction button!
+
+Thank you!
 
 What's Missing in the Alpha?
 ----------------------------
