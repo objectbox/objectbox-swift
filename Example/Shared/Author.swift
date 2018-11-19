@@ -6,7 +6,8 @@ import ObjectBox
 class Author {
     var id: Id<Author> // An `Id<Author>` is required by ObjectBox
     var name: String
-    var notes: ToMany<Note, Author> // Backlinks
+    // sourcery: backlink = "author"
+    var notes: ToMany<Note, Author>
 
     // An initializer with no parameters is required by ObjectBox
     required init() {
