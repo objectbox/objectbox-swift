@@ -10,7 +10,10 @@ extension Store {
             for: .applicationSupportDirectory,
             in: FileManager.SearchPathDomainMask.userDomainMask,
             appropriateFor: nil,
-            create: true)
+            create: true).appendingPathComponent("database")
+        if !FileManager.default.fileExists(atPath: directory.path) {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false, attributes: nil)
+        }
         return try Store(directoryPath: directory.path)
     }
 }
