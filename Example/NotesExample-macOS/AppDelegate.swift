@@ -16,8 +16,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         do {
             logger.append("Setting up store ...")
             self.store = try Store.createStoreInTemporaryDirectory()
-            self.store.register(entity: Author.self)
-            self.store.register(entity: Note.self)
             logger.append("Store path: \(store.directoryPath)")
             logger.appendSeparator()
 
