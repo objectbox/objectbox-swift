@@ -23,6 +23,8 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
+Note: this is an early alpha not intended for production use just yet ([details below](#alpha)).
+
 Installation
 ------------
 
@@ -66,6 +68,7 @@ We're looking forward to receive your comments and requests:
 
 Thank you!
 
+<a name="alpha"></a>
 What's Missing in the Alpha?
 ----------------------------
 
