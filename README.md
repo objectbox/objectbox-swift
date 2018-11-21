@@ -37,6 +37,11 @@ pod 'ObjectBox'
 
 Then run `pod install` afterwards to install the framework and its dependencies.
 
+
+If `pod install` fails, try updating CocoaPods first:
+
+    gem update xcodeproj && gem update cocoapods && pod repo update
+
 Example
 -------
 In the [Example](Example/) directory, you find a notes example app demonstrating ObjectBox's Swift API.
@@ -45,7 +50,7 @@ The example comes with two apps: one for iOS and one for macOS.
 To setup the example, use CocoaPods to acquire the framework:
 
     cd Example/
-    pod install
+    pod install # if that fails, update CocoaPods (see Installation)
     Pods/ObjectBox/setup.rb
 
 This will generate a `NotesExample.xcworkspace` that you can launch to try out ObjectBox.
