@@ -35,8 +35,15 @@ To install the [pod](https://cocoapods.org/pods/ObjectBox), simply add the follo
 pod 'ObjectBox'
 ```
 
-Then run `pod install` afterwards to install the framework and its dependencies.
+Then run 
 
+```bash
+cd /path/to/your/project/folder/ # whatever folder your Podfile is in.
+pod install
+Pods/ObjectBox/setup.rb /path/to/your/project/folder/myproject.xcodeproj
+```
+
+afterwards to install the framework and its dependencies, and set up the code generator in your project.
 
 If `pod install` fails, try updating CocoaPods first:
 
