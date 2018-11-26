@@ -40,7 +40,7 @@ Then run
 ```bash
 cd /path/to/your/project/folder/ # whatever folder your Podfile is in.
 pod install
-Pods/ObjectBox/setup.rb /path/to/your/project/folder/myproject.xcodeproj
+Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is named
 ```
 
 afterwards to install the framework and its dependencies, and set up the code generator in your project.
