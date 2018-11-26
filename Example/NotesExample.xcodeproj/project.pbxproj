@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		485C08A6DD3B9121F73BE55A /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */; };
 		5039ECA02181DA350095204F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC9F2181DA350095204F /* AppDelegate.swift */; };
 		5039ECA22181DA350095204F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECA12181DA350095204F /* ViewController.swift */; };
 		5039ECA42181DA360095204F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA32181DA360095204F /* Assets.xcassets */; };
@@ -35,15 +34,11 @@
 		50DC4EA62189B74300DF7253 /* Notification+AuthorChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA52189B74300DF7253 /* Notification+AuthorChanges.swift */; };
 		50DC4EA82189B92400DF7253 /* AuthorCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA72189B92400DF7253 /* AuthorCreationViewController.swift */; };
 		CB92D5BA675B8E1D824A3EFC /* Pods_NotesExample_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */; };
-		E3A74FC7D2AB1972A96A66F5 /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */; };
 		FCB054DFF31FB988F198A270 /* Pods_NotesExample_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated.swift; sourceTree = "<group>"; };
-		0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		5039EC9D2181DA350095204F /* NotesExample-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9F2181DA350095204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5039ECA12181DA350095204F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,14 +69,7 @@
 		50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorEditingViewController.swift; sourceTree = "<group>"; };
 		50DC4EA52189B74300DF7253 /* Notification+AuthorChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+AuthorChanges.swift"; sourceTree = "<group>"; };
 		50DC4EA72189B92400DF7253 /* AuthorCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCreationViewController.swift; sourceTree = "<group>"; };
-		510AB1943D44CEF9BBFD83FC /* Pods-NotesExample-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		5571FBE121A5729000B2073D /* NotesExample-macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "NotesExample-macOS.entitlements"; sourceTree = "<group>"; };
-		5571FBE221A5782800B2073D /* NotesExample-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "NotesExample-iOS.entitlements"; sourceTree = "<group>"; };
-		5F860423F5C2884B48857B2F /* Pods-NotesExample-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.debug.xcconfig"; sourceTree = "<group>"; };
-		665F303804C62FE87781402C /* Pods-NotesExample-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-macOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		6A46AAAC066915AAC14D3A8B /* Pods-NotesExample-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.debug.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.debug.xcconfig"; sourceTree = "<group>"; };
-		8140F6069D933B39420AC659 /* Pods-NotesExample-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.release.xcconfig"; sourceTree = "<group>"; };
-		8F1A6148521EFDE57CD8A305 /* Pods-NotesExample-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotesExample-iOS.release.xcconfig"; path = "Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -105,29 +93,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1816FA0D018BADD44A16C61F /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6A46AAAC066915AAC14D3A8B /* Pods-NotesExample-iOS.debug.xcconfig */,
-				8140F6069D933B39420AC659 /* Pods-NotesExample-iOS.release.xcconfig */,
-				34684F4530AD29B74727E507 /* Pods-NotesExample-macOS.debug.xcconfig */,
-				0F24EB393E1ADF01EDD556C0 /* Pods-NotesExample-macOS.release.xcconfig */,
-				5F860423F5C2884B48857B2F /* Pods-NotesExample-iOS.debug.xcconfig */,
-				8F1A6148521EFDE57CD8A305 /* Pods-NotesExample-iOS.release.xcconfig */,
-				665F303804C62FE87781402C /* Pods-NotesExample-macOS.debug.xcconfig */,
-				510AB1943D44CEF9BBFD83FC /* Pods-NotesExample-macOS.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		35F641D9D3E0492C65A63C84 /* generated */ = {
-			isa = PBXGroup;
-			children = (
-				03AAE3E2539C80211DDB0E1D /* EntityInfo.generated.swift */,
-			);
-			path = generated;
-			sourceTree = "<group>";
-		};
 		3DABC3C80306D2BD07D4938C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,9 +134,7 @@
 				5039ECAD2181DA4D0095204F /* Shared */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5039EC9E2181DA350095204F /* NotesExample-macOS */,
-				35F641D9D3E0492C65A63C84 /* generated */,
 				5070AAED218066C0002305F8 /* Products */,
-				1816FA0D018BADD44A16C61F /* Pods */,
 				3DABC3C80306D2BD07D4938C /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -416,7 +379,6 @@
 				5039ECAE2181DA560095204F /* Note.swift in Sources */,
 				5039ECBB2181E2020095204F /* Logger.swift in Sources */,
 				5039ECB62181DFFF0095204F /* Author.swift in Sources */,
-				E3A74FC7D2AB1972A96A66F5 /* EntityInfo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +401,6 @@
 				50DC4E832188617A00DF7253 /* Services.swift in Sources */,
 				5070AB1521809535002305F8 /* Note.swift in Sources */,
 				50DC4EA021899D5300DF7253 /* Notification+NoteChanges.swift in Sources */,
-				485C08A6DD3B9121F73BE55A /* EntityInfo.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,7 +436,6 @@
 /* Begin XCBuildConfiguration section */
 		5039ECAB2181DA360095204F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 665F303804C62FE87781402C /* Pods-NotesExample-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
@@ -496,7 +456,6 @@
 		};
 		5039ECAC2181DA360095204F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 510AB1943D44CEF9BBFD83FC /* Pods-NotesExample-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
@@ -633,7 +592,6 @@
 		};
 		5070AB01218066C1002305F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F860423F5C2884B48857B2F /* Pods-NotesExample-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -652,7 +610,6 @@
 		};
 		5070AB02218066C1002305F8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F1A6148521EFDE57CD8A305 /* Pods-NotesExample-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
