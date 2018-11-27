@@ -39,6 +39,10 @@ class NoteEditingViewController: UITableViewController {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var authorPickerView: UIPickerView!
     @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var creationDateLabel: UILabel!
+    @IBOutlet weak var modificationDateLabel: UILabel!
+    
+    private var noteModificationDateChangeSubscription: NotificationToken!
 
     lazy var authorModel: AuthorModel = AuthorModel(authorBox: Services.instance.authorBox)
     var noteBox: Box<Note> = Services.instance.noteBox
@@ -65,6 +69,33 @@ class NoteEditingViewController: UITableViewController {
         if let contentTextView = contentTextView {
             contentTextView.text = note.text
         }
+
+        self.refreshCreationDate()
+        self.refreshModificationDate()
+        
+        noteModificationDateChangeSubscription = NotificationCenter.default.observe(name: .noteModificationDateDidChange, object: nil) { _ in
+            self.refreshModificationDate()
+        }
+    }
+
+    private func refreshCreationDate() {
+        guard let creationDateLabel = creationDateLabel, let note = note else { return }
+
+        var dateString: String?
+        if let creationDate = note.creationDate {
+            dateString = DateFormatter.localizedString(from: creationDate, dateStyle: .short, timeStyle: .short)
+        }
+        creationDateLabel.text = dateString ?? "--"
+    }
+
+    private func refreshModificationDate() {
+        guard let modificationDateLabel = modificationDateLabel, let note = note else { return }
+        
+        var dateString: String?
+        if let modificationDate = note.modificationDate {
+            dateString = DateFormatter.localizedString(from: modificationDate, dateStyle: .short, timeStyle: .short)
+        }
+        modificationDateLabel.text = dateString ?? "--"
     }
 
     private func refreshAuthors() {
@@ -134,6 +165,10 @@ extension NoteEditingViewController: UITextFieldDelegate {
             name: .noteTitleDidChange,
             object: note,
             userInfo: [ "oldValue" : oldTitle, "newValue" : newTitle])
+        NotificationCenter.default.post(
+            name: .noteModificationDateDidChange,
+            object: note,
+            userInfo: nil)
     }
 }
 
@@ -181,6 +216,7 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
 
         let oldAuthorId = note.author.targetId
         note.author.target = newAuthor
+        note.modificationDate = Date()
 
         // Do not autosave drafts
         guard self.mode == .edit else { return }
@@ -202,6 +238,10 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
             name: .noteAuthorDidChange,
             object: note,
             userInfo: changeUserInfo)
+        NotificationCenter.default.post(
+            name: .noteModificationDateDidChange,
+            object: note,
+            userInfo: nil)
     }
 }
 
@@ -228,6 +268,10 @@ extension NoteEditingViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         note?.text = textView.text
+        NotificationCenter.default.post(
+            name: .noteModificationDateDidChange,
+            object: note,
+            userInfo: nil)
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {

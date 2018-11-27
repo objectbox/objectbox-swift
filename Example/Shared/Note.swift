@@ -4,8 +4,18 @@ import ObjectBox
 
 class Note: Entity {
     var id: Id<Note> = 0 // An `Id<Note>` is required by ObjectBox
-    var title: String = ""
-    var text: String = ""
+    var title: String = "" {
+        didSet {
+            modificationDate = Date()
+        }
+    }
+    var text: String = "" {
+        didSet {
+            modificationDate = Date()
+        }
+    }
+    var creationDate: Date? = Date()
+    var modificationDate: Date?
     var author: ToOne<Author> = nil
 
     // An initializer with no parameters is required by ObjectBox

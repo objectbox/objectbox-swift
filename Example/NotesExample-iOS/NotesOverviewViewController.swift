@@ -114,6 +114,7 @@ extension NotesOverviewViewController {
             controller.note = {
                 let draft = Note()
                 draft.author.targetId = filter.authorId
+                draft.modificationDate = Date()
                 return draft
             }()
         }

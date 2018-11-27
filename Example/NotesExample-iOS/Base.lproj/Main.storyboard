@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -465,15 +465,62 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AuthorCell" rowHeight="165" id="x5Y-uX-LLW">
-                                        <rect key="frame" x="0.0" y="99.5" width="375" height="165"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AuthorCell" rowHeight="80" id="MBQ-Q8-ID5" userLabel="DatesCell">
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MBQ-Q8-ID5" id="I4S-7Z-vmK">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Created:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ltg-a8-HKT">
+                                                    <rect key="frame" x="16" y="11" width="72" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1980-11-12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nff-e6-ybc">
+                                                    <rect key="frame" x="100" y="11" width="87" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Modified:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TL-Eu-20l">
+                                                    <rect key="frame" x="16" y="40" width="72" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1980-11-12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dha-hx-Ppc">
+                                                    <rect key="frame" x="100" y="40" width="87" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dha-hx-Ppc" firstAttribute="leading" secondItem="nff-e6-ybc" secondAttribute="leading" id="9mJ-Oi-P9l"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="dha-hx-Ppc" secondAttribute="trailing" id="A4w-ih-LEJ"/>
+                                                <constraint firstItem="dha-hx-Ppc" firstAttribute="leading" secondItem="1TL-Eu-20l" secondAttribute="trailing" constant="12" id="Ckv-O4-dNw"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="nff-e6-ybc" secondAttribute="trailing" id="GNb-RZ-j6t"/>
+                                                <constraint firstItem="nff-e6-ybc" firstAttribute="firstBaseline" secondItem="Ltg-a8-HKT" secondAttribute="firstBaseline" id="Ou9-Aj-o1H"/>
+                                                <constraint firstItem="nff-e6-ybc" firstAttribute="leading" secondItem="Ltg-a8-HKT" secondAttribute="trailing" constant="12" id="X7I-lp-5mt"/>
+                                                <constraint firstItem="Ltg-a8-HKT" firstAttribute="leading" secondItem="I4S-7Z-vmK" secondAttribute="leadingMargin" id="ZfM-xc-Yb3"/>
+                                                <constraint firstItem="1TL-Eu-20l" firstAttribute="top" secondItem="Ltg-a8-HKT" secondAttribute="bottom" constant="8" id="k39-R3-XpF"/>
+                                                <constraint firstItem="dha-hx-Ppc" firstAttribute="firstBaseline" secondItem="1TL-Eu-20l" secondAttribute="firstBaseline" id="o1L-az-vZv"/>
+                                                <constraint firstItem="Ltg-a8-HKT" firstAttribute="top" secondItem="I4S-7Z-vmK" secondAttribute="topMargin" id="pkb-VT-T1D"/>
+                                                <constraint firstItem="1TL-Eu-20l" firstAttribute="leading" secondItem="I4S-7Z-vmK" secondAttribute="leadingMargin" id="vkm-et-flm"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="AuthorCell" rowHeight="174" id="x5Y-uX-LLW">
+                                        <rect key="frame" x="0.0" y="179.5" width="375" height="174"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="x5Y-uX-LLW" id="HcG-RY-8L9">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="164.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="173.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wiR-UB-CCr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="164.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="173.5"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="AQa-CG-VLn" id="Cmk-BA-Eh5"/>
                                                         <outlet property="delegate" destination="AQa-CG-VLn" id="2WS-Qc-YXR"/>
@@ -493,7 +540,7 @@
                             <tableViewSection headerTitle="Text" id="doI-x6-0IL">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextCell" rowHeight="300" id="gO3-H5-rL6">
-                                        <rect key="frame" x="0.0" y="320.5" width="375" height="300"/>
+                                        <rect key="frame" x="0.0" y="409.5" width="375" height="300"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gO3-H5-rL6" id="Czq-DS-mMH">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="299.5"/>
@@ -531,6 +578,8 @@
                         <outlet property="authorPickerView" destination="wiR-UB-CCr" id="6Rd-9j-tuQ"/>
                         <outlet property="cancelDraftBarButtonItem" destination="sCG-Wh-e6e" id="OIb-iB-9Io"/>
                         <outlet property="contentTextView" destination="rjd-DA-ToB" id="cBg-ZM-Ieh"/>
+                        <outlet property="creationDateLabel" destination="nff-e6-ybc" id="uTx-qa-9Zv"/>
+                        <outlet property="modificationDateLabel" destination="dha-hx-Ppc" id="3Z4-nj-vnk"/>
                         <outlet property="saveDraftBarButtonItem" destination="vlo-gg-HVH" id="ofd-N2-w72"/>
                         <outlet property="titleTextField" destination="S9h-nU-4h9" id="Tbq-Yw-e5c"/>
                     </connections>
@@ -548,7 +597,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dfh-5D-0ys" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="AY2-Yw-i9F" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2164" y="174"/>
+            <point key="canvasLocation" x="2164" y="173.16341829085459"/>
         </scene>
         <!--Notes-->
         <scene sceneID="oaf-mk-a0k">
@@ -626,6 +675,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="jF9-l9-MOM"/>
-        <segue reference="JXz-I2-P4l"/>
+        <segue reference="7s5-jb-PaF"/>
     </inferredMetricsTieBreakers>
 </document>
