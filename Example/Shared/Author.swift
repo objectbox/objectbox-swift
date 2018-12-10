@@ -2,11 +2,11 @@
 
 import ObjectBox
 
-// sourcery:Entity
+// objectbox:Entity
 class Author {
     var id: Id<Author> // An `Id<Author>` is required by ObjectBox
     var name: String
-    // sourcery: backlink = "author"
+    // objectbox: backlink = "author"
     var notes: ToMany<Note, Author>
 
     // An initializer with no parameters is required by ObjectBox
