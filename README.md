@@ -62,17 +62,15 @@ To setup the example, use CocoaPods to acquire the framework:
 
 This will generate a `NotesExample.xcworkspace` that you can launch to try out ObjectBox.
 
-Why We Released this Preview
-----------------------------
+How can ObjectBox Help You?
+---------------------------
 
-Because your feedback is paramount!
-We want ObjectBox not only to be the fastest, but also to be the most Swift-friendly persistence solution.
-By releasing it early we can still make adjustments based on your input.
+We want ObjectBox to be not only the fastest, but also the most Swift-friendly persistence solution.
 
-Thus, this preview is really all about you: what do you love? What's amiss?
+To do that, we want your feedback: what do you love? What's amiss?
 Where do you struggle in everyday app development?
 
-We're looking forward to receive your comments and requests:
+We're looking forward to receiving your comments and requests:
 
 - Take this [short questionaire](https://docs.google.com/forms/d/e/1FAIpQLSd0neiviD0Yal0Tn7921w-XWI2d0ONpLm7TfVKp7OvwW2Tu2A/viewform?usp=sf_link) (takes only 1 or 2 minutes)
 - Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) and 
