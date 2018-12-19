@@ -1,7 +1,7 @@
 <img width="466" src="https://raw.githubusercontent.com/objectbox/objectbox-swift/master/images/logo.png">
 
-ObjectBox Swift (Alpha)
-=======================
+ObjectBox Swift
+===============
 
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
 [![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
@@ -23,7 +23,7 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
-Note: this is an early alpha not intended for production use just yet ([details below](#alpha)).
+Note: This beta version is subject to change ([details below](#alpha)).
 
 Installation
 ------------
@@ -80,19 +80,12 @@ We're looking forward to receive your comments and requests:
 
 Thank you!
 
-<a name="alpha"></a>
-What's Missing in the Alpha?
-----------------------------
+<a name="beta"></a>
+What's Missing in the Beta?
+---------------------------
 
-_ObjectBox Swift Alpha_ is a developer preview. 
-**It is not ready for production use yet!**
-Consider the following limitations:
-
-- No binary compatibility of your on-disk data with future versions. 
-- No model migrations: once you persist an entity with 2 properties, you cannot simply add a 3rd property.
-  You have to reset the store (e.g. delete the database files) to start from scratch.
-- Incomplete functionality: missing relation types, indexes, data observers, object browser.
-  This functionality is available at lower layers and has not yet been exposed to Swift.
+More relation types, data observers, object browser.
+This functionality is available at lower layers and has not yet been exposed to Swift.
 
 Keep in touch
 -------------
