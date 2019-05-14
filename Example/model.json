@@ -9,12 +9,15 @@
       "name" : "Author",
       "properties" : [
         {
+          "flags" : 1,
           "id" : "1:6336800942024279296",
-          "name" : "id"
+          "name" : "id",
+          "type" : 6
         },
         {
           "id" : "2:5025387500910526208",
-          "name" : "name"
+          "name" : "name",
+          "type" : 9
         }
       ],
       "relations" : [
@@ -27,29 +30,38 @@
       "name" : "Note",
       "properties" : [
         {
+          "flags" : 1,
           "id" : "1:7180411752564202752",
-          "name" : "id"
+          "name" : "id",
+          "type" : 6
         },
         {
           "id" : "2:249105953415333376",
-          "name" : "title"
+          "name" : "title",
+          "type" : 9
         },
         {
           "id" : "3:5661281725891017216",
-          "name" : "text"
+          "name" : "text",
+          "type" : 9
         },
         {
           "id" : "4:8342334437465755392",
-          "name" : "creationDate"
+          "name" : "creationDate",
+          "type" : 10
         },
         {
           "id" : "5:8881960381068888832",
-          "name" : "modificationDate"
+          "name" : "modificationDate",
+          "type" : 10
         },
         {
+          "flags" : 8,
           "id" : "6:6001769173142034944",
           "indexId" : "1:6069708401898380544",
-          "name" : "author"
+          "name" : "author",
+          "relationTarget" : "Author",
+          "type" : 11
         }
       ],
       "relations" : [
@@ -61,8 +73,8 @@
   "lastIndexId" : "1:6069708401898380544",
   "lastRelationId" : "0:0",
   "lastSequenceId" : "0:0",
-  "modelVersion" : 4,
-  "modelVersionParserMinimum" : 4,
+  "modelVersion" : 5,
+  "modelVersionParserMinimum" : 5,
   "retiredEntityUids" : [
 
   ],

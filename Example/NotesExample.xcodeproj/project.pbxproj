@@ -225,6 +225,7 @@
 				TargetAttributes = {
 					5039EC9C2181DA350095204F = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -450,7 +451,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.NotesExample-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -470,7 +471,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.NotesExample-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
