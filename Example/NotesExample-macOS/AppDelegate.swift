@@ -56,4 +56,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         logger.display(viewController: viewController!)
         print(logger.string)
     }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
 }
