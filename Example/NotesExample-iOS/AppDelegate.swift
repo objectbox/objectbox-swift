@@ -8,12 +8,10 @@ extension Store {
     static func createStore() throws -> Store {
         let directory = try FileManager.default.url(
             for: .applicationSupportDirectory,
-            in: FileManager.SearchPathDomainMask.userDomainMask,
+            in: .userDomainMask,
             appropriateFor: nil,
             create: true).appendingPathComponent(Bundle.main.bundleIdentifier!)
-        if !FileManager.default.fileExists(atPath: directory.path) {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false, attributes: nil)
-        }
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false, attributes: nil)
         return try Store(directoryPath: directory.path)
     }
 }
