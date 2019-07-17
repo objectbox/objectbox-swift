@@ -37,11 +37,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.append("\(noteBox.all().readableDescription)\n")
 
             logger.append("Reading notes containing 'writing':")
-            let allWritingNotes = noteBox.query { Note.text.contains("writing") }.find()
+            let allWritingNotes = noteBox.query { Note.text.contains("writing") }.build().find()
             logger.append("\(allWritingNotes.readableDescription)\n")
 
             logger.append("Reading notes containing 'writing' by Peter Brett:")
-            let peterBrettsWritingNotes = noteBox.query { Note.text.contains("writing") && Note.author == peterBrett.id }.find()
+            let peterBrettsWritingNotes = noteBox.query { Note.text.contains("writing") && Note.author == peterBrett.id }.build().find()
             logger.append("\(peterBrettsWritingNotes.readableDescription)\n")
 
             logger.append("Looking into Peter Brett's current object state again ...")

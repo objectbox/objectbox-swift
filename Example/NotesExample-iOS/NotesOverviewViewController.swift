@@ -23,9 +23,9 @@ class NotesOverviewViewController: UITableViewController {
             self.authorId = authorId
 
             if let authorId = authorId {
-                query = noteBox.query { Note.author == authorId }
+                query = noteBox.query { Note.author == authorId }.build()
             } else {
-                query = noteBox.query()
+                query = noteBox.query().build()
             }
         }
 
