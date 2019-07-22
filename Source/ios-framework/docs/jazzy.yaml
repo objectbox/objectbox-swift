@@ -1,0 +1,47 @@
+theme: "./jazzy_theme"
+output: "./swift_output"
+author: "ObjectBox"
+author_url: "https://objectbox.io"
+
+module: "ObjectBox"
+module_version: 0.9.0
+
+github_url: "https://github.com/ObjectBox/objectbox-swift"
+root_url: "https://objectbox.io/docfiles/swift/current/"
+exclude: [
+  "../CommonSource/Entities/EntityPropertyTypeImplementations.swift",
+  "../CommonSource/PropertyCollector+SwiftRefinedAPI.swift",
+  "../CommonSource/Entities/EntityPropertyType.swift",
+  "../CommonSource/Entities/EntityReader+SwiftRefinedAPI.swift",
+  "../CommonSource/Relation/Box+BacklinkIds.swift",
+  "../CommonSource/Cursor.swift"
+]
+
+# Reference custom Markdown files for inclusion, references by filename in `custom_categories`.
+documentation: "./docs/texts/*.md"
+custom_categories:
+- name: Core
+  children:
+  - Store
+  - Box
+  - Entity
+  - Id
+  - Property
+- name: Relations
+  children:
+  - ToOne
+  - ToMany
+- name: Query
+  children:
+  - Query Syntax # custom doc
+  - Query
+  - PropertyQuery
+  - PropertyQueryCondition
+  - QueryCondition
+  - PropertyAlias
+  - ".=(_:_:)"
+- name: Other Types
+  children:
+  - IdBase
+  - EntityInspectable
+  - EntityPropertyTypeConvertible
