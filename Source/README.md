@@ -154,6 +154,6 @@ Then you're all set to use entities with ObjectBox:
     
     // Get collections of entities
     _ = personBox.all()
-    _ = personBox.query({ Person.name == "Fry" }).find()
+    _ = personBox.query({ Person.name == "Fry" }).build().find()
 
 That's it, it works now!
