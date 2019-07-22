@@ -35,13 +35,6 @@
 
 /* Begin PBXBuildFile section */
 		503962EB216363A1000DFB7E /* ToMany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503962EA216363A1000DFB7E /* ToMany.swift */; };
-		5042FDC220CE9B4E00EBCA52 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDC120CE9B4E00EBCA52 /* main.swift */; };
-		5042FDC720CEA3C500EBCA52 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */; };
-		5042FDCB20CEA3DE00EBCA52 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDCA20CEA3DE00EBCA52 /* Options.swift */; };
-		5042FDCD20CEA3F300EBCA52 /* Run.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDCC20CEA3F300EBCA52 /* Run.swift */; };
-		5042FDCF20CEA5AA00EBCA52 /* TestEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDCE20CEA5AA00EBCA52 /* TestEntity.swift */; };
-		5042FDD120CEACB100EBCA52 /* TemporaryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDD020CEACB100EBCA52 /* TemporaryStore.swift */; };
-		5042FDDB20CEAEC800EBCA52 /* TimeElapsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042FDDA20CEAEC800EBCA52 /* TimeElapsed.swift */; };
 		5052616320BD72A500405B13 /* OBXErrorHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614720BD72A500405B13 /* OBXErrorHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5052616920BD72A500405B13 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614D20BD72A500405B13 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5052616C20BD72A500405B13 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052615020BD72A500405B13 /* Constants.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -112,7 +105,6 @@
 		50A28C75219B4C310024D1FC /* Box+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A28C74219B4C310024D1FC /* Box+Query.swift */; };
 		50A28C76219B4C310024D1FC /* Box+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A28C74219B4C310024D1FC /* Box+Query.swift */; };
 		50C365B120BE8FC200F77FA3 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */; };
-		50D7E6C520EB4F900001872D /* MemoryUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D7E6C420EB4F900001872D /* MemoryUsage.swift */; };
 		50F7EC0D2114481B0050D924 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F7EC0B211447CF0050D924 /* Query.swift */; };
 		50FCFEFF212EEF0B00A44B32 /* PropertyAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FCFEFE212EEF0B00A44B32 /* PropertyAlias.swift */; };
 		50FE2F9721391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */; };
@@ -152,7 +144,6 @@
 		5547123F228D656D00DB4136 /* ObjectBoxC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5547123D228D656D00DB4136 /* ObjectBoxC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		558A79002281B65A00BAE9C9 /* StructEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558A78FF2281B65A00BAE9C9 /* StructEntity.swift */; };
 		558A79012281B65A00BAE9C9 /* StructEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558A78FF2281B65A00BAE9C9 /* StructEntity.swift */; };
-		55A1C9D2228480D500D00F72 /* ObjectBox.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		55BC4173226F4A69008195D0 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BC4172226F4A69008195D0 /* Transaction.swift */; };
 		55BC4174226F4A69008195D0 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BC4172226F4A69008195D0 /* Transaction.swift */; };
 		55BE9BF721AEAAB70017F77D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BE9BF421AEAAB60017F77D /* Security.framework */; };
@@ -185,13 +176,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5042FDC820CEA3CC00EBCA52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CB3B3F3020AB4B4B00418618;
-			remoteInfo = "ObjectBox-macOS";
-		};
 		5070A96F217F479C002305F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
@@ -223,16 +207,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5042FDBD20CE9B4D00EBCA52 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				55A1C9D2228480D500D00F72 /* ObjectBox.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		50D7EF8020EC9E470001872D /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -248,13 +222,6 @@
 /* Begin PBXFileReference section */
 		503962EA216363A1000DFB7E /* ToMany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToMany.swift; sourceTree = "<group>"; };
 		5042FDB220CBE18600EBCA52 /* ObjectBoxTests-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectBoxTests-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		5042FDBF20CE9B4D00EBCA52 /* PerformanceTest-Swift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "PerformanceTest-Swift"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5042FDC120CE9B4E00EBCA52 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		5042FDCA20CEA3DE00EBCA52 /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
-		5042FDCC20CEA3F300EBCA52 /* Run.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Run.swift; sourceTree = "<group>"; };
-		5042FDCE20CEA5AA00EBCA52 /* TestEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEntity.swift; sourceTree = "<group>"; };
-		5042FDD020CEACB100EBCA52 /* TemporaryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryStore.swift; sourceTree = "<group>"; };
-		5042FDDA20CEAEC800EBCA52 /* TimeElapsed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeElapsed.swift; sourceTree = "<group>"; };
 		5052614720BD72A500405B13 /* OBXErrorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBXErrorHelper.h; sourceTree = "<group>"; };
 		5052614D20BD72A500405B13 /* ObjectBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectBox.h; sourceTree = "<group>"; };
 		5052615020BD72A500405B13 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -296,7 +263,6 @@
 		50A28C74219B4C310024D1FC /* Box+Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Box+Query.swift"; sourceTree = "<group>"; };
 		50C365AC20BE8FC200F77FA3 /* ObjectBoxTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ObjectBoxTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C365B020BE8FC200F77FA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50D7E6C420EB4F900001872D /* MemoryUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryUsage.swift; sourceTree = "<group>"; };
 		50F7EC0B211447CF0050D924 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		50FCFEFE212EEF0B00A44B32 /* PropertyAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyAlias.swift; sourceTree = "<group>"; };
 		50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PropertyCollector+SwiftRefinedAPI.swift"; sourceTree = "<group>"; };
@@ -339,14 +305,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		5042FDBC20CE9B4D00EBCA52 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5042FDC720CEA3C500EBCA52 /* ObjectBox.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5070A962217F479C002305F8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -383,20 +341,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5042FDC020CE9B4E00EBCA52 /* PerformanceTest-Swift */ = {
-			isa = PBXGroup;
-			children = (
-				5042FDC120CE9B4E00EBCA52 /* main.swift */,
-				5042FDCA20CEA3DE00EBCA52 /* Options.swift */,
-				5042FDCC20CEA3F300EBCA52 /* Run.swift */,
-				50D7E6C420EB4F900001872D /* MemoryUsage.swift */,
-				5042FDCE20CEA5AA00EBCA52 /* TestEntity.swift */,
-				5042FDD020CEACB100EBCA52 /* TemporaryStore.swift */,
-				5042FDDA20CEAEC800EBCA52 /* TimeElapsed.swift */,
-			);
-			path = "PerformanceTest-Swift";
-			sourceTree = "<group>";
-		};
 		5042FDC620CEA3C500EBCA52 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -578,7 +522,6 @@
 				5070A9C8217F4C3B002305F8 /* CommonTests */,
 				CB3B3F3320AB4B4B00418618 /* ObjectBox-macOS */,
 				50C365AD20BE8FC200F77FA3 /* ObjectBoxTests-macOS */,
-				5042FDC020CE9B4E00EBCA52 /* PerformanceTest-Swift */,
 				5070A966217F479C002305F8 /* ObjectBox-iOS */,
 				5070A971217F479C002305F8 /* ObjectBoxTests-iOS */,
 				55EB4BEC22AA69490091CDB1 /* flatbuffers */,
@@ -592,7 +535,6 @@
 			children = (
 				CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */,
 				50C365AC20BE8FC200F77FA3 /* ObjectBoxTests-macOS.xctest */,
-				5042FDBF20CE9B4D00EBCA52 /* PerformanceTest-Swift */,
 				5070A965217F479C002305F8 /* ObjectBox.framework */,
 				5070A96D217F479C002305F8 /* ObjectBoxTests-iOS.xctest */,
 			);
@@ -646,24 +588,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		5042FDBE20CE9B4D00EBCA52 /* PerformanceTest-Swift */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5042FDC520CE9B4E00EBCA52 /* Build configuration list for PBXNativeTarget "PerformanceTest-Swift" */;
-			buildPhases = (
-				5042FDBB20CE9B4D00EBCA52 /* Sources */,
-				5042FDBC20CE9B4D00EBCA52 /* Frameworks */,
-				5042FDBD20CE9B4D00EBCA52 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5042FDC920CEA3CC00EBCA52 /* PBXTargetDependency */,
-			);
-			name = "PerformanceTest-Swift";
-			productName = "PerformanceTest-Swift";
-			productReference = 5042FDBF20CE9B4D00EBCA52 /* PerformanceTest-Swift */;
-			productType = "com.apple.product-type.tool";
-		};
 		5070A964217F479C002305F8 /* ObjectBox-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5070A97B217F479C002305F8 /* Build configuration list for PBXNativeTarget "ObjectBox-iOS" */;
@@ -751,10 +675,6 @@
 				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = ObjectBox;
 				TargetAttributes = {
-					5042FDBE20CE9B4D00EBCA52 = {
-						CreatedOnToolsVersion = 9.3;
-						LastSwiftMigration = 1020;
-					};
 					5070A964217F479C002305F8 = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1020;
@@ -796,7 +716,6 @@
 				5070A964217F479C002305F8 /* ObjectBox-iOS */,
 				5070A96C217F479C002305F8 /* ObjectBoxTests-iOS */,
 				5070AB072180807E002305F8 /* iOS-Fat-Framework */,
-				5042FDBE20CE9B4D00EBCA52 /* PerformanceTest-Swift */,
 				55C37BCD21BFC1610012BC0D /* CodeGenTests */,
 			);
 		};
@@ -926,20 +845,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5042FDBB20CE9B4D00EBCA52 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5042FDD120CEACB100EBCA52 /* TemporaryStore.swift in Sources */,
-				5042FDDB20CEAEC800EBCA52 /* TimeElapsed.swift in Sources */,
-				5042FDCF20CEA5AA00EBCA52 /* TestEntity.swift in Sources */,
-				5042FDCB20CEA3DE00EBCA52 /* Options.swift in Sources */,
-				50D7E6C520EB4F900001872D /* MemoryUsage.swift in Sources */,
-				5042FDCD20CEA3F300EBCA52 /* Run.swift in Sources */,
-				5042FDC220CE9B4E00EBCA52 /* main.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5070A961217F479C002305F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1087,11 +992,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5042FDC920CEA3CC00EBCA52 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CB3B3F3020AB4B4B00418618 /* ObjectBox-macOS */;
-			targetProxy = 5042FDC820CEA3CC00EBCA52 /* PBXContainerItemProxy */;
-		};
 		5070A970217F479C002305F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
@@ -1115,45 +1015,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		5042FDC320CE9B4E00EBCA52 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-					"@executable_path/",
-				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		5042FDC420CE9B4E00EBCA52 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
-				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-					"@executable_path/",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					$BUILT_PRODUCTS_DIR/,
-					"$(inherited)",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 		5070A976217F479C002305F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1568,15 +1429,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5042FDC520CE9B4E00EBCA52 /* Build configuration list for PBXNativeTarget "PerformanceTest-Swift" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5042FDC320CE9B4E00EBCA52 /* Debug */,
-				5042FDC420CE9B4E00EBCA52 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		5070A97B217F479C002305F8 /* Build configuration list for PBXNativeTarget "ObjectBox-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
