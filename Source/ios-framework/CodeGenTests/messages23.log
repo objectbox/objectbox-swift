@@ -1,0 +1,3 @@
+Scanning sources...
+Found 1 types.
+error: Property wibblyWobblyTimeyWimey of entity WashingMachine has an "// objectbox: uid n" annotation missing the number n.

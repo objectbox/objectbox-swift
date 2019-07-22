@@ -1,0 +1,68 @@
+{
+  "_note1" : "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2" : "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3" : "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities" : [
+    {
+      "id": "2:22528",
+      "lastPropertyId": "3:21504",
+      "name": "Building",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:19712",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:20736",
+          "name": "buildingName",
+          "type": 9
+        },
+        {
+          "id": "3:21504",
+          "name": "buildingNumber",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:25600",
+      "lastPropertyId": "2:24576",
+      "name": "Autobus",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:23552",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:24576",
+          "name": "lineName",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:25600",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    17664
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    15616,
+    14592,
+    16640,
+    18688
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

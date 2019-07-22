@@ -1,0 +1,344 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(33536)
+		className = TypeTest
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<TypeTest>
+			entityName = TypeTest
+			unwrappedPropertyType = Id<TypeTest>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:15616))
+			propertyName = intValue
+			propertyType = Int
+			entityName = TypeTest
+			unwrappedPropertyType = Int
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:16640))
+			propertyName = int8Value
+			propertyType = Int8
+			entityName = TypeTest
+			unwrappedPropertyType = Int8
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(4:17664))
+			propertyName = int16Value
+			propertyType = Int16
+			entityName = TypeTest
+			unwrappedPropertyType = Int16
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(5:18688))
+			propertyName = int32Value
+			propertyType = Int32
+			entityName = TypeTest
+			unwrappedPropertyType = Int32
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(6:19712))
+			propertyName = int64Value
+			propertyType = Int64
+			entityName = TypeTest
+			unwrappedPropertyType = Int64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(7:20736))
+			propertyName = uintValue
+			propertyType = UInt
+			entityName = TypeTest
+			unwrappedPropertyType = UInt
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(8:21504))
+			propertyName = uint8Value
+			propertyType = UInt8
+			entityName = TypeTest
+			unwrappedPropertyType = UInt8
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(9:22528))
+			propertyName = uint16Value
+			propertyType = UInt16
+			entityName = TypeTest
+			unwrappedPropertyType = UInt16
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(10:23552))
+			propertyName = uint32Value
+			propertyType = UInt32
+			entityName = TypeTest
+			unwrappedPropertyType = UInt32
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(11:24576))
+			propertyName = uint64Value
+			propertyType = UInt64
+			entityName = TypeTest
+			unwrappedPropertyType = UInt64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(12:25600))
+			propertyName = boolValue
+			propertyType = Bool
+			entityName = TypeTest
+			unwrappedPropertyType = Bool
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(13:26624))
+			propertyName = stringValue
+			propertyType = String
+			entityName = TypeTest
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(14:27648))
+			propertyName = byteValue
+			propertyType = Byte
+			entityName = TypeTest
+			unwrappedPropertyType = Byte
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(15:28672))
+			propertyName = bytes
+			propertyType = Data
+			entityName = TypeTest
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(16:29696))
+			propertyName = byteArray
+			propertyType = Data
+			entityName = TypeTest
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(17:30720))
+			propertyName = floatValue
+			propertyType = Float
+			entityName = TypeTest
+			unwrappedPropertyType = Float
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(18:31744))
+			propertyName = doubleValue
+			propertyType = Double
+			entityName = TypeTest
+			unwrappedPropertyType = Double
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(19:32512))
+			propertyName = dateValue
+			propertyType = Date
+			entityName = TypeTest
+			unwrappedPropertyType = Date
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(19:32512))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<TypeTest>
+			entityName = TypeTest
+			unwrappedPropertyType = Id<TypeTest>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<TypeTest>
+			entityName = TypeTest
+			unwrappedPropertyType = Id<TypeTest>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(1:33536)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

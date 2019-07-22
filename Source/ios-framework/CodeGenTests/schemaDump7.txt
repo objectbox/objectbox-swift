@@ -1,0 +1,82 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(5107964062888457216)
+		className = BusRoute
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:7895576389419683840))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:6687926154759915520))
+			propertyName = lineName
+			propertyType = String
+			entityName = BusRoute
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(2:6687926154759915520))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:7895576389419683840))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:7895576389419683840))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(1:5107964062888457216)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

@@ -1,0 +1,3 @@
+Scanning sources...
+Found 1 types.
+error: Entity BusRoute has both anotherId and id annotated as 'objectId'. There can only be one.

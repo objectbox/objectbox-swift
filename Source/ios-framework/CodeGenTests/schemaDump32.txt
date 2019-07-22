@@ -1,0 +1,84 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(17664)
+		className = Building
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = UInt64
+			entityName = Building
+			unwrappedPropertyType = UInt64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:15616))
+			propertyName = buildingName
+			propertyType = String
+			entityName = Building
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:16640))
+			propertyName = buildingNumber
+			propertyType = Int
+			entityName = Building
+			unwrappedPropertyType = Int
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(3:16640))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = UInt64
+			entityName = Building
+			unwrappedPropertyType = UInt64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isUnsignedType = true
+		}
+)
+		idCandidates = []
+	}
+]
+lastEntityId = IdUid(1:17664)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

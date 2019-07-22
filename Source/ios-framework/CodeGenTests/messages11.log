@@ -1,0 +1,3 @@
+Scanning sources...
+Found 1 types.
+error: Entity BusRoute needs an ID property of type Id<BusRoute>.

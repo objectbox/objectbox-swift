@@ -1,0 +1,103 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(18688)
+		className = Building
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:16640))
+			propertyName = buildingName
+			propertyType = String
+			entityName = Building
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = Optional(IdUid(1:15616))
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+			isUniqueIndex = true
+			indexType = hashIndex
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:17664))
+			propertyName = buildingNumber
+			propertyType = Int
+			entityName = Building
+			unwrappedPropertyType = Int
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = [SchemaIndex {
+			modelId = IdUid(1:15616)
+			properties = ["buildingName"]
+		}
+]
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(3:17664))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(1:18688)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(1:15616)
+}

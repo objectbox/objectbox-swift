@@ -1,0 +1,48 @@
+{
+  "_note1" : "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2" : "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3" : "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities" : [
+    {
+      "id" : "1:17664",
+      "lastPropertyId" : "3:18688",
+      "name" : "BusRoute",
+      "properties" : [
+        {
+          "id" : "1:14592",
+          "name" : "id"
+        },
+        {
+          "id" : "2:16640",
+          "name" : "lineName"
+        },
+        {
+          "id" : "3:18688",
+          "name" : "destinationName"
+        }
+      ],
+      "relations" : [
+
+      ]
+    }
+  ],
+  "lastEntityId" : "1:17664",
+  "lastIndexId" : "1:15616",
+  "lastRelationId" : "0:0",
+  "lastSequenceId" : "0:0",
+  "modelVersion" : 4,
+  "modelVersionParserMinimum" : 4,
+  "retiredEntityUids" : [
+
+  ],
+  "retiredIndexUids" : [
+    15616
+  ],
+  "retiredPropertyUids" : [
+
+  ],
+  "retiredRelationUids" : [
+
+  ],
+  "version" : 1
+}

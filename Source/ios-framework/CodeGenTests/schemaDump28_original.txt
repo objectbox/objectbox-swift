@@ -1,0 +1,173 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(2)
+		modelUid = Optional(22528)
+		className = Building
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:19712))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:20736))
+			propertyName = buildingName
+			propertyType = String
+			entityName = Building
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:21504))
+			propertyName = buildingNumber
+			propertyType = Int
+			entityName = Building
+			unwrappedPropertyType = Int
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(3:21504))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:19712))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:19712))
+			propertyName = id
+			propertyType = Id<Building>
+			entityName = Building
+			unwrappedPropertyType = Id<Building>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+, SchemaEntity {
+		modelId = Optional(3)
+		modelUid = Optional(25600)
+		className = BusRoute
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:23552))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:24576))
+			propertyName = lineName
+			propertyType = String
+			entityName = BusRoute
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(2:24576))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:23552))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:23552))
+			propertyName = id
+			propertyType = Id<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = Id<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(3:25600)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

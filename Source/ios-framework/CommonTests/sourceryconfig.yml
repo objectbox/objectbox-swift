@@ -1,0 +1,7 @@
+sources:
+  - SourceryTestEntities/
+module: "ObjectBoxTests_macOS"
+templates:
+  - ../cocoapod/templates
+output:
+  path: ../build/generated/

@@ -1,0 +1,11 @@
+included:
+    - CommonSource
+    - CommonTests
+    - ObjectBox-iOS/ObjectBox
+    - ObjectBox-iOS/ObjectBoxTests
+line_length: 120
+reporter: "xcode"
+disabled_rules:
+    - trailing_whitespace
+    - todo
+    - vertical_whitespace

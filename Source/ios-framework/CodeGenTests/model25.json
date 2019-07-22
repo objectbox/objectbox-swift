@@ -1,0 +1,126 @@
+{
+  "_note1" : "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2" : "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3" : "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities" : [
+    {
+      "id": "1:33536",
+      "lastPropertyId": "19:32512",
+      "name": "TypeTest",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:14592",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:15616",
+          "name": "intValue",
+          "type": 6
+        },
+        {
+          "id": "3:16640",
+          "name": "int8Value",
+          "type": 2
+        },
+        {
+          "id": "4:17664",
+          "name": "int16Value",
+          "type": 3
+        },
+        {
+          "id": "5:18688",
+          "name": "int32Value",
+          "type": 5
+        },
+        {
+          "id": "6:19712",
+          "name": "int64Value",
+          "type": 6
+        },
+        {
+          "flags": 8192,
+          "id": "7:20736",
+          "name": "uintValue",
+          "type": 6
+        },
+        {
+          "flags": 8192,
+          "id": "8:21504",
+          "name": "uint8Value",
+          "type": 2
+        },
+        {
+          "flags": 8192,
+          "id": "9:22528",
+          "name": "uint16Value",
+          "type": 3
+        },
+        {
+          "flags": 8192,
+          "id": "10:23552",
+          "name": "uint32Value",
+          "type": 5
+        },
+        {
+          "flags": 8192,
+          "id": "11:24576",
+          "name": "uint64Value",
+          "type": 6
+        },
+        {
+          "id": "12:25600",
+          "name": "boolValue",
+          "type": 1
+        },
+        {
+          "id": "13:26624",
+          "name": "stringValue",
+          "type": 9
+        },
+        {
+          "id": "14:27648",
+          "name": "byteValue"
+        },
+        {
+          "id": "15:28672",
+          "name": "bytes",
+          "type": 23
+        },
+        {
+          "id": "16:29696",
+          "name": "byteArray",
+          "type": 23
+        },
+        {
+          "id": "17:30720",
+          "name": "floatValue",
+          "type": 7
+        },
+        {
+          "id": "18:31744",
+          "name": "doubleValue",
+          "type": 8
+        },
+        {
+          "id": "19:32512",
+          "name": "dateValue",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:33536",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

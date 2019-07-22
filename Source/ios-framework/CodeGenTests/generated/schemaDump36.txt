@@ -1,0 +1,206 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(17664)
+		className = Author
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Author>
+			entityName = Author
+			unwrappedPropertyType = Id<Author>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:15616))
+			propertyName = name
+			propertyType = String
+			entityName = Author
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = nil
+			propertyName = books
+			propertyType = ToMany<Book, Author>
+			entityName = Author
+			unwrappedPropertyType = ToMany<Book, Author>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = [SchemaToManyRelation {
+			modelId = Optional(IdUid(1:16640))
+			relationName = books
+			relationType = ToMany<Book, Author>
+			relationTargetType = Book
+			dbName = nil
+			relationOwnerType =  Author
+			backlinkProperty = nil
+		}
+]
+		lastPropertyId = Optional(IdUid(2:15616))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Author>
+			entityName = Author
+			unwrappedPropertyType = Id<Author>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id<Author>
+			entityName = Author
+			unwrappedPropertyType = Id<Author>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+, SchemaEntity {
+		modelId = Optional(2)
+		modelUid = Optional(21504)
+		className = Book
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<Book>
+			entityName = Book
+			unwrappedPropertyType = Id<Book>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:19712))
+			propertyName = name
+			propertyType = String
+			entityName = Book
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = nil
+			propertyName = authors
+			propertyType = ToMany<Author, Book>
+			entityName = Book
+			unwrappedPropertyType = ToMany<Author, Book>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = [SchemaToManyRelation {
+			modelId = Optional(IdUid(2:20736))
+			relationName = authors
+			relationType = ToMany<Author, Book>
+			relationTargetType = Author
+			dbName = nil
+			relationOwnerType =  Book
+			backlinkProperty = nil
+		}
+]
+		lastPropertyId = Optional(IdUid(2:19712))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<Book>
+			entityName = Book
+			unwrappedPropertyType = Id<Book>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<Book>
+			entityName = Book
+			unwrappedPropertyType = Id<Book>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(2:21504)
+	lastRelationId = IdUid(2:20736)
+	lastIndexId = IdUid(0:0)
+}

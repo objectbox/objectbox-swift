@@ -1,0 +1,6 @@
+Scanning sources...
+Found 1 types.
+note: ObjectBox ID Model file changed: model22.json, creating backup file (.bak).
+error: No UID given for property lineName of entity WashingMachine. You can do the following:
+	[Rename] Apply the current UID using // objectbox: uid = 15616
+	[Change/Reset] Apply a new UID using // objectbox: uid = 18688

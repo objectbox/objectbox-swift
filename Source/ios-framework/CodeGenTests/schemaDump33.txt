@@ -1,0 +1,131 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(2)
+		modelUid = Optional(23552)
+		className = DataThing
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<DataThing>
+			entityName = DataThing
+			unwrappedPropertyType = Id<DataThing>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:19712))
+			propertyName = firstData
+			propertyType = Data
+			entityName = DataThing
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:20736))
+			propertyName = secondData
+			propertyType = [UInt8]
+			entityName = DataThing
+			unwrappedPropertyType = [UInt8]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(4:21504))
+			propertyName = maybeThirdData
+			propertyType = Data?
+			entityName = DataThing
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(5:22528))
+			propertyName = maybeFourthData
+			propertyType = [UInt8]?
+			entityName = DataThing
+			unwrappedPropertyType = [UInt8]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(5:22528))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = false
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<DataThing>
+			entityName = DataThing
+			unwrappedPropertyType = Id<DataThing>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = Id<DataThing>
+			entityName = DataThing
+			unwrappedPropertyType = Id<DataThing>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(2:23552)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

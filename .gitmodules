@@ -1,0 +1,6 @@
+[submodule "Source/external/SwiftLint"]
+	path = Source/external/SwiftLint
+	url = https://github.com/realm/SwiftLint.git
+[submodule "Source/external/objectbox-swift-generator"]
+	path = Source/external/objectbox-swift-generator
+	url = ../objectbox-swift-generator.git

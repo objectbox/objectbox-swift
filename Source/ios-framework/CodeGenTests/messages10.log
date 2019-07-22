@@ -1,0 +1,3 @@
+Scanning sources...
+Found 1 types.
+error: Properties text and text of entity BusRoute both map to the same property of the same class.
