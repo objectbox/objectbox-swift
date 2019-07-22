@@ -16,7 +16,7 @@ try personBox.put(santa)
 let query: Query<Person> = personBox.query {
     return (Person.firstName.contains("Santa") || Person.age > 100)
            && Person.lastName.isEqual(to: "Claus") 
-}
+}.build()
 let oldClauses = query.find()
 ```
 
@@ -95,7 +95,12 @@ For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
 Background: Code generation
 ---------------------------
 ObjectBox Swift generates code at build time for optimal performance at runtime by avoiding reflection etc.
-This is automatically done for you and should be transparent. Internally, we use Sourcery for this.
+This is automatically done for you and should be transparent. Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
+
+Source Code
+-----------
+
+Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
 Other languages/bindings
 ------------------------
