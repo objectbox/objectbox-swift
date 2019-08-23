@@ -10,8 +10,8 @@
 
 set -e
 
-version=0.9.0
-core_version=0.6.0
+version=0.9.1
+core_version=0.6.1
 
 my_dir=$(realpath `dirname "$0"`)
 
