@@ -6,33 +6,33 @@ import ObjectBox
 class MasterViewController: UITableViewController {
 
     lazy var noteBox: Box<Note> = Services.instance.noteBox
+    var noteBoxObserver: Observer?
     lazy var authorBox: Box<Author> = Services.instance.authorBox
-
-    private var noteAddedSubscription: NotificationToken!
-    private var noteRemovedSubscription: NotificationToken!
-    private var authorRemovedSubscription: NotificationToken!
-    private var authorAddedSubscription: NotificationToken!
+    var authorBoxObserver: Observer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         clearsSelectionOnViewWillAppear = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        noteAddedSubscription = NotificationCenter.default.observe(name: .noteAdded, object: nil) { _ in
+        noteBoxObserver = noteBox.subscribe {
             self.tableView.reloadData()
         }
-
-        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { _ in
+        
+        authorBoxObserver = authorBox.subscribe {
             self.tableView.reloadData()
         }
-
-        authorAddedSubscription = NotificationCenter.default.observe(name: .authorAdded, object: nil) { _ in
-            self.tableView.reloadData()
-        }
-
-        authorRemovedSubscription = NotificationCenter.default.observe(name: .authorRemoved, object: nil) { _ in
-            self.tableView.reloadData()
-        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        noteBoxObserver = nil
+        authorBoxObserver = nil
     }
 
     @IBAction func replaceWithDemoData(_ sender: Any?) {

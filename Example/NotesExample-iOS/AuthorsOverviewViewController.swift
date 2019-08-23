@@ -11,10 +11,7 @@ class AuthorsOverviewViewController: UITableViewController {
     var authors = [Author]()
 
     var authorBox: Box<Author> = Services.instance.authorBox
-
-
-    private var authorAddedSubscription: NotificationToken!
-    private var authorNameChangeSubscription: NotificationToken!
+    private var authorBoxObserver: Observer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,34 +25,27 @@ class AuthorsOverviewViewController: UITableViewController {
             let controllers = split.viewControllers
             authorEditingViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? AuthorEditingViewController
         }
-
-        self.refreshAuthors()
-
-        authorAddedSubscription = NotificationCenter.default.observe(name: .authorAdded, object: nil) { _ in
-            self.refreshAuthors()
-        }
-
-        authorNameChangeSubscription = NotificationCenter.default.observe(name: .authorNameDidChange, object: nil) { _ in
-            self.refreshAuthors()
-        }
-    }
-
-    private func refreshAuthors() {
-        authors = authorBox.all()
-        guard let tableView = self.tableView else { return }
-        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
+        
+        authorBoxObserver = authorBox.subscribe { authors, _ in
+            self.authors = authors
+            guard let tableView = self.tableView else { return }
+            tableView.reloadData()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        authorBoxObserver = nil
     }
 
     private func deleteAuthor(at index: Int) {
         let authorId = authors[index].id
-        authors.remove(at: index)
         try! authorBox.remove(authorId)
-        NotificationCenter.default.post(name: .authorRemoved, object: nil, userInfo: [ "authorId" : authorId.value ])
     }
 
 }
@@ -109,7 +99,6 @@ extension AuthorsOverviewViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             deleteAuthor(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
