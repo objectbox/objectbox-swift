@@ -141,7 +141,6 @@ extension NoteEditingViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         let title = textField.text ?? ""
         changeNoteTitle(to: title)
-        refreshAuthors()
     }
 
     func changeNoteTitle(to newTitle: String) {
@@ -209,7 +208,6 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
         try! noteBox.put(note)
 
         refreshModificationDate()
-        refreshAuthors()
     }
 }
 
