@@ -50,9 +50,9 @@ extension MasterViewController {
 
         if indexPath.section == 0 {
             if indexPath.row == 0 {
-                cell.detailTextLabel?.text = "\(noteBox.count)"
+                cell.detailTextLabel?.text = "\(noteBox.count())"
             } else if indexPath.row == 1 {
-                cell.detailTextLabel?.text = "\(authorBox.count)"
+                cell.detailTextLabel?.text = "\(authorBox.count())"
             }
         }
 
