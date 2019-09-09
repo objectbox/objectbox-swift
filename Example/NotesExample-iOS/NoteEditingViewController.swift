@@ -42,8 +42,6 @@ class NoteEditingViewController: UITableViewController {
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var modificationDateLabel: UILabel!
     
-    private var noteModificationDateChangeSubscription: NotificationToken!
-
     lazy var authorModel: AuthorModel = AuthorModel(authorBox: Services.instance.authorBox)
     var noteBox: Box<Note> = Services.instance.noteBox
 
@@ -72,10 +70,6 @@ class NoteEditingViewController: UITableViewController {
 
         self.refreshCreationDate()
         self.refreshModificationDate()
-        
-        noteModificationDateChangeSubscription = NotificationCenter.default.observe(name: .noteModificationDateDidChange, object: nil) { _ in
-            self.refreshModificationDate()
-        }
     }
 
     private func refreshCreationDate() {
@@ -134,8 +128,7 @@ extension NoteEditingViewController {
             self.note = nil
         } else if segue.identifier == "saveDraft" {
             guard let note = self.note else { preconditionFailure() }
-            let noteId = try! noteBox.put(note)
-            NotificationCenter.default.post(name: .noteAdded, object: note, userInfo: [ "noteId" : noteId.value ])
+            try! noteBox.put(note)
         }
     }
 
@@ -153,7 +146,6 @@ extension NoteEditingViewController: UITextFieldDelegate {
     func changeNoteTitle(to newTitle: String) {
         guard let note = self.note else { return }
 
-        let oldTitle = note.title
         note.title = newTitle
 
         // Do not autosave drafts
@@ -161,14 +153,7 @@ extension NoteEditingViewController: UITextFieldDelegate {
 
         try! noteBox.put(note)
 
-        NotificationCenter.default.post(
-            name: .noteTitleDidChange,
-            object: note,
-            userInfo: [ "oldValue" : oldTitle, "newValue" : newTitle])
-        NotificationCenter.default.post(
-            name: .noteModificationDateDidChange,
-            object: note,
-            userInfo: nil)
+        refreshModificationDate()
     }
 }
 
@@ -181,7 +166,7 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
         let pickerItems: [String]
 
         init(authorBox: Box<Author>) {
-            self.authors = authorBox.all().sorted(by: { $0.name < $1.name })
+            self.authors = authorBox.all.sorted(by: { $0.name < $1.name })
             self.pickerItems = authors
                 .map { $0.name }
                 .prepending("(None)")
@@ -214,7 +199,6 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
     func changeNoteAuthor(to newAuthor: Author?) {
         guard let note = self.note else { return }
 
-        let oldAuthorId = note.author.targetId
         note.author.target = newAuthor
         note.modificationDate = Date()
 
@@ -223,25 +207,7 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
 
         try! noteBox.put(note)
 
-        let changeUserInfo: [String: Any] = {
-            var result: [String: Any] = [:]
-            if let oldAuthorId = oldAuthorId {
-                result["oldValue"] = oldAuthorId.value
-            }
-            if let newAuthorId = newAuthor?.id {
-                result["newValue"] = newAuthorId.value
-            }
-            return result
-        }()
-
-        NotificationCenter.default.post(
-            name: .noteAuthorDidChange,
-            object: note,
-            userInfo: changeUserInfo)
-        NotificationCenter.default.post(
-            name: .noteModificationDateDidChange,
-            object: note,
-            userInfo: nil)
+        refreshModificationDate()
     }
 }
 
@@ -268,10 +234,7 @@ extension NoteEditingViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         note?.text = textView.text
-        NotificationCenter.default.post(
-            name: .noteModificationDateDidChange,
-            object: note,
-            userInfo: nil)
+        refreshModificationDate()
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {

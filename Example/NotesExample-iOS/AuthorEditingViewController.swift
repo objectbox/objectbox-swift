@@ -75,13 +75,7 @@ extension AuthorEditingViewController: UITextFieldDelegate {
     func renameAuthor(to newName: String) {
         guard let author = self.author else { return }
 
-        let oldName = author.name
         author.name = newName
         try! authorBox.put(author)
-
-        NotificationCenter.default.post(
-            name: .authorNameDidChange,
-            object: author,
-            userInfo: [ "oldValue" : oldName, "newValue" : newName])
     }
 }

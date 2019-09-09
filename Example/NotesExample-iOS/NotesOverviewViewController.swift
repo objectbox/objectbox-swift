@@ -18,6 +18,7 @@ class NotesOverviewViewController: UITableViewController {
 
         let authorId: Id<Author>?
         let query: Query<Note>
+        var queryObserver: Observer?
 
         init(authorId: Id<Author>?, noteBox: Box<Note> = Services.instance.noteBox) {
             self.authorId = authorId
@@ -30,18 +31,13 @@ class NotesOverviewViewController: UITableViewController {
         }
 
         func notes() -> [Note] {
-            return query.find()
+            return try! query.find()
         }
     }
 
     func filterBy(authorId: Id<Author>?) {
         filter = Filter(authorId: authorId)
     }
-
-    private var noteAddedSubscription: NotificationToken!
-    private var noteRemovedSubscription: NotificationToken!
-    private var noteTitleChangeSubscription: NotificationToken!
-    private var noteAuthorChangeSubscription: NotificationToken!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,25 +51,18 @@ class NotesOverviewViewController: UITableViewController {
             let controllers = split.viewControllers
             noteViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? NoteEditingViewController
         }
-
-        refreshNotes()
-
-        noteAddedSubscription = NotificationCenter.default.observe(name: .noteAdded, object: nil) { _ in
-            self.refreshNotes()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        filter.queryObserver = filter.query.subscribe { notes, _ in
+            self.notes = notes
+            guard let tableView = self.tableView else { return }
+            tableView.reloadData()
         }
-
-        noteRemovedSubscription = NotificationCenter.default.observe(name: .noteRemoved, object: nil) { notification in
-            guard notification.object as AnyObject !== self else { return }
-            self.refreshNotes()
-        }
-
-        noteTitleChangeSubscription = NotificationCenter.default.observe(name: .noteTitleDidChange, object: nil) { _ in
-            self.refreshNotes()
-        }
-
-        noteAuthorChangeSubscription = NotificationCenter.default.observe(name: .noteAuthorDidChange, object: nil) { _ in
-            self.refreshNotes()
-        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        filter.queryObserver = nil
     }
 
     private func refreshNotes() {
@@ -89,9 +78,7 @@ class NotesOverviewViewController: UITableViewController {
 
     private func deleteNote(at index: Int) {
         let noteId = notes[index].id
-        notes.remove(at: index)
         try! noteBox.remove(noteId)
-        NotificationCenter.default.post(name: .noteRemoved, object: self, userInfo: [ "noteId" : noteId.value ])
     }
 
 }
