@@ -166,7 +166,7 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
         let pickerItems: [String]
 
         init(authorBox: Box<Author>) {
-            self.authors = authorBox.all.sorted(by: { $0.name < $1.name })
+            self.authors = authorBox.all().sorted(by: { $0.name < $1.name })
             self.pickerItems = authors
                 .map { $0.name }
                 .prepending("(None)")
