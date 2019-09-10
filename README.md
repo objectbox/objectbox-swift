@@ -2,7 +2,6 @@
 
 ObjectBox Swift
 ===============
-
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
 [![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
 
@@ -23,19 +22,18 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
-Note: This beta version is subject to change ([details below](#alpha)).
-
 Installation
 ------------
-
-ObjectBox is available through [CocoaPods](https://cocoapods.org).
-To install the [pod](https://cocoapods.org/pods/ObjectBox), simply add the following line to your Podfile:
+[CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
+See the [installation docs](https://swift.objectbox.io/install) for alternative setups,
+or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
+To install the [ObjectBox pod](https://cocoapods.org/pods/ObjectBox), add the following line to your Podfile:
 
 ```ruby
 pod 'ObjectBox'
 ```
 
-Then run 
+Then run this to install the ObjectBox framework:
 
 ```bash
 cd /path/to/your/project/folder/ # whatever folder your Podfile is in.
@@ -43,14 +41,33 @@ pod install
 Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is named
 ```
 
-afterwards to install the framework and its dependencies, and set up the code generator in your project.
+Now you are all set to define your first ObjectBox entities;
+e.g. check the [getting started guide] or the [example](#example) described below. 
+
+### <a name="new-to-cocoapods"></a>New to CocoaPods?
+
+[CocoaPods](https://cocoapods.org) it is a dependency manager and sets up libraries like ObjectBox in your xcode project.
+To install it, run this in a terminal: 
+
+```bash
+sudo gem install cocoapods
+```
+
+In CocoaPods, you keep track of used libraries in a file called "Podfile".
+If you don't have this file yet, navigate to your xcode project folder and use CocoaPod to create one:
+
+```bash
+pod init
+```
+
+### CocoaPods troubleshooting
 
 If `pod install` fails, try updating CocoaPods first:
 
     gem update xcodeproj && gem update cocoapods && pod repo update
 
-Example
--------
+<a name="example"></a>Example
+-----------------------------
 In the [Example](Example/) directory, you find a notes example app demonstrating ObjectBox's Swift API.
 The example comes with two apps: one for iOS and one for macOS.
 
@@ -64,7 +81,6 @@ This will generate a `NotesExample.xcworkspace` that you can launch to try out O
 
 How can ObjectBox Help You?
 ---------------------------
-
 We want ObjectBox to be not only the fastest, but also the most Swift-friendly persistence solution.
 
 To do that, we want your feedback: what do you love? What's amiss?
@@ -78,13 +94,6 @@ We're looking forward to receiving your comments and requests:
 
 Thank you!
 
-<a name="beta"></a>
-What's Missing in the Beta?
----------------------------
-
-More relation types, data observers, object browser.
-This functionality is available at lower layers and has not yet been exposed to Swift.
-
 Keep in touch
 -------------
 We're obviously not finished here.
@@ -92,14 +101,14 @@ We're obviously not finished here.
 
 For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
 
-Background: Code generation
+Background: code generation
 ---------------------------
 ObjectBox Swift generates code at build time for optimal performance at runtime by avoiding reflection etc.
-This is automatically done for you and should be transparent. Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
+This is automatically done for you and should be transparent.
+Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
 
-Source Code
+Source code
 -----------
-
 Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
 Other languages/bindings
@@ -114,7 +123,7 @@ License
 -------
 All files in this repository are under the Apache 2 license:
 
-    Copyright 2018 ObjectBox Ltd. All rights reserved.
+    Copyright 2018-2019 ObjectBox Ltd. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
