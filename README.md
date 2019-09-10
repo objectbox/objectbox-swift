@@ -22,8 +22,8 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
-Installation
-------------
+Adding ObjectBox to your project
+--------------------------------
 [CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
 See the [installation docs](https://swift.objectbox.io/install) for alternative setups,
 or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
@@ -41,12 +41,13 @@ pod install
 Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is named
 ```
 
-Now you are all set to define your first ObjectBox entities;
+And, don't forget to close the Xcode project (.xcodeproj) and open the workspace (.xcworkspace) instead.
+Now, you are all set to define your first ObjectBox entities;
 e.g. check the [getting started guide] or the [example](#example) described below. 
 
 ### <a name="new-to-cocoapods"></a>New to CocoaPods?
 
-[CocoaPods](https://cocoapods.org) is a dependency manager and sets up libraries like ObjectBox in your xcode project.
+[CocoaPods](https://cocoapods.org) is a dependency manager and sets up libraries like ObjectBox in your Xcode project.
 To install it, run this in a terminal: 
 
 ```bash
@@ -54,7 +55,7 @@ sudo gem install cocoapods
 ```
 
 In CocoaPods, you keep track of used libraries in a file called "Podfile".
-If you don't have this file yet, navigate to your xcode project folder and use CocoaPods to create one:
+If you don't have this file yet, navigate to your Xcode project folder and use CocoaPods to create one:
 
 ```bash
 pod init
@@ -104,9 +105,7 @@ For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
 Background: code generation
 ---------------------------
 ObjectBox Swift generates code at build time for optimal performance at runtime by avoiding reflection etc.
-
 This is automatically done for you and should be transparent.
-
 Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
 
 Source code
