@@ -46,7 +46,7 @@ e.g. check the [getting started guide] or the [example](#example) described belo
 
 ### <a name="new-to-cocoapods"></a>New to CocoaPods?
 
-[CocoaPods](https://cocoapods.org) it is a dependency manager and sets up libraries like ObjectBox in your xcode project.
+[CocoaPods](https://cocoapods.org) is a dependency manager and sets up libraries like ObjectBox in your xcode project.
 To install it, run this in a terminal: 
 
 ```bash
@@ -54,7 +54,7 @@ sudo gem install cocoapods
 ```
 
 In CocoaPods, you keep track of used libraries in a file called "Podfile".
-If you don't have this file yet, navigate to your xcode project folder and use CocoaPod to create one:
+If you don't have this file yet, navigate to your xcode project folder and use CocoaPods to create one:
 
 ```bash
 pod init
@@ -68,8 +68,8 @@ If `pod install` fails, try updating CocoaPods first:
 
 <a name="example"></a>Example
 -----------------------------
-In the [Example](Example/) directory, you find a notes example app demonstrating ObjectBox's Swift API.
-The example comes with two apps: one for iOS and one for macOS.
+In the [Example](Example/) directory, you'll find a "Notes" example app demonstrating ObjectBox's Swift API.
+The example comes with two apps: one for iOS and one for macOS. The iOS example is a full GUI application, whereas the macOS example runs a few operations and then exits.
 
 To setup the example, use CocoaPods to acquire the framework:
 
@@ -104,7 +104,9 @@ For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
 Background: code generation
 ---------------------------
 ObjectBox Swift generates code at build time for optimal performance at runtime by avoiding reflection etc.
+
 This is automatically done for you and should be transparent.
+
 Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
 
 Source code
