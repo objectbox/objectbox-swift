@@ -3,7 +3,7 @@
 import ObjectBox
 
 class Note: Entity {
-    var id: Id<Note> = 0 // An `Id<Note>` is required by ObjectBox
+    var id: EntityId<Note> = 0 // An `EntityIdNote>` is required by ObjectBox
     var title: String = "" {
         didSet {
             modificationDate = Date()

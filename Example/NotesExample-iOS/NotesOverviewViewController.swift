@@ -16,11 +16,11 @@ class NotesOverviewViewController: UITableViewController {
     struct Filter {
         static var all: Filter { return Filter(authorId: nil) }
 
-        let authorId: Id<Author>?
+        let authorId: EntityId<Author>?
         let query: Query<Note>
         var queryObserver: Observer?
 
-        init(authorId: Id<Author>?, noteBox: Box<Note> = Services.instance.noteBox) {
+        init(authorId: EntityId<Author>?, noteBox: Box<Note> = Services.instance.noteBox) {
             self.authorId = authorId
 
             if let authorId = authorId {
@@ -35,7 +35,7 @@ class NotesOverviewViewController: UITableViewController {
         }
     }
 
-    func filterBy(authorId: Id<Author>?) {
+    func filterBy(authorId: EntityId<Author>?) {
         filter = Filter(authorId: authorId)
     }
 

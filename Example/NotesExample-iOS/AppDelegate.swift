@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let noteBox = Services.instance.noteBox
         let authorBox = Services.instance.authorBox
 
-        guard noteBox.isEmpty && authorBox.isEmpty else { return }
+        guard noteBox.isEmpty() && authorBox.isEmpty() else { return }
 
         try Services.instance.replaceWithDemoData()
     }

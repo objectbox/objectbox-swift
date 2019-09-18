@@ -4,7 +4,7 @@ import ObjectBox
 
 // objectbox:Entity
 class Author {
-    var id: Id<Author> // An `Id<Author>` is required by ObjectBox
+    var id: EntityId<Author> // An `EntityId<Author>` is required by ObjectBox
     var name: String
     // objectbox: backlink = "author"
     var notes: ToMany<Note, Author>
