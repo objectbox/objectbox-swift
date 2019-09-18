@@ -2,8 +2,8 @@
 
 ObjectBox Swift
 ===============
-[![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
-[![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](https://cocoapods.org/pods/ObjectBox)
+![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)
+![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)
 
 ObjectBox is a superfast, light-weight object persistence framework.
 This Swift API seamlessly persists objects on-device for iOS and macOS.
@@ -97,10 +97,10 @@ Thank you!
 
 Keep in touch
 -------------
-We're obviously not finished here.
-[Sign up here](https://objectbox.io/ios-alpha/) for future updates on ObjectBox Swift.
 
-For general news on ObjectBox, [check our blog](https://objectbox.io/blog).
+[Sign up here](https://objectbox.io/ios) for future updates on ObjectBox Swift.
+
+For general news on ObjectBox, [check our blog](https://objectbox.io/blog) or follow [@ObjectBox_io](https://twitter.com/ObjectBox_io/) on Twitter.
 
 Background: code generation
 ---------------------------
@@ -116,9 +116,11 @@ Other languages/bindings
 ------------------------
 ObjectBox is a multi platform database supporting [multiple languages](https://objectbox.io/dev-get-started/): 
 
-* [ObjectBox C API](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
+* [ObjectBox Java](https://github.com/objectbox/objectbox-java): runs on Android, desktop and servers.
+* [ObjectBox Go](https://github.com/objectbox/objectbox-go): great for data-driven tools and server applications. 
+* [ObjectBox C](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
   also enables porting ObjectBox to other languages.
-* [ObjectBox Java](https://github.com/objectbox/objectbox-java): runs on Android, desktop and even servers.
+* [ObjectBox Dart](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (early version) 
 
 License
 -------
