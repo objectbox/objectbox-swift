@@ -2,8 +2,8 @@
 
 ObjectBox Swift
 ===============
-![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)
-![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)
+[![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](#cocoapods)
+[![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](#cocoapods)
 
 ObjectBox is a superfast, light-weight object persistence framework.
 This Swift API seamlessly persists objects on-device for iOS and macOS.
@@ -22,12 +22,12 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
-Adding ObjectBox to your project
---------------------------------
+<a name="cocoapods"></a>Adding ObjectBox to your project
+--------------------------------------------------------
 [CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
 See the [installation docs](https://swift.objectbox.io/install) for alternative setups,
 or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
-To install the [ObjectBox pod](https://cocoapods.org/pods/ObjectBox), add the following line to your Podfile:
+To install the `ObjectBox` pod, add the following line to your Podfile:
 
 ```ruby
   pod 'ObjectBox', '1.0.0-rc.7'
@@ -43,7 +43,7 @@ Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is nam
 
 And, don't forget to close the Xcode project (.xcodeproj) and open the workspace (.xcworkspace) instead.
 Now, you are all set to define your first ObjectBox entities;
-e.g. check the [getting started guide] or the [example](#example) described below. 
+e.g. check the [getting started guide](https://swift.objectbox.io/getting-started) or the [example](#example) described below. 
 
 ### <a name="new-to-cocoapods"></a>New to CocoaPods?
 
