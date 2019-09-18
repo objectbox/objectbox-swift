@@ -30,7 +30,7 @@ or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
 To install the [ObjectBox pod](https://cocoapods.org/pods/ObjectBox), add the following line to your Podfile:
 
 ```ruby
-pod 'ObjectBox'
+  pod 'ObjectBox', '1.0.0-rc.7'
 ```
 
 Then run this to install the ObjectBox framework:
