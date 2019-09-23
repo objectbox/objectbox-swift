@@ -7,7 +7,7 @@ class Author {
     var id: EntityId<Author> // An `EntityId<Author>` is required by ObjectBox
     var name: String
     // objectbox: backlink = "author"
-    var notes: ToMany<Note, Author>
+    var notes: ToMany<Note>
 
     // An initializer with no parameters is required by ObjectBox
     required init() {

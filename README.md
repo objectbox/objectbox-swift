@@ -112,6 +112,19 @@ Source code
 -----------
 Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
+Migrating from the Beta
+-----------------------
+
+If you've used the ObjectBox betas, there are a few changes we made for the 1.0 release to
+improve the experience before we freeze the API for release. The adjustments you'll have to make are:
+
+1. `isEmpty()`, `count()`, `all()`, `sum()`, `min()`, `max()` etc. are now functions to make it clearer they may perform a database lookup and aren't just properties to read.
+2. `putImmutable()` is now gone. Just call `put()` instead, it now returns the IDs like `putImmutable` used to.
+3. The old `Id<>` type has been renamed to `EntityId<>`. There is now a new `Id` type that does not use generics.
+4. Changes to standalone relations need to be saved explicitly using a call to `applyToDb()`.
+5. Most calls have been revised to now throw errors, so you'll have to add the requisite `try` statements.
+6. `ToMany` has been revised to no longer need the containing type as a second generic parameter, so change any `ToMany<A, B>` in your code to `ToMany<A>`.
+
 Other languages/bindings
 ------------------------
 ObjectBox is a multi platform database supporting [multiple languages](https://objectbox.io/dev-get-started/): 
