@@ -10,8 +10,8 @@ import ObjectBox
 extension WashingMachine: ObjectBox.__EntityRelatable {
     internal typealias EntityType = WashingMachine
 
-    internal var _id: Id<WashingMachine> {
-        return self.id
+    internal var _id: EntityId<WashingMachine> {
+        return EntityId<WashingMachine>(self.id.value)
     }
 }
 
@@ -23,9 +23,9 @@ extension WashingMachine: ObjectBox.EntityInspectable {
 
     internal static var entityBinding = EntityBindingType()
 
-    fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: WashingMachine.self, id: 1, uid: 17664)
-        try entityBuilder.addProperty(name: "id", type: Id<WashingMachine>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "id", type: EntityId<WashingMachine>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
         try entityBuilder.addProperty(name: "lineName", type: Int.entityPropertyType, id: 4, uid: 18688)
         try entityBuilder.addProperty(name: "destinationName", type: String.entityPropertyType, id: 3, uid: 16640)
 
@@ -39,22 +39,22 @@ extension WashingMachine {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { WashingMachine.id == myId }
-    internal static var id: Property<WashingMachine, Id<WashingMachine>> { return Property<WashingMachine, Id<WashingMachine>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<WashingMachine, EntityId<WashingMachine>, EntityId<WashingMachine>> { return Property<WashingMachine, EntityId<WashingMachine>, EntityId<WashingMachine>>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { WashingMachine.lineName > 1234 }
-    internal static var lineName: Property<WashingMachine, Int> { return Property<WashingMachine, Int>(propertyId: 4, isPrimaryKey: false) }
+    internal static var lineName: Property<WashingMachine, Int, Void> { return Property<WashingMachine, Int, Void>(propertyId: 4, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { WashingMachine.destinationName.startsWith("X") }
-    internal static var destinationName: Property<WashingMachine, String> { return Property<WashingMachine, String>(propertyId: 3, isPrimaryKey: false) }
+    internal static var destinationName: Property<WashingMachine, String, Void> { return Property<WashingMachine, String, Void>(propertyId: 3, isPrimaryKey: false) }
 
-    fileprivate func __setId(identifier: ObjectBox.EntityId) {
-        self.id = Id(identifier)
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = EntityId(identifier)
     }
 }
 
@@ -65,7 +65,7 @@ extension ObjectBox.Property where E == WashingMachine {
     ///
     ///     box.query { .id == myId }
 
-    static var id: Property<WashingMachine, Id<WashingMachine>> { return Property<WashingMachine, Id<WashingMachine>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<WashingMachine, EntityId<WashingMachine>, EntityId<WashingMachine>> { return Property<WashingMachine, EntityId<WashingMachine>, EntityId<WashingMachine>>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -73,7 +73,7 @@ extension ObjectBox.Property where E == WashingMachine {
     ///
     ///     box.query { .lineName > 1234 }
 
-    static var lineName: Property<WashingMachine, Int> { return Property<WashingMachine, Int>(propertyId: 4, isPrimaryKey: false) }
+    internal static var lineName: Property<WashingMachine, Int, Void> { return Property<WashingMachine, Int, Void>(propertyId: 4, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -81,8 +81,7 @@ extension ObjectBox.Property where E == WashingMachine {
     ///
     ///     box.query { .destinationName.startsWith("X") }
 
-    static var destinationName: Property<WashingMachine, String> { return Property<WashingMachine, String>(propertyId: 3, isPrimaryKey: false) }
-
+    internal static var destinationName: Property<WashingMachine, String, Void> { return Property<WashingMachine, String, Void>(propertyId: 3, isPrimaryKey: false) }
 
 }
 
@@ -90,19 +89,20 @@ extension ObjectBox.Property where E == WashingMachine {
 /// Generated service type to handle persisting and reading entity data. Exposed through `WashingMachine.EntityBindingType`.
 internal class WashingMachineBinding: NSObject, ObjectBox.EntityBinding {
     internal typealias EntityType = WashingMachine
+    internal typealias IdType = EntityId<WashingMachine>
 
     override internal required init() {}
 
-    internal func setEntityId(of entity: EntityType, to entityId: ObjectBox.EntityId) {
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
     }
 
-    internal func entityId(of entity: EntityType) -> ObjectBox.EntityId {
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
         return entity.id.value
     }
 
-    internal func collect(fromEntity entity: EntityType, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
-
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.destinationName, at: 2 + 2 * 3), 2 + 2 * 3))
 
@@ -115,14 +115,12 @@ internal class WashingMachineBinding: NSObject, ObjectBox.EntityBinding {
         }
     }
 
-    internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
         let entity = WashingMachine()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
         entity.lineName = entityReader.read(at: 2 + 2 * 4)
         entity.destinationName = entityReader.read(at: 2 + 2 * 3)
-
-
 
         return entity
     }
@@ -138,7 +136,7 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 // MARK: - Store setup
 
 fileprivate func cModel() throws -> OpaquePointer {
-    let modelBuilder = try ModelBuilder()
+    let modelBuilder = try ObjectBox.ModelBuilder()
     try WashingMachine.buildEntity(modelBuilder: modelBuilder)
     modelBuilder.lastEntity(id: 1, uid: 17664)
     return modelBuilder.finish()

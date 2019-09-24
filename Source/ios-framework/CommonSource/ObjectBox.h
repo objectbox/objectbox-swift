@@ -16,9 +16,6 @@
 
 #import "Constants.h"
 
-// Cursor read/write interfaces
-#import "OBXPropertyConstants.h"
-
 // Temporarily exposed, private, do not use directly!
 #import "OBXErrorHelper.h"
 #import "obx_fbb.h"

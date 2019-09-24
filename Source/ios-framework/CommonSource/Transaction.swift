@@ -32,23 +32,24 @@ internal class Transaction {
     }
     
     deinit {
-        if cTransaction != nil {
-            obx_txn_close(cTransaction)
-        }
-        throwLastFatalError()
+        try? close()
     }
     
     func commit() throws {
         assert(!isClosed)
         assert(isWritable)
         obx_txn_success(cTransaction)
+        cTransaction = nil
+        isClosed = true
         try checkLastError()
     }
     
     func close() throws {
         guard !isClosed else { return }
         
-        obx_txn_close(cTransaction)
+        if cTransaction != nil {
+            obx_txn_close(cTransaction)
+        }
         cTransaction = nil
         isClosed = true
         try checkLastError()

@@ -124,23 +124,24 @@ public func || <E>(lhs: QueryCondition<E>, rhs: QueryCondition<E>) -> QueryCondi
 infix operator ∈ : ComparisonPrecedence
 infix operator ∉ : ComparisonPrecedence
 
-// MARK: - Id<T>
+// MARK: - EntityId<T>
 
 /// :nodoc:
-public func == <E, T>(lhs: Property<E, Id<T>>, rhs: Id<T>)
+public func == <E, T>(lhs: Property<E, EntityId<T>, T>, rhs: EntityId<T>)
     -> PropertyQueryCondition<E, UInt64>
     where E: Entity, T: Entity {
     return lhs.isEqual(to: rhs.value)
 }
 
+// TODO: Figure out why entityIdProperty is needed here, can't we just use self?
 extension Property where Property.ValueType: IdBase {
-    internal var entityIdProperty: Property<EntityType, EntityId> {
-        return Property<EntityType, EntityId>(base: self.base)
+    internal var entityIdProperty: Property<EntityType, Id, ReferencedType> {
+        return Property<EntityType, Id, ReferencedType>(base: self.base)
     }
 
     /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: EntityId)
-        -> PropertyQueryCondition<EntityType, EntityId> {
+    public func isEqual(to value: Id)
+        -> PropertyQueryCondition<EntityType, Id> {
             return PropertyQueryCondition(expression: {
                 $0.where(self.entityIdProperty, isEqualTo: value)
             })
@@ -152,28 +153,28 @@ extension Property where Property.ValueType: IdBase {
 // MARK: Int8
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int8>, rhs: Int8)
+public func == <E>(lhs: Property<E, Int8, Void>, rhs: Int8)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int8>, rhs: Int8)
+public func != <E>(lhs: Property<E, Int8, Void>, rhs: Int8)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int8>, rhs: Int8)
+public func < <E>(lhs: Property<E, Int8, Void>, rhs: Int8)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int8>, rhs: Int8)
+public func > <E>(lhs: Property<E, Int8, Void>, rhs: Int8)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -181,28 +182,28 @@ public func > <E>(lhs: Property<E, Int8>, rhs: Int8)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: Range<Int8>)
+public func ∈ <E>(lhs: Property<E, Int8, Void>, rhs: Range<Int8>)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: ClosedRange<Int8>)
+public func ∈ <E>(lhs: Property<E, Int8, Void>, rhs: ClosedRange<Int8>)
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: [Int8])
+public func ∈ <E>(lhs: Property<E, Int8, Void>, rhs: [Int8])
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int8>, rhs: [Int8])
+public func ∉ <E>(lhs: Property<E, Int8, Void>, rhs: [Int8])
     -> PropertyQueryCondition<E, Int8>
     where E: Entity {
         return lhs.isNotIn(rhs)
@@ -305,28 +306,28 @@ extension Property where Property.ValueType == Int8? {
 // MARK: Int16
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int16>, rhs: Int16)
+public func == <E>(lhs: Property<E, Int16, Void>, rhs: Int16)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int16>, rhs: Int16)
+public func != <E>(lhs: Property<E, Int16, Void>, rhs: Int16)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int16>, rhs: Int16)
+public func < <E>(lhs: Property<E, Int16, Void>, rhs: Int16)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int16>, rhs: Int16)
+public func > <E>(lhs: Property<E, Int16, Void>, rhs: Int16)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -334,28 +335,28 @@ public func > <E>(lhs: Property<E, Int16>, rhs: Int16)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: Range<Int16>)
+public func ∈ <E>(lhs: Property<E, Int16, Void>, rhs: Range<Int16>)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: ClosedRange<Int16>)
+public func ∈ <E>(lhs: Property<E, Int16, Void>, rhs: ClosedRange<Int16>)
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: [Int16])
+public func ∈ <E>(lhs: Property<E, Int16, Void>, rhs: [Int16])
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int16>, rhs: [Int16])
+public func ∉ <E>(lhs: Property<E, Int16, Void>, rhs: [Int16])
     -> PropertyQueryCondition<E, Int16>
     where E: Entity {
         return lhs.isNotIn(rhs)
@@ -452,28 +453,28 @@ extension Property where Property.ValueType == Int16? {
 // MARK: Int32
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int32>, rhs: Int32)
+public func == <E>(lhs: Property<E, Int32, Void>, rhs: Int32)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int32>, rhs: Int32)
+public func != <E>(lhs: Property<E, Int32, Void>, rhs: Int32)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int32>, rhs: Int32)
+public func < <E>(lhs: Property<E, Int32, Void>, rhs: Int32)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int32>, rhs: Int32)
+public func > <E>(lhs: Property<E, Int32, Void>, rhs: Int32)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isGreaterThan(rhs)
@@ -481,28 +482,28 @@ public func > <E>(lhs: Property<E, Int32>, rhs: Int32)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: Range<Int32>)
+public func ∈ <E>(lhs: Property<E, Int32, Void>, rhs: Range<Int32>)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: ClosedRange<Int32>)
+public func ∈ <E>(lhs: Property<E, Int32, Void>, rhs: ClosedRange<Int32>)
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: [Int32])
+public func ∈ <E>(lhs: Property<E, Int32, Void>, rhs: [Int32])
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int32>, rhs: [Int32])
+public func ∉ <E>(lhs: Property<E, Int32, Void>, rhs: [Int32])
     -> PropertyQueryCondition<E, Int32>
     where E: Entity {
     return lhs.isNotIn(rhs)
@@ -605,28 +606,28 @@ extension Property where Property.ValueType == Int32? {
 // MARK: Int64
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int64>, rhs: Int64)
+public func == <E, R>(lhs: Property<E, Int64, R>, rhs: Int64)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int64>, rhs: Int64)
+public func != <E, R>(lhs: Property<E, Int64, R>, rhs: Int64)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int64>, rhs: Int64)
+public func < <E, R>(lhs: Property<E, Int64, R>, rhs: Int64)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int64>, rhs: Int64)
+public func > <E, R>(lhs: Property<E, Int64, R>, rhs: Int64)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -634,28 +635,28 @@ public func > <E>(lhs: Property<E, Int64>, rhs: Int64)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: Range<Int64>)
+public func ∈ <E, R>(lhs: Property<E, Int64, R>, rhs: Range<Int64>)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: ClosedRange<Int64>)
+public func ∈ <E, R>(lhs: Property<E, Int64, R>, rhs: ClosedRange<Int64>)
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: [Int64])
+public func ∈ <E, R>(lhs: Property<E, Int64, R>, rhs: [Int64])
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int64>, rhs: [Int64])
+public func ∉ <E, R>(lhs: Property<E, Int64, R>, rhs: [Int64])
     -> PropertyQueryCondition<E, Int64>
     where E: Entity {
         return lhs.isNotIn(rhs)
@@ -752,28 +753,28 @@ extension Property where Property.ValueType == Int64? {
 // MARK: Int
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int>, rhs: Int)
+public func == <E>(lhs: Property<E, Int, Void>, rhs: Int)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int>, rhs: Int)
+public func != <E>(lhs: Property<E, Int, Void>, rhs: Int)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int>, rhs: Int)
+public func < <E>(lhs: Property<E, Int, Void>, rhs: Int)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int>, rhs: Int)
+public func > <E>(lhs: Property<E, Int, Void>, rhs: Int)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isGreaterThan(rhs)
@@ -781,28 +782,28 @@ public func > <E>(lhs: Property<E, Int>, rhs: Int)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: Range<Int>)
+public func ∈ <E>(lhs: Property<E, Int, Void>, rhs: Range<Int>)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: ClosedRange<Int>)
+public func ∈ <E>(lhs: Property<E, Int, Void>, rhs: ClosedRange<Int>)
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: [Int])
+public func ∈ <E>(lhs: Property<E, Int, Void>, rhs: [Int])
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int>, rhs: [Int])
+public func ∉ <E>(lhs: Property<E, Int, Void>, rhs: [Int])
     -> PropertyQueryCondition<E, Int>
     where E: Entity {
     return lhs.isNotIn(rhs)
@@ -899,14 +900,14 @@ extension Property where Property.ValueType == Int? {
 // MARK: - Double
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Double>, rhs: Double)
+public func < <E>(lhs: Property<E, Double, Void>, rhs: Double)
     -> PropertyQueryCondition<E, Double>
     where E: Entity {
     return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Double>, rhs: Double)
+public func > <E>(lhs: Property<E, Double, Void>, rhs: Double)
     -> PropertyQueryCondition<E, Double>
     where E: Entity {
     return lhs.isGreaterThan(rhs)
@@ -972,14 +973,14 @@ extension Property where Property.ValueType == Double? {
 // MARK: - Float
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Float>, rhs: Float)
+public func < <E>(lhs: Property<E, Float, Void>, rhs: Float)
     -> PropertyQueryCondition<E, Float>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Float>, rhs: Float)
+public func > <E>(lhs: Property<E, Float, Void>, rhs: Float)
     -> PropertyQueryCondition<E, Float>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -1046,28 +1047,28 @@ extension Property where Property.ValueType == Float? {
 // MARK: - String
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, String>, rhs: String)
+public func == <E>(lhs: Property<E, String, Void>, rhs: String)
     -> PropertyQueryCondition<E, String>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, String>, rhs: String)
+public func != <E>(lhs: Property<E, String, Void>, rhs: String)
     -> PropertyQueryCondition<E, String>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, String>, rhs: String)
+public func < <E>(lhs: Property<E, String, Void>, rhs: String)
     -> PropertyQueryCondition<E, String>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, String>, rhs: String)
+public func > <E>(lhs: Property<E, String, Void>, rhs: String)
     -> PropertyQueryCondition<E, String>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -1075,7 +1076,7 @@ public func > <E>(lhs: Property<E, String>, rhs: String)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, String>, rhs: [String])
+public func ∈ <E>(lhs: Property<E, String, Void>, rhs: [String])
     -> PropertyQueryCondition<E, String>
     where E: Entity {
         return lhs.isIn(rhs)
@@ -1083,28 +1084,28 @@ public func ∈ <E>(lhs: Property<E, String>, rhs: [String])
 // swiftlint:enable identifier_name
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, String?>, rhs: String)
+public func == <E>(lhs: Property<E, String?, Void>, rhs: String)
     -> PropertyQueryCondition<E, String?>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, String?>, rhs: String)
+public func != <E>(lhs: Property<E, String?, Void>, rhs: String)
     -> PropertyQueryCondition<E, String?>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, String?>, rhs: String)
+public func < <E>(lhs: Property<E, String?, Void>, rhs: String)
     -> PropertyQueryCondition<E, String?>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, String?>, rhs: String)
+public func > <E>(lhs: Property<E, String?, Void>, rhs: String)
     -> PropertyQueryCondition<E, String?>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -1112,7 +1113,7 @@ public func > <E>(lhs: Property<E, String?>, rhs: String)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, String?>, rhs: [String])
+public func ∈ <E>(lhs: Property<E, String?, Void>, rhs: [String])
     -> PropertyQueryCondition<E, String?>
     where E: Entity {
         return lhs.isIn(rhs)
@@ -1215,35 +1216,35 @@ extension Property where Property.ValueType == String? {
 // MARK: - Data
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Data>, rhs: Data)
+public func == <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Data>, rhs: Data)
+public func < <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func <= <E>(lhs: Property<E, Data>, rhs: Data)
+public func <= <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isLessThanEqual(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Data>, rhs: Data)
+public func > <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
 }
 
 /// :nodoc:
-public func >= <E>(lhs: Property<E, Data>, rhs: Data)
+public func >= <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isGreaterThanEqual(rhs)
@@ -1251,21 +1252,21 @@ public func >= <E>(lhs: Property<E, Data>, rhs: Data)
 // swiftlint:enable identifier_name
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Data?>, rhs: Data)
+public func == <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Data?>, rhs: Data)
+public func < <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Data?>, rhs: Data)
+public func > <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -1335,28 +1336,28 @@ extension Property where Property.ValueType == Data? {
 // MARK: - Date
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Date>, rhs: Date)
+public func == <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Date>, rhs: Date)
+public func != <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Date>, rhs: Date)
+public func < <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isBefore(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Date>, rhs: Date)
+public func > <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isAfter(rhs)
@@ -1364,28 +1365,28 @@ public func > <E>(lhs: Property<E, Date>, rhs: Date)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: Range<Date>)
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: Range<Date>)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: ClosedRange<Date>)
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: ClosedRange<Date>)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: [Date])
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Date>, rhs: [Date])
+public func ∉ <E>(lhs: Property<E, Date, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isNotIn(rhs)
@@ -1465,28 +1466,28 @@ extension Property where Property.ValueType: DatePropertyType {
 // MARK: - Date?
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Date?>, rhs: Date)
+public func == <E>(lhs: Property<E, Date?, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Date?>, rhs: Date)
+public func != <E>(lhs: Property<E, Date?, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Date?>, rhs: Date)
+public func < <E>(lhs: Property<E, Date?, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isBefore(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Date?>, rhs: Date)
+public func > <E>(lhs: Property<E, Date?, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isAfter(rhs)
@@ -1494,28 +1495,28 @@ public func > <E>(lhs: Property<E, Date?>, rhs: Date)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: Range<Date>)
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: Range<Date>)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: ClosedRange<Date>)
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: ClosedRange<Date>)
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: [Date])
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Date?>, rhs: [Date])
+public func ∉ <E>(lhs: Property<E, Date?, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date?>
     where E: Entity {
         return lhs.isNotIn(rhs)

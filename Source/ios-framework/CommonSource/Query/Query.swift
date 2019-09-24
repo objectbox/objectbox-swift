@@ -34,41 +34,40 @@
 ///      let averageAge = ageQuery.average
 ///
 
-public struct Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
+public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
 where E == E.EntityBindingType.EntityType {
     /// The entity type this query is going to target.
     public typealias EntityType = E
     
     internal var cQuery: OpaquePointer /*OBX_query*/
     internal var store: Store
-
+    
     internal init(query: OpaquePointer /*OBX_query*/, store: Store) {
         self.cQuery = query
         self.store = store
     }
     
+    deinit {
+        obx_query_close(cQuery)
+    }
+
     /// Find all objects matching the query between the given offset and limit.
     ///
     /// - Parameters:
     ///   - offset: How many results to skip. (Useful when paginating results.)
     ///   - limit: Maximum number of objects that may be returned (may give fewer).
     /// - Returns: Collection of objects matching the query conditions.
-    public func find(offset: UInt64 = 0, limit: UInt64 = 0) -> [EntityType] {
+    public func find(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityType] {
         var result = [EntityType]()
         
-        do {
-            try store.obx_runInReadOnlyTransaction { _ in
-                let box = self.store.box(for: EntityType.self)
-                if let bytesArray = obx_query_find(cQuery, offset, limit) {
-                    try check(error: obx_last_error_code())
-                    defer { obx_bytes_array_free(bytesArray) }
-                    result = try box.readAll(bytesArray.pointee)
-                }
+        try store.obx_runInReadOnlyTransaction { _ in
+            let box = self.store.box(for: EntityType.self)
+            if let bytesArray = obx_query_find(cQuery, offset, limit) {
                 try check(error: obx_last_error_code())
+                defer { obx_bytes_array_free(bytesArray) }
+                result = try box.readAll(bytesArray.pointee)
             }
-        } catch {
-            ignoreAndLog(error: error)
-            result = []
+            try check(error: obx_last_error_code())
         }
         
         return result
@@ -80,25 +79,20 @@ where E == E.EntityBindingType.EntityType {
     ///   - offset: How many results to skip. (Useful when paginating results.)
     ///   - limit: Maximum number of results that may be returned (may give fewer).
     /// - Returns: Collection of object IDs matching the query conditions.
-    public func findIds(offset: UInt64 = 0, limit: UInt64 = 0) -> [Id<EntityType>] {
-        var result = [Id<EntityType>]()
+    public func findIds(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityId<EntityType>] {
+        var result = [EntityId<EntityType>]()
         
-        do {
-            if let idArray = obx_query_find_ids(cQuery, offset, limit) {
-                try check(error: obx_last_error_code())
-                defer { obx_id_array_free(idArray) }
-                
-                result.reserveCapacity(idArray.pointee.count)
-                
-                for idIndex in 0 ..< idArray.pointee.count {
-                    result.append(Id<EntityType>(idArray.pointee.ids[idIndex]))
-                }
-            }
+        if let idArray = obx_query_find_ids(cQuery, offset, limit) {
             try check(error: obx_last_error_code())
-        } catch {
-            ignoreAndLog(error: error)
-            result = []
+            defer { obx_id_array_free(idArray) }
+            
+            result.reserveCapacity(idArray.pointee.count)
+            
+            for idIndex in 0 ..< idArray.pointee.count {
+                result.append(EntityId<EntityType>(idArray.pointee.ids[idIndex]))
+            }
         }
+        try check(error: obx_last_error_code())
         
         return result
     }
@@ -108,24 +102,19 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameters:
     /// - Returns: Number of objects deleted.
     @discardableResult
-    public func remove() -> UInt64 {
+    public func remove() throws -> UInt64 {
         var result: UInt64 = 0
         
-        do {
-            obx_query_remove(cQuery, &result)
-            try check(error: obx_last_error_code())
-        } catch {
-            ignoreAndLog(error: error)
-            result = 0
-        }
+        obx_query_remove(cQuery, &result)
+        try check(error: obx_last_error_code())
         
         return result
     }
 
 
     /// Find the first Object matching the query.
-    public var first: EntityType? {
-        return find(offset: 0, limit: 1).first
+    public func findFirst() throws -> EntityType? {
+        return try find(offset: 0, limit: 1).first
     }
 
     /// Find the single object matching the query.
@@ -136,28 +125,25 @@ where E == E.EntityBindingType.EntityType {
     /// - Throws: ObjectBoxError.nonUniqueResult when there is more than one match, ObjectBoxError.notFound when there
     ///             are no matches at all.
     public func findUnique() throws -> EntityType {
-        let found = find(offset: 0, limit: 2)
+        let found = try find(offset: 0, limit: 2)
         guard found.count < 2 else { throw ObjectBoxError.nonUniqueResult(message: "More than 1 result in database.") }
         guard found.count > 0 else { throw ObjectBoxError.notFound(message: "No results in database.") }
         return found[0]
     }
 
     /// The number of objects matching the query.
-    public var count: Int {
+    public func count() throws -> Int {
         var result: UInt64 = 0
         
-        do {
-            try check(error: obx_query_count(cQuery, &result))
-        } catch {
-            ignoreAndLog(error: error)
-        }
+        try check(error: obx_query_count(cQuery, &result))
 
         return Int(result) // Return as Int because that's what Swift Standard lib uses for arrays.
     }
 
     /// Find all Objects matching the query.
-    public var all: [EntityType] {
-        return find()
+    /// Alternative name for find() without arguments.
+    public func all() throws -> [EntityType] {
+        return try find()
     }
     
     /// Accessor to get a `PropertyQuery` object based on the query conditions.
@@ -167,14 +153,14 @@ where E == E.EntityBindingType.EntityType {
     /// 
     /// - Parameter property: Object property to modify the query for.
     /// - Returns: New `PropertyQuery` to configure.
-    public func property<T>(_ property: Property<EntityType, T>) -> PropertyQuery<EntityType, T>
+    public func property<T>(_ property: Property<EntityType, T, Void>) -> PropertyQuery<EntityType, T>
         where T: EntityPropertyTypeConvertible {
         return PropertyQuery(query: cQuery, propertyId: property.base.propertyId, store: store)
     }
 
     // MARK: - Parameter changes
     
-    internal func setParameters(property: PropertyDescriptor, to collection: [Int64]) {
+    internal func setParameters(property: PropertyDescriptor, to collection: [Int64]) throws {
         if property.type == .long {
             let numParams = Int32(collection.count)
             collection.withContiguousStorageIfAvailable { ptr -> Void in
@@ -189,51 +175,51 @@ where E == E.EntityBindingType.EntityType {
                                           property.propertyId, ptr.baseAddress, numParams)
             }
         }
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParametersForPropertyWithAlias(_ alias: String, to collection: [Int64]) {
+    internal func setParametersForPropertyWithAlias(_ alias: String, to collection: [Int64]) throws {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
             obx_query_int64_params_in_alias(cQuery, alias, ptr.baseAddress, numParams)
         }
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParametersForPropertyWithAlias(_ alias: String, to collection: [Int32]) {
+    internal func setParametersForPropertyWithAlias(_ alias: String, to collection: [Int32]) throws {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
             obx_query_int32_params_in_alias(cQuery, alias, ptr.baseAddress, numParams)
         }
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameter(property: PropertyDescriptor, to value: Int64) {
+    internal func setParameter(property: PropertyDescriptor, to value: Int64) throws {
         obx_query_int_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Specify a value for a parameter of a sub-expression of a query.
-    public func setParameter(_ alias: String, to value: Int64) {
+    public func setParameter(_ alias: String, to value: Int64) throws {
         obx_query_int_param_alias(cQuery, alias, value)
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameters(property: PropertyDescriptor, to value1: Int64, _ value2: Int64) {
+    internal func setParameters(property: PropertyDescriptor, to value1: Int64, _ value2: Int64) throws {
         obx_query_int_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                              value1, value2)
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Specify two values for a parameter of a sub-expression of a query.
-    public func setParameters(_ alias: String, to value1: Int64, _ value2: Int64) {
+    public func setParameters(_ alias: String, to value1: Int64, _ value2: Int64) throws {
         obx_query_int_params_alias(cQuery, alias, value1, value2)
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameter(property: PropertyDescriptor, to value: Double) {
+    internal func setParameter(property: PropertyDescriptor, to value: Double) throws {
         obx_query_double_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
@@ -243,15 +229,15 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - value: New value.
-    public func setParameter(_ alias: String, to value: Double) {
+    public func setParameter(_ alias: String, to value: Double) throws {
         obx_query_double_param_alias(cQuery, alias, value)
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameters(property: PropertyDescriptor, to value1: Double, _ value2: Double) {
+    internal func setParameters(property: PropertyDescriptor, to value1: Double, _ value2: Double) throws {
         obx_query_double_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                                 value1, value2)
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Sets a parameter previously specified using a `ParameterAlias` to new values.
@@ -263,14 +249,14 @@ where E == E.EntityBindingType.EntityType {
     ///   - alias: Condition's alias.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters(_ alias: String, to value1: Double, _ value2: Double) {
+    public func setParameters(_ alias: String, to value1: Double, _ value2: Double) throws {
         obx_query_double_params_alias(cQuery, alias, value1, value2)
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameter(property: PropertyDescriptor, to value: String) {
+    internal func setParameter(property: PropertyDescriptor, to value: String) throws {
         obx_query_string_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
@@ -280,19 +266,19 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - string: New value.
-    public func setParameter(_ alias: String, to string: String) {
+    public func setParameter(_ alias: String, to string: String) throws {
         obx_query_string_param_alias(cQuery, alias, string)
-        throwLastFatalError()
+        try checkLastError()
     }
     
-    internal func setParameters(property: PropertyDescriptor, to collection: [String]) {
+    internal func setParameters(property: PropertyDescriptor, to collection: [String]) throws {
         let numStrings = Int32(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
             obx_query_string_params_in(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                                        ptr.baseAddress, numStrings)
         }
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// Sets a parameter previously specified during query construction to a new collection value.
@@ -302,13 +288,13 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
-    public func setParameters(_ alias: String, to collection: [String]) {
+    public func setParameters(_ alias: String, to collection: [String]) throws {
         let numStrings = Int32(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
             obx_query_string_params_in_alias(cQuery, alias, ptr.baseAddress, numStrings)
         }
-        throwLastFatalError()
+        try checkLastError()
     }
     
     /// :nodoc:

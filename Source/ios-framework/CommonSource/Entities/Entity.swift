@@ -55,7 +55,7 @@ public protocol Entity {}
 ///
 /// - Note: Used in Alpha 1 only to implement backlinks. When you operate on the level of
 ///   "a type that conforms to Entity", that's not specific enough; you need to erase the type. This
-///   provides specification to get to the concrete Id<T>. Will be replaced in future versions.
+///   provides specification to get to the concrete EntityId<T>. Will be replaced in future versions.
 public protocol __EntityRelatable {
     // swiftlint:disable identifier_name
     /// - Note: Used in Alpha 1 only to implement backlinks and get to the _concrete_ type.
@@ -66,9 +66,9 @@ public protocol __EntityRelatable {
     ///        typealias EntityType = Person
     ///        // ...
     ///    }
-    associatedtype EntityType: Entity
+    associatedtype EntityType: EntityInspectable & __EntityRelatable
     /// - Note: Used in Alpha 1 only to implement backlinks and know which _concrete_ `Id` type
-    /// is used. Implement as e.g. `_id: Id<Person> { return self.id }`.
-    var _id: Id<EntityType> { get }
+    /// is used. Implement as e.g. `_id: EntityId<Person> { return self.id }`.
+    var _id: EntityId<EntityType> { get }
     // swiftlint:enable identifier_name
 }

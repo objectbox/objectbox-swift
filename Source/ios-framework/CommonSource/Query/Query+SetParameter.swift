@@ -25,9 +25,9 @@ extension Array where Element: IntegerPropertyQueryType {
 // MARK: - Integer types
 
 extension Query {
-
+    
     // MARK: Int64
-
+    
     /// Sets a parameter of a condition previously specified during query construction to a new value.
     ///
     /// This is the binary operator variant. It changes the value no matter which operation you used,
@@ -41,15 +41,17 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - value: New value for the condition.
-    public func setParameter<L>(_ property: Property<EntityType, L>, to value: L) where L: LongPropertyQueryType {
-        setParameter(property: property.base, to: value.int64Value)
+    public func setParameter<L>(_ property: Property<EntityType, L, Void>, to value: L) throws
+        where L: LongPropertyQueryType {
+        try setParameter(property: property.base, to: value.int64Value)
     }
-
+    
     /// :nodoc:
-    public func setParameter<L>(_ property: Property<EntityType, L?>, to value: L) where L: LongPropertyQueryType {
-        setParameter(property: property.base, to: value.int64Value)
+    public func setParameter<L>(_ property: Property<EntityType, L?, Void>, to value: L) throws
+        where L: LongPropertyQueryType {
+        try setParameter(property: property.base, to: value.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
     ///
     /// This is the binary operator variant. See `setParameters(_:to:_:)` for operators with 2 values.
@@ -57,10 +59,10 @@ extension Query {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - value: New value.
-    public func setParameter<L>(_ alias: String, to value: L) where L: LongPropertyQueryType {
-        setParameter(alias, to: value.int64Value)
+    public func setParameter<L>(_ alias: String, to value: L) throws where L: LongPropertyQueryType {
+        try setParameter(alias, to: value.int64Value)
     }
-
+    
     /// Sets a parameter of a condition previously specified during query construction to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -74,17 +76,17 @@ extension Query {
     ///   - property: Entity property specification.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters<L>(_ property: Property<EntityType, L>, to value1: L, _ value2: L)
+    public func setParameters<L>(_ property: Property<EntityType, L, Void>, to value1: L, _ value2: L) throws
         where L: LongPropertyQueryType {
-        setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
+            try setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// :nodoc:
-    public func setParameters<L>(_ property: Property<EntityType, L?>, to value1: L, _ value2: L)
+    public func setParameters<L>(_ property: Property<EntityType, L?, Void>, to value1: L, _ value2: L) throws
         where L: LongPropertyQueryType {
-            setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
+            try setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -94,10 +96,11 @@ extension Query {
     ///   - alias: Condition's alias.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters<L>(_ alias: String, to value1: L, _ value2: L) where L: LongPropertyQueryType {
-        setParameters(alias, to: value1.int64Value, value2.int64Value)
+    public func setParameters<L>(_ alias: String, to value1: L, _ value2: L) throws
+        where L: LongPropertyQueryType {
+        try setParameters(alias, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
@@ -108,17 +111,17 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - collection: New collection of values for the condition.
-    public func setParameters<L>(_ property: Property<EntityType, L>, to collection: [L])
+    public func setParameters<L>(_ property: Property<EntityType, L, Void>, to collection: [L]) throws
         where L: LongPropertyQueryType {
-        setParameters(property: property.base, to: collection.int64s )
+            try setParameters(property: property.base, to: collection.int64s )
     }
-
+    
     /// :nodoc:
-    public func setParameters<L>(_ property: Property<EntityType, L?>, to collection: [L])
+    public func setParameters<L>(_ property: Property<EntityType, L?, Void>, to collection: [L]) throws
         where L: LongPropertyQueryType {
-        setParameters(property: property.base, to: collection.int64s )
+            try setParameters(property: property.base, to: collection.int64s )
     }
-
+    
     /// Sets a parameter previously specified during query construction to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
@@ -126,13 +129,13 @@ extension Query {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
-    public func setParameters<L>(_ alias: String, to collection: [L]) where L: LongPropertyQueryType {
+    public func setParameters<L>(_ alias: String, to collection: [L]) throws where L: LongPropertyQueryType {
         let longs = collection.map { $0.int64Value }
-        setParametersForPropertyWithAlias(alias, to: longs)
+        try setParametersForPropertyWithAlias(alias, to: longs)
     }
-
+    
     // MARK: Int32
-
+    
     /// Sets a parameter of a condition previously specified during query construction to a new value.
     ///
     /// This is the binary operator variant. It changes the value no matter which operation you used,
@@ -146,17 +149,17 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - value: New value for the condition.
-    public func setParameter<I>(_ property: Property<EntityType, I>, to value: I)
+    public func setParameter<I>(_ property: Property<EntityType, I, Void>, to value: I) throws
         where I: IntegerPropertyQueryType {
-        setParameter(property: property.base, to: value.int64Value)
+            try setParameter(property: property.base, to: value.int64Value)
     }
-
+    
     /// :nodoc:
-    public func setParameter<I>(_ property: Property<EntityType, I?>, to value: I)
+    public func setParameter<I>(_ property: Property<EntityType, I?, Void>, to value: I) throws
         where I: IntegerPropertyQueryType {
-            setParameter(property: property.base, to: value.int64Value)
+            try setParameter(property: property.base, to: value.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
     ///
     /// This is the binary operator variant. See `setParameters(_:to:_:)` for operators with 2 values.
@@ -164,10 +167,10 @@ extension Query {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - value: New value.
-    public func setParameter<I>(_ alias: String, to value: I) where I: IntegerPropertyQueryType {
-        setParameter(alias, to: value.int64Value)
+    public func setParameter<I>(_ alias: String, to value: I) throws where I: IntegerPropertyQueryType {
+        try setParameter(alias, to: value.int64Value)
     }
-
+    
     /// Sets a parameter of a condition previously specified during query construction to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -181,17 +184,17 @@ extension Query {
     ///   - property: Entity property specification.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters<I>(_ property: Property<EntityType, I>, to value1: I, _ value2: I)
+    public func setParameters<I>(_ property: Property<EntityType, I, Void>, to value1: I, _ value2: I) throws
         where I: IntegerPropertyQueryType {
-            setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
+            try setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// :nodoc:
-    public func setParameters<I>(_ property: Property<EntityType, I?>, to value1: I, _ value2: I)
+    public func setParameters<I>(_ property: Property<EntityType, I?, Void>, to value1: I, _ value2: I) throws
         where I: IntegerPropertyQueryType {
-            setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
+            try setParameters(property: property.base, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -201,11 +204,11 @@ extension Query {
     ///   - alias: Condition's alias.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters<I>(_ alias: String, to value1: I, _ value2: I)
+    public func setParameters<I>(_ alias: String, to value1: I, _ value2: I) throws
         where I: IntegerPropertyQueryType {
-        setParameters(alias, to: value1.int64Value, value2.int64Value)
+            try setParameters(alias, to: value1.int64Value, value2.int64Value)
     }
-
+    
     /// Sets a parameter previously specified using a `ParameterAlias` to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
@@ -216,17 +219,17 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - collection: New collection of values for the condition.
-    public func setParameters<I>(_ property: Property<EntityType, I>, to collection: [I])
+    public func setParameters<I>(_ property: Property<EntityType, I, Void>, to collection: [I]) throws
         where I: IntegerPropertyQueryType {
-        setParameters(property: property.base, to: collection.int64s )
+            try setParameters(property: property.base, to: collection.int64s )
     }
-
+    
     /// :nodoc:
-    public func setParameters<I>(_ property: Property<EntityType, I?>, to collection: [I])
+    public func setParameters<I>(_ property: Property<EntityType, I?, Void>, to collection: [I]) throws
         where I: IntegerPropertyQueryType {
-            setParameters(property: property.base, to: collection.int64s )
+            try setParameters(property: property.base, to: collection.int64s )
     }
-
+    
     /// Sets a parameter previously specified during query construction to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
@@ -234,17 +237,17 @@ extension Query {
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
-    public func setParameters<I>(_ alias: String, to collection: [I])
+    public func setParameters<I>(_ alias: String, to collection: [I]) throws
         where I: IntegerPropertyQueryType {
-        let ints = collection.map { $0.int32Value }
-        setParametersForPropertyWithAlias(alias, to: ints)
+            let ints = collection.map { $0.int32Value }
+            try setParametersForPropertyWithAlias(alias, to: ints)
     }
 }
 
 // MARK: - Double
 
 extension Query {
-
+    
     /// Sets a parameter of a condition previously specified during query construction to a new value.
     ///
     /// This is the binary operator variant. It changes the value no matter which operation you used,
@@ -258,13 +261,13 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - value: New value for the condition.
-    public func setParameter(_ property: Property<EntityType, Double>, to value: Double) {
-        setParameter(property: property.base, to: value)
+    public func setParameter(_ property: Property<EntityType, Double, Void>, to value: Double) throws {
+        try setParameter(property: property.base, to: value)
     }
     
     /// :nodoc:
-    public func setParameter(_ property: Property<EntityType, Double?>, to value: Double) {
-        setParameter(property: property.base, to: value)
+    public func setParameter(_ property: Property<EntityType, Double?, Void>, to value: Double) throws {
+        try setParameter(property: property.base, to: value)
     }
     
     /// Convenience for `setParameters(property:to:_:)` that offers the same API as a floating point
@@ -277,13 +280,15 @@ extension Query {
     ///   - property: Entity property specification.
     ///   - value: Value to compare, ± `tolerance`.
     ///   - tolerance: Tolerance around `value`.
-    public func setParameter(_ property: Property<EntityType, Double>, toEqual value: Double, tolerance: Double) {
-        self.setParameters(property, to: (value - tolerance), (value + tolerance))
+    public func setParameter(_ property: Property<EntityType, Double, Void>, toEqual value: Double,
+                             tolerance: Double) throws {
+        try self.setParameters(property, to: (value - tolerance), (value + tolerance))
     }
     
     /// :nodoc:
-    public func setParameter(_ property: Property<EntityType, Double?>, toEqual value: Double, tolerance: Double) {
-        self.setParameters(property, to: (value - tolerance), (value + tolerance))
+    public func setParameter(_ property: Property<EntityType, Double?, Void>, toEqual value: Double,
+                             tolerance: Double) throws {
+        try self.setParameters(property, to: (value - tolerance), (value + tolerance))
     }
     
     /// Convenience for `setParameters(_:to:_:)` that offers the same API as a floating point equality
@@ -293,10 +298,10 @@ extension Query {
     ///   - alias: Condition's alias.
     ///   - value: Value to compare, ± `tolerance`.
     ///   - tolerance: Tolerance around `value`.
-    public func setParameters(_ alias: String, toEqual value: Double, tolerance: Double) {
-        setParameters(alias, to: (value - tolerance), (value + tolerance))
+    public func setParameters(_ alias: String, toEqual value: Double, tolerance: Double) throws {
+        try setParameters(alias, to: (value - tolerance), (value + tolerance))
     }
-
+    
     /// Sets a parameter of a condition previously specified during query construction to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -310,20 +315,22 @@ extension Query {
     ///   - property: Entity property specification.
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
-    public func setParameters(_ property: Property<EntityType, Double>, to value1: Double, _ value2: Double) {
-        setParameters(property: property.base, to: value1, value2)
+    public func setParameters(_ property: Property<EntityType, Double, Void>, to value1: Double,
+                              _ value2: Double) throws {
+        try setParameters(property: property.base, to: value1, value2)
     }
     
     /// :nodoc:
-    public func setParameters(_ property: Property<EntityType, Double?>, to value1: Double, _ value2: Double) {
-        setParameters(property: property.base, to: value1, value2)
+    public func setParameters(_ property: Property<EntityType, Double?, Void>, to value1: Double,
+                              _ value2: Double) throws {
+        try setParameters(property: property.base, to: value1, value2)
     }
 }
 
 // MARK: - String
 
 extension Query {
-
+    
     /// Sets a parameter of a condition previously specified during query construction to a new value.
     ///
     /// This is the binary operator variant. It changes the value no matter which operation you used,
@@ -337,13 +344,13 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - value: New value for the condition.
-    public func setParameter(_ property: Property<EntityType, String>, to string: String) {
-        setParameter(property: property.base, to: string)
+    public func setParameter(_ property: Property<EntityType, String, Void>, to string: String) throws {
+        try setParameter(property: property.base, to: string)
     }
     
     /// :nodoc:
-    public func setParameter(_ property: Property<EntityType, String?>, to string: String) {
-        setParameter(property: property.base, to: string)
+    public func setParameter(_ property: Property<EntityType, String?, Void>, to string: String) throws {
+        try setParameter(property: property.base, to: string)
     }
     
     /// Sets a parameter previously specified using a `ParameterAlias` to a new collection value.
@@ -356,12 +363,12 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - collection: New collection of values for the condition.
-    public func setParameters(_ property: Property<EntityType, String>, to collection: [String]) {
-        setParameters(property: property.base, to: collection)
+    public func setParameters(_ property: Property<EntityType, String, Void>, to collection: [String]) throws {
+        try setParameters(property: property.base, to: collection)
     }
     
     /// :nodoc:
-    public func setParameters(_ property: Property<EntityType, String?>, to collection: [String]) {
-        setParameters(property: property.base, to: collection)
+    public func setParameters(_ property: Property<EntityType, String?, Void>, to collection: [String]) throws {
+        try setParameters(property: property.base, to: collection)
     }
 }

@@ -50,19 +50,18 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 4, double: 0, string: "")
             ])
 
-        let query = box.query {
+        let query = try box.query {
             NullablePropertyEntity.double > 1.0
                 && NullablePropertyEntity.int32 > 2
                 && NullablePropertyEntity.string.hasSuffix("b")
         }.build()
 
         // Combined results
-        XCTAssertEqual(query.count, 1)
+        XCTAssertEqual(try query.count(), 1)
 
         // Per-property results count non-nil values
-        XCTAssertEqual(query.property(NullablePropertyEntity.double).count, 1)
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).count, 1)
-        XCTAssertEqual(query.property(NullablePropertyEntity.string).count, 1)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.double).count(), 1)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.string).count(), 1)
     }
 
     func testPropertyQuery_CountDistinct() throws {
@@ -73,11 +72,10 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 3)
             ])
 
-        let query = box.query { NullablePropertyEntity.int32 > 1 }.build()
+        let query = try box.query { NullablePropertyEntity.int32 > 1 }.build()
 
-        XCTAssertEqual(query.count, 3)
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).count, 3)
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).distinct().count, 2)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).count(), 3)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).distinct().count(), 2)
     }
 
     // MARK: - Long
@@ -90,8 +88,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int64.isIn([300, 400]) }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).sum, 700)
+        let query = try box.query { NullablePropertyEntity.int64.isIn([300, 400]) }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).sum(), 700)
     }
 
     func testPropertyQuery_LongMax() throws {
@@ -102,8 +100,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int64 < 300 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).max, 200)
+        let query = try box.query { NullablePropertyEntity.int64 < 300 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).max(), 200)
     }
 
     func testPropertyQuery_LongMin() throws {
@@ -114,8 +112,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int64 > 200 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).min, 300)
+        let query = try box.query { NullablePropertyEntity.int64 > 200 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).min(), 300)
     }
 
     func testPropertyQuery_LongAverage() throws {
@@ -126,8 +124,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int64 < 400 && NullablePropertyEntity.int64 > 100 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).average, 250)
+        let query = try box.query { NullablePropertyEntity.int64 < 400 && NullablePropertyEntity.int64 > 100 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).average(), 250)
     }
 
     func testPropertyQuery_FindLongs() throws {
@@ -138,11 +136,11 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 2)
             ])
 
-        let query = box.query().build()
+        let query = try box.query().build()
 
-        XCTAssertEqual(query.count, 4)
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).findInt64s().count, 4)
-        XCTAssertEqual(query.property(NullablePropertyEntity.int64).distinct().findInt64s().count, 2)
+        XCTAssertEqual(try query.count(), 4)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).findInt64s().count, 4)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).distinct().findInt64s().count, 2)
 //        let int64s = query.property(NullablePropertyEntity.int64).findInt64s(offset: 1, limit: 2)
 //        XCTAssertEqual(int64s.count, 2)
 //        // We don't really have an ordering guarantee, but currently we return in insertion order, which is why this
@@ -170,20 +168,20 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int64: 2)
             ])
 
-        let query = box.query().build()
+        let query = try box.query().build()
 
-        XCTAssertEqual(query.count, 4)
-        XCTAssertNotNil(query.property(NullablePropertyEntity.int64).findInt64())
-        XCTAssertNotNil(query.property(NullablePropertyEntity.int64).distinct().findInt64())
+        XCTAssertEqual(try query.count(), 4)
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.int64).findInt64())
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.int64).distinct().findInt64())
         // TODO: The following was a fatal exception. Changed it to return NIL, which callers need to check for anyway.
         XCTAssertThrowsError(try query.property(NullablePropertyEntity.int64).findUniqueInt64())
 
         XCTAssertNoThrow(_ = try box.put(NullablePropertyEntity(int64: 100)))
-        XCTAssertEqual(query.count, 5)
+        XCTAssertEqual(try query.count(), 5)
 
         // "unique" does not produce a unique result, but asserts there's only 1 result
         XCTAssertThrowsError(try query.property(NullablePropertyEntity.int64).findUniqueInt64())
-        let uniqueQuery = box.query { NullablePropertyEntity.int64 > 2 }.build()
+        let uniqueQuery = try box.query { NullablePropertyEntity.int64 > 2 }.build()
         XCTAssertEqual(try uniqueQuery.property(NullablePropertyEntity.int64).findUniqueInt64(), 100)
     }
 
@@ -197,8 +195,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int32.isIn([300, 400]) }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).sum, 700)
+        let query = try box.query { NullablePropertyEntity.int32.isIn([300, 400]) }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).sum(), 700)
     }
 
     func testPropertyQuery_IntegerMax() throws {
@@ -209,8 +207,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int32 < 400 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).max, 300)
+        let query = try box.query { NullablePropertyEntity.int32 < 400 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).max(), 300)
     }
 
     func testPropertyQuery_IntegerMin() throws {
@@ -221,8 +219,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int32 > 100 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).min, 200)
+        let query = try box.query { NullablePropertyEntity.int32 > 100 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).min(), 200)
     }
 
     func testPropertyQuery_IntegerAverage() throws {
@@ -233,8 +231,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(int32: 400)
             ])
 
-        let query = box.query { NullablePropertyEntity.int32 > 200 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.int32).average, 350)
+        let query = try box.query { NullablePropertyEntity.int32 > 200 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).average(), 350)
     }
 
     // MARK: - Double
@@ -247,8 +245,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(double: 4.4)
             ])
 
-        let query = box.query { NullablePropertyEntity.double > 2.5 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.double).sum, 7.7)
+        let query = try box.query { NullablePropertyEntity.double > 2.5 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.double).sum(), 7.7)
     }
 
     func testPropertyQuery_DoubleMax() throws {
@@ -259,8 +257,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(double: 4.4)
             ])
 
-        let query = box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.double).max, 3.3)
+        let query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.double).max(), 3.3)
     }
 
     func testPropertyQuery_DoubleMin() throws {
@@ -271,8 +269,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(double: 4.4)
             ])
 
-        let query = box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.double).min, 2.2)
+        let query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.double).min(), 2.2)
     }
 
     func testPropertyQuery_DoubleAverage() throws {
@@ -283,8 +281,8 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(double: 4.4)
             ])
 
-        let query = box.query { NullablePropertyEntity.double > 1.0 }.build()
-        XCTAssertEqual(query.property(NullablePropertyEntity.double).average, 2.75)
+        let query = try box.query { NullablePropertyEntity.double > 1.0 }.build()
+        XCTAssertEqual(try query.property(NullablePropertyEntity.double).average(), 2.75)
     }
 
     // MARK: - String
@@ -298,28 +296,28 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(maybeString: nil)
             ])
 
-        let query = box.query().build()
+        let query = try box.query().build()
 
-        XCTAssertEqual(query.count, 5)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString).findStrings().count, 4)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString).distinct().findStrings().count, 4)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.count(), 5)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).findStrings().count, 4)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).distinct().findStrings().count, 4)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: true).findStrings().count, 4)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: false).findStrings().count, 2)
 
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .with(nullString: "REPLACEMENT").findStrings().count, 5)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .with(nullString: "REPLACEMENT")
             .distinct(caseSensitiveCompare: false).findStrings().count, 3)
 
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .with(nullString: "x").findStrings().count, 5)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: true)
             .with(nullString: "x").findStrings().count, 5)
-        XCTAssertEqual(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: false)
             .with(nullString: "x").findStrings().count, 3)
     }
@@ -333,25 +331,25 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(maybeString: nil)
             ])
 
-        let query = box.query().build()
+        let query = try box.query().build()
 
-        XCTAssertEqual(query.count, 5)
-        XCTAssertNotNil(query.property(NullablePropertyEntity.maybeString).findString())
-        XCTAssertNotNil(query.property(NullablePropertyEntity.maybeString).distinct().findString())
-        XCTAssertNotNil(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertEqual(try query.count(), 5)
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString).findString())
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString).distinct().findString())
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: true).findString())
-        XCTAssertNotNil(query.property(NullablePropertyEntity.maybeString)
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: false).findString())
         XCTAssertThrowsError(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: false).findUniqueString())
 
         _ = try box.put(NullablePropertyEntity(maybeString: "qwertz"))
-        XCTAssertEqual(query.count, 6)
+        XCTAssertEqual(try query.count(), 6)
 
         // "unique" does not produce a unique result, but asserts there's only 1 result
         XCTAssertThrowsError(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: false).findUniqueString())
-        let uniqueQuery = box.query { NullablePropertyEntity.maybeString.startsWith("qwe") }.build()
+        let uniqueQuery = try box.query { NullablePropertyEntity.maybeString.startsWith("qwe") }.build()
         XCTAssertEqual(try uniqueQuery.property(NullablePropertyEntity.maybeString).findUniqueString(), "qwertz")
     }
 
@@ -366,37 +364,37 @@ class PropertyQueryTests: XCTestCase {
         let entity3 = NullablePropertyEntity(maybeByteVector: secondBytes, byteVector: thirdBytes)
         try box.put([entity1, entity2, entity3])
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector.isNil()
-        }).build().find().count, 1)
+        }).build().all().count, 1)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector.isNotNil()
-        }).build().find().count, 2)
+        }).build().all().count, 2)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector == secondBytes
-        }).build().find().count, 1)
+        }).build().all().count, 1)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector < secondBytes
-        }).build().find().count, 1)
+        }).build().all().count, 1)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector > firstBytes
-        }).build().find().count, 1)
+        }).build().all().count, 1)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector == secondBytes
-        }).build().find().count, 1)
+        }).build().all().count, 1)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector < firstBytes
-        }).build().find().count, 0)
+        }).build().all().count, 0)
         
-        XCTAssertEqual(box.query({
+        XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector > firstBytes
-        }).build().find().count, 2)
+        }).build().all().count, 2)
     }
     
 }

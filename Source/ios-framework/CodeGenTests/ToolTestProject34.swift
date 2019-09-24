@@ -28,7 +28,7 @@ enum TestEnum: Int {
 
 
 class EnumEntity: Entity, CustomDebugStringConvertible {
-    // objectbox:objectId
+    // objectbox:id
     var id: UInt64 = 0
     // objectbox: convert = { "dbType": "Int", "converter": "TestEnumConverter" }
     var custom: TestEnum
@@ -58,7 +58,7 @@ func main(_ args: [String]) throws -> Int32 {
         try enumBox.put(testEnumEntity1)
         guard testEnumEntity1.id != 0 else { print("error: Couldn't write entity 1."); return 1 }
 
-        guard let readEnumEntity1 = enumBox.get(Id<EnumEntity>(testEnumEntity1.id)) else { print("error: Couldn't read entity 1."); return 1 }
+        guard let readEnumEntity1 = try enumBox.get(EntityId<EnumEntity>(testEnumEntity1.id)) else { print("error: Couldn't read entity 1."); return 1 }
         guard testEnumEntity1.id == readEnumEntity1.id else { print("error: Read entity 1 ID isn't the one written."); return 1 }
         guard testEnumEntity1.custom == readEnumEntity1.custom else { print("error: Read entity 1 enum isn't the one written."); return 1 }
 
@@ -67,7 +67,7 @@ func main(_ args: [String]) throws -> Int32 {
         return 1
     }
     
-    print("note: Ran \(args.first ?? "???") tests.")
+    print("note: Ran \(args.count > 1 ? args[1] : "???") tests.")
 
     try? FileManager.default.removeItem(atPath: storeFolder.path)
 

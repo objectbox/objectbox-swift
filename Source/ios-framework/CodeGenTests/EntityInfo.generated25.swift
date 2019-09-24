@@ -10,8 +10,8 @@ import ObjectBox
 extension TypeTest: ObjectBox.__EntityRelatable {
     internal typealias EntityType = TypeTest
 
-    internal var _id: Id<TypeTest> {
-        return self.id
+    internal var _id: EntityId<TypeTest> {
+        return EntityId<TypeTest>(self.id.value)
     }
 }
 
@@ -23,9 +23,9 @@ extension TypeTest: ObjectBox.EntityInspectable {
 
     internal static var entityBinding = EntityBindingType()
 
-    fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 1, uid: 33536)
-        try entityBuilder.addProperty(name: "id", type: Id<TypeTest>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "id", type: EntityId<TypeTest>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
         try entityBuilder.addProperty(name: "intValue", type: Int.entityPropertyType, id: 2, uid: 15616)
         try entityBuilder.addProperty(name: "int8Value", type: Int8.entityPropertyType, id: 3, uid: 16640)
         try entityBuilder.addProperty(name: "int16Value", type: Int16.entityPropertyType, id: 4, uid: 17664)
@@ -55,118 +55,118 @@ extension TypeTest {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.id == myId }
-    internal static var id: Property<TypeTest, Id<TypeTest>> { return Property<TypeTest, Id<TypeTest>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<TypeTest, EntityId<TypeTest>, EntityId<TypeTest>> { return Property<TypeTest, EntityId<TypeTest>, EntityId<TypeTest>>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.intValue > 1234 }
-    internal static var intValue: Property<TypeTest, Int> { return Property<TypeTest, Int>(propertyId: 2, isPrimaryKey: false) }
+    internal static var intValue: Property<TypeTest, Int, Void> { return Property<TypeTest, Int, Void>(propertyId: 2, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.int8Value > 1234 }
-    internal static var int8Value: Property<TypeTest, Int8> { return Property<TypeTest, Int8>(propertyId: 3, isPrimaryKey: false) }
+    internal static var int8Value: Property<TypeTest, Int8, Void> { return Property<TypeTest, Int8, Void>(propertyId: 3, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.int16Value > 1234 }
-    internal static var int16Value: Property<TypeTest, Int16> { return Property<TypeTest, Int16>(propertyId: 4, isPrimaryKey: false) }
+    internal static var int16Value: Property<TypeTest, Int16, Void> { return Property<TypeTest, Int16, Void>(propertyId: 4, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.int32Value > 1234 }
-    internal static var int32Value: Property<TypeTest, Int32> { return Property<TypeTest, Int32>(propertyId: 5, isPrimaryKey: false) }
+    internal static var int32Value: Property<TypeTest, Int32, Void> { return Property<TypeTest, Int32, Void>(propertyId: 5, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.int64Value > 1234 }
-    internal static var int64Value: Property<TypeTest, Int64> { return Property<TypeTest, Int64>(propertyId: 6, isPrimaryKey: false) }
+    internal static var int64Value: Property<TypeTest, Int64, Void> { return Property<TypeTest, Int64, Void>(propertyId: 6, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.uintValue > 1234 }
-    internal static var uintValue: Property<TypeTest, UInt> { return Property<TypeTest, UInt>(propertyId: 7, isPrimaryKey: false) }
+    internal static var uintValue: Property<TypeTest, UInt, Void> { return Property<TypeTest, UInt, Void>(propertyId: 7, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.uint8Value > 1234 }
-    internal static var uint8Value: Property<TypeTest, UInt8> { return Property<TypeTest, UInt8>(propertyId: 8, isPrimaryKey: false) }
+    internal static var uint8Value: Property<TypeTest, UInt8, Void> { return Property<TypeTest, UInt8, Void>(propertyId: 8, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.uint16Value > 1234 }
-    internal static var uint16Value: Property<TypeTest, UInt16> { return Property<TypeTest, UInt16>(propertyId: 9, isPrimaryKey: false) }
+    internal static var uint16Value: Property<TypeTest, UInt16, Void> { return Property<TypeTest, UInt16, Void>(propertyId: 9, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.uint32Value > 1234 }
-    internal static var uint32Value: Property<TypeTest, UInt32> { return Property<TypeTest, UInt32>(propertyId: 10, isPrimaryKey: false) }
+    internal static var uint32Value: Property<TypeTest, UInt32, Void> { return Property<TypeTest, UInt32, Void>(propertyId: 10, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.uint64Value > 1234 }
-    internal static var uint64Value: Property<TypeTest, UInt64> { return Property<TypeTest, UInt64>(propertyId: 11, isPrimaryKey: false) }
+    internal static var uint64Value: Property<TypeTest, UInt64, Void> { return Property<TypeTest, UInt64, Void>(propertyId: 11, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.boolValue == true }
-    internal static var boolValue: Property<TypeTest, Bool> { return Property<TypeTest, Bool>(propertyId: 12, isPrimaryKey: false) }
+    internal static var boolValue: Property<TypeTest, Bool, Void> { return Property<TypeTest, Bool, Void>(propertyId: 12, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.stringValue.startsWith("X") }
-    internal static var stringValue: Property<TypeTest, String> { return Property<TypeTest, String>(propertyId: 13, isPrimaryKey: false) }
+    internal static var stringValue: Property<TypeTest, String, Void> { return Property<TypeTest, String, Void>(propertyId: 13, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.byteValue > 1234 }
-    internal static var byteValue: Property<TypeTest, Byte> { return Property<TypeTest, Byte>(propertyId: 14, isPrimaryKey: false) }
+    internal static var byteValue: Property<TypeTest, Byte, Void> { return Property<TypeTest, Byte, Void>(propertyId: 14, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.bytes > 1234 }
-    internal static var bytes: Property<TypeTest, Data> { return Property<TypeTest, Data>(propertyId: 15, isPrimaryKey: false) }
+    internal static var bytes: Property<TypeTest, Data, Void> { return Property<TypeTest, Data, Void>(propertyId: 15, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.byteArray > 1234 }
-    internal static var byteArray: Property<TypeTest, Data> { return Property<TypeTest, Data>(propertyId: 16, isPrimaryKey: false) }
+    internal static var byteArray: Property<TypeTest, Data, Void> { return Property<TypeTest, Data, Void>(propertyId: 16, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.floatValue > 1234 }
-    internal static var floatValue: Property<TypeTest, Float> { return Property<TypeTest, Float>(propertyId: 17, isPrimaryKey: false) }
+    internal static var floatValue: Property<TypeTest, Float, Void> { return Property<TypeTest, Float, Void>(propertyId: 17, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.doubleValue > 1234 }
-    internal static var doubleValue: Property<TypeTest, Double> { return Property<TypeTest, Double>(propertyId: 18, isPrimaryKey: false) }
+    internal static var doubleValue: Property<TypeTest, Double, Void> { return Property<TypeTest, Double, Void>(propertyId: 18, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { TypeTest.dateValue > 1234 }
-    internal static var dateValue: Property<TypeTest, Date> { return Property<TypeTest, Date>(propertyId: 19, isPrimaryKey: false) }
+    internal static var dateValue: Property<TypeTest, Date, Void> { return Property<TypeTest, Date, Void>(propertyId: 19, isPrimaryKey: false) }
 
-    fileprivate func __setId(identifier: ObjectBox.EntityId) {
-        self.id = Id(identifier)
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = EntityId(identifier)
     }
 }
 
@@ -177,7 +177,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .id == myId }
 
-    static var id: Property<TypeTest, Id<TypeTest>> { return Property<TypeTest, Id<TypeTest>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<TypeTest, EntityId<TypeTest>, EntityId<TypeTest>> { return Property<TypeTest, EntityId<TypeTest>, EntityId<TypeTest>>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -185,7 +185,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .intValue > 1234 }
 
-    static var intValue: Property<TypeTest, Int> { return Property<TypeTest, Int>(propertyId: 2, isPrimaryKey: false) }
+    internal static var intValue: Property<TypeTest, Int, Void> { return Property<TypeTest, Int, Void>(propertyId: 2, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -193,7 +193,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .int8Value > 1234 }
 
-    static var int8Value: Property<TypeTest, Int8> { return Property<TypeTest, Int8>(propertyId: 3, isPrimaryKey: false) }
+    internal static var int8Value: Property<TypeTest, Int8, Void> { return Property<TypeTest, Int8, Void>(propertyId: 3, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -201,7 +201,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .int16Value > 1234 }
 
-    static var int16Value: Property<TypeTest, Int16> { return Property<TypeTest, Int16>(propertyId: 4, isPrimaryKey: false) }
+    internal static var int16Value: Property<TypeTest, Int16, Void> { return Property<TypeTest, Int16, Void>(propertyId: 4, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -209,7 +209,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .int32Value > 1234 }
 
-    static var int32Value: Property<TypeTest, Int32> { return Property<TypeTest, Int32>(propertyId: 5, isPrimaryKey: false) }
+    internal static var int32Value: Property<TypeTest, Int32, Void> { return Property<TypeTest, Int32, Void>(propertyId: 5, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -217,7 +217,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .int64Value > 1234 }
 
-    static var int64Value: Property<TypeTest, Int64> { return Property<TypeTest, Int64>(propertyId: 6, isPrimaryKey: false) }
+    internal static var int64Value: Property<TypeTest, Int64, Void> { return Property<TypeTest, Int64, Void>(propertyId: 6, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -225,7 +225,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .uintValue > 1234 }
 
-    static var uintValue: Property<TypeTest, UInt> { return Property<TypeTest, UInt>(propertyId: 7, isPrimaryKey: false) }
+    internal static var uintValue: Property<TypeTest, UInt, Void> { return Property<TypeTest, UInt, Void>(propertyId: 7, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -233,7 +233,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .uint8Value > 1234 }
 
-    static var uint8Value: Property<TypeTest, UInt8> { return Property<TypeTest, UInt8>(propertyId: 8, isPrimaryKey: false) }
+    internal static var uint8Value: Property<TypeTest, UInt8, Void> { return Property<TypeTest, UInt8, Void>(propertyId: 8, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -241,7 +241,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .uint16Value > 1234 }
 
-    static var uint16Value: Property<TypeTest, UInt16> { return Property<TypeTest, UInt16>(propertyId: 9, isPrimaryKey: false) }
+    internal static var uint16Value: Property<TypeTest, UInt16, Void> { return Property<TypeTest, UInt16, Void>(propertyId: 9, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -249,7 +249,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .uint32Value > 1234 }
 
-    static var uint32Value: Property<TypeTest, UInt32> { return Property<TypeTest, UInt32>(propertyId: 10, isPrimaryKey: false) }
+    internal static var uint32Value: Property<TypeTest, UInt32, Void> { return Property<TypeTest, UInt32, Void>(propertyId: 10, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -257,7 +257,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .uint64Value > 1234 }
 
-    static var uint64Value: Property<TypeTest, UInt64> { return Property<TypeTest, UInt64>(propertyId: 11, isPrimaryKey: false) }
+    internal static var uint64Value: Property<TypeTest, UInt64, Void> { return Property<TypeTest, UInt64, Void>(propertyId: 11, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -265,7 +265,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .boolValue == true }
 
-    static var boolValue: Property<TypeTest, Bool> { return Property<TypeTest, Bool>(propertyId: 12, isPrimaryKey: false) }
+    internal static var boolValue: Property<TypeTest, Bool, Void> { return Property<TypeTest, Bool, Void>(propertyId: 12, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -273,7 +273,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .stringValue.startsWith("X") }
 
-    static var stringValue: Property<TypeTest, String> { return Property<TypeTest, String>(propertyId: 13, isPrimaryKey: false) }
+    internal static var stringValue: Property<TypeTest, String, Void> { return Property<TypeTest, String, Void>(propertyId: 13, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -281,7 +281,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .byteValue > 1234 }
 
-    static var byteValue: Property<TypeTest, Byte> { return Property<TypeTest, Byte>(propertyId: 14, isPrimaryKey: false) }
+    internal static var byteValue: Property<TypeTest, Byte, Void> { return Property<TypeTest, Byte, Void>(propertyId: 14, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -289,7 +289,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .bytes > 1234 }
 
-    static var bytes: Property<TypeTest, Data> { return Property<TypeTest, Data>(propertyId: 15, isPrimaryKey: false) }
+    internal static var bytes: Property<TypeTest, Data, Void> { return Property<TypeTest, Data, Void>(propertyId: 15, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -297,7 +297,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .byteArray > 1234 }
 
-    static var byteArray: Property<TypeTest, Data> { return Property<TypeTest, Data>(propertyId: 16, isPrimaryKey: false) }
+    internal static var byteArray: Property<TypeTest, Data, Void> { return Property<TypeTest, Data, Void>(propertyId: 16, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -305,7 +305,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .floatValue > 1234 }
 
-    static var floatValue: Property<TypeTest, Float> { return Property<TypeTest, Float>(propertyId: 17, isPrimaryKey: false) }
+    internal static var floatValue: Property<TypeTest, Float, Void> { return Property<TypeTest, Float, Void>(propertyId: 17, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -313,7 +313,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .doubleValue > 1234 }
 
-    static var doubleValue: Property<TypeTest, Double> { return Property<TypeTest, Double>(propertyId: 18, isPrimaryKey: false) }
+    internal static var doubleValue: Property<TypeTest, Double, Void> { return Property<TypeTest, Double, Void>(propertyId: 18, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -321,8 +321,7 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     ///     box.query { .dateValue > 1234 }
 
-    static var dateValue: Property<TypeTest, Date> { return Property<TypeTest, Date>(propertyId: 19, isPrimaryKey: false) }
-
+    internal static var dateValue: Property<TypeTest, Date, Void> { return Property<TypeTest, Date, Void>(propertyId: 19, isPrimaryKey: false) }
 
 }
 
@@ -330,19 +329,20 @@ extension ObjectBox.Property where E == TypeTest {
 /// Generated service type to handle persisting and reading entity data. Exposed through `TypeTest.EntityBindingType`.
 internal class TypeTestBinding: NSObject, ObjectBox.EntityBinding {
     internal typealias EntityType = TypeTest
+    internal typealias IdType = EntityId<TypeTest>
 
     override internal required init() {}
 
-    internal func setEntityId(of entity: EntityType, to entityId: ObjectBox.EntityId) {
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
     }
 
-    internal func entityId(of entity: EntityType) -> ObjectBox.EntityId {
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
         return entity.id.value
     }
 
-    internal func collect(fromEntity entity: EntityType, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
-
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.stringValue, at: 2 + 2 * 13), 2 + 2 * 13))
         offsets.append((propertyCollector.prepare(bytes: entity.bytes, at: 2 + 2 * 15), 2 + 2 * 15))
@@ -371,7 +371,7 @@ internal class TypeTestBinding: NSObject, ObjectBox.EntityBinding {
         }
     }
 
-    internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
         let entity = TypeTest()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
@@ -394,8 +394,6 @@ internal class TypeTestBinding: NSObject, ObjectBox.EntityBinding {
         entity.doubleValue = entityReader.read(at: 2 + 2 * 18)
         entity.dateValue = entityReader.read(at: 2 + 2 * 19)
 
-
-
         return entity
     }
 }
@@ -410,7 +408,7 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 // MARK: - Store setup
 
 fileprivate func cModel() throws -> OpaquePointer {
-    let modelBuilder = try ModelBuilder()
+    let modelBuilder = try ObjectBox.ModelBuilder()
     try TypeTest.buildEntity(modelBuilder: modelBuilder)
     modelBuilder.lastEntity(id: 1, uid: 33536)
     return modelBuilder.finish()

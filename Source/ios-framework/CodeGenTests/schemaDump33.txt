@@ -7,9 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = Id<DataThing>
+			propertyType = EntityId<DataThing>
 			entityName = DataThing
-			unwrappedPropertyType = Id<DataThing>
+			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -94,9 +94,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = Id<DataThing>
+			propertyType = EntityId<DataThing>
 			entityName = DataThing
-			unwrappedPropertyType = Id<DataThing>
+			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -110,9 +110,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = Id<DataThing>
+			propertyType = EntityId<DataThing>
 			entityName = DataThing
-			unwrappedPropertyType = Id<DataThing>
+			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil

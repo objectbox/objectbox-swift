@@ -16,20 +16,20 @@
 
 @testable import ObjectBox
 
-// swiftlint:disable identifier_name
+// swiftlint:disable identifier_name line_length
 class PureSwiftEntity: Entity, EntityInspectable, __EntityRelatable {
     public typealias EntityBindingType = PureSwiftEntityBinding
     
     static var entityBinding = EntityBindingType()
     
-    var id: Id<PureSwiftEntity>
-    var _id: Id<PureSwiftEntity> { return id }
+    var id: EntityId<PureSwiftEntity>
+    var _id: EntityId<PureSwiftEntity> { return id }
     var integerValue: Int32
     var maybeLongValue: Int64?
 
-    static var id: Property<PureSwiftEntity, Id<PureSwiftEntity>> { return Property(propertyId: 1, isPrimaryKey: true) }
-    static var integer: Property<PureSwiftEntity, Int32> { return Property(propertyId: 2, isPrimaryKey: false) }
-    static var maybeLong: Property<PureSwiftEntity, Int64?> { return Property(propertyId: 3, isPrimaryKey: false) }
+    static var id: Property<PureSwiftEntity, EntityId<PureSwiftEntity>, Void> { return Property(propertyId: 1, isPrimaryKey: true) }
+    static var integer: Property<PureSwiftEntity, Int32, Void> { return Property(propertyId: 2, isPrimaryKey: false) }
+    static var maybeLong: Property<PureSwiftEntity, Int64?, Void> { return Property(propertyId: 3, isPrimaryKey: false) }
 
     required init() {
         self.id = 0
@@ -37,7 +37,7 @@ class PureSwiftEntity: Entity, EntityInspectable, __EntityRelatable {
         self.maybeLongValue = nil
     }
 
-    convenience init(id: Id<PureSwiftEntity> = 0, integerValue: Int32 = 123456, maybeLongValue: Int64? = nil) {
+    convenience init(id: EntityId<PureSwiftEntity> = 0, integerValue: Int32 = 123456, maybeLongValue: Int64? = nil) {
         self.init()
         self.id = id
         self.integerValue = integerValue
@@ -58,10 +58,11 @@ class PureSwiftEntity: Entity, EntityInspectable, __EntityRelatable {
 
 class PureSwiftEntityBinding: EntityBinding {
     typealias EntityType = PureSwiftEntity
-    
+    typealias IdType = EntityId<PureSwiftEntity>
+
     required init() {}
     
-    func collect(fromEntity entity: PureSwiftEntity, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: PureSwiftEntity, id: Id, propertyCollector: PropertyCollector, store: Store) {
         propertyCollector.collect(id, at: 2 + 2*1)
         
         propertyCollector.collect(entity.integerValue, at: 2 + 2*2)
@@ -76,13 +77,13 @@ class PureSwiftEntityBinding: EntityBinding {
         return entity
     }
     
-    func setEntityId(of entity: PureSwiftEntity, to entityId: EntityId) {
-        entity.id = Id(entityId)
+    func setEntityIdUnlessStruct(of entity: PureSwiftEntity, to entityId: Id) {
+        entity.id = EntityId(entityId)
     }
     
-    func entityId(of entity: PureSwiftEntity) -> EntityId {
+    func entityId(of entity: PureSwiftEntity) -> Id {
         return entity.id.value
     }
 }
 
-// swiftlint:enable identifier_name force_cast
+// swiftlint:enable identifier_name force_cast line_length

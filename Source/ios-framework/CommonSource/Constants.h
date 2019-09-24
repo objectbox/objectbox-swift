@@ -15,12 +15,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ObjectBox/ObjectBoxC.h"
 
 #ifndef Constants_h
 #define Constants_h
-
-NS_SWIFT_NAME(EntityId)
-typedef uint64_t OBXEntityId;
 
 typedef NSString OBXPropertyAlias;
 

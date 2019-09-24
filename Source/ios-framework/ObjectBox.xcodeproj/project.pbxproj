@@ -114,8 +114,6 @@
 		550974DA2285D84F006B24B7 /* EntityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550974D82285D84F006B24B7 /* EntityBuilder.swift */; };
 		5527B79C228DD15100585FD2 /* PropertyDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527B79B228DD15100585FD2 /* PropertyDescriptor.swift */; };
 		5527B79D228DD15100585FD2 /* PropertyDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527B79B228DD15100585FD2 /* PropertyDescriptor.swift */; };
-		5527B79F228EBFF400585FD2 /* OBXPropertyConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5527B79E228EBFF400585FD2 /* OBXPropertyConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5527B7A0228EBFF400585FD2 /* OBXPropertyConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5527B79E228EBFF400585FD2 /* OBXPropertyConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5527B7A22292CC0000585FD2 /* QueryBuilderCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527B7A12292CC0000585FD2 /* QueryBuilderCondition.swift */; };
 		5527B7A32292CC0000585FD2 /* QueryBuilderCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5527B7A12292CC0000585FD2 /* QueryBuilderCondition.swift */; };
 		5530004322A15AD200C65558 /* libObjectBoxCore-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5530004222A15AD200C65558 /* libObjectBoxCore-macOS.a */; };
@@ -144,9 +142,19 @@
 		5547123F228D656D00DB4136 /* ObjectBoxC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5547123D228D656D00DB4136 /* ObjectBoxC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		558A79002281B65A00BAE9C9 /* StructEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558A78FF2281B65A00BAE9C9 /* StructEntity.swift */; };
 		558A79012281B65A00BAE9C9 /* StructEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558A78FF2281B65A00BAE9C9 /* StructEntity.swift */; };
+		559BBF97230C607400FF078F /* CombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBE6C6230C4D2A00F41F88 /* CombineTests.swift */; };
+		559BBF98230C607900FF078F /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBE6C4230C3C0100F41F88 /* Combine.swift */; };
+		55A79D1323018AB000039BBB /* ToManyProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A79D1223018AB000039BBB /* ToManyProperty.swift */; };
+		55A79D1423018AB000039BBB /* ToManyProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A79D1223018AB000039BBB /* ToManyProperty.swift */; };
 		55BC4173226F4A69008195D0 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BC4172226F4A69008195D0 /* Transaction.swift */; };
 		55BC4174226F4A69008195D0 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55BC4172226F4A69008195D0 /* Transaction.swift */; };
 		55BE9BF721AEAAB70017F77D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BE9BF421AEAAB60017F77D /* Security.framework */; };
+		55C14CE92306ECF800F10D7D /* AsyncBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CE82306ECF800F10D7D /* AsyncBox.swift */; };
+		55C14CEA2306ECF800F10D7D /* AsyncBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CE82306ECF800F10D7D /* AsyncBox.swift */; };
+		55C14CEE230710F900F10D7D /* AsyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CEB2307103D00F10D7D /* AsyncTest.swift */; };
+		55C14CEF230710FB00F10D7D /* AsyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CEB2307103D00F10D7D /* AsyncTest.swift */; };
+		55C14CF1230AF4B000F10D7D /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CF0230AF4B000F10D7D /* Observer.swift */; };
+		55C14CF2230AF4B000F10D7D /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CF0230AF4B000F10D7D /* Observer.swift */; };
 		55D19CA1228036CD00BEAD37 /* EntityBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D19CA0228036CD00BEAD37 /* EntityBinding.swift */; };
 		55D19CA2228036CD00BEAD37 /* EntityBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D19CA0228036CD00BEAD37 /* EntityBinding.swift */; };
 		55D19CAB2280632D00BEAD37 /* TestEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D19CA82280601B00BEAD37 /* TestEntities.swift */; };
@@ -269,7 +277,6 @@
 		550974D32285D1EB006B24B7 /* ModelBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBuilder.swift; sourceTree = "<group>"; };
 		550974D82285D84F006B24B7 /* EntityBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityBuilder.swift; sourceTree = "<group>"; };
 		5527B79B228DD15100585FD2 /* PropertyDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyDescriptor.swift; sourceTree = "<group>"; };
-		5527B79E228EBFF400585FD2 /* OBXPropertyConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBXPropertyConstants.h; sourceTree = "<group>"; };
 		5527B7A12292CC0000585FD2 /* QueryBuilderCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderCondition.swift; sourceTree = "<group>"; };
 		5530004222A15AD200C65558 /* libObjectBoxCore-macOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-macOS.a"; path = "../../external/objectbox-static/libObjectBoxCore-macOS.a"; sourceTree = "<group>"; };
 		5530005C22A167A700C65558 /* libObjectBoxCore-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS.a"; path = "../../external/objectbox-static/libObjectBoxCore-iOS.a"; sourceTree = "<group>"; };
@@ -279,14 +286,19 @@
 		554176282278445700B3A225 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		5541762B2278584200B3A225 /* BoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxTests.swift; sourceTree = "<group>"; };
 		5541762E2278726300B3A225 /* ErrorHelperIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHelperIntegrationTests.swift; sourceTree = "<group>"; };
+		55420B562326A9C50070BB3E /* GeneratedStoreInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedStoreInitializer.swift; sourceTree = "<group>"; };
 		554711FD228B120A00DB4136 /* EntityInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityInfo.swift; sourceTree = "<group>"; };
 		55471202228B15D700DB4136 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		55471210228C466100DB4136 /* StoreHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreHelper.swift; sourceTree = "<group>"; };
 		55471224228C767800DB4136 /* Date+Timestamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Timestamp.swift"; sourceTree = "<group>"; };
 		5547123D228D656D00DB4136 /* ObjectBoxC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectBoxC.h; sourceTree = BUILT_PRODUCTS_DIR; };
 		558A78FF2281B65A00BAE9C9 /* StructEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructEntity.swift; sourceTree = "<group>"; };
+		55A79D1223018AB000039BBB /* ToManyProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToManyProperty.swift; sourceTree = "<group>"; };
 		55BC4172226F4A69008195D0 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		55BE9BF421AEAAB60017F77D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		55C14CE82306ECF800F10D7D /* AsyncBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncBox.swift; sourceTree = "<group>"; };
+		55C14CEB2307103D00F10D7D /* AsyncTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTest.swift; sourceTree = "<group>"; };
+		55C14CF0230AF4B000F10D7D /* Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		55D19CA0228036CD00BEAD37 /* EntityBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityBinding.swift; sourceTree = "<group>"; };
 		55D19CA82280601B00BEAD37 /* TestEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEntities.swift; sourceTree = "<group>"; };
 		55D1A39522B28B3B0032361C /* FlatBufferBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatBufferBuilder.swift; sourceTree = "<group>"; };
@@ -300,6 +312,8 @@
 		55EB4BF922AA8A460091CDB1 /* EntityReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityReader.swift; sourceTree = "<group>"; };
 		55EB4BFC22AAA2170091CDB1 /* ThreadSpecific.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSpecific.swift; sourceTree = "<group>"; };
 		55EB4BFF22AAA4E90091CDB1 /* PropertyCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyCollector.swift; sourceTree = "<group>"; };
+		55FBE6C4230C3C0100F41F88 /* Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combine.swift; sourceTree = "<group>"; };
+		55FBE6C6230C4D2A00F41F88 /* CombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineTests.swift; sourceTree = "<group>"; };
 		CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB3B3F3520AB4B4B00418618 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -360,9 +374,11 @@
 				5086A1DB210869A400F9B628 /* Query */,
 				5052614720BD72A500405B13 /* OBXErrorHelper.h */,
 				5052615720BD72A500405B13 /* OBXErrorHelper.mm */,
+				55420B562326A9C50070BB3E /* GeneratedStoreInitializer.swift */,
 				5541760B2271C1E400B3A225 /* Errors.swift */,
 				55471224228C767800DB4136 /* Date+Timestamp.swift */,
 				5089AB2821367CC900CB7871 /* Box.swift */,
+				55C14CE82306ECF800F10D7D /* AsyncBox.swift */,
 				55D1A39C22B38EF60032361C /* InstanceVisitor.swift */,
 				5089AB2621367CA900CB7871 /* Store+SwiftRefinedAPI.swift */,
 				50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */,
@@ -372,6 +388,8 @@
 				55D1A39522B28B3B0032361C /* FlatBufferBuilder.swift */,
 				55D1A39622B28B3B0032361C /* FlatBufferReader.swift */,
 				55EB4BFC22AAA2170091CDB1 /* ThreadSpecific.swift */,
+				55C14CF0230AF4B000F10D7D /* Observer.swift */,
+				55FBE6C4230C3C0100F41F88 /* Combine.swift */,
 				55DD1A462268AFC5007F8D30 /* obx_fbb.h */,
 				55DD1A472268AFC5007F8D30 /* obx_fbb.cpp */,
 			);
@@ -420,6 +438,8 @@
 				5070A9D4217F4C3B002305F8 /* QueryTests.swift */,
 				5070A9D6217F4C3B002305F8 /* PropertyQueryTests.swift */,
 				5070A9D9217F4C3B002305F8 /* ToOneRelationTests.swift */,
+				55C14CEB2307103D00F10D7D /* AsyncTest.swift */,
+				55FBE6C6230C4D2A00F41F88 /* CombineTests.swift */,
 				5070A9CC217F4C3B002305F8 /* Test Entities */,
 				5070A9DA217F4C3B002305F8 /* Exception */,
 				5070A9E3217F4C3B002305F8 /* Helpers */,
@@ -491,12 +511,12 @@
 				550974D32285D1EB006B24B7 /* ModelBuilder.swift */,
 				550974D82285D84F006B24B7 /* EntityBuilder.swift */,
 				5527B79B228DD15100585FD2 /* PropertyDescriptor.swift */,
-				5527B79E228EBFF400585FD2 /* OBXPropertyConstants.h */,
 				5089AB2A21367D0200CB7871 /* Entity.swift */,
 				5089AB2C21367D3500CB7871 /* EntityPropertyType.swift */,
 				50A28C6E219B49860024D1FC /* EntityPropertyTypeImplementations.swift */,
 				5089AB2E21367D5A00CB7871 /* Id.swift */,
 				5089AB2021367BDF00CB7871 /* Property.swift */,
+				55A79D1223018AB000039BBB /* ToManyProperty.swift */,
 				554711FD228B120A00DB4136 /* EntityInfo.swift */,
 				55EB4BF922AA8A460091CDB1 /* EntityReader.swift */,
 			);
@@ -559,7 +579,6 @@
 			files = (
 				5070A9BA217F49A9002305F8 /* OBXErrorHelper.h in Headers */,
 				5070A97D217F48D7002305F8 /* ObjectBox.h in Headers */,
-				5527B7A0228EBFF400585FD2 /* OBXPropertyConstants.h in Headers */,
 				55EB4BF122AA69490091CDB1 /* flatbuffers.h in Headers */,
 				55EB4BF322AA69490091CDB1 /* stl_emulation.h in Headers */,
 				5547123F228D656D00DB4136 /* ObjectBoxC.h in Headers */,
@@ -578,7 +597,6 @@
 				55DD1A482268AFC5007F8D30 /* obx_fbb.h in Headers */,
 				55EB4BF022AA69490091CDB1 /* flatbuffers.h in Headers */,
 				55EB4BF222AA69490091CDB1 /* stl_emulation.h in Headers */,
-				5527B79F228EBFF400585FD2 /* OBXPropertyConstants.h in Headers */,
 				5052616320BD72A500405B13 /* OBXErrorHelper.h in Headers */,
 				5052616C20BD72A500405B13 /* Constants.h in Headers */,
 				55EB4BF422AA69490091CDB1 /* base.h in Headers */,
@@ -801,7 +819,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "mkdir -p \"${PUBLIC_HEADERS_FOLDER_PATH}\"\n\"${PROJECT_DIR}/../download_dependencies.command\"\n\"${PROJECT_DIR}/generate_ObjectBoxC_header.rb\" \"${PROJECT_DIR}/../external/objectbox-static/objectbox.h\" \"${BUILT_PRODUCTS_DIR}/ObjectBoxC.h\"\n";
+			shellScript = "if [ ! -d \"${PROJECT_DIR}/../external/objectbox\" ]; then\n    \"${PROJECT_DIR}/../download_dependencies.command\"\nfi\n\"${PROJECT_DIR}/generate_ObjectBoxC_header.rb\" \"${PROJECT_DIR}/../external/objectbox-static/objectbox.h\" \"${BUILT_PRODUCTS_DIR}/ObjectBoxC.h\"\n";
 			showEnvVarsInLog = 0;
 		};
 		55471240228D66BA00DB4136 /* Rename C Header */ = {
@@ -820,7 +838,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "mkdir -p \"${PUBLIC_HEADERS_FOLDER_PATH}\"\n\"${PROJECT_DIR}/../download_dependencies.command\"\n\"${PROJECT_DIR}/generate_ObjectBoxC_header.rb\" \"${PROJECT_DIR}/../external/objectbox-static/objectbox.h\" \"${BUILT_PRODUCTS_DIR}/ObjectBoxC.h\"\n";
+			shellScript = "if [ ! -d \"${PROJECT_DIR}/../external/objectbox\" ]; then\n    \"${PROJECT_DIR}/../download_dependencies.command\"\nfi\n\"${PROJECT_DIR}/generate_ObjectBoxC_header.rb\" \"${PROJECT_DIR}/../external/objectbox-static/objectbox.h\" \"${BUILT_PRODUCTS_DIR}/ObjectBoxC.h\"\n";
 			showEnvVarsInLog = 0;
 		};
 		55C37BD521BFC17E0012BC0D /* Run Test Script */ = {
@@ -862,12 +880,15 @@
 				5527B79D228DD15100585FD2 /* PropertyDescriptor.swift in Sources */,
 				550974D52285D1EB006B24B7 /* ModelBuilder.swift in Sources */,
 				55EB4C0122AAA4E90091CDB1 /* PropertyCollector.swift in Sources */,
+				559BBF98230C607900FF078F /* Combine.swift in Sources */,
+				55C14CF2230AF4B000F10D7D /* Observer.swift in Sources */,
 				5070A99E217F4946002305F8 /* LazyProxyRelation.swift in Sources */,
 				5070A99C217F493E002305F8 /* Property.swift in Sources */,
 				5070A9B9217F49A5002305F8 /* PropertyAlias.swift in Sources */,
 				5070A9C5217F49CC002305F8 /* PropertyCollector+SwiftRefinedAPI.swift in Sources */,
 				5070A9B8217F49A3002305F8 /* PropertyQuery.swift in Sources */,
 				5070A9B4217F498D002305F8 /* Query.swift in Sources */,
+				55A79D1423018AB000039BBB /* ToManyProperty.swift in Sources */,
 				5070A9B5217F4990002305F8 /* Query+SetParameter.swift in Sources */,
 				5527B7A32292CC0000585FD2 /* QueryBuilderCondition.swift in Sources */,
 				55D1A39A22B28B3B0032361C /* FlatBufferReader.swift in Sources */,
@@ -877,6 +898,7 @@
 				5070A9C4217F49CA002305F8 /* Store+SwiftRefinedAPI.swift in Sources */,
 				5070A99F217F4948002305F8 /* ToMany.swift in Sources */,
 				5070A99D217F4942002305F8 /* ToOne.swift in Sources */,
+				55C14CEA2306ECF800F10D7D /* AsyncBox.swift in Sources */,
 				55BC4174226F4A69008195D0 /* Transaction.swift in Sources */,
 				5541760D2271C1E400B3A225 /* Errors.swift in Sources */,
 				5070A9BB217F49AB002305F8 /* OBXErrorHelper.mm in Sources */,
@@ -898,6 +920,7 @@
 				5070A9FA217F4CA8002305F8 /* TestExceptionProducer.mm in Sources */,
 				55D19CAC2280632E00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA02217F4CF7002305F8 /* RelatedEntities.swift in Sources */,
+				55C14CEF230710FB00F10D7D /* AsyncTest.swift in Sources */,
 				5070A9F2217F4C72002305F8 /* QueryOperatorTests.swift in Sources */,
 				5541762D2278584200B3A225 /* BoxTests.swift in Sources */,
 				5070A9F9217F4CA8002305F8 /* ExceptionHelpers+Swift.swift in Sources */,
@@ -906,6 +929,7 @@
 				554176272277575700B3A225 /* TransactionTests.swift in Sources */,
 				5070A9F4217F4C72002305F8 /* PropertyQueryTests.swift in Sources */,
 				5541762A2278445700B3A225 /* StoreTests.swift in Sources */,
+				559BBF97230C607400FF078F /* CombineTests.swift in Sources */,
 				55417624227756D800B3A225 /* QueryBuilderTests.swift in Sources */,
 				5070A9F0217F4C72002305F8 /* SwiftRefinedAPITests.swift in Sources */,
 				5070A9F1217F4C72002305F8 /* Entity+NullablePropertyTests.swift in Sources */,
@@ -925,6 +949,7 @@
 				5070AA0A217F4EC4002305F8 /* QueryOperatorTests.swift in Sources */,
 				55D19CAB2280632D00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA0D217F4EC4002305F8 /* ToOneRelationTests.swift in Sources */,
+				55C14CEE230710F900F10D7D /* AsyncTest.swift in Sources */,
 				5070AA14217F4ECF002305F8 /* ExceptionHelpers+Swift.swift in Sources */,
 				5541762C2278584200B3A225 /* BoxTests.swift in Sources */,
 				5070AA08217F4EC4002305F8 /* SwiftRefinedAPITests.swift in Sources */,
@@ -961,12 +986,14 @@
 				5527B79C228DD15100585FD2 /* PropertyDescriptor.swift in Sources */,
 				55EB4C0022AAA4E90091CDB1 /* PropertyCollector.swift in Sources */,
 				5089AB2D21367D3500CB7871 /* EntityPropertyType.swift in Sources */,
+				55C14CF1230AF4B000F10D7D /* Observer.swift in Sources */,
 				5089AB2121367BDF00CB7871 /* Property.swift in Sources */,
 				50A28C6F219B49860024D1FC /* EntityPropertyTypeImplementations.swift in Sources */,
 				55BC4173226F4A69008195D0 /* Transaction.swift in Sources */,
 				5089AB2921367CC900CB7871 /* Box.swift in Sources */,
 				5089AB2F21367D5A00CB7871 /* Id.swift in Sources */,
 				5052617320BD72A500405B13 /* OBXErrorHelper.mm in Sources */,
+				55A79D1323018AB000039BBB /* ToManyProperty.swift in Sources */,
 				55471225228C767800DB4136 /* Date+Timestamp.swift in Sources */,
 				5527B7A22292CC0000585FD2 /* QueryBuilderCondition.swift in Sources */,
 				55D1A39922B28B3B0032361C /* FlatBufferReader.swift in Sources */,
@@ -976,6 +1003,7 @@
 				5541760C2271C1E400B3A225 /* Errors.swift in Sources */,
 				5089AB2321367BF100CB7871 /* PropertyQuery.swift in Sources */,
 				5089AB2721367CA900CB7871 /* Store+SwiftRefinedAPI.swift in Sources */,
+				55C14CE92306ECF800F10D7D /* AsyncBox.swift in Sources */,
 				550974D92285D84F006B24B7 /* EntityBuilder.swift in Sources */,
 				50A28C75219B4C310024D1FC /* Box+Query.swift in Sources */,
 				5089AB2B21367D0200CB7871 /* Entity.swift in Sources */,
@@ -1042,6 +1070,7 @@
 				SDKROOT = iphoneos;
 				STRIPFLAGS = "-x -S";
 				STRIP_STYLE = all;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/CommonSource/ $(PROJECT_DIR)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1078,6 +1107,7 @@
 				SDKROOT = iphoneos;
 				STRIPFLAGS = "-x -S";
 				STRIP_STYLE = all;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/CommonSource/ $(PROJECT_DIR)";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -1275,7 +1305,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = (
 					"${PROJECT_DIR}/../external/objectbox-static/",

@@ -137,7 +137,7 @@ class StoreTests: XCTestCase {
         let result = try! store.obx_runInReadOnlyTransaction { _ -> TestPerson? in
             return try store.obx_runInReadOnlyTransaction({ _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
-                return box.get(entityId)
+                return try box.get(entityId)
             })
         }
         
@@ -167,7 +167,7 @@ class StoreTests: XCTestCase {
         let result = try! store.obx_runInTransaction { _ -> TestPerson? in
             return try store.obx_runInReadOnlyTransaction({ _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
-                return box.get(entityId)
+                return try box.get(entityId)
             })
         }
         
@@ -176,8 +176,8 @@ class StoreTests: XCTestCase {
     }
     
     func testNestedWriteTransactions() {
-        let result = try! store.obx_runInTransaction { _ -> EntityId in
-            return try store.obx_runInTransaction({ _ -> EntityId in
+        let result = try! store.obx_runInTransaction { _ -> Id in
+            return try store.obx_runInTransaction({ _ -> Id in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
                 return try box.put(TestPerson.irrelevant).value
             })

@@ -1,0 +1,7 @@
+/Users/uli/Programming/objectbox-swift/ios-framework/CodeGenTests/ToolTestProject51.swift:52:30: error: argument type 'EntityId<NotAnAuthor>' does not conform to expected type 'UntypedIdBase'
+        try authorBox.remove(EntityId<NotAnAuthor>(7879))
+                             ^
+/Users/uli/Programming/objectbox-swift/ios-framework/CodeGenTests/ToolTestProject51.swift:53:26: error: argument type 'EntityId<NotAnAuthor>' does not conform to expected type 'UntypedIdBase'
+        if authorBox.get(EntityId<NotAnAuthor>(7879)) != nil {
+                         ^
+note: Using new build systemnote: Planning buildnote: Using build description from disk

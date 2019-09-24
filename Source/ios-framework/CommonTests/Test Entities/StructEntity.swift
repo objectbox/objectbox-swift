@@ -20,7 +20,7 @@ import ObjectBox
 // swiftlint:disable identifier_name line_length
 
 struct StructEntity {
-    let id: Id<StructEntity>
+    let id: EntityId<StructEntity>
     let message: String
     let date: Date
 }
@@ -30,7 +30,7 @@ extension StructEntity: Entity {}
 extension StructEntity: __EntityRelatable {
     internal typealias EntityType = StructEntity
     
-    internal var _id: Id<StructEntity> {
+    internal var _id: EntityId<StructEntity> {
         return self.id
     }
 }
@@ -45,7 +45,7 @@ extension StructEntity: EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: StructEntity.self, id: 3, uid: 1002)
-        try entityBuilder.addProperty(name: "id", type: Id<StructEntity>.entityPropertyType, flags: [.id], id: 1, uid: 12)
+        try entityBuilder.addProperty(name: "id", type: EntityId<StructEntity>.entityPropertyType, flags: [.id], id: 1, uid: 12)
         try entityBuilder.addProperty(name: "message", type: String.entityPropertyType, id: 2, uid: 13)
         try entityBuilder.addProperty(name: "date", type: Date.entityPropertyType, id: 3, uid: 14)
         try entityBuilder.lastProperty(id: 3, uid: 14)
@@ -58,19 +58,19 @@ extension StructEntity {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { StructEntity.id == myId }
-    internal static var id: Property<StructEntity, Id<StructEntity>> { return Property<StructEntity, Id<StructEntity>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<StructEntity, EntityId<StructEntity>, Void> { return Property<StructEntity, EntityId<StructEntity>, Void>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { StructEntity.message.startsWith("X") }
-    internal static var message: Property<StructEntity, String> { return Property<StructEntity, String>(propertyId: 2, isPrimaryKey: false) }
+    internal static var message: Property<StructEntity, String, Void> { return Property<StructEntity, String, Void>(propertyId: 2, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { StructEntity.date > 1234 }
-    internal static var date: Property<StructEntity, Date> { return Property<StructEntity, Date>(propertyId: 3, isPrimaryKey: false) }
+    internal static var date: Property<StructEntity, Date, Void> { return Property<StructEntity, Date, Void>(propertyId: 3, isPrimaryKey: false) }
 }
 
 extension Property where E == StructEntity {
@@ -80,7 +80,7 @@ extension Property where E == StructEntity {
     ///
     ///     box.query { .id == myId }
     
-    static var id: Property<StructEntity, Id<StructEntity>> { return Property<StructEntity, Id<StructEntity>>(propertyId: 1, isPrimaryKey: true) }
+    static var id: Property<StructEntity, EntityId<StructEntity>, Void> { return Property<StructEntity, EntityId<StructEntity>, Void>(propertyId: 1, isPrimaryKey: true) }
     
     /// Generated entity property information.
     ///
@@ -88,7 +88,7 @@ extension Property where E == StructEntity {
     ///
     ///     box.query { .message.startsWith("X") }
     
-    static var message: Property<StructEntity, String> { return Property<StructEntity, String>(propertyId: 2, isPrimaryKey: false) }
+    static var message: Property<StructEntity, String, Void> { return Property<StructEntity, String, Void>(propertyId: 2, isPrimaryKey: false) }
     
     /// Generated entity property information.
     ///
@@ -96,7 +96,7 @@ extension Property where E == StructEntity {
     ///
     ///     box.query { .date > 1234 }
     
-    static var date: Property<StructEntity, Date> { return Property<StructEntity, Date>(propertyId: 3, isPrimaryKey: false) }
+    static var date: Property<StructEntity, Date, Void> { return Property<StructEntity, Date, Void>(propertyId: 3, isPrimaryKey: false) }
     
     
 }
@@ -105,18 +105,19 @@ extension Property where E == StructEntity {
 /// Generated service type to handle persisting and reading entity data. Exposed through `StructEntity.entitySchemaId`.
 internal class StructEntityCursor: EntityBinding {
     internal typealias EntityType = StructEntity
-    
+    internal typealias IdType = EntityId<StructEntity>
+
     internal required init() {}
     
-    internal func setEntityId(of entity: EntityType, to entityId: EntityId) {
-        fatalError("Use the struct variants of the put methods on entities of struct StructEntity.")
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: Id) {
+        // Use the struct variants of the put methods on entities of struct StructEntity.
     }
     
-    internal func entityId(of entity: EntityType) -> EntityId {
+    internal func entityId(of entity: EntityType) -> Id {
         return entity.id.value
     }
     
-    internal func collect(fromEntity entity: EntityType, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
+    internal func collect(fromEntity entity: EntityType, id: Id, propertyCollector: PropertyCollector, store: Store) {
         
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.message, at: 2 + 2 * 2), 2 + 2 * 2))
@@ -130,7 +131,7 @@ internal class StructEntityCursor: EntityBinding {
     }
     
     internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
-        let entityId: Id<StructEntity> = entityReader.read(at: 2 + 2 * 1)
+        let entityId: EntityId<StructEntity> = entityReader.read(at: 2 + 2 * 1)
         let entity = StructEntity(
             id: entityId,
             message: entityReader.read(at: 2 + 2 * 2),
@@ -149,7 +150,7 @@ extension Box where E == StructEntity {
     /// - Returns: The stored object. If `entity`'s id is 0, an ID is generated.
     /// - Throws: ObjectBoxError errors for database write errors.
     func put(struct entity: StructEntity) throws -> StructEntity {
-        let entityId: Id<StructEntity> = try self.putImmutable(entity)
+        let entityId: EntityId<StructEntity> = try self.put(entity)
         
         return StructEntity(
             id: entityId,
@@ -164,7 +165,7 @@ extension Box where E == StructEntity {
     /// - Returns: The stored objects. If any entity's id is 0, an ID is generated.
     /// - Throws: ObjectBoxError errors for database write errors.
     func put(structs entities: [StructEntity]) throws -> [StructEntity] {
-        let entityIds: [Id<StructEntity>] = try self.putImmutable(entities)
+        let entityIds: [EntityId<StructEntity>] = try self.put(entities)
         var newEntities = [StructEntity]()
         
         for i in 0 ..< min(entities.count, entityIds.count) {

@@ -2,7 +2,7 @@ import ObjectBox
 
 
 class DataThing: Entity, CustomDebugStringConvertible {
-    var id: Id<DataThing> = 0
+    var id: EntityId<DataThing> = 0
     var firstData: Data
     var secondData: [UInt8]
     var maybeThirdData: Data?
@@ -42,14 +42,14 @@ func main(_ args: [String]) throws -> Int32 {
         
         try box.put(records)
         
-        let numAvailable = box.count
+        let numAvailable = try box.count()
         if numAvailable != records.count {
             print("error: Expected \(records.count) entities, only \(numAvailable) reported")
             return 1
         }
         
         for entity in records {
-            let results = box.query({ DataThing.firstData == entity.firstData }).build().find()
+            let results = try box.query({ DataThing.firstData == entity.firstData }).build().all()
             if results.count != 1 {
                 print("error: Expected one \(entity), \(results.count) found")
                 return 1
@@ -65,7 +65,7 @@ func main(_ args: [String]) throws -> Int32 {
         return 1
     }
     
-    print("note: Ran Data and [UInt8] tests.")
+    print("note: Ran \(args.count > 1 ? args[1] : "???") tests.")
 
     try? FileManager.default.removeItem(atPath: storeFolder.path)
 

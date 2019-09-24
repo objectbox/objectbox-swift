@@ -36,7 +36,7 @@ public class ModelBuilder {
     /// Create a new ModelBuilder.
     public init() throws {
         obx_last_error_clear()
-        model = obx_model_create()
+        model = obx_model()
         try checkLastError()
     }
     

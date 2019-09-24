@@ -81,83 +81,83 @@ extension Data: DataPropertyType {}
 extension Optional: DataPropertyType where Wrapped == Data {}
 
 extension Array: EntityPropertyTypeConvertible where Element == UInt8 {
-    public static var entityPropertyType: OBXPropertyType { return .byteVector }
+    public static var entityPropertyType: PropertyType { return .byteVector }
 }
 
 // MARK: - Entity Property Types
 
 extension Bool: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .bool }
+    public static var entityPropertyType: PropertyType { return .bool }
 }
 
 public typealias Byte = UInt8
 
 extension Int8: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .byte }
+    public static var entityPropertyType: PropertyType { return .byte }
 }
 
 extension Int16: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .short }
+    public static var entityPropertyType: PropertyType { return .short }
 }
 
 extension Int32: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .int }
+    public static var entityPropertyType: PropertyType { return .int }
 }
 
 extension Int64: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .long }
+    public static var entityPropertyType: PropertyType { return .long }
 }
 
 extension Int: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .long }
+    public static var entityPropertyType: PropertyType { return .long }
 }
 
 extension UInt8: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .byte }
+    public static var entityPropertyType: PropertyType { return .byte }
 }
 
 extension UInt16: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .short }
+    public static var entityPropertyType: PropertyType { return .short }
 }
 
 extension UInt32: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .int }
+    public static var entityPropertyType: PropertyType { return .int }
 }
 
 extension UInt64: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .long }
+    public static var entityPropertyType: PropertyType { return .long }
 }
 
 extension UInt: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .long }
+    public static var entityPropertyType: PropertyType { return .long }
 }
 
 extension Float: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .float }
+    public static var entityPropertyType: PropertyType { return .float }
 }
 
 extension Double: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .double }
+    public static var entityPropertyType: PropertyType { return .double }
 }
 
 extension String: EntityPropertyTypeConvertible {
-    public static var entityPropertyType: OBXPropertyType { return .string }
+    public static var entityPropertyType: PropertyType { return .string }
 }
 
 extension Date: EntityPropertyTypeConvertible, EntityScalarPropertyType {
-    public static var entityPropertyType: OBXPropertyType { return .date }
+    public static var entityPropertyType: PropertyType { return .date }
 }
 
 extension Data: EntityPropertyTypeConvertible {
-    public static var entityPropertyType: OBXPropertyType { return .byteVector }
+    public static var entityPropertyType: PropertyType { return .byteVector }
 }
 
 extension Optional: EntityPropertyTypeConvertible where Wrapped: EntityPropertyTypeConvertible {
-    public static var entityPropertyType: OBXPropertyType { return Wrapped.entityPropertyType }
+    public static var entityPropertyType: PropertyType { return Wrapped.entityPropertyType }
 }
 
-extension Id: EntityPropertyTypeConvertible {
-    public static var entityPropertyType: OBXPropertyType {
+extension EntityId: EntityPropertyTypeConvertible {
+    public static var entityPropertyType: PropertyType {
         return .long
     }
 }

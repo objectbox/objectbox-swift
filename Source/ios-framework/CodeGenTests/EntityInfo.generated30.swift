@@ -10,8 +10,8 @@ import ObjectBox
 extension Building: ObjectBox.__EntityRelatable {
     internal typealias EntityType = Building
 
-    internal var _id: Id<Building> {
-        return self.id
+    internal var _id: EntityId<Building> {
+        return EntityId<Building>(self.id.value)
     }
 }
 
@@ -23,9 +23,9 @@ extension Building: ObjectBox.EntityInspectable {
 
     internal static var entityBinding = EntityBindingType()
 
-    fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Building.self, id: 1, uid: 18688)
-        try entityBuilder.addProperty(name: "id", type: Id<Building>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "id", type: EntityId<Building>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
         try entityBuilder.addProperty(name: "buildingName", type: String.entityPropertyType, flags: [.unique, .indexHash, .indexed], id: 2, uid: 16640, indexId: 1, indexUid: 15616)
         try entityBuilder.addProperty(name: "buildingNumber", type: Int.entityPropertyType, id: 3, uid: 17664)
 
@@ -39,22 +39,22 @@ extension Building {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Building.id == myId }
-    internal static var id: Property<Building, Id<Building>> { return Property<Building, Id<Building>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Building, EntityId<Building>, EntityId<Building>> { return Property<Building, EntityId<Building>, EntityId<Building>>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Building.buildingName.startsWith("X") }
-    internal static var buildingName: Property<Building, String> { return Property<Building, String>(propertyId: 2, isPrimaryKey: false) }
+    internal static var buildingName: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 2, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Building.buildingNumber > 1234 }
-    internal static var buildingNumber: Property<Building, Int> { return Property<Building, Int>(propertyId: 3, isPrimaryKey: false) }
+    internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
 
-    fileprivate func __setId(identifier: ObjectBox.EntityId) {
-        self.id = Id(identifier)
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = EntityId(identifier)
     }
 }
 
@@ -65,7 +65,7 @@ extension ObjectBox.Property where E == Building {
     ///
     ///     box.query { .id == myId }
 
-    static var id: Property<Building, Id<Building>> { return Property<Building, Id<Building>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Building, EntityId<Building>, EntityId<Building>> { return Property<Building, EntityId<Building>, EntityId<Building>>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -73,7 +73,7 @@ extension ObjectBox.Property where E == Building {
     ///
     ///     box.query { .buildingName.startsWith("X") }
 
-    static var buildingName: Property<Building, String> { return Property<Building, String>(propertyId: 2, isPrimaryKey: false) }
+    internal static var buildingName: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 2, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
@@ -81,8 +81,7 @@ extension ObjectBox.Property where E == Building {
     ///
     ///     box.query { .buildingNumber > 1234 }
 
-    static var buildingNumber: Property<Building, Int> { return Property<Building, Int>(propertyId: 3, isPrimaryKey: false) }
-
+    internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
 
 }
 
@@ -90,19 +89,20 @@ extension ObjectBox.Property where E == Building {
 /// Generated service type to handle persisting and reading entity data. Exposed through `Building.EntityBindingType`.
 internal class BuildingBinding: NSObject, ObjectBox.EntityBinding {
     internal typealias EntityType = Building
+    internal typealias IdType = EntityId<Building>
 
     override internal required init() {}
 
-    internal func setEntityId(of entity: EntityType, to entityId: ObjectBox.EntityId) {
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
     }
 
-    internal func entityId(of entity: EntityType) -> ObjectBox.EntityId {
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
         return entity.id.value
     }
 
-    internal func collect(fromEntity entity: EntityType, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
-
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.buildingName, at: 2 + 2 * 2), 2 + 2 * 2))
 
@@ -115,14 +115,12 @@ internal class BuildingBinding: NSObject, ObjectBox.EntityBinding {
         }
     }
 
-    internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
         let entity = Building()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
         entity.buildingName = entityReader.read(at: 2 + 2 * 2)
         entity.buildingNumber = entityReader.read(at: 2 + 2 * 3)
-
-
 
         return entity
     }
@@ -138,7 +136,7 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 // MARK: - Store setup
 
 fileprivate func cModel() throws -> OpaquePointer {
-    let modelBuilder = try ModelBuilder()
+    let modelBuilder = try ObjectBox.ModelBuilder()
     try Building.buildEntity(modelBuilder: modelBuilder)
     modelBuilder.lastEntity(id: 1, uid: 18688)
     modelBuilder.lastIndex(id: 1, uid: 15616)

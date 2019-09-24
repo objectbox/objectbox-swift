@@ -3,7 +3,7 @@
 ## What is it?
 
 This project is used to test code generation in ObjectBox's Sourcery-descended code generator.
-It will run the codegen over a given target in the project, then build and run the project. You can do
+It will run the codegen over a given target in the project, then build and run the product. You can do
 whatever testing you need to do in the actual Swift code.
 
 ## Running these tests

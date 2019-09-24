@@ -30,9 +30,9 @@
 ///
 ///     let personBox: Box<Person> = store.box(for: Person.self)
 ///     let amanda: Person = ...
-///     let bob: Person = ...
+///     let neil: Person = ...
 ///
-///     amanda.spouse.target = bob
+///     amanda.spouse.target = neil
 ///     personBox.put(amanda)
 ///
 ///
@@ -48,17 +48,20 @@
 ///
 public final class ToOne<T: EntityInspectable & __EntityRelatable>: ExpressibleByNilLiteral
 where T == T.EntityBindingType.EntityType {
-
+    
     /// The type of object this relation will produce.
     public typealias Target = T
-
+    
+    private var lazyTargetLock = DispatchSemaphore(value: 1)
     private var _lazyTarget: LazyProxyRelation<Target>
-
+    
     /// Whether the relation was set to a target object.
     public var hasValue: Bool {
+        lazyTargetLock.wait()
+        defer { lazyTargetLock.signal() }
         return _lazyTarget.hasValue
     }
-
+    
     /// Access to the relation's target, if any. Set to `nil` to remove the relation.
     ///
     /// Alternatively, you can also overwrite the whole relation:
@@ -72,13 +75,17 @@ where T == T.EntityBindingType.EntityType {
     /// - Note: Call `Box.put(_:)` to persist changes.
     public var target: Target? {
         get {
+            lazyTargetLock.wait()
+            defer { lazyTargetLock.signal() }
             return _lazyTarget.target
         }
         set {
+            lazyTargetLock.wait()
+            defer { lazyTargetLock.signal() }
             _lazyTarget.target = newValue
         }
     }
-
+    
     /// Access to the ID of the relation's target, if any. Set to `nil` to remove the relation.
     ///
     /// Alternatively, you can also overwrite the whole relation:
@@ -90,12 +97,17 @@ where T == T.EntityBindingType.EntityType {
     ///     order.customer = ToOne<Customer>(target: nil)
     ///
     /// - Note: Call `Box.put(_:)` to persist changes.
-    public var targetId: Id<Target>? {
+    public var targetId: EntityId<Target>? {
         get {
+            lazyTargetLock.wait()
+            defer { lazyTargetLock.signal() }
             return _lazyTarget.targetId
         }
         set {
-            _lazyTarget.targetId = newValue
+            lazyTargetLock.wait()
+            defer { lazyTargetLock.signal() }
+            _lazyTarget = LazyProxyRelation<Target>(box: _lazyTarget.box,
+                                                    initialState: (newValue != nil ) ? .lazy(id: newValue!) : .none)
         }
     }
     /// Initialize an empty relation.
@@ -107,21 +119,40 @@ where T == T.EntityBindingType.EntityType {
     ///        // ...
     ///    }
     public required init(nilLiteral: ()) {
+        lazyTargetLock.wait()
+        defer { lazyTargetLock.signal() }
         self._lazyTarget = LazyProxyRelation<Target>(box: nil, initialState: .none)
     }
-
+    
     /// Initialize a relation with a target set from the get-go.
     ///
     /// - Parameter entity: Target entity, or `nil` if the relation is empty.
     public required init(_ entity: Target?) {
         self._lazyTarget = LazyProxyRelation<Target>(box: nil, initialState: .init(entity: entity))
     }
-
+    
     // swiftlint:disable identifier_name
-    internal init(box: Box<Target>, id: Id<Target>) {
+    internal init(box: Box<Target>, id: EntityId<Target>) {
         self._lazyTarget = LazyProxyRelation<Target>(box: box, initialState: .init(id: id))
     }
     // swiftlint:enable identifier_name
+    
+    /// :nodoc:
+    public func attach(to box: Box<Target>) {
+        lazyTargetLock.wait()
+        defer { lazyTargetLock.signal() }
+        _lazyTarget = LazyProxyRelation<Target>(box: box, original: _lazyTarget)
+    }
+    
+    /// If this relation's target has already been persisted, unload the entity
+    /// so it is re-loaded from the database the next time you ask for the target.
+    /// Does nothing if the target hasn't been persisted yet. If you want to
+    /// reset the target to what is set in the database, get() the entity again instead.
+    public func reset() {
+        lazyTargetLock.wait()
+        defer { lazyTargetLock.signal() }
+        _lazyTarget.reset()
+    }
 }
 
 // MARK: - Description
@@ -143,6 +174,8 @@ extension ToOne: CustomStringConvertible {
 extension ToOne: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
+        lazyTargetLock.wait()
+        defer { lazyTargetLock.signal() }
         let mirror = Mirror(reflecting: self)
         return "\(mirror.subjectType)(\(_lazyTarget.debugDescription))"
     }

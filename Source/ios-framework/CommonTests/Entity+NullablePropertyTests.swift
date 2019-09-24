@@ -41,13 +41,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableInt() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeInt: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt)
         } else {
             XCTFail("Get failed"); return
@@ -57,7 +57,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt = Int.max
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeInt, Int.max)
         } else {
             XCTFail("Get failed"); return
@@ -67,7 +67,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt)
         } else {
             XCTFail("Get failed"); return
@@ -75,13 +75,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableInt64() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeInt64: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt64)
         } else {
             XCTFail("Get failed"); return
@@ -91,7 +91,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt64 = Int64.max
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeInt64, Int64.max)
         } else {
             XCTFail("Get failed"); return
@@ -101,7 +101,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt64 = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt64)
         } else {
             XCTFail("Get failed"); return
@@ -109,13 +109,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableInt32() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeInt32: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt32)
         } else {
             XCTFail("Get failed"); return
@@ -125,7 +125,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt32 = Int32.max
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeInt32, Int32.max)
         } else {
             XCTFail("Get failed"); return
@@ -135,7 +135,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt32 = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt32)
         } else {
             XCTFail("Get failed"); return
@@ -143,13 +143,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableInt16() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeInt16: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt16)
         } else {
             XCTFail("Get failed"); return
@@ -159,7 +159,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt16 = Int16.max
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeInt16, Int16.max)
         } else {
             XCTFail("Get failed"); return
@@ -169,7 +169,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt16 = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt16)
         } else {
             XCTFail("Get failed"); return
@@ -177,13 +177,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableInt8() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeInt8: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt8)
         } else {
             XCTFail("Get failed"); return
@@ -193,7 +193,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt8 = Int8.max
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeInt8, Int8.max)
         } else {
             XCTFail("Get failed"); return
@@ -203,7 +203,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeInt8 = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeInt8)
         } else {
             XCTFail("Get failed"); return
@@ -211,13 +211,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableBool() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeBool: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeBool)
         } else {
             XCTFail("Get failed"); return
@@ -227,7 +227,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeBool = true
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeBool, true)
         } else {
             XCTFail("Get failed"); return
@@ -237,7 +237,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeBool = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeBool)
         } else {
             XCTFail("Get failed"); return
@@ -245,13 +245,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableFloat() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeFloat: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeFloat)
         } else {
             XCTFail("Get failed"); return
@@ -261,7 +261,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeFloat = Float.greatestFiniteMagnitude
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeFloat, Float.greatestFiniteMagnitude)
         } else {
             XCTFail("Get failed"); return
@@ -271,7 +271,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeFloat = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeFloat)
         } else {
             XCTFail("Get failed"); return
@@ -279,13 +279,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableDouble() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeDouble: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeDouble)
         } else {
             XCTFail("Get failed"); return
@@ -295,7 +295,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeDouble = Double.greatestFiniteMagnitude
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeDouble, Double.greatestFiniteMagnitude)
         } else {
             XCTFail("Get failed"); return
@@ -305,7 +305,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeDouble = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeDouble)
         } else {
             XCTFail("Get failed"); return
@@ -313,13 +313,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableDate() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeDate: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeDate)
         } else {
             XCTFail("Get failed"); return
@@ -330,7 +330,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeDate = date
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeDate, date)
         } else {
             XCTFail("Get failed"); return
@@ -340,7 +340,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeDate = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeDate)
         } else {
             XCTFail("Get failed"); return
@@ -348,13 +348,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableString() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeString: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeString)
         } else {
             XCTFail("Get failed"); return
@@ -365,7 +365,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeString = string
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeString, string)
         } else {
             XCTFail("Get failed"); return
@@ -375,7 +375,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeString = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeString)
         } else {
             XCTFail("Get failed"); return
@@ -383,13 +383,13 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     func testNullableByteVector() throws {
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         // Initial nil value
         let originalEntity = NullablePropertyEntity(maybeByteVector: nil)
         let entityId = try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeByteVector)
         } else {
             XCTFail("Get failed"); return
@@ -400,7 +400,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeByteVector = stringData
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertEqual(obj.maybeByteVector, stringData)
         } else {
             XCTFail("Get failed"); return
@@ -410,7 +410,7 @@ class EntityNullablePropertyTests: XCTestCase {
         originalEntity.maybeByteVector = nil
         try box.put(originalEntity)
 
-        if let obj = box.get(entityId) {
+        if let obj = try box.get(entityId) {
             XCTAssertNil(obj.maybeByteVector)
         } else {
             XCTFail("Get failed"); return

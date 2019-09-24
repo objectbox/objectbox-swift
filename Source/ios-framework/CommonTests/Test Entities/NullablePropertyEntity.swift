@@ -22,8 +22,8 @@ class NullablePropertyEntity: Entity, EntityInspectable, __EntityRelatable {
     
     static var entityBinding = EntityBindingType()
     
-    var id: Id<NullablePropertyEntity>
-    var _id: Id<NullablePropertyEntity> { return id }
+    var id: EntityId<NullablePropertyEntity>
+    var _id: EntityId<NullablePropertyEntity> { return id }
     var maybeBool: Bool?
     var maybeInt: Int?
     var maybeInt64: Int64?
@@ -48,31 +48,31 @@ class NullablePropertyEntity: Entity, EntityInspectable, __EntityRelatable {
     var string: String
     var byteVector: Data
 
-    static var id: Property<NullablePropertyEntity, Id<NullablePropertyEntity>> { return Property(propertyId: 1, isPrimaryKey: true) }
+    static var id: Property<NullablePropertyEntity, EntityId<NullablePropertyEntity>, Void> { return Property(propertyId: 1, isPrimaryKey: true) }
 
-    static var maybeBool: Property<NullablePropertyEntity, Bool?> { return Property(propertyId: 2) }
-    static var maybeInt: Property<NullablePropertyEntity, Int?> { return Property(propertyId: 3) }
-    static var maybeInt64: Property<NullablePropertyEntity, Int64?> { return Property(propertyId: 4) }
-    static var maybeInt32: Property<NullablePropertyEntity, Int32?> { return Property(propertyId: 5) }
-    static var maybeInt16: Property<NullablePropertyEntity, Int16?> { return Property(propertyId: 6) }
-    static var maybeInt8: Property<NullablePropertyEntity, Int8?> { return Property(propertyId: 7) }
-    static var maybeFloat: Property<NullablePropertyEntity, Float?> { return Property(propertyId: 8) }
-    static var maybeDouble: Property<NullablePropertyEntity, Double?> { return Property(propertyId: 9) }
-    static var maybeDate: Property<NullablePropertyEntity, Date?> { return Property(propertyId: 10) }
-    static var maybeString: Property<NullablePropertyEntity, String?> { return Property(propertyId: 11) }
-    static var maybeByteVector: Property<NullablePropertyEntity, Data?> { return Property(propertyId: 12) }
+    static var maybeBool: Property<NullablePropertyEntity, Bool?, Void> { return Property(propertyId: 2) }
+    static var maybeInt: Property<NullablePropertyEntity, Int?, Void> { return Property(propertyId: 3) }
+    static var maybeInt64: Property<NullablePropertyEntity, Int64?, Void> { return Property(propertyId: 4) }
+    static var maybeInt32: Property<NullablePropertyEntity, Int32?, Void> { return Property(propertyId: 5) }
+    static var maybeInt16: Property<NullablePropertyEntity, Int16?, Void> { return Property(propertyId: 6) }
+    static var maybeInt8: Property<NullablePropertyEntity, Int8?, Void> { return Property(propertyId: 7) }
+    static var maybeFloat: Property<NullablePropertyEntity, Float?, Void> { return Property(propertyId: 8) }
+    static var maybeDouble: Property<NullablePropertyEntity, Double?, Void> { return Property(propertyId: 9) }
+    static var maybeDate: Property<NullablePropertyEntity, Date?, Void> { return Property(propertyId: 10) }
+    static var maybeString: Property<NullablePropertyEntity, String?, Void> { return Property(propertyId: 11) }
+    static var maybeByteVector: Property<NullablePropertyEntity, Data?, Void> { return Property(propertyId: 12) }
 
-    static var bool: Property<NullablePropertyEntity, Bool> { return Property(propertyId: 13) }
-    static var int: Property<NullablePropertyEntity, Int> { return Property(propertyId: 14) }
-    static var int64: Property<NullablePropertyEntity, Int64> { return Property(propertyId: 15) }
-    static var int32: Property<NullablePropertyEntity, Int32> { return Property(propertyId: 16) }
-    static var int16: Property<NullablePropertyEntity, Int16> { return Property(propertyId: 17) }
-    static var int8: Property<NullablePropertyEntity, Int8> { return Property(propertyId: 18) }
-    static var float: Property<NullablePropertyEntity, Float> { return Property(propertyId: 19) }
-    static var double: Property<NullablePropertyEntity, Double> { return Property(propertyId: 20) }
-    static var date: Property<NullablePropertyEntity, Date> { return Property(propertyId: 21) }
-    static var string: Property<NullablePropertyEntity, String> { return Property(propertyId: 22) }
-    static var byteVector: Property<NullablePropertyEntity, Data> { return Property(propertyId: 23) }
+    static var bool: Property<NullablePropertyEntity, Bool, Void> { return Property(propertyId: 13) }
+    static var int: Property<NullablePropertyEntity, Int, Void> { return Property(propertyId: 14) }
+    static var int64: Property<NullablePropertyEntity, Int64, Void> { return Property(propertyId: 15) }
+    static var int32: Property<NullablePropertyEntity, Int32, Void> { return Property(propertyId: 16) }
+    static var int16: Property<NullablePropertyEntity, Int16, Void> { return Property(propertyId: 17) }
+    static var int8: Property<NullablePropertyEntity, Int8, Void> { return Property(propertyId: 18) }
+    static var float: Property<NullablePropertyEntity, Float, Void> { return Property(propertyId: 19) }
+    static var double: Property<NullablePropertyEntity, Double, Void> { return Property(propertyId: 20) }
+    static var date: Property<NullablePropertyEntity, Date, Void> { return Property(propertyId: 21) }
+    static var string: Property<NullablePropertyEntity, String, Void> { return Property(propertyId: 22) }
+    static var byteVector: Property<NullablePropertyEntity, Data, Void> { return Property(propertyId: 23) }
 
     required init() {
         self.id = 0
@@ -102,7 +102,7 @@ class NullablePropertyEntity: Entity, EntityInspectable, __EntityRelatable {
         self.byteVector = Data()
     }
 
-    convenience init(id: Id<NullablePropertyEntity> = 0,
+    convenience init(id: EntityId<NullablePropertyEntity> = 0,
 
                      maybeBool: Bool? = nil,
                      maybeInt: Int? = nil, maybeInt8: Int8? = nil, maybeInt16: Int16? = nil, maybeInt32: Int32? = nil, maybeInt64: Int64? = nil,
@@ -147,7 +147,7 @@ class NullablePropertyEntity: Entity, EntityInspectable, __EntityRelatable {
 
     static func buildEntity(modelBuilder: ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: NullablePropertyEntity.self, id: 1, uid: 1)
-        try entityBuilder.addProperty(name: "id", type: Id<NullablePropertyEntity>.entityPropertyType, flags: [.id], id: 1, uid: 1002)
+        try entityBuilder.addProperty(name: "id", type: EntityId<NullablePropertyEntity>.entityPropertyType, flags: [.id], id: 1, uid: 1002)
 
         try entityBuilder.addProperty(name: "maybeBool", type: Bool?.entityPropertyType, id: 2, uid: 2)
         try entityBuilder.addProperty(name: "maybeInt", type: Int?.entityPropertyType, id: 3, uid: 3)
@@ -181,10 +181,11 @@ class NullablePropertyEntity: Entity, EntityInspectable, __EntityRelatable {
 
 class NullablePropertyEntityBinding: EntityBinding {
     typealias EntityType = NullablePropertyEntity
-    
+    typealias IdType = EntityId<NullablePropertyEntity>
+
     required init() {}
     
-    func collect(fromEntity entity: NullablePropertyEntity, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: NullablePropertyEntity, id: Id, propertyCollector: PropertyCollector, store: Store) {
         let maybeStringOffset = propertyCollector.prepare(string: entity.maybeString, at: 2 + 2*11)
         let maybeByteVectorOffset = propertyCollector.prepare(bytes: entity.maybeByteVector, at: 2 + 2*12)
         let stringOffset = propertyCollector.prepare(string: entity.string, at: 2 + 2*22)
@@ -250,15 +251,11 @@ class NullablePropertyEntityBinding: EntityBinding {
         return entity
     }
     
-    func setEntityId(of entity: NullablePropertyEntity, to entityId: EntityId) {
-        entity.id = Id(entityId)
+    func setEntityIdUnlessStruct(of entity: NullablePropertyEntity, to entityId: Id) {
+        entity.id = EntityId(entityId)
     }
     
-    func setEntityIdStruct(of entity: inout NullablePropertyEntity, to entityId: EntityId) {
-        entity.id = Id(entityId)
-    }
-    
-    func entityId(of entity: NullablePropertyEntity) -> EntityId {
+    func entityId(of entity: NullablePropertyEntity) -> Id {
         return entity.id.value
     }
 }

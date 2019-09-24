@@ -45,60 +45,60 @@ class BoxSwiftRefinedAPITests: XCTestCase {
     func testPutAllRemoveAll() throws {
         let box = store.box(for: AllTypesEntity.self)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         let entities = [1, 2, 3, 4, 5, 6, 7, 8].map(AllTypesEntity.create(long:))
         try box.put(entities)
 
-        XCTAssertEqual(box.count, 8)
+        XCTAssertEqual(try box.count(), 8)
 
         XCTAssertEqual(try box.removeAll(), 8)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
     }
 
     func testPutAllRemoveSome() throws {
         let box = store.box(for: AllTypesEntity.self)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         let entities = [1, 2, 3, 4, 5, 6, 7, 8].map(AllTypesEntity.create(long:))
         try box.put(entities)
 
-        XCTAssertEqual(box.count, 8)
+        XCTAssertEqual(try box.count(), 8)
 
         XCTAssertEqual(try box.remove(entities.filter({ $0.aLong % 2 == 0 })), 4)
 
-        XCTAssertEqual(box.count, 4)
-        XCTAssertEqual(box.all().map { $0.aLong }.sorted(), [1, 3, 5, 7])
+        XCTAssertEqual(try box.count(), 4)
+        XCTAssertEqual(try box.all().map { $0.aLong }.sorted(), [1, 3, 5, 7])
     }
 
     func testPutAllRemoveSomeWithUnput() throws {
         let box = store.box(for: AllTypesEntity.self)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         let entities = [1, 2, 3, 4, 5, 6, 7, 8].map(AllTypesEntity.create(long:))
         try box.put(entities.filter({ $0.aLong != 5 }))
 
-        XCTAssertEqual(box.count, 7)
+        XCTAssertEqual(try box.count(), 7)
 
         let removedCount = try! box.remove(entities)
         XCTAssertEqual(removedCount, 7)
-        XCTAssertEqual(box.count, 0)
+        XCTAssertEqual(try box.count(), 0)
     }
 
     func testPutAllRemoveSomeWithNonexisting() throws {
         let box = store.box(for: AllTypesEntity.self)
         
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
         
         let entities = [1, 2, 3, 4, 5, 6, 7, 8].map(AllTypesEntity.create(long:))
         try box.put(entities)
-        XCTAssertEqual(box.count, 8)
+        XCTAssertEqual(try box.count(), 8)
 
         try box.remove(entities[4])
-        XCTAssertEqual(box.count, 7)
+        XCTAssertEqual(try box.count(), 7)
         
         let numDeleted = try box.remove(entities)
         XCTAssertEqual(numDeleted, 7)
@@ -111,7 +111,7 @@ class BoxSwiftRefinedAPITests: XCTestCase {
         person.name = "Fred"
         person.age = 42
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         XCTAssertFalse(try box.remove(person))
     }
@@ -119,15 +119,15 @@ class BoxSwiftRefinedAPITests: XCTestCase {
     func testPutGetUpdatePutAgain() throws {
         let box = store.box(for: TestPerson.self)
 
-        XCTAssertEqual(box.count, 0)
+        XCTAssertEqual(try box.count(), 0)
 
         let person = TestPerson()
         person.name = "Fred"
         person.age = 42
         let entityId = try box.put(person)
-        XCTAssertEqual(box.count, 1)
+        XCTAssertEqual(try box.count(), 1)
 
-        guard let fetchedPerson = box.get(entityId) else {
+        guard let fetchedPerson = try box.get(entityId) else {
             XCTFail("Expected person with \(entityId)")
             return
         }
@@ -140,9 +140,9 @@ class BoxSwiftRefinedAPITests: XCTestCase {
 
         let entityId2 = try box.put(fetchedPerson)
         XCTAssertEqual(entityId2, entityId)
-        XCTAssertEqual(box.count, 1)
+        XCTAssertEqual(try box.count(), 1)
 
-        if let fetchedPerson2 = box.get(entityId2) {
+        if let fetchedPerson2 = try box.get(entityId2) {
             XCTAssertEqual(fetchedPerson2.id.value, entityId.value)
             XCTAssertEqual(fetchedPerson2.name, "Barney")
             XCTAssertEqual(fetchedPerson2.age, person.age)
@@ -154,14 +154,14 @@ class BoxSwiftRefinedAPITests: XCTestCase {
     func testPutGetRemove() throws {
         let box = store.box(for: TestPerson.self)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         let person = TestPerson()
         person.name = "Fred"
         person.age = 42
         let entityId = try box.put(person)
 
-        XCTAssertEqual(box.count, 1)
+        XCTAssertEqual(try box.count(), 1)
 
         let person2 = TestPerson()
         person2.name = "Barney"
@@ -169,16 +169,16 @@ class BoxSwiftRefinedAPITests: XCTestCase {
         let entityId2 = try box.put(person2)
         XCTAssertNotEqual(entityId, entityId2)
 
-        XCTAssertEqual(box.count, 2)
+        XCTAssertEqual(try box.count(), 2)
 
-        if let fetchedPerson = box.get(entityId) {
+        if let fetchedPerson = try box.get(entityId) {
             XCTAssertEqual(person.name, fetchedPerson.name)
             XCTAssertEqual(person.age, fetchedPerson.age)
         } else {
             XCTFail("Expected person with \(entityId)")
         }
 
-        if let fetchedPerson2 = box.get(entityId2) {
+        if let fetchedPerson2 = try box.get(entityId2) {
             XCTAssertEqual(person2.name, fetchedPerson2.name)
             XCTAssertEqual(person2.age, fetchedPerson2.age)
         } else {
@@ -187,20 +187,20 @@ class BoxSwiftRefinedAPITests: XCTestCase {
 
         try box.remove(entityId)
 
-        XCTAssertEqual(box.count, 1)
+        XCTAssertEqual(try box.count(), 1)
 
-        XCTAssertNil(box.get(entityId))
-        XCTAssertNotNil(box.get(entityId2))
+        XCTAssertNil(try box.get(entityId))
+        XCTAssertNotNil(try box.get(entityId2))
 
         try box.remove(person2)
 
-        XCTAssertEqual(box.count, 0)
+        XCTAssertEqual(try box.count(), 0)
     }
 
     func testNestedWriteTransactionRollback() throws {
         let box = store.box(for: TestPerson.self)
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
 
         do {
             try store.runInTransaction {
@@ -216,7 +216,7 @@ class BoxSwiftRefinedAPITests: XCTestCase {
             XCTAssertNoThrow(try rethrow(error))
         }
 
-        XCTAssert(box.isEmpty)
+        XCTAssert(try box.isEmpty())
     }
 }
 // swiftlint:enable identifier_name

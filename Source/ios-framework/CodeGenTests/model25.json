@@ -1,8 +1,8 @@
 {
-  "_note1" : "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
-  "_note2" : "ObjectBox manages crucial IDs for your object model. See docs for details.",
-  "_note3" : "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
-  "entities" : [
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
     {
       "id": "1:33536",
       "lastPropertyId": "19:32512",

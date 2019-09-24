@@ -17,7 +17,7 @@ enum Error: Swift.Error {
 
 
 class TypeTest: Entity {
-    var id: Id<TypeTest> = 0
+    var id: EntityId<TypeTest> = 0
     
     var intValue = Int.min
     var int8Value = Int8.min
@@ -46,7 +46,7 @@ class TypeTest: Entity {
 func main(_ args: [String]) throws -> Int32 {
     let originalTypeTest = TypeTest()
 
-    let storeFolder = URL(fileURLWithPath: "/tmp/tooltestDB/")
+    let storeFolder = URL(fileURLWithPath: "/tmp/tooltestDB25/")
     try? FileManager.default.removeItem(atPath: storeFolder.path)
     try FileManager.default.createDirectory(at: storeFolder, withIntermediateDirectories: false)
     
@@ -59,7 +59,7 @@ func main(_ args: [String]) throws -> Int32 {
         throw Error.NoIdAssignedToNewlyWrittenEntity
     }
     
-    if let readTypeTest = typeTestBox.get(newId) {
+    if let readTypeTest = try typeTestBox.get(newId) {
         if (originalTypeTest.intValue != readTypeTest.intValue) {
             throw Error.ValueReadDoesntEqualValueWritten(property: "int", written: originalTypeTest.intValue, read: readTypeTest.intValue)
         }

@@ -59,7 +59,7 @@ extension BusRoute {
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `BusRoute.entityInfo`.
 class BusRouteCursor: NSObject, CursorBase {
-    func setEntityId(of entity: Any, to entityId: EntityId) {
+    func setEntityIdUnlessStruct(of entity: Any, to entityId: EntityId) {
         let entity = entity as! BusRoute
         entity.__setId(identifier: entityId)
     }

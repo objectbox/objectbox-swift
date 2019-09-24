@@ -18,11 +18,11 @@ import ObjectBox
 
 // swiftlint:disable all
 class Customer: Entity {
-    var id: Id<Customer>
+    var id: EntityId<Customer>
     var name: String
 
     // sourcery: backlink = "customer"
-    var orders: ToMany<Order, Customer>
+    var orders: ToMany<Order>
 
     required init() {
         self.id = 0
@@ -38,14 +38,16 @@ class Customer: Entity {
 }
 
 class Order: Entity {
-    var id: Id<Order>
+    var id: EntityId<Order>
     var date: Date
     var customer: ToOne<Customer>
+    var name: String
 
     required init() {
         self.id = 0
         self.customer = nil
         self.date = Date()
+        self.name = ""
     }
 }
 
@@ -72,7 +74,7 @@ extension ObjectBox.Store {
 extension Customer: __EntityRelatable {
     typealias EntityType = Customer
 
-    var _id: Id<Customer> {
+    var _id: EntityId<Customer> {
         return self.id
     }
 }
@@ -86,7 +88,7 @@ extension Customer: EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Customer.self, id: 4, uid: 1004)
-        try entityBuilder.addProperty(name: "id", type: Id<Customer>.entityPropertyType, flags: [.id], id: 1, uid: 1)
+        try entityBuilder.addProperty(name: "id", type: EntityId<Customer>.entityPropertyType, flags: [.id], id: 1, uid: 1)
         try entityBuilder.addProperty(name: "name", type: String.entityPropertyType, id: 2, uid: 2)
         try entityBuilder.lastProperty(id: 2, uid: 2)
         modelBuilder.lastEntity(id: 4, uid: 1004)
@@ -100,18 +102,19 @@ extension Customer {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Customer.id == myId }
-    static var id: Property<Customer, Id<Customer>> { return Property<Customer, Id<Customer>>(propertyId: 1, isPrimaryKey: true) }
+    static var id: Property<Customer, EntityId<Customer>, Void> { return Property<Customer, EntityId<Customer>, Void>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Customer.name.startsWith("X") }
-    static var name: Property<Customer, String> { return Property<Customer, String>(propertyId: 2, isPrimaryKey: false) }
+    static var name: Property<Customer, String, Void> { return Property<Customer, String, Void>(propertyId: 2, isPrimaryKey: false) }
+    
+    static var orders: ToManyProperty<Order> { return ToManyProperty<Order>(.valuePropertyId(3)) }
 
-
-    fileprivate  func __setId(identifier: EntityId) {
-        self.id = Id(identifier)
+    fileprivate  func __setId(identifier: Id) {
+        self.id = EntityId(identifier)
     }
 }
 
@@ -119,18 +122,19 @@ extension Customer {
 class CustomerCursor: EntityBinding {
     
     typealias EntityType = Customer
-    
+    typealias IdType = EntityId<Customer>
+
     required init() {}
     
-    func setEntityId(of entity: Customer, to entityId: EntityId) {
+    func setEntityIdUnlessStruct(of entity: Customer, to entityId: Id) {
         entity.__setId(identifier: entityId)
     }
     
-    func entityId(of entity: Customer) -> EntityId {
+    func entityId(of entity: Customer) -> Id {
         return entity.id.value
     }
 
-    func collect(fromEntity entity: Customer, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: Customer, id: Id, propertyCollector: PropertyCollector, store: Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2*2), 2 + 2*2))
 
@@ -141,15 +145,27 @@ class CustomerCursor: EntityBinding {
         }
     }
 
+    internal func postPut(fromEntity entity: EntityType, id: Id, store: Store) {
+        if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
+            let orders = ToMany<Order>.backlink(
+                sourceBox: store.box(for: ToMany<Order>.ReferencedType.self),
+                sourceProperty: ToMany<Order>.ReferencedType.customer,
+                targetId: EntityId<Customer>(id))
+            if !entity.orders.isEmpty {
+                orders.replace(entity.orders)
+            }
+            entity.orders = orders
+        }
+    }
     func createEntity(entityReader: EntityReader, store: Store) -> Customer {
         let entity = Customer()
 
         entity.id = entityReader.read(at: 2 + 2*1)
 
         entity.name = entityReader.read(at: 2 + 2*2)
-        entity.orders = ToMany<Order, Customer>.backlink(
-            sourceBox: store.box(for: ToMany<Order, Customer>.Source.self),
-            sourceProperty: ToMany<Order, Customer>.Source.customer,
+        entity.orders = ToMany<Order>.backlink(
+            sourceBox: store.box(for: ToMany<Order>.ReferencedType.self),
+            sourceProperty: ToMany<Order>.ReferencedType.customer,
             targetId: entity.id)
         return entity
     }
@@ -158,7 +174,7 @@ class CustomerCursor: EntityBinding {
 extension Order: __EntityRelatable {
     typealias EntityType = Order
 
-    var _id: Id<Order> {
+    var _id: EntityId<Order> {
         return self.id
     }
 }
@@ -172,10 +188,11 @@ extension Order: EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Order.self, id: 5, uid: 1005)
-        try entityBuilder.addProperty(name: "id", type: Id<Order>.entityPropertyType, flags: [.id], id: 1, uid: 3)
+        try entityBuilder.addProperty(name: "id", type: EntityId<Order>.entityPropertyType, flags: [.id], id: 1, uid: 3)
         try entityBuilder.addProperty(name: "date", type: Date.entityPropertyType, id: 2, uid: 4)
         try entityBuilder.addToOneRelation(name: "customer", targetEntityInfo: ToOne<Customer>.Target.entityInfo, id: 3, uid: 5, indexId: 1, indexUid: 66223399)
-        try entityBuilder.lastProperty(id: 3, uid: 5)
+        try entityBuilder.addProperty(name: "name", type: String.entityPropertyType, id: 4, uid: 6)
+        try entityBuilder.lastProperty(id: 4, uid: 6)
         modelBuilder.lastEntity(id: 5, uid: 1005)
         modelBuilder.lastIndex(id: 1, uid: 66223399)
     }
@@ -187,45 +204,67 @@ extension Order {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Order.id == myId }
-    static var id: Property<Order, Id<Order>> { return Property<Order, Id<Order>>(propertyId: 1, isPrimaryKey: true) }
+    static var id: Property<Order, EntityId<Order>, Void> { return Property<Order, EntityId<Order>, Void>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Order.date.isBefore(lastSunday) }
-    static var date: Property<Order, Date> { return Property<Order, Date>(propertyId: 2, isPrimaryKey: false) }
+    static var date: Property<Order, Date, Void> { return Property<Order, Date, Void>(propertyId: 2, isPrimaryKey: false) }
 
     /// Generated entity relation property information.
-    static var customer: Property<Order, Id<ToOne<Customer>.Target>> { return Property(propertyId: 3) }
+    static var customer: Property<Order, EntityId<ToOne<Customer>.Target>, ToOne<Customer>.Target> { return Property(propertyId: 3) }
 
+    static var name: Property<Order, String, Void> { return Property<Order, String, Void>(propertyId: 4, isPrimaryKey: false) }
 
-    fileprivate  func __setId(identifier: EntityId) {
-        self.id = Id(identifier)
+    fileprivate  func __setId(identifier: Id) {
+        self.id = EntityId(identifier)
     }
 }
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Order.entitySchemaId`.
 class OrderCursor: EntityBinding {
     typealias EntityType = Order
-    
+    typealias IdType = EntityId<Order>
+
     required init() {}
     
-    func setEntityId(of entity: Order, to entityId: EntityId) {
+    func setEntityIdUnlessStruct(of entity: Order, to entityId: Id) {
         entity.__setId(identifier: entityId)
     }
     
-    func entityId(of entity: Order) -> EntityId {
+    func entityId(of entity: Order) -> Id {
         return entity.id.value
     }
 
-    func collect(fromEntity entity: Order, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: Order, id: Id, propertyCollector: PropertyCollector, store: Store) {
+        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
+        offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2*4), 2 + 2*4))
+        
         propertyCollector.collect(id, at: 2 + 2*1)
         
         propertyCollector.collect(entity.date, at: 2 + 2*2)
         propertyCollector.collect(entity.customer, at: 2 + 2*3, store: store)
+
+        for value in offsets {
+            propertyCollector.collect(dataOffset: value.offset, at: value.index)
+        }
     }
 
+    internal func postPut(fromEntity entity: EntityType, id: Id, store: Store) {
+        if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
+            entity.customer.attach(to: store.box(for: Customer.self))
+        }
+    }
+    internal func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: Id?) {
+        switch propertyId {
+        case 3:
+            entity.customer.targetId = (entityId != nil) ? EntityId<Customer>(entityId!) : nil
+        default:
+            fatalError("Attempt to change nonexistent ToOne relation with ID \(propertyId)")
+        }
+    }
     func createEntity(entityReader: EntityReader, store: Store) -> Order {
         let entity = Order()
 
@@ -233,6 +272,7 @@ class OrderCursor: EntityBinding {
 
         entity.date = entityReader.read(at: 2 + 2*2)
         entity.customer = entityReader.read(at: 2 + 2*3, store: store)
+        entity.name = entityReader.read(at: 2 + 2*4)
         return entity
     }
 }

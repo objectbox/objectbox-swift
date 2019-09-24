@@ -11,7 +11,7 @@ import ObjectBox
 
 // objectbox: uid
 class BusRoute: Entity {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     var lineName: String = ""
     var destinationName: String = ""
     

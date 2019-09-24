@@ -35,10 +35,10 @@ where Target == Target.EntityBindingType.EntityType {
         /// Set by app developer, but not stored
         case unstored(entity: Target)
         /// Initial state before attempting a lazy load
-        case lazy(id: Id<Target>)
+        case lazy(id: EntityId<Target>)
         /// Known reference established in the database
-        case stored(id: Id<Target>, entity: Target)
-        case unresolvable(id: Id<Target>)
+        case stored(id: EntityId<Target>, entity: Target)
+        case unresolvable(id: EntityId<Target>)
 
         internal var entity: Target? {
             switch self {
@@ -52,7 +52,7 @@ where Target == Target.EntityBindingType.EntityType {
             }
         }
 
-        internal var entityId: Id<Target>? {
+        internal var entityId: EntityId<Target>? {
             switch self {
             case .none:
                 return nil
@@ -85,12 +85,12 @@ where Target == Target.EntityBindingType.EntityType {
                 self = .unstored(entity: entity)
             } else {
                 //swiftlint:disable force_cast
-                self = .stored(id: entity._id as! Id<Target>, entity: entity)
+                self = .stored(id: entity._id as! EntityId<Target>, entity: entity)
                 //swiftlint:enable force_cast
             }
         }
 
-        internal init(targetId: Id<Target>?) {
+        internal init(targetId: EntityId<Target>?) {
             switch targetId {
             case .none:
                 self = .none
@@ -102,16 +102,16 @@ where Target == Target.EntityBindingType.EntityType {
         internal func loaded(box: Box<Target>?) -> State {
             guard case .lazy(let id) = self else { return self }
             guard let box = box else { return self }
-            guard let entity = box.get(id) else { return .unresolvable(id: id) }
+            guard let entity = try? box.get(id) else { return .unresolvable(id: id) }
             return .stored(id: id, entity: entity)
         }
     }
     
     internal enum InitialState {
         case none
-        case lazy(id: Id<Target>)
+        case lazy(id: EntityId<Target>)
         case unstored(entity: Target)
-        case stored(id: Id<Target>, entity: Target)
+        case stored(id: EntityId<Target>, entity: Target)
         
         internal init(entity: Target?) {
             switch entity {
@@ -122,7 +122,7 @@ where Target == Target.EntityBindingType.EntityType {
             }
         }
         
-        internal init(id: Id<Target>) {
+        internal init(id: EntityId<Target>) {
             if id.needsIdGeneration {
                 self = .none
             } else {
@@ -143,7 +143,7 @@ where Target == Target.EntityBindingType.EntityType {
         }
     }
 
-    internal var targetId: Id<Target>? {
+    internal var targetId: EntityId<Target>? {
         get {
             return _state.entityId
         }
@@ -155,6 +155,30 @@ where Target == Target.EntityBindingType.EntityType {
     internal init(box: Box<Target>?, initialState: InitialState) {
         self.box = box
         self._state = State(initial: initialState)
+    }
+
+    internal init(box: Box<Target>?, original: LazyProxyRelation<Target>) {
+        self.box = box
+        self._state = original._state
+    }
+    
+    /// Reset the cached target in this relation. If you have changed the target
+    /// of this relation to a not-yet-stored object, this will be a no-op.
+    /// Call get() to reset the actual relation to its previous on-disk state.
+    func reset() {
+        switch _state {
+        case .stored(let id, _):
+            _state = .lazy(id: id)
+        case .unresolvable(let id):
+            _state = .lazy(id: id)
+        case .unstored(entity: let target):
+            let entityId = Target.entityBinding.entityId(of: target)
+            if entityId != 0 {
+                _state = .lazy(id: EntityId<Target>(entityId))
+            }
+        default:
+            break
+        }
     }
 }
 

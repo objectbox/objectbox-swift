@@ -38,6 +38,8 @@ test_target_num () {
         cp "$PREMODELFILE" "$TESTMODELFILE"
     elif [[ -f "$ORIGINALMODELFILE" ]]; then
         cp "$ORIGINALMODELFILE" "$TESTMODELFILE"
+    elif [[ -f "$TESTMODELFILE" ]]; then
+        rm "$TESTMODELFILE" # Make sure we get a fresh one even after failed tests.
     fi
 
     echo "// Ensure there's no leftover code from previous tests." > "$TESTSOURCEFILE"
@@ -48,9 +50,9 @@ test_target_num () {
     if [ -e "$PREMODELFILE" ]; then
         cmp --silent "$TESTMODELFILE" "$ORIGINALMODELFILE"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Model files match."
+            echo "note: $2: $1: Model files match."
         else
-            echo "error: $1: Model files DIFFERENT!"
+            echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
             echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
@@ -66,9 +68,9 @@ test_target_num () {
     if [ -e "$ORIGINALSOURCEFILE" ]; then
         cmp --silent "$TESTSOURCEFILE" "$ORIGINALSOURCEFILE"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Output files match."
+            echo "note: $2: $1: Output files match."
         else
-            echo "error: $1: Output files DIFFERENT!"
+            echo "error: $2: $1: Output files DIFFERENT!"
 
             echo "====="
             echo "opendiff \"$TESTSOURCEFILE\" \"$ORIGINALSOURCEFILE\" -merge \"$ORIGINALSOURCEFILE\""
@@ -84,9 +86,9 @@ test_target_num () {
     if [ -e "$ORIGINALDUMPFILE" ]; then
         cmp --silent "$TESTDUMPFILE" "$ORIGINALDUMPFILE"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Schema dumps match."
+            echo "note: $2: $1: Schema dumps match."
         else
-            echo "error: $1: Schema dumps DIFFERENT!"
+            echo "error: $2: $1: Schema dumps DIFFERENT!"
 
             echo "====="
             echo "opendiff \"$TESTDUMPFILE\" \"$ORIGINALDUMPFILE\" -merge \"$ORIGINALDUMPFILE\""
@@ -102,34 +104,34 @@ test_target_num () {
     if [ $FAIL -eq 0 ]; then
         xcodebuild FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" -quiet -project "$TESTPROJECT" -target "ToolTestProject${2}" CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Built test target."
+            echo "note: $2: $1: Built test target."
         else
-            echo "error: $1: Build failed."
+            echo "error: $2: $1: Build failed."
             FAIL=1
         fi
     else
-        echo "error: $1: Skipping build."
+        echo "error: $2: $1: Skipping build."
     fi
 
     TEST_EXECUTABLE="${BUILT_PRODUCTS_DIR}/ToolTestProject${2}"
 
     if [ $FAIL -eq 0 ]; then
         if [[ ! -f "${TEST_EXECUTABLE}" ]]; then
-            echo "error: $1: Can't find executable '${TEST_EXECUTABLE}'."
+            echo "error: $2: $1: Can't find executable '${TEST_EXECUTABLE}'."
             FAIL=1
         else
             echo "DYLD_FRAMEWORK_PATH=\"${BUILT_PRODUCTS_DIR}\" \"${TEST_EXECUTABLE}\" \"$1\""
-            DYLD_FRAMEWORK_PATH="${BUILT_PRODUCTS_DIR}" "${TEST_EXECUTABLE}"
+            DYLD_FRAMEWORK_PATH="${BUILT_PRODUCTS_DIR}" "${TEST_EXECUTABLE}" "$1"
             RESULT=$?
             if [ $RESULT -eq 0 ]; then
-                echo "note: $1: Ran test executable."
+                echo "note: $2: $1: Ran test executable."
             else
-                echo "error: $1: Running test failed with $RESULT ."
+                echo "error: $2: $1: Running test failed with $RESULT ."
                 FAIL=1
             fi
         fi
     else
-        echo "error: $1: Skipping execution, build already failed."
+        echo "error: $2: $1: Skipping execution, build already failed."
     fi
 
     if [ $FAIL == 0 ]; then
@@ -138,9 +140,9 @@ test_target_num () {
         rm -f "$TESTSOURCEFILE"
         rm -f "$TESTDUMPFILE"
         
-        echo "note: $1: Cleaning up."
+        echo "note: $2: $1: Cleaning up."
     else
-        echo "note: $1: Failed with result $FAIL ."
+        echo "note: $2: $1: Failed with result $FAIL ."
     fi
 
     return $FAIL
@@ -159,11 +161,15 @@ fail_codegen_target_num () {
     ORIGINALDUMPFILE="${MYDIR}/schemaDump${2}.txt"
     TESTDUMPFILE="${MYOUTPUTDIR}/schemaDump${2}.txt"
     TESTSOURCEFILE="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
+    ORIGINALXCODELOGFILE="${MYDIR}/xcode${2}.log"
+    TESTXCODELOGFILE="${BUILT_PRODUCTS_DIR}/xcode${2}.log"
 
     if [[ -f "$PREMODELFILE" ]]; then
         cp "$PREMODELFILE" "$TESTMODELFILE"
     elif [[ -f "$ORIGINALMODELFILE" ]]; then
         cp "$ORIGINALMODELFILE" "$TESTMODELFILE"
+    elif [[ -f "$TESTMODELFILE" ]]; then
+        rm "$TESTMODELFILE" # Make sure we get a fresh one even after failed tests.
     fi
 
     echo "// Ensure there's no leftover code from previous tests." > "$TESTSOURCEFILE"
@@ -174,9 +180,9 @@ fail_codegen_target_num () {
     if [ -e "$ORIGINALMESSAGESFILE" ]; then
         cmp --silent "$TESTMESSAGESFILE" "$ORIGINALMESSAGESFILE"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Output as expected."
+            echo "note: $2: $1: Output as expected."
         else
-            echo "error: $1: Output DIFFERENT!"
+            echo "error: $2: $1: Output DIFFERENT!"
 
             echo "====="
             echo "opendiff \"$TESTMESSAGESFILE\" \"$ORIGINALMESSAGESFILE\" -merge \"$ORIGINALMESSAGESFILE\""
@@ -192,9 +198,9 @@ fail_codegen_target_num () {
     if [[ -f "$PREMODELFILE" ]]; then
         cmp --silent "$TESTMODELFILE" "$ORIGINALMODELFILE"
         if [ $? -eq 0 ]; then
-            echo "note: $1: Model files match."
+            echo "note: $2: $1: Model files match."
         else
-            echo "error: $1: Model files DIFFERENT!"
+            echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
             echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
@@ -206,16 +212,49 @@ fail_codegen_target_num () {
             FAIL=1
         fi
     fi
+    
+    if [ $FAIL -eq 0 ]; then
+        if [ -e "$ORIGINALXCODELOGFILE" ]; then
+            xcodebuild FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" -quiet -project "$TESTPROJECT" -target "ToolTestProject${2}" CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}" > "$TESTXCODELOGFILE"
+        
+            OLDPWD="`pwd`"
+            cd "$MYDIR"
+            GITROOT=`git rev-parse --show-toplevel`
+            cd "$OLDPWD"
+            #sed -i "$TESTXCODELOGFILE" 's:$GITROOT:ROOT:'
+        
+            cmp --silent "$TESTXCODELOGFILE" "$ORIGINALXCODELOGFILE"
+            if [ $? -eq 0 ]; then
+                echo "note: $2: $1: Xcode log files match."
+            else
+                echo "error: $2: $1: Xcode log files DIFFERENT!"
+
+                echo "====="
+                echo "opendiff \"$TESTXCODELOGFILE\" \"$ORIGINALXCODELOGFILE\" -merge \"$ORIGINALXCODELOGFILE\""
+                echo "===== $TESTXCODELOGFILE ====="
+                cat "$TESTXCODELOGFILE"
+                echo "===== $ORIGINALXCODELOGFILE ====="
+                cat "$ORIGINALXCODELOGFILE"
+                echo "====="
+                FAIL=1
+            fi
+        else
+            echo "note: $2: $1: Skipping build. No file at $ORIGINALXCODELOGFILE."
+        fi
+    else
+        echo "note: $2: $1: Skipping build. Failed previously"
+    fi
 
     if [ $FAIL == 0 ]; then
         rm -f "$TESTMODELFILE"
         rm -f "$TESTSOURCEFILE"
         rm -f "$TESTDUMPFILE"
         rm -f "$TESTMESSAGESFILE"
+        rm -f "$TESTXCODELOGFILE"
         
-        echo "note: $1: Cleaning up."
+        echo "note: $2: $1: Cleaning up."
     else
-        echo "note: $1: Failed with result $FAIL ."
+        echo "note: $2: $1: Failed with result $FAIL ."
     fi
 
     return $FAIL
@@ -262,6 +301,27 @@ test_target_num "Data and [UInt8] Test" 33 || FAIL=1
 
 test_target_num "Converter Test" 34 || FAIL=1
 test_target_num "Enum Test" 35 || FAIL=1
+test_target_num "Standalone Relations" 36 || FAIL=1
+test_target_num "Standalone Backlinks" 37 || FAIL=1
+test_target_num "Edit ToOne Backlinks" 38 || FAIL=1
+test_target_num "Edit ToOne Backlinks Structs" 39 || FAIL=1
+test_target_num "Standalone Backlinks Structs" 40 || FAIL=1
+fail_codegen_target_num "ToOne Backlink annotation wrong" 41 || FAIL=1
+test_target_num "Standalone Relation Queries" 42 || FAIL=1
+test_target_num "ToOne Relation Queries" 43 || FAIL=1
+test_target_num "many-to-many reset" 44 || FAIL=1
+test_target_num "many-to-many backlink reset" 45 || FAIL=1
+test_target_num "Threaded ToOne backlink edit" 46 || FAIL=1
+test_target_num "Threaded Many-to-many edit" 47 || FAIL=1
+test_target_num "Threaded Many-to-many backlink edit" 48 || FAIL=1
+test_target_num "Untyped IDs and queries 1" 49 || FAIL=1
+test_target_num "Untyped IDs and queries 2" 50 || FAIL=1
+#fail_codegen_target_num "Typed IDs still enforce type?" 51 || FAIL=1
+
+fail_codegen_target_num "Ensure we don't write JSON before ID errors" 52 || FAIL=1
+test_target_num "ToOne Backlink ensure applyToDb is needed" 53 || FAIL=1
+test_target_num "ToMany ensure applyToDb is needed" 54 || FAIL=1
+test_target_num "ToMany Backlink ensure applyToDb is needed" 55 || FAIL=1
 
 echo "note: Finished tests..."
 

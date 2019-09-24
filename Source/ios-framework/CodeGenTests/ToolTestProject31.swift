@@ -10,7 +10,7 @@ import ObjectBox
 
 
 struct Building: Entity, CustomDebugStringConvertible {
-    let id: Id<Building>
+    let id: EntityId<Building>
     let buildingName: String
     let buildingNumber: Int
 
@@ -32,15 +32,15 @@ func main(_ args: [String]) throws -> Int32 {
 
     do {
         let testBuilding1 = Building(id: 0, buildingName: "Reinhöfli", buildingNumber: 0)
-        let building1Id = try buildingBox.putImmutable(testBuilding1)
+        let building1Id = try buildingBox.put(testBuilding1)
         guard building1Id.value != 0 else { print("error: Couldn't write building 1."); return 1 }
 
         let testBuilding2 = Building(id: 0, buildingName: "Hildisriederstr.", buildingNumber: 5)
         let building2Written = try buildingBox.put(struct: testBuilding2)
         guard building2Written.id.value != 0 else { print("error: Couldn't write building 2."); return 1 }
 
-        guard let retrievedBuilding1 = buildingBox.get(building1Id) else { print("error: Couldn't read back building 1."); return 1 }
-        guard let retrievedBuilding2 = buildingBox.get(building2Written.id) else { print("error: Couldn't read back building 2."); return 1 }
+        guard let retrievedBuilding1 = try buildingBox.get(building1Id) else { print("error: Couldn't read back building 1."); return 1 }
+        guard let retrievedBuilding2 = try buildingBox.get(building2Written.id) else { print("error: Couldn't read back building 2."); return 1 }
 
         guard building1Id.value == retrievedBuilding1.id.value else { print("error: Building 1 read with wrong ID."); return 1 }
         guard building2Written.id.value == retrievedBuilding2.id.value else { print("error: Building 2 read with wrong ID."); return 1 }
@@ -51,7 +51,7 @@ func main(_ args: [String]) throws -> Int32 {
         print("error: \(error)")
     }
     
-    print("note: Ran \(args.first ?? "???") tests.")
+    print("note: Ran \(args.count > 1 ? args[1] : "???") tests.")
 
     try? FileManager.default.removeItem(atPath: storeFolder.path)
 

@@ -11,8 +11,8 @@ extension BusRoute: ObjectBox.Entity {}
 extension BusRoute: ObjectBox.__EntityRelatable {
     internal typealias EntityType = BusRoute
 
-    internal var _id: Id<BusRoute> {
-        return self.id
+    internal var _id: EntityId<BusRoute> {
+        return EntityId<BusRoute>(self.id.value)
     }
 }
 
@@ -24,9 +24,9 @@ extension BusRoute: ObjectBox.EntityInspectable {
 
     internal static var entityBinding = EntityBindingType()
 
-    fileprivate static func buildEntity(modelBuilder: ModelBuilder) throws {
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: BusRoute.self, id: 1, uid: 5107964062888457216)
-        try entityBuilder.addProperty(name: "id", type: Id<BusRoute>.entityPropertyType, flags: [.id], id: 1, uid: 7895576389419683840)
+        try entityBuilder.addProperty(name: "id", type: EntityId<BusRoute>.entityPropertyType, flags: [.id], id: 1, uid: 7895576389419683840)
 
         try entityBuilder.lastProperty(id: 2, uid: 6687926154759915520)
     }
@@ -38,10 +38,10 @@ extension BusRoute {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { BusRoute.id == myId }
-    internal static var id: Property<BusRoute, Id<BusRoute>> { return Property<BusRoute, Id<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>> { return Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
 
-    fileprivate func __setId(identifier: ObjectBox.EntityId) {
-        self.id = Id(identifier)
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = EntityId(identifier)
     }
 }
 
@@ -52,8 +52,7 @@ extension ObjectBox.Property where E == BusRoute {
     ///
     ///     box.query { .id == myId }
 
-    static var id: Property<BusRoute, Id<BusRoute>> { return Property<BusRoute, Id<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
-
+    internal static var id: Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>> { return Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
 
 }
 
@@ -61,31 +60,30 @@ extension ObjectBox.Property where E == BusRoute {
 /// Generated service type to handle persisting and reading entity data. Exposed through `BusRoute.EntityBindingType`.
 internal class BusRouteBinding: NSObject, ObjectBox.EntityBinding {
     internal typealias EntityType = BusRoute
+    internal typealias IdType = EntityId<BusRoute>
 
     override internal required init() {}
 
-    internal func setEntityId(of entity: EntityType, to entityId: ObjectBox.EntityId) {
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
     }
 
-    internal func entityId(of entity: EntityType) -> ObjectBox.EntityId {
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
         return entity.id.value
     }
 
-    internal func collect(fromEntity entity: EntityType, id: EntityId, propertyCollector: PropertyCollector, store: Store) {
-
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
 
 
     }
 
-    internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
         let entity = BusRoute()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
-
-
 
         return entity
     }
@@ -101,7 +99,7 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 // MARK: - Store setup
 
 fileprivate func cModel() throws -> OpaquePointer {
-    let modelBuilder = try ModelBuilder()
+    let modelBuilder = try ObjectBox.ModelBuilder()
     try BusRoute.buildEntity(modelBuilder: modelBuilder)
     modelBuilder.lastEntity(id: 1, uid: 5107964062888457216)
     return modelBuilder.finish()

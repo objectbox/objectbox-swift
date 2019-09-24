@@ -139,16 +139,16 @@ struct FlatBufferReader: EntityReader {
         return [UInt8](bufferPointer)
     }
     
-    func read<E>(at index: UInt16) -> Id<E> where E: EntityInspectable, E: __EntityRelatable,
+    func read<E>(at index: UInt16) -> EntityId<E> where E: EntityInspectable, E: __EntityRelatable,
         E == E.EntityBindingType.EntityType {
         var result: UInt64 = 0
         if !obx_fbr_read_uint64(unwrapFBR(), index, &result) { result = 0 }
-        return Id<E>(result)
+        return EntityId<E>(result)
     }
     
     func read<T>(at index: UInt16, store: Store) -> ToOne<T> where T: EntityInspectable, T: __EntityRelatable,
         T == T.EntityBindingType.EntityType {
-        let entityId: Id<T> = read(at: index)
+        let entityId: EntityId<T> = read(at: index)
         let entityBox = store.box(for: T.self)
         return ToOne<T>(box: entityBox, id: entityId)
     }

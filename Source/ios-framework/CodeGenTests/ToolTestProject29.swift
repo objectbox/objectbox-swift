@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class Building: Entity {
-    var id: Id<Building> = 0
+    var id: EntityId<Building> = 0
     var buildingName: String = ""
     var buildingNumber: Int = 0
     
@@ -19,7 +19,7 @@ class Building: Entity {
 
 // objectbox: uid = 25600
 class Autobus: Entity {
-    var id: Id<Autobus> = 0
+    var id: EntityId<Autobus> = 0
     var lineName: String = ""
     
     required init() {}

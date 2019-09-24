@@ -22,12 +22,19 @@ public protocol EntityBinding {
     /// The type this binding serves as an adapter for.
     associatedtype EntityType: Entity & EntityInspectable
     
+    /// The type of the 'id' property in EntityType.
+    associatedtype IdType: IdBase
+
     /// Used by `Box` to create new EntityBinding adapter instances.
     init()
     
     /// Writes the given entity's value to the given PropertyCollector, assigning it the given ID.
     /// `entityId` _must_ not be 0.
-    func collect(fromEntity entity: EntityType, id entityId: EntityId, propertyCollector: PropertyCollector,
+    func collect(fromEntity entity: EntityType, id entityId: Id, propertyCollector: PropertyCollector,
+                 store: Store)
+    
+    /// The collected entity has been put and now it's time to attach and put all relations, if this entity is new.
+    func postPut(fromEntity entity: EntityType, id entityId: Id,
                  store: Store)
     
     /// Creates a new entity based on data from the given EntityReader.
@@ -35,8 +42,19 @@ public protocol EntityBinding {
     func createEntity(entityReader: EntityReader, store: Store) -> EntityType
     
     /// For class types, this is used to write the new entity ID back to the entity when they are first put into a box.
-    func setEntityId(of entity: EntityType, to entityId: EntityId)
+    /// Note that this function only works on classes, it will quietly do nothing when used on a struct.
+    func setEntityIdUnlessStruct(of entity: EntityType, to entityId: Id)
 
     /// Used to read the ID of an entity.
-    func entityId(of entity: EntityType) -> EntityId
+    func entityId(of entity: EntityType) -> Id
+
+    func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: Id?)
+}
+
+extension EntityBinding {
+    public func postPut(fromEntity entity: EntityType, id idNumber: Id, store: Store) {}
+
+    public func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: Id?) {
+        fatalError("Attempt to set unknown ToOne relation \(propertyId)")
+    }
 }

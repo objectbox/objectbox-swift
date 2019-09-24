@@ -21,5 +21,5 @@
 public protocol EntityPropertyTypeConvertible {
     /// The primitive type supported by the ObjectBox C API that this type will map to.
     ///
-    static var entityPropertyType: OBXPropertyType { get }
+    static var entityPropertyType: PropertyType { get }
 }

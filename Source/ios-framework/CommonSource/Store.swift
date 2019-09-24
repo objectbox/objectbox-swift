@@ -16,42 +16,55 @@
 
 import Foundation
 
-/// On-disk store of the boxes for your object types.
-///
-/// You can obtain `Box` instances with the `box(for:)` methods. Boxes provide the interfaces for object persistence.
-///
-/// The code generator will create a convenience initializer for you to use, with
-/// sensible defaults set: `Store.init(directoryPath:)`.
+/// The Store represents an ObjectBox database on the local disk.
+/// For each persisted object type, you can obtain a `Box` instance with the `box(for:)` method.
+/// Boxes provide the interfaces for object persistence.
 ///
 /// A typical setup sequence looks like this:
 ///
 ///     let store = try Store(directoryPath: pathToStoreData)
 ///     let personBox = store.box(for: Person.self)
-///     let persons = personBox.all()
+///     let persons = personBox.all
+///
+/// - Note: You must use the code generator to create a Store initializer according to your data model.
+/// This generated initializer does not have a "model" parameter (that one is an internal initializer),
+/// and comes with convenient defaults for its named parameters.
 ///
 
 public class Store: CustomDebugStringConvertible {
     internal var cStore: OpaquePointer?
     internal var boxes = [UInt32: Any]() // entitySchemaId -> Box<N> instances.
-    internal var boxesLock = NSLock()
+    internal var boxesLock = DispatchSemaphore(value: 1)
+    internal var attachedObjectsLock = DispatchSemaphore(value: 1)
+    internal var attachedObjects = [String: AnyObject]()
 
     /// Returns the version number of ObjectBox C API the framework was built against.
     public static var version: String {
         return String(utf8String: obx_version_string()) ?? ""
     }
+
     /// The path that was passed to this instance when creating it.
     internal(set) public var directoryPath: String
     
     private init() { directoryPath = "" }
-    
-    /// Create a new store.
-    /// - Parameter model: A model description generated using ObjectBox.modelBuilder
-    /// - Parameter directory: The path to thedirectory in which ObjectBox is to save the files related to the database.
-    /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk.
+
+    /// - important: this initializer is only used internally.
+    /// Instead of this, use the generated initializer without the model parameter
+    /// (trigger code generation if you don't see it yet).
+    /// - Parameter model: A model description generated using a `ModelBuilder`
+    /// - Parameter directory: The path to the directory in which ObjectBox should store database files.
+    /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk (default: 1 GB).
     /// - Parameter fileMode: The unix permissions (like 0o755) to use for creating the database files.
-    /// - Parameter maxReaders: How many threads may be reading at the same time at once.
-    public init(model: OpaquePointer, directory: String, maxDbSizeInKByte: UInt64, fileMode: UInt32,
-                maxReaders: UInt32) throws {
+    /// - Parameter maxReaders: "readers" are a finite resource for which you need to define a maximum upfront. The
+    ///                         default value is enough for most apps and usually you can ignore it completely. However,
+    ///                         if you get the "maxReadersExceeded" error, you should verify your threading. For each
+    ///                         thread, ObjectBox uses multiple readers. Their number (per thread) depends on number of
+    ///                         types, relations, and usage patterns. Thus, if you are working with many threads (e.g.
+    ///                         server-like scenario), it can make sense to increase the maximum number of readers. The
+    ///                         default value 0 (zero) lets ObjectBox choose an internal default (currently around 120).
+    ///                         So if you hit this limit, try values around 200-500.
+    public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 1024 * 1024,
+                fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
         directoryPath = directory
         cStore = try directory.withCString { ptr -> OpaquePointer? in
             var opts = obx_opt()
@@ -77,11 +90,11 @@ public class Store: CustomDebugStringConvertible {
     
     internal func close() {
         if let cStore = cStore {
-            let err1 = obx_store_close(cStore)
-            if err1 != OBX_SUCCESS {
-                print("Error closing ObjectBox.Store: \(err1)")
-            }
             self.cStore = nil
+            let err = obx_store_close(cStore)
+            if err != OBX_SUCCESS {
+                print("Error closing ObjectBox.Store: \(err)")
+            }
         }
     }
     
@@ -95,8 +108,8 @@ public class Store: CustomDebugStringConvertible {
             fatalError("entitySchemaId shouldn't be 0") // Swift doesn't know raise() never returns.
         }
         
-        boxesLock.lock()
-        defer { boxesLock.unlock() }
+        boxesLock.wait()
+        defer { boxesLock.signal() }
         
         if let box = boxes[T.entityInfo.entitySchemaId] as? Box<T> {
             return box
@@ -138,7 +151,7 @@ public class Store: CustomDebugStringConvertible {
                 let applicationGroups = entitlements["com.apple.security.application-groups"] as? [NSString] {
                 
                 if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 20 }) {
-                    obx_mutexname_prefix_set(appGroupIdentifier.appending("/"))
+                    obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
                     //print("found appGroupIdentifier \(appGroupIdentifier)")
                 } else {
                     print("Could not find an application group identifier of 20 characters or fewer.")
@@ -155,6 +168,18 @@ public class Store: CustomDebugStringConvertible {
         return true
     }()
     
+    /// :nodoc:
+    public func lazyAttachedObject<T: AnyObject>(key: String, creationBlock: () -> T) -> T {
+        attachedObjectsLock.wait()
+        defer { attachedObjectsLock.signal() }
+        if let object = attachedObjects[key] as? T {
+            return object
+        }
+        let object = creationBlock()
+        attachedObjects[key] = object
+        return object
+    }
+
     /// :nodoc:
     public var debugDescription: String {
         return "<ObjectBox.Store \"\(directoryPath)\">"

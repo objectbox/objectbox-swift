@@ -68,6 +68,13 @@ public enum ObjectBoxError: Swift.Error {
     case schema(message: String)
     /// The database file has errors, e.g. has a structural inconsistency.
     case fileCorrupt(message: String)
+    /// Attempted to establish a relation to an entity that hasn't been assigned an ID yet.
+    case cannotRelateToUnsavedEntities(message: String)
+    /// Unexpected error, should never occur in practice, but for pragmatic reasons, we cover the case.
+    /// Used in some cases where ObjectBox e.g. calls a function (which can only say throws and not what it throws)
+    /// If you encounter this error in your use of ObjectBox, please report it to us, as it's likely a bug in the
+    /// binding.
+    case unexpected(error: Error)
 }
 
 // This method uses our Swift code for generating ObjectBoxErrors and then wraps that ObjectBoxError in an ObjC error.
