@@ -30,9 +30,11 @@ or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
 To install the `ObjectBox` pod, add the following line to your Podfile:
 
 ```ruby
-  pod 'ObjectBox', '1.0.0-rc.7'
+  pod 'ObjectBox'
 ```
 
+*Note:* use `pod 'ObjectBox501'` if you are still on Swift 5.0.1.
+  
 Then run this to install the ObjectBox framework:
 
 ```bash
@@ -40,6 +42,8 @@ cd /path/to/your/project/folder/ # whatever folder your Podfile is in.
 pod install
 Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is named
 ```
+
+*Note:* run `Pods/ObjectBox501/setup.rb myproject.xcodeproj` if you are still on Swift 5.0.1.
 
 And, don't forget to close the Xcode project (.xcodeproj) and open the workspace (.xcworkspace) instead.
 Now, you are all set to define your first ObjectBox entities;
@@ -112,8 +116,8 @@ Source code
 -----------
 Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
-Migrating from the Beta
------------------------
+Migrating from pre 1.0 versions
+-------------------------------
 
 If you've used the ObjectBox betas, there are a few changes we made for the 1.0 release to
 improve the experience before we freeze the API for release. The adjustments you'll have to make are:
