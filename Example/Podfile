@@ -2,10 +2,10 @@ use_frameworks!
 
 target 'NotesExample-iOS' do
   platform :ios, :deployment_target => '11.0'
-  pod 'ObjectBox', '1.0.0-rc.10'
+  pod 'ObjectBox', '1.0'
 end
 
 target 'NotesExample-macOS' do
   platform :osx, :deployment_target => '10.10'
-  pod 'ObjectBox', '1.0.0-rc.10'
+  pod 'ObjectBox', '1.0'
 end
