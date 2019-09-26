@@ -26,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         try! setupDemoNotes()
         setupSplitViewController()
         
+        // SR-4562 / #220: Create an object so the Swift compiler knows not to remove this class from ObjC's class list.
+        // Workaround for "Unknown class _TtC12NotesExample27NotesOverviewViewController in Interface Builder file."
+        _ = NotesOverviewViewController()
+        
         return true
     }
 
