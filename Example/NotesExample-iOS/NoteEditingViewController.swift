@@ -186,7 +186,7 @@ extension NoteEditingViewController: UIPickerViewDelegate  {
 
         func selectedPickerRow(for note: Note) -> Int {
             guard let authorId = note.author.targetId else { return 0 }
-            guard let authorIndex = authors.firstIndex(where: { $0.id == authorId }) else { return 0 }
+            guard let authorIndex = authors.firstIndex(where: { $0.id == authorId.value }) else { return 0 }
             return authorIndex + 1
         }
     }

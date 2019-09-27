@@ -16,15 +16,15 @@ class NotesOverviewViewController: UITableViewController {
     struct Filter {
         static var all: Filter { return Filter(authorId: nil) }
 
-        let authorId: EntityId<Author>?
+        let authorId: Id?
         let query: Query<Note>
         var queryObserver: Observer?
 
-        init(authorId: EntityId<Author>?, noteBox: Box<Note> = Services.instance.noteBox) {
-            self.authorId = authorId
+        init(authorId: Id?, noteBox: Box<Note> = Services.instance.noteBox) {
+            self.authorId = authorId?.value
 
             if let authorId = authorId {
-                query = try! noteBox.query { Note.author == authorId }.build()
+                query = try! noteBox.query { Note.author.isEqual(to: authorId) }.build()
             } else {
                 query = try! noteBox.query().build()
             }
@@ -35,7 +35,7 @@ class NotesOverviewViewController: UITableViewController {
         }
     }
 
-    func filterBy(authorId: EntityId<Author>?) {
+    func filterBy(authorId: Id?) {
         filter = Filter(authorId: authorId)
     }
 
@@ -100,7 +100,7 @@ extension NotesOverviewViewController {
             controller.mode = .draft
             controller.note = {
                 let draft = Note()
-                draft.author.targetId = filter.authorId
+                draft.author.targetId = filter.authorId != nil ? EntityId<Author>(filter.authorId!) : nil
                 draft.modificationDate = Date()
                 return draft
             }()
