@@ -17,7 +17,7 @@ Repository Contents
 Setup
 -----
 
-* Install Xcode 10.2+ (Swift 5.x) with command line tools prepared to build from the shell
+* Install Xcode 11.2+ (Swift 5.1+) with command line tools prepared to build from the shell
 * Run `git submodule update --init --recursive` to get external dependencies
 * Run `make build_swiftlint` to build the build SwiftLint from source into its `external/SwiftLint/.build` directory.
 * The Sourcery submodule contains a `_build.command` script that you can double-click to build a release-ready version of the code generator.
