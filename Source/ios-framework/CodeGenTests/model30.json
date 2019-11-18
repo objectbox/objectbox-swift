@@ -35,7 +35,7 @@
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
-  "modelVersionParserMinimum": 5,
+  "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [],

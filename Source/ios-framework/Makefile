@@ -16,7 +16,7 @@ test: unit_tests integration_tests
 unit_tests: download_statics
 	@echo "$(BLUE)Running Unit Tests...$(NC)"
 	xcodebuild $(XCOPTIONS) test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=OS X,arch=x86_64'
-	xcodebuild $(XCOPTIONS) build test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone X'
+	xcodebuild $(XCOPTIONS) build test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11'
 
 integration_tests: download_statics
 	@echo "$(BLUE)Integration Tests...$(NC)"
@@ -37,7 +37,7 @@ build_framework_verbose: download_statics
 
 archive_framework:
 	@echo "$(BLUE)Archiving Carthage Frameworks...$(NC)"
-	@carthage archive ObjectBox $(CARTOPTIONS)
+	@carthage archive ObjectBox
 
 # Consider to pass in VERSION as a parameter here instead of in the jazzy configuration.
 # Version used in jazzy for the Dash.app documentation XML feed.

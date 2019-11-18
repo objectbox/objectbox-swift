@@ -215,9 +215,6 @@ class StoreTests: XCTestCase {
         } catch {
             XCTAssertNoThrow(try rethrow(error))
         }
-        
-        try! Store.threadLocalTransaction.value?.close()
-        Store.threadLocalTransaction.value = nil
     }
     
     func testDebugDescription() {

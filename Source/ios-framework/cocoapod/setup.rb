@@ -50,14 +50,23 @@ end
 ## Figure out app project path
 ##
 
-OBJECTBOX_POD_ROOT = File.expand_path(File.dirname(__FILE__))
-is_cocoapods = ("/" + __FILE__ + "/").include? "/Pods/" # Naïve heuristic for finding out if the user uses CocoaPods.
+HELPER_FILES_ROOT = File.dirname(File.realpath(__FILE__))
+REL_OBJECTBOX_POD_ROOT = HELPER_FILES_ROOT.match(/.*\/Pods\/.*?\//) # Naïve heuristic for finding out if the user uses CocoaPods.
+if REL_OBJECTBOX_POD_ROOT.nil?
+  OBJECTBOX_POD_ROOT = ""
+  is_cocoapods = false
+else
+  OBJECTBOX_POD_ROOT = File.expand_path("#{REL_OBJECTBOX_POD_ROOT}")
+  is_cocoapods = true
+end
 POD_NAME = File.basename(OBJECTBOX_POD_ROOT)
+EMPTY_GENERATED_FILE = HELPER_FILES_ROOT + "/empty.generated.swift"
 
 args=ARGV
 SHOULD_SHOW_HELP = args.delete("--help") != nil
 SHOULD_REPLACE_MODIFIED_SCRIPTS = args.delete("--replace-modified") != nil
 SHOULD_SKIP_MODIFIED_SCRIPTS = args.delete("--skip-modified") != nil
+SHOULD_INTERACT = (ENV["TERM"] != "") and (ENV["TERM"] != "dumb")
 
 if SHOULD_SHOW_HELP
   print "usage: ".bold
@@ -101,21 +110,64 @@ if args.size > 0
     exit 1
   end
 else
-  PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..", ".."))
+  PROJECT_ROOT = File.expand_path(".")
   PROJECT_BASENAME = File.basename(PROJECT_ROOT)
-  puts "🔸 Trying to find project named like parent folder \"#{PROJECT_BASENAME}\"."
+  puts "🔸 Looking for project files in the current directory ..."
+  project_files = Dir.glob(File.join(PROJECT_ROOT, "*.xcodeproj"))
+  if project_files.empty?
+    puts "🛑 Could not find a project file in \"#{PROJECT_ROOT}\"."
+    puts ""
+    exit 1
+  end
+  project_files.sort_by!{ |m| m.downcase } # Make following call more deterministic, APFS returns you files in any random order.
 
-  project_path = File.join(PROJECT_ROOT, "#{PROJECT_BASENAME}.xcodeproj")
-  if !File.exists?(project_path)
-    puts "🔸 Not found. Taking first project file from the current directory ..."
-    project_files = Dir.glob(File.join(PROJECT_ROOT, "*.xcodeproj"))
-    if project_files.empty?
-      puts "🛑 Could not find a project file in \"#{PROJECT_ROOT}\"."
-      puts ""
+  if SHOULD_INTERACT and project_files.count() > 1
+    default_project_file = nil
+    puts "Several projects found. Which one do you want to set up?"
+    item_number=1
+    project_files.each do |curr_project_file|
+      curr_project_basename = File.basename(curr_project_file)
+      if curr_project_basename == "#{PROJECT_BASENAME}.xcodeproj" # Make most likely one bold & default
+        default_project_file = curr_project_file
+        curr_project_basename = curr_project_basename.bold
+      end
+      puts "#{item_number.to_s.rjust(4)}. #{curr_project_basename}"
+      item_number += 1
+    end
+    print "Enter the number of the project you'd like to use:"
+    if default_project_file != nil
+      print " [#{File.basename(default_project_file)}]"
+    end
+    puts ""
+    print "> "
+    user_input = STDIN.gets
+    
+    # Allow picking project with same name as folder by hitting return:
+    if user_input == "\n" and not default_project_file.nil?
+      project_path = default_project_file
+    else
+      # If not default, try to resolve project by number:
+      desired_index = Integer(user_input) rescue nil
+      if desired_index == nil or desired_index > project_files.count() or desired_index < 1
+        puts "🛑 Input doesn't correspond to a list entry."
+        puts ""
+        exit
+      end
+      desired_index -= 1
+      project_path = project_files[desired_index]
+    end
+  elsif project_files.count() == 1
+    puts "🔸 Found a single project."
+    project_path = project_files[0]
+  else
+    # Non-interactive or only one project in folder? Try old behaviour:
+    puts "🔸 Trying to find project named like parent folder \"#{PROJECT_BASENAME}\"."
+    
+    project_path = File.join(PROJECT_ROOT, "#{PROJECT_BASENAME}.xcodeproj")
+    if !File.exists?(project_path)
+      puts "🛑 Multiple projects found. Please specify which project you want as an argument to this script."
       exit 1
     end
-    project_files.sort_by!{ |m| m.downcase } # Make following call more deterministic, APFS returns you files in any random order.
-    project_path = project_files[0] # Take first project file ¯\_(ツ)_/¯
   end
 end
 
@@ -124,14 +176,14 @@ if is_cocoapods # Use path relative to the PODS_ROOT setting for CocoaPods:
   OBJECTBOX_GEN_SCRIPT_PATH = "$PODS_ROOT/#{POD_NAME}/generate_sources.sh"
   OBJECTBOX_REL_GEN_SCRIPT_PATH = OBJECTBOX_GEN_SCRIPT_PATH
 else # Use paths relative to the project itself for non-CocoaPods:
-  OBJECTBOX_GEN_SCRIPT_PATH = File.join(OBJECTBOX_POD_ROOT, "generate_sources.sh")
+  OBJECTBOX_GEN_SCRIPT_PATH = File.join(HELPER_FILES_ROOT, "generate_sources.sh")
   proj_pathname = Pathname.new PROJECT_ROOT
   script_pathname = Pathname.new OBJECTBOX_GEN_SCRIPT_PATH
   TMP_PATH = script_pathname.relative_path_from proj_pathname
   OBJECTBOX_REL_GEN_SCRIPT_PATH = "$PROJECT_DIR/" + "#{TMP_PATH}"
 end
 
-puts "🔸 Using \"#{project_path}\""
+puts "🔸 Using \"#{File.dirname(project_path).gray}/#{File.basename(project_path).bold}\""
 
 ##
 ## Add the generated Swift files to the project
@@ -169,6 +221,8 @@ if generated_groupref.nil?
     project.main_group.children.insert(products_group_index, project.main_group.children.delete(generated_groupref))
 end
 
+empty_generated_file_template = File.read(EMPTY_GENERATED_FILE)
+
 app_targets.each do |target|
   puts ""
   puts "Target \"#{target.name}\":".bold
@@ -187,7 +241,7 @@ app_targets.each do |target|
     puts "  🔹 Creating file \"#{generated_file_name}\" ..."
     FileUtils.mkdir_p(GENERATED_DIR_PATH)
     File.open(generated_code_path, 'w') do |file|
-      file.puts("// Build your project to run Sourcery and create contents for this file\n")
+      file.puts("// Build your project to run Sourcery and create current contents for this file\n\n#{empty_generated_file_template}")
     end
 
     puts "  🔹 Inserting generated file into group \"#{generated_groupref.name}\" ..."

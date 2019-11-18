@@ -4,6 +4,10 @@ PRODUCTS_PATH="Carthage"
 MAKE_TARGET_NAME="build_framework_verbose"
 SOURCE_GITHUB="https://github.com/objectbox/objectbox-swift"
 LICENSES="Apache 2.0, ObjectBox Binary License"
+
+# Detect which version of Swift (well, Xcode) has been selected using
+# sudo xcode-select --switch /Applications/Xcode10.app or whatever:
+
 if [ "`xcrun swift --version | grep -o '5.0.1'`" == "5.0.1" ]; then
     SWIFT_VERSION="5.0.1"
     POD_NAME="ObjectBox501"
@@ -43,7 +47,7 @@ fi
 
 
 if [[ -z "$1" ]]; then
-    echo "Please enter a version number for this release (like 1.0): [${DEFAULT_VERSION}]"
+    echo "Please enter a version number for this release (like 1.0 or 1.2rc.5): [${DEFAULT_VERSION}]"
     echo -n "> $BEL"
     read VERSION
     echo ""
@@ -71,6 +75,7 @@ $SOURCERY_DIR/_build.command
 
 DOWNLOAD_BASENAME="${POD_NAME}-framework-${VERSION}"
 DOWNLOAD_NAME="${DOWNLOAD_BASENAME}.zip"
+CARTHAGE_NAME="${POD_NAME}-${VERSION}-Carthage.framework.zip"
 HELPER_FILES_DIR="`dirname $0`/../cocoapod"
 
 BUILD_DIR="$my_dir/../build"
@@ -89,23 +94,50 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+echo ""
+echo "$SMSO Generate Zip file $RMSO"
+echo ""
+
+xcodebuild -derivedDataPath "${BUILD_DIR}/DerivedData" archive -project ObjectBox.xcodeproj -scheme OBXCodeGen -destination 'platform=OS X,arch=x86_64' -archivePath "${BUILD_DIR}/OBXCodeGen"
+
+cd `dirname $0`/.. # just in case the makefile changed the current directory.
+
+"${my_dir}/../regenerate_empty_generated_file.command"
+
+
 cd `dirname $0`/.. # just in case the makefile changed the current directory.
 
 echo ""
 echo "$SMSO Generate Zip file $RMSO"
 echo ""
 
+PRODUCT_RESOURCES_DIR="${BUILD_DIR}/${DOWNLOAD_BASENAME}/Carthage/Build/Mac/OBXCodeGen.framework/Versions/A/Resources/"
+
+# Copy the frameworks and support files:
 rm "${BUILD_DIR}"/${DOWNLOAD_NAME} 2>&1 >/dev/null
 rm -r "${BUILD_DIR}/"${DOWNLOAD_BASENAME} 2>&1 >/dev/null
 mkdir -p "${BUILD_DIR}/"${DOWNLOAD_BASENAME}
 rsync -av --exclude='*.dSYM' --exclude='*.bcsymbolmap' "${PRODUCTS_PATH}" "${BUILD_DIR}/"${DOWNLOAD_BASENAME}
-rsync -av --include='*.md' --include='*.rb' --exclude="*" "${HELPER_FILES_DIR}/"  "${BUILD_DIR}/"${DOWNLOAD_BASENAME}
-cp -R "${HELPER_FILES_DIR}/templates" "${BUILD_DIR}/"${DOWNLOAD_BASENAME}/
-cp -R "${HELPER_FILES_DIR}/generate_sources.sh" "${BUILD_DIR}/"${DOWNLOAD_BASENAME}/
-cp -R "$SOURCERY_PATH" "${BUILD_DIR}/"${DOWNLOAD_BASENAME}/
+cp -R "${BUILD_DIR}/OBXCodeGen.xcarchive/Products/Library/Frameworks/OBXCodeGen.framework" "${BUILD_DIR}/${DOWNLOAD_BASENAME}/Carthage/Build/Mac/"
+rsync -av --exclude='*.md' --exclude='*.rb' --include='*.generated.swift' --exclude="*" "${HELPER_FILES_DIR}/" "${PRODUCT_RESOURCES_DIR}"
+rsync -av --include='*.md' --exclude="*" "${HELPER_FILES_DIR}/" "${BUILD_DIR}/${DOWNLOAD_BASENAME}/"
+cp -R "${HELPER_FILES_DIR}/generate_sources.sh" "${PRODUCT_RESOURCES_DIR}"
+cp -R "${HELPER_FILES_DIR}/setup.rb" "${PRODUCT_RESOURCES_DIR}"
+cp -R "$SOURCERY_PATH" "${PRODUCT_RESOURCES_DIR}"
 
+# Relative symlinks in old CocoaPods script locations (Carthage doesn't download these):
+cd "${BUILD_DIR}/${DOWNLOAD_BASENAME}"
+ln -s "Carthage/Build/Mac/OBXCodeGen.framework/Versions/A/Resources/setup.rb" "setup.rb"
+ln -s "Carthage/Build/Mac/OBXCodeGen.framework/Versions/A/Resources/generate_sources.sh" "generate_sources.sh"
+
+# Relative symlink at bottom of framework so Carthage users don't need to type the path to Resources:
+cd "${BUILD_DIR}/${DOWNLOAD_BASENAME}/Carthage/Build/Mac/OBXCodeGen.framework/"
+ln -s "Versions/A/Resources/setup.rb" "setup.rb"
+
+# Zip it all up into a download:
 cd "${BUILD_DIR}/"${DOWNLOAD_BASENAME}
 zip "${BUILD_DIR}/${DOWNLOAD_NAME}" -r --symlinks * # preserve the relative symlinks in Mac frameworks (avoids huge size and "bundle format is ambiguous (could be app or framework)" error message)
+cp "${BUILD_DIR}/${DOWNLOAD_NAME}" "${BUILD_DIR}/${CARTHAGE_NAME}" # Create copy with stupid suffix that Carthage requires.
 
 echo ""
 echo "$SMSO Generate Podspec file $RMSO"
@@ -143,7 +175,7 @@ EOF
 POD_CONTENTS_SOURCE="    :http => '${SOURCE_GITHUB}/releases/download/v$VERSION/${DOWNLOAD_NAME}', "
 read -r -d '' POD_CONTENTS5 <<'EOF'
   }
-  spec.preserve_paths = '{templates,*.rb,*.sh,*.command,*.app}'
+  spec.preserve_paths = '{templates,*.rb,*.sh,*.command,*.app,*.generated.swift,Carthage/Build/Mac/OBXCodeGen.framework}'
   spec.ios.vendored_frameworks = "Carthage/Build/iOS/ObjectBox.framework"
   spec.osx.vendored_frameworks = "Carthage/Build/Mac/ObjectBox.framework"
 end

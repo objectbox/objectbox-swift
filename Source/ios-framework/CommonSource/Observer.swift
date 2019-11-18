@@ -24,6 +24,8 @@ internal func observerCallback(_ ptr: UnsafeMutableRawPointer?) {
 /// An opaque object that serves as a reference to a change subscription on a Box or Query.
 /// Keep a strong reference to this object (in a property or a global) as long as you want to receive
 /// callbacks. Let this object deinit to cancel your subscription.
+///
+/// You obtain an Observer from one of a `Box`'s or `Query`'s `subscribe()` methods.
 public class Observer {
     private var cObserver: OpaquePointer?
     internal var changeHandler: (() -> Void)
@@ -31,6 +33,7 @@ public class Observer {
     
     /// Flags to pass to the various `subscribe` calls on `Box` and `Query`.
     public struct Flags: OptionSet {
+        /// :nodoc:
         public let rawValue: Int
         
         /// Immediately send the current value so the receiver is initialized with current state?
@@ -39,6 +42,7 @@ public class Observer {
         /// not-live-updating snapshot (e.g. when printing).
         public static let dontSubscribe = Flags(rawValue: 1 << 1)
         
+        /// :nodoc:
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
@@ -115,7 +119,42 @@ extension Box {
                                     let result: [EntityType]
                                     var resultError: ObjectBoxError?
                                     do {
-                                        result = try self.find()
+                                        result = try self.all()
+                                    } catch let error as ObjectBoxError {
+                                        resultError = error
+                                        result = []
+                                    } catch {
+                                        // Should never reach this spot, but since functions can only declare they
+                                        // throw, but not that they only throw one type of error, we have to also
+                                        // cover the remaining cases or the compiler is unhappy.
+                                        resultError = .unexpected(error: error)
+                                        result = []
+                                    }
+                                    resultHandler(result, resultError)
+        })
+        if flags.contains(.sendInitial) {
+            dispatchQueue.async(execute: observer.changeHandler)
+        }
+        if flags.contains(.dontSubscribe) {
+            observer.unsubscribe()
+            if !flags.contains(.sendInitial) {
+                fatalError(".dontSubscribe passed without .sendInitial, subscription does nothing.")
+            }
+        }
+        return observer
+    }
+
+    /// Variant of subscribe() that is faster due to using ContiguousArray.
+    public func subscribeContiguous(dispatchQueue: DispatchQueue = DispatchQueue.main,
+                                    flags: Observer.Flags = [.sendInitial],
+                                    resultHandler:
+        @escaping (ContiguousArray<EntityType>, ObjectBoxError?) -> Void) -> Observer {
+        let observer = Observer(store: store, entityId: EntityType.entityInfo.entitySchemaId,
+                                dispatchQueue: dispatchQueue, changeHandler: {
+                                    let result: ContiguousArray<EntityType>
+                                    var resultError: ObjectBoxError?
+                                    do {
+                                        result = try self.allContiguous()
                                     } catch let error as ObjectBoxError {
                                         resultError = error
                                         result = []
@@ -210,4 +249,37 @@ extension Query {
         }
         return observer
     }
+    
+    /// Variant of subscribe() that is faster due to using ContiguousArray.
+    public func subscribeContiguous(dispatchQueue: DispatchQueue = DispatchQueue.main,
+                                    flags: Observer.Flags = [.sendInitial],
+                                    resultHandler:
+        @escaping (ContiguousArray<EntityType>, ObjectBoxError?) -> Void) -> Observer {
+        let observer = Observer(store: store, entityId: EntityType.entityInfo.entitySchemaId,
+                                dispatchQueue: dispatchQueue, changeHandler: {
+                                    let result: ContiguousArray<EntityType>
+                                    var resultError: ObjectBoxError?
+                                    do {
+                                        result = try self.allContiguous()
+                                    } catch let error as ObjectBoxError {
+                                        resultError = error
+                                        result = []
+                                    } catch {
+                                        // Should never reach this spot, but since functions can only declare they
+                                        // throw, but not that they only throw one type of error, we have to also
+                                        // cover the remaining cases or the compiler is unhappy.
+                                        resultError = .unexpected(error: error)
+                                        result = []
+                                    }
+                                    resultHandler(result, resultError)
+        })
+        if flags.contains(.sendInitial) {
+            dispatchQueue.async(execute: observer.changeHandler)
+        }
+        if flags.contains(.dontSubscribe) {
+            observer.unsubscribe()
+        }
+        return observer
+    }
+
 }

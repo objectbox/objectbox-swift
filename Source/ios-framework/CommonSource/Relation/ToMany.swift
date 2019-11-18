@@ -28,7 +28,7 @@ internal struct ResolverAndCollection<ReferencedType> {
 }
 
 
-// Of the form `ToMany<OtherEntity, Self>`. Initialize with `nil` when you define properties.
+// Of the form `ToMany<OtherEntity>`. Initialize with `nil` when you define properties.
 // The codegen uses the `relation()` and `backlink()` static factory methods to create instances.
 //
 // Code generator will figure out a call to the value-ful initializer.
@@ -45,7 +45,7 @@ internal struct ResolverAndCollection<ReferencedType> {
 ///         /// Annotation with ReferencedType's property name is required; Order is "ReferencedType",
 ///         /// Customer is "OwningType"
 ///         // objectbox: backlink = "customer"
-///         var orders: ToMany<Order, Customer> = nil
+///         var orders: ToMany<Order> = nil
 ///         // ...
 ///     }
 ///
@@ -57,15 +57,9 @@ internal struct ResolverAndCollection<ReferencedType> {
 ///
 /// ## Removing relations
 ///
-/// Since this type only supports backlinks at the moment, you cannot modify relations from
-/// this end. You have to set the relation from `ReferencedType` to `OwningType` to `nil` instead:
-///
-///     // You cannot set `aCustomer.orders = nil`, so:
-///     let order = Array(aCustomer.orders)
-///     orders.forEach { order in
-///         order.customer = nil
-///     }
-///     store.box(for: Order.self).put(orders)
+/// A ToMany can be modified just like any other RangeReplaceableCollection. Once you have
+/// changed your relation as needed, call `applyToDb()` on it to actually write the changes
+/// to disk.
 ///
 /// - Note: You can also use a ToMany to create backlinks from `ToOne` relations. Use the
 ///   `// objectbox: backlink = "propertyName"` annotation to tell the code generator which property of
@@ -282,7 +276,14 @@ where S == S.EntityBindingType.EntityType {
         added.removeAll()
         removed.removeAll()
     }
+    
+    /// Replace the entire contents of this relation with the contents of the given collection.
+    public func replace<C>(_ newElements: __owned C)
+        where C: Collection, ReferencedType == C.Element {
+            replaceSubrange(self.startIndex ..< self.endIndex, with: newElements)
+    }
 }
+
 
 // MARK: - RandomAccessCollection
 
@@ -355,13 +356,6 @@ extension ToMany: RangeReplaceableCollection {
             newComparableElements.forEach { added.insert($0) }
             
             resolverAndCollection.collection.replaceSubrange(subrange, with: newElements)
-    }
-}
-
-extension ToMany {
-    public func replace<C>(_ newElements: __owned C)
-        where C: Collection, ReferencedType == C.Element {
-            replaceSubrange(self.startIndex ..< self.endIndex, with: newElements)
     }
 }
 

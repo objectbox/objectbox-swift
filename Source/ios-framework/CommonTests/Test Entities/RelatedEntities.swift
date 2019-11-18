@@ -134,9 +134,9 @@ class CustomerCursor: EntityBinding {
         return entity.id.value
     }
 
-    func collect(fromEntity entity: Customer, id: Id, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: Customer, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2*2), 2 + 2*2))
+        offsets.append((propertyCollector.prepare(string: entity.name), 2 + 2*2))
 
         propertyCollector.collect(id, at: 2 + 2*1)
 
@@ -157,7 +157,7 @@ class CustomerCursor: EntityBinding {
             entity.orders = orders
         }
     }
-    func createEntity(entityReader: EntityReader, store: Store) -> Customer {
+    func createEntity(entityReader: FlatBufferReader, store: Store) -> Customer {
         let entity = Customer()
 
         entity.id = entityReader.read(at: 2 + 2*1)
@@ -238,9 +238,9 @@ class OrderCursor: EntityBinding {
         return entity.id.value
     }
 
-    func collect(fromEntity entity: Order, id: Id, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: Order, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2*4), 2 + 2*4))
+        offsets.append((propertyCollector.prepare(string: entity.name), 2 + 2*4))
         
         propertyCollector.collect(id, at: 2 + 2*1)
         
@@ -265,7 +265,7 @@ class OrderCursor: EntityBinding {
             fatalError("Attempt to change nonexistent ToOne relation with ID \(propertyId)")
         }
     }
-    func createEntity(entityReader: EntityReader, store: Store) -> Order {
+    func createEntity(entityReader: FlatBufferReader, store: Store) -> Order {
         let entity = Order()
 
         entity.id = entityReader.read(at: 2 + 2*1)

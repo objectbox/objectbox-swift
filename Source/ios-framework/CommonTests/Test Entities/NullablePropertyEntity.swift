@@ -185,11 +185,11 @@ class NullablePropertyEntityBinding: EntityBinding {
 
     required init() {}
     
-    func collect(fromEntity entity: NullablePropertyEntity, id: Id, propertyCollector: PropertyCollector, store: Store) {
-        let maybeStringOffset = propertyCollector.prepare(string: entity.maybeString, at: 2 + 2*11)
-        let maybeByteVectorOffset = propertyCollector.prepare(bytes: entity.maybeByteVector, at: 2 + 2*12)
-        let stringOffset = propertyCollector.prepare(string: entity.string, at: 2 + 2*22)
-        let byteVectorOffset = propertyCollector.prepare(bytes: entity.byteVector, at: 2 + 2*23)
+    func collect(fromEntity entity: NullablePropertyEntity, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
+        let maybeStringOffset = propertyCollector.prepare(string: entity.maybeString)
+        let maybeByteVectorOffset = propertyCollector.prepare(bytes: entity.maybeByteVector)
+        let stringOffset = propertyCollector.prepare(string: entity.string)
+        let byteVectorOffset = propertyCollector.prepare(bytes: entity.byteVector)
         
         propertyCollector.collect(id, at: 2 + 2*1)
         
@@ -219,7 +219,7 @@ class NullablePropertyEntityBinding: EntityBinding {
         propertyCollector.collect(dataOffset: byteVectorOffset, at: 2 + 2*23)
     }
     
-    func createEntity(entityReader: EntityReader, store: Store) -> NullablePropertyEntity {
+    func createEntity(entityReader: FlatBufferReader, store: Store) -> NullablePropertyEntity {
         let entity = NullablePropertyEntity()
         
         entity.id = entityReader.read(at: 2 + 2*1)

@@ -99,16 +99,11 @@ internal class AuthorBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2 * 2), 2 + 2 * 2))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
     }
 
     internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) {
@@ -123,7 +118,7 @@ internal class AuthorBinding: NSObject, ObjectBox.EntityBinding {
             entity.books = books
         }
     }
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = Author()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
@@ -229,16 +224,11 @@ internal class BookBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.name, at: 2 + 2 * 2), 2 + 2 * 2))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
     }
 
     internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) {
@@ -253,7 +243,7 @@ internal class BookBinding: NSObject, ObjectBox.EntityBinding {
             entity.authors = authors
         }
     }
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = Book()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)

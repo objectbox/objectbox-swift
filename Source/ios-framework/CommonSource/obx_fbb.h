@@ -78,8 +78,8 @@ void obx_fbb_collect_double(struct OBX_fbb* _Nonnull self, double value, uint16_
 
 void obx_fbb_collect_data_offset(struct OBX_fbb* _Nonnull self, OBXDataOffset dataOffset, uint16_t propertyOffset);
 
-OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string, uint16_t propertyOffset);
-OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size, uint16_t propertyOffset);
+OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string);
+OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size);
 
 #pragma mark - Reading
 

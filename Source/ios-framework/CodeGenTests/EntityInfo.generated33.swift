@@ -132,22 +132,20 @@ internal class DataThingBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(bytes: entity.firstData, at: 2 + 2 * 2), 2 + 2 * 2))
-        offsets.append((propertyCollector.prepare(bytes: entity.secondData, at: 2 + 2 * 3), 2 + 2 * 3))
-        offsets.append((propertyCollector.prepare(bytes: entity.maybeThirdData, at: 2 + 2 * 4), 2 + 2 * 4))
-        offsets.append((propertyCollector.prepare(bytes: entity.maybeFourthData, at: 2 + 2 * 5), 2 + 2 * 5))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_firstData = propertyCollector.prepare(bytes: entity.firstData)
+        let propertyOffset_secondData = propertyCollector.prepare(bytes: entity.secondData)
+        let propertyOffset_maybeThirdData = propertyCollector.prepare(bytes: entity.maybeThirdData)
+        let propertyOffset_maybeFourthData = propertyCollector.prepare(bytes: entity.maybeFourthData)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_firstData, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_secondData, at: 2 + 2 * 3)
+        propertyCollector.collect(dataOffset: propertyOffset_maybeThirdData, at: 2 + 2 * 4)
+        propertyCollector.collect(dataOffset: propertyOffset_maybeFourthData, at: 2 + 2 * 5)
     }
 
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = DataThing()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)

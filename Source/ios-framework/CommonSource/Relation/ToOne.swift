@@ -33,7 +33,7 @@
 ///     let neil: Person = ...
 ///
 ///     amanda.spouse.target = neil
-///     personBox.put(amanda)
+///     try personBox.put(amanda)
 ///
 ///
 /// ## Remove a relation

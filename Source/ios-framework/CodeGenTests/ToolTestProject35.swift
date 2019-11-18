@@ -20,7 +20,7 @@ enum TestEnum: Int {
 class EnumEntity: Entity, CustomDebugStringConvertible {
     // objectbox:id
     var id: UInt64 = 0
-    // objectbox: convert = { "dbType": "Int", "default": ".unset" }
+    // objectbox: convert = { "default": ".unset" }
     var custom: TestEnum
     
     init(custom: TestEnum = .unset) {

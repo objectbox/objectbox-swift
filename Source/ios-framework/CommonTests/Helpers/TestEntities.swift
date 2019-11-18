@@ -50,7 +50,11 @@ public class TestPerson: CustomDebugStringConvertible {
     }
 }
 
-extension TestPerson: Equatable {
+extension TestPerson: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
     public static func == (lhs: TestPerson, rhs: TestPerson) -> Bool {
         return lhs.id == rhs.id && lhs.name == rhs.name && lhs.age == rhs.age
     }
@@ -217,15 +221,15 @@ public class TestPersonCursor: EntityBinding {
         return entity.id.value
     }
     
-    public func collect(fromEntity entity: TestPerson, id: Id, propertyCollector: PropertyCollector,
+    public func collect(fromEntity entity: TestPerson, id: Id, propertyCollector: FlatBufferBuilder,
                         store: Store) {
-        let nameOffset = propertyCollector.prepare(string: entity.name, at: 8)
+        let nameOffset = propertyCollector.prepare(string: entity.name)
         propertyCollector.collect(id, at: 4)
         propertyCollector.collect(entity.age, at: 6)
         propertyCollector.collect(dataOffset: nameOffset, at: 8)
     }
     
-    public func createEntity(entityReader: EntityReader, store: Store) -> TestPerson {
+    public func createEntity(entityReader: FlatBufferReader, store: Store) -> TestPerson {
         let result = TestPerson()
         result.id = EntityId(entityReader.read(at: 4))
         result.age = entityReader.read(at: 6)
@@ -249,9 +253,9 @@ public class AllTypesEntityCursor: EntityBinding {
         return entity.id.value
     }
     
-     public func collect(fromEntity entity: AllTypesEntity, id: Id, propertyCollector: PropertyCollector,
+     public func collect(fromEntity entity: AllTypesEntity, id: Id, propertyCollector: FlatBufferBuilder,
                          store: Store) {
-        let offset = propertyCollector.prepare(string: entity.string, at: AllTypesOffset.string.rawValue)
+        let offset = propertyCollector.prepare(string: entity.string)
         
         propertyCollector.collect(id, at: AllTypesOffset.ID.rawValue)
         propertyCollector.collect(entity.boolean, at: AllTypesOffset.bool.rawValue)
@@ -264,7 +268,7 @@ public class AllTypesEntityCursor: EntityBinding {
         propertyCollector.collect(dataOffset: offset, at: AllTypesOffset.string.rawValue)
     }
     
-     public func createEntity(entityReader: EntityReader, store: Store) -> AllTypesEntity {
+     public func createEntity(entityReader: FlatBufferReader, store: Store) -> AllTypesEntity {
         let result = AllTypesEntity()
         
         result.id = EntityId(entityReader.read(at: AllTypesOffset.ID.rawValue))

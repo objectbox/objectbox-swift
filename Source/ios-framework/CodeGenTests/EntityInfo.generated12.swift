@@ -72,14 +72,12 @@ internal class BusRouteBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-
-
     }
 
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = BusRoute()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)

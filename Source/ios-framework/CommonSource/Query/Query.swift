@@ -14,24 +14,16 @@
 // limitations under the License.
 //
 
-// 1. Use the Query type to perform core-compatible Objective-C calls.
-// 2. Use the block-based query method to state conditions using operator overloads, like:
-//
-//    box.query { "AgeRestriction" .= Person.age > 21 && Person.name.startsWith("M") }
-//
-
 /// A reusable query returning entities.
 ///
-/// You can store a `Query` once it is set up and re-evaluate it e.g. using `find()` or `all()`.
+/// You can hold on to a `Query` once it is set up and re-evaluate it e.g. using `find()` or `all()`.
 ///
-/// Use `PropertyQuery` instead if you want to return aggregate results. Use `property(_:)` to obtain a `PropertyQuery`.
+/// Use the block-based query method to state conditions using operator overloads, like:
 ///
-/// `PropertyQuery` will respect the conditions of its base `Query`. So it you want to find the average age of all
-/// `Person`s above 30, this is how you can write it:
+///    let query = box.query { Person.age > 21 && Person.name.startsWith("M") }.build()
 ///
-///      let query = personBox.query { Person.age > 29 }.build()
-///      let ageQuery = query.property(Person.age)
-///      let averageAge = ageQuery.average
+/// If you want to return aggregate results or just property values and not whole entities, use `property(_:)` to obtain
+/// a `PropertyQuery`.
 ///
 
 public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
@@ -72,6 +64,23 @@ where E == E.EntityBindingType.EntityType {
         
         return result
     }
+    
+    // Variant of find() that is faster due to using ContiguousArray.
+    public func findContiguous(offset: UInt64 = 0, limit: UInt64 = 0) throws -> ContiguousArray<EntityType> {
+        var result = ContiguousArray<EntityType>()
+        
+        try store.obx_runInReadOnlyTransaction { _ in
+            let box = self.store.box(for: EntityType.self)
+            if let bytesArray = obx_query_find(cQuery, offset, limit) {
+                try check(error: obx_last_error_code())
+                defer { obx_bytes_array_free(bytesArray) }
+                result = try box.readAllContiguous(bytesArray.pointee)
+            }
+            try check(error: obx_last_error_code())
+        }
+        
+        return result
+    }
 
     /// Find all object IDs matching the query between the given offset and limit.
     ///
@@ -86,17 +95,21 @@ where E == E.EntityBindingType.EntityType {
             try check(error: obx_last_error_code())
             defer { obx_id_array_free(idArray) }
             
-            result.reserveCapacity(idArray.pointee.count)
-            
-            for idIndex in 0 ..< idArray.pointee.count {
-                result.append(EntityId<EntityType>(idArray.pointee.ids[idIndex]))
+            // swiftlint:disable opening_brace
+            result = [EntityId<EntityType>](unsafeUninitializedCapacity: idArray.pointee.count)
+            { ptr, initializedCount in
+                for idIndex in 0 ..< idArray.pointee.count {
+                    ptr[idIndex] = EntityId<EntityType>(idArray.pointee.ids[idIndex])
+                }
+                initializedCount = idArray.pointee.count
             }
+            // swiftlint:enable opening_brace
         }
         try check(error: obx_last_error_code())
         
         return result
     }
-    
+
     /// Delete all objects matching the query.
     ///
     /// - Parameters:
@@ -146,6 +159,11 @@ where E == E.EntityBindingType.EntityType {
         return try find()
     }
     
+    /// Variant of all() that is faster due to using ContiguousArray.
+    public func allContiguous() throws -> ContiguousArray<EntityType> {
+        return try findContiguous()
+    }
+
     /// Accessor to get a `PropertyQuery` object based on the query conditions.
     ///
     /// You use `Query` to get objects, `PropertyQuery` to get aggregate results for entity properties.

@@ -30,13 +30,14 @@
 ///
 ///     let alcoholRestriction: QueryCondition<Person> = Person.age > 18 && Person.age < 80
 ///     // ...
-///     let alcoholAllowedQuery = personBox.query {
+///     let alcoholAllowedQuery = try personBox.query {
 ///         return alcoholRestriction
 ///             || (Person.firstName == "Johnny" && Person.lastName == "Walker")
-///     }
+///     }.build()
 ///
 public class QueryCondition<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
+    /// The type of entity this query will return.
     public typealias EntityType = E
 
     internal let expression: (QueryBuilder<E>) -> QueryBuilderCondition
@@ -59,9 +60,9 @@ where E == E.EntityBindingType.EntityType {
 /// You can apply a short name (called _alias_, see `PropertyAlias`) to later identify specific expressions
 /// using the `.=` operator. This is useful to change the values. The example above with an alias would read:
 ///
-///     let query = personBox.query { "AgeRestriction" .= Person.age > 21 }.build()
+///     let query = try personBox.query { "AgeRestriction" .= Person.age > 21 }.build()
 ///     // Change the condition to `Person.age > 18`
-///     query.setParameter("AgeRestriction", to: 18)
+///     try query.setParameter("AgeRestriction", to: 18)
 ///
 /// You can form conditions and use them later, like:
 ///
@@ -69,11 +70,11 @@ where E == E.EntityBindingType.EntityType {
 ///              "MinAge" .= Person.age > 21
 ///              && "MaxAge" .= Person.age < 80
 ///      // ...
-///      let alcoholAllowedQuery = personBox.query {
+///      let alcoholAllowedQuery = try personBox.query {
 ///          return alcoholRestriction
 ///              || (Person.firstName == "Johnny" && Person.lastName == "Walker")
 ///      }.build()
-///      alcoholAllowedQuery.setParameter("MinAge", to: 18)
+///      try alcoholAllowedQuery.setParameter("MinAge", to: 18)
 ///
 public class PropertyQueryCondition<E: EntityInspectable & __EntityRelatable, T: EntityPropertyTypeConvertible>:
     QueryCondition<E>

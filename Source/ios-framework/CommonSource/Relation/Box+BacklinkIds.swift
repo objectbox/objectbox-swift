@@ -19,14 +19,19 @@ extension Box {
         -> [T.EntityBindingType.IdType] {
             var result = [T.EntityBindingType.IdType]()
             if let sourceIds = sourceIds?.pointee {
-                result.reserveCapacity(sourceIds.count)
-                for idIndex in 0 ..< sourceIds.count {
-                    result.append(T.EntityBindingType.IdType(sourceIds.ids[idIndex]))
+                // swiftlint:disable opening_brace
+                result = [T.EntityBindingType.IdType](unsafeUninitializedCapacity: sourceIds.count)
+                { ptr, initializedCount in
+                    for idIndex in 0 ..< sourceIds.count {
+                        ptr[idIndex] = T.EntityBindingType.IdType(sourceIds.ids[idIndex])
+                    }
+                    initializedCount = sourceIds.count
                 }
+                // swiftlint:enable opening_brace
             }
             return result
     }
-    
+
     internal func backlinkIds(propertyId: UInt32, entityId: Id) throws -> [EntityType.EntityBindingType.IdType] {
         let sourceIds = obx_box_get_backlink_ids(cBox, propertyId, entityId)
         try checkLastError()

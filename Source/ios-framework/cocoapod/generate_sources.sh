@@ -2,7 +2,10 @@
 
 set -e
 
-sourcery=`dirname "$0"`/Sourcery.app/Contents/MacOS/Sourcery
+myrealpath=`realpath "$0"`
+mydir=`dirname "$myrealpath"`
+
+sourcery="${mydir}/Sourcery.app/Contents/MacOS/Sourcery"
 
 # if this script had parameters, we would look for them here.
 

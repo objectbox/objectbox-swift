@@ -103,7 +103,7 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
 Caveats
 -------
 
-To make to-one relations and their backlinks work, the `Entity` protocol was extended to require (1) an `EntityType` typealias, and (2) an `_id` property. The former was needed to disambiguate which concrete entity we're talking about when all we have is the protocol type, and this in turn is needed to specify the generic type requirement of `Id<T>`. Since the `Entity` protocol itself is intended to be no more than a convenient code annotation (which Sourcery can filter on), it's advised to get rid of this as soon as possible and find a different way to get the data needed for associations in Swift, for example using an `IdGetter<T>` like we do in Java and injecting it into `EntityInfo` from generated code.
+To make to-one relations and their backlinks work, the `Entity` protocol was extended to require (1) an `EntityType` typealias, and (2) an `_id` property. The former was needed to disambiguate which concrete entity we're talking about when all we have is the protocol type, and this in turn is needed to specify the generic type requirement of `EntityId<T>`. Since the `Entity` protocol itself is intended to be no more than a convenient code annotation (which Sourcery can filter on), it's advised to get rid of this as soon as possible and find a different way to get the data needed for associations in Swift, for example using an `IdGetter<T>` like we do in Java and injecting it into `EntityInfo` from generated code.
 
 How to Use the Framework
 ------------------------
@@ -117,7 +117,7 @@ Define entities:
 
     import ObjectBox
     final class Person: Entity {
-        var id: Id<Person> = 0
+        var id: Id = 0
         var age: Int
         var name: String
         var birthdate: Date
@@ -136,7 +136,7 @@ Run the code generator. This will configure a `ModelBuilder` and get the `Data` 
 Create and set up the ObjectBox types:
 
     let directory: String = "/path/to/the/store"
-    let store: Store = try! Store(directoryPath: directory)
+    let store: Store = try Store(directoryPath: directory)
     let personBox: Box<Person> = store.box(for: Person.self)
 
 This will call into the the generated (!) initializer that uses the private model builder's `modelBytes()` automatically.
@@ -150,10 +150,10 @@ Then you're all set to use entities with ObjectBox:
     assert(person.id == personId) // ID is set after put
     
     // Get by ID
-    assert(personBox.get(personId) != nil)
+    assert(try personBox.get(personId) != nil)
     
     // Get collections of entities
-    _ = personBox.all()
-    _ = personBox.query({ Person.name == "Fry" }).build().find()
+    _ = try personBox.all()
+    _ = try personBox.query({ Person.name == "Fry" }).build().find()
 
 That's it, it works now!

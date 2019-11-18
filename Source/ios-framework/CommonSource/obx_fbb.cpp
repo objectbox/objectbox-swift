@@ -42,7 +42,7 @@ struct OBX_fbr: flatbuffers::Table {};
 #pragma mark Macros
 
 #if DEBUG
-#define GUARD_IS_COLLECTING assert(self->isCollecting) // OBXPropertyCollector methods should only be called during -put:error:.
+#define GUARD_IS_COLLECTING assert(self->isCollecting) // OBX_fbb methods should only be called during -put:error:.
 #else
 #define GUARD_IS_COLLECTING do {} while(0)
 #endif
@@ -179,7 +179,7 @@ extern "C" void obx_fbb_collect_data_offset(struct OBX_fbb* _Nonnull self, OBXDa
     self->fbb.AddOffset(propertyOffset, offset);
 }
 
-extern "C" OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string, uint16_t propertyOffset) {
+extern "C" OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string) {
     GUARD_IS_COLLECTING;
     assert(!obx_is_started_fast(self)); // Strings must be collected before scalars.
     
@@ -194,7 +194,7 @@ extern "C" OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, c
     return result;
 }
 
-extern "C" OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size, uint16_t propertyOffset) {
+extern "C" OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size) {
     GUARD_IS_COLLECTING;
     assert(!obx_is_started_fast(self)); // Byte vectors must be collected before scalars.
     

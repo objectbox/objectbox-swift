@@ -63,38 +63,50 @@ where E == E.EntityBindingType.EntityType {
         return result
     }
     
-    /// Find out whether objects with the given ID exist in this box.
+    /// Find out whether objects with the given IDs exist in this box.
     ///
-    /// - Parameter entityIds: ID of the object.
+    /// - Parameter ids: IDs of the objects.
     /// - Returns: true if all objects specified exist.
     public func contains(_ ids: [EntityType.EntityBindingType.IdType]) throws -> Bool {
-        var result = false
-
-        var entityIds = ids.map { currId -> Id in currId.value }
-        let numEntities = entityIds.count
-        try entityIds.withContiguousMutableStorageIfAvailable { cArray -> Void in
-            guard let safePtr = cArray.baseAddress else { result = false; return }
-            var obxArray = OBX_id_array(ids: safePtr, count: numEntities)
-            try checkLastError(obx_box_contains_many(cBox, &obxArray, &result))
+        var result = true
+        
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            
+            for currId in ids {
+                if try !cursor.contains(currId.value) {
+                    result = false
+                    return
+                }
+            }
         }
 
         return result
+    }
+
+    /// Find out whether objects with the given IDs (passed individually, not as an array) exist in this box.
+    ///
+    /// - Parameter ids: IDs of the objects.
+    /// - Returns: true if all objects specified exist.
+    public func contains(_ ids: EntityType.EntityBindingType.IdType...) throws -> Bool {
+        return try contains(ids)
     }
 }
 
 // MARK: Persisting Objects
 
 extension Box {
-    
-    /// Puts the given object in the box (aka persisting it). If the entity hadn't been persisted yet, it will be
-    /// assigned an ID.
+    /// Puts the given struct in the box (aka persisting it). If the struct hadn't been persisted yet, it will be
+    /// assigned an ID, which will be written back to the entity's ID property.
     ///
     /// - Parameter entity: Object to persist.
+    /// - Parameter mode: Whether you want to put (insert or update), insert (fail if there is an existing object of
+    ///                     the given ID) or update (fail if the object doesn't exist anymore).
     /// - Returns: ID of the object after persistence. If `entity` was persisted before, it's the same as its ID.
-    ///   If `entity` is a new object, an ID is generated.
+    ///   If `entity` is a new object, this is the new ID that was generated.
     /// - Throws: ObjectBoxError errors for database write errors.
     @discardableResult
-    public func put(_ entity: EntityType) throws -> EntityType.EntityBindingType.IdType {
+    public func put(_ entity: inout EntityType, mode: PutMode = .put) throws -> EntityType.EntityBindingType.IdType {
         let binding = EntityType.entityBinding
         let flatBuffer = FlatBufferBuilder.dequeue()
         defer { FlatBufferBuilder.return(flatBuffer) }
@@ -102,10 +114,39 @@ extension Box {
         var writtenId: Id = 0
         
         try store.obx_runInTransaction { swiftTx in
-            let cursor = obx_cursor(swiftTx.cTransaction, EntityType.entityInfo.entitySchemaId)
-            defer { obx_cursor_close(cursor) }
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
             
-            writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, cursor: cursor)
+            writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
+            binding.postPut(fromEntity: entity, id: writtenId, store: store)
+        }
+        binding.setStructEntityId(of: &entity, to: writtenId)
+        
+        return EntityType.EntityBindingType.IdType(writtenId)
+    }
+    
+    /// Puts the given object in the box (aka persisting it). If the entity hadn't been persisted yet, it will be
+    /// assigned an ID, and if the entity is not a struct, the ID will be written back to the entity's ID property.
+    /// For a struct, either use the `put(inout EntityType)` variant or assign the returned ID to the ID property
+    /// yourself.
+    ///
+    /// - Parameter entity: Object to persist.
+    /// - Parameter mode: Whether you want to put (insert or update), insert (fail if there is an existing object of
+    ///                     the given ID) or update (fail if the object doesn't exist anymore).
+    /// - Returns: ID of the object after persistence. If `entity` was persisted before, it's the same as its ID.
+    ///   If `entity` is a new object, this is the new ID that was generated.
+    /// - Throws: ObjectBoxError errors for database write errors.
+    @discardableResult
+    public func put(_ entity: EntityType, mode: PutMode = .put) throws -> EntityType.EntityBindingType.IdType {
+        let binding = EntityType.entityBinding
+        let flatBuffer = FlatBufferBuilder.dequeue()
+        defer { FlatBufferBuilder.return(flatBuffer) }
+        
+        var writtenId: Id = 0
+        
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
             binding.postPut(fromEntity: entity, id: writtenId, store: store)
         }
         binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
@@ -114,54 +155,188 @@ extension Box {
     }
     
     internal func putOne(_ entity: EntityType, binding: EntityType.EntityBindingType, flatBuffer: FlatBufferBuilder,
-                         cursor: OpaquePointer!) throws -> Id {
+                         mode: PutMode, cursor: Cursor<EntityType>) throws -> Id {
         flatBuffer.isCollecting = true
         defer { flatBuffer.clear(); flatBuffer.isCollecting = false }
         
-        let actualId = obx_cursor_id_for_put(cursor, binding.entityId(of: entity))
+        let actualId = cursor.idForPut(entity)
         binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
-        try checkLastError(obx_cursor_put(cursor, actualId, data.data, data.size, false))
+        try cursor.put(id: actualId, data: data, mode: mode)
         
         return actualId
     }
     
     /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
-    /// assigned an ID. For classes, the entity's ID will be set to match any newly-assigned IDs.
-    /// For structs, you will have to extract the IDs from the returned array of IDs and assign it to your entity.
-    /// If an error occurs putting one of the entities, only the entities up to that entity will be put and an error
-    /// thrown.
+    /// assigned an ID. For classes, the entity's ID property will be set to match any newly-assigned IDs.
+    /// For structs, use the `put(inout [EntityType])` variant or extract the IDs from the returned array of
+    /// IDs and assign them to each entity.
     ///
     /// - Parameter entities: Objects to persist.
+    /// - Parameter mode: Whether you want to put (insert or update), insert (fail if there is an existing object of
+    ///                     the given ID) or update (fail if the object doesn't exist anymore).
     /// - Returns: List of IDs of the entities were written to.
     /// - Throws: ObjectBoxError errors for database write errors.
     @discardableResult
-    public func put(_ entities: [EntityType]) throws -> [EntityType.EntityBindingType.IdType] {
+    public func putAndReturnIDs <C: Collection>(_ entities: C, mode: PutMode = .put) throws
+        -> [EntityType.EntityBindingType.IdType]
+        where C.Element == EntityType {
+            if entities.isEmpty {
+                // Short-cut, we don't need a TX
+                return []
+            }
+            // swiftlint:disable opening_brace
+            var result = try [EntityType.EntityBindingType.IdType](unsafeUninitializedCapacity: entities.count)
+            { ptr, initializedCount in
+                try store.obx_runInTransaction { swiftTx in
+                    let binding = EntityType.entityBinding
+                    let flatBuffer = FlatBufferBuilder.dequeue()
+                    defer { FlatBufferBuilder.return(flatBuffer) }
+                    
+                    let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+                    initializedCount = 0
+                    for entity in entities {
+                        let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
+                                                   mode: mode, cursor: cursor)
+                        binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                        binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
+                        ptr[initializedCount] = EntityType.EntityBindingType.IdType(writtenId)
+                        initializedCount += 1
+                    }
+                }
+            }
+            // swiftlint:enable opening_brace
+            return result
+    }
+
+    /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
+    /// assigned an ID. For classes, the entity's ID property will be set to match any newly-assigned IDs.
+    /// For structs, use the `put(inout [EntityType])` variant or `putAndReturnIDs()` and assign the returned
+    /// IDs to each entity.
+    ///
+    /// - Parameter entities: Objects to persist.
+    /// - Throws: ObjectBoxError errors for database write errors.
+    public func put<C: Collection>(_ entities: C, mode: PutMode = .put) throws
+        where C.Element == EntityType {
         if entities.isEmpty {
             // Short-cut, we don't need a TX
-            return []
+            return
         }
-        var result = [EntityType.EntityBindingType.IdType]()
         try store.obx_runInTransaction { swiftTx in
             let binding = EntityType.entityBinding
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
             
-            let cursor = obx_cursor(swiftTx.cTransaction, EntityType.entityInfo.entitySchemaId)
-            defer { obx_cursor_close(cursor) }
-            
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
-                                           cursor: cursor)
+                                           mode: mode, cursor: cursor)
                 binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
-                result.append(EntityType.EntityBindingType.IdType(writtenId))
             }
         }
-        return result
     }
-    
+
+    /// :nodoc:
+    public func put(_ entities: [EntityType], mode: PutMode = .put) throws {
+        if entities.isEmpty {
+            // Short-cut, we don't need a TX
+            return
+        }
+        try store.obx_runInTransaction { swiftTx in
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            for entity in entities {
+                let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
+                                           mode: mode, cursor: cursor)
+                binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
+            }
+        }
+    }
+
+    /// Version of put([EntityType]) that is faster because it uses ContiguousArray.
+    public func put(_ entities: ContiguousArray<EntityType>, mode: PutMode = .put) throws {
+        if entities.isEmpty {
+            // Short-cut, we don't need a TX
+            return
+        }
+        try store.obx_runInTransaction { swiftTx in
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            for entity in entities {
+                let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
+                                           mode: mode, cursor: cursor)
+                binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
+            }
+        }
+    }
+
+
+    /// Puts the given structs in a box using a single transaction. Any entities that hadn't been persisted yet will be
+    /// assigned an ID. The entities' ID properties will be set to match any newly-assigned IDs.
+    ///
+    /// - Parameter entities: Objects to persist and whose IDs will be updated if needed.
+    /// - Parameter mode: Whether you want to put (insert or update), insert (fail if there is an existing object of
+    ///                     the given ID) or update (fail if the object doesn't exist anymore).
+    /// - Throws: ObjectBoxError errors for database write errors.
+    public func put(_ entities: inout [EntityType], mode: PutMode = .put) throws {
+        if entities.isEmpty {
+            // Short-cut, we don't need a TX
+            return
+        }
+        try store.obx_runInTransaction { swiftTx in
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            for entityIndex in 0 ..< entities.count {
+                let newEntity = entities[entityIndex]
+                let writtenId = try putOne(newEntity, binding: binding, flatBuffer: flatBuffer,
+                                           mode: mode, cursor: cursor)
+                binding.postPut(fromEntity: newEntity, id: writtenId, store: store)
+                binding.setStructEntityId(of: &entities[entityIndex], to: writtenId)
+            }
+        }
+    }
+
+    /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
+    /// assigned an ID. For classes, the entity's ID property will be set to match any newly-assigned IDs.
+    /// For structs, you will have to extract the IDs from the returned array of IDs and assign them to each entity.
+    ///
+    /// - Parameter entities: Objects to persist, passed as individual parameters, not as an array.
+    /// - Returns: List of IDs of the entities were written to.
+    /// - Throws: ObjectBoxError errors for database write errors.
+    public func putAndReturnIDs(_ entities: EntityType..., mode: PutMode = .put) throws
+        -> [EntityType.EntityBindingType.IdType] {
+        return try putAndReturnIDs(entities, mode: mode)
+    }
+
+    /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
+    /// assigned an ID. For classes, the entity's ID property will be set to match any newly-assigned IDs.
+    /// For structs, use the `put(inout [EntityType])` variant or `putAndReturnIDs()` and assign the returned
+    /// IDs to each entity.
+    ///
+    /// - Parameter entities: Objects to persist, passed as individual parameters, not as an array.
+    /// - Throws: ObjectBoxError errors for database write errors.
+    public func put(_ entities: EntityType..., mode: PutMode = .put) throws {
+        try put(entities, mode: mode)
+    }
+
     internal func put(_ relatedEntity: ToOne<EntityType>) throws -> EntityType.EntityBindingType.IdType? {
         guard let entity = relatedEntity.target else { return nil }
         return try put(entity)
@@ -186,7 +361,7 @@ extension Box {
         return binding.createEntity(entityReader: flatBuffer, store: store)
     }
     
-    /// Get the stored objects for the given ID.
+    /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
@@ -199,7 +374,7 @@ extension Box {
         }
     }
     
-    /// Get the stored objects for the given ID.
+    /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
@@ -207,7 +382,7 @@ extension Box {
         return try get(id: entityId.value)
     }
     
-    /// Get the stored objects for the given ID.
+    /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
@@ -220,8 +395,8 @@ extension Box {
     /// - Parameter entityIds: Object IDs to map to objects.
     /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
     ///   Nothing is added to the dictionary for entities that can't be found.
-    public func dictionaryWithEntities(forIds entityIds: [EntityId<EntityType>]) throws
-        -> [EntityId<EntityType>: EntityType] {
+    public func dictionaryWithEntities<C: Collection>(forIds entityIds: C) throws
+        -> [EntityId<EntityType>: EntityType] where C.Element == EntityId<EntityType> {
             return try dictionaryWithEntities(forIdBases: entityIds)
     }
 
@@ -230,8 +405,8 @@ extension Box {
     /// - Parameter entityIds: Object IDs to map to objects.
     /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
     ///   Nothing is added to the dictionary for entities that can't be found.
-    public func dictionaryWithEntities<I: UntypedIdBase>(forIds entityIds: [I]) throws
-        -> [I: EntityType] {
+    public func dictionaryWithEntities<I: UntypedIdBase, C: Collection>(forIds entityIds: C) throws
+        -> [I: EntityType] where C.Element == I {
             return try dictionaryWithEntities(forIdBases: entityIds)
     }
 
@@ -240,8 +415,8 @@ extension Box {
     /// - Parameter entityIds: Object IDs to map to objects.
     /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
     ///   Nothing is added to the dictionary for entities that can't be found.
-    private func dictionaryWithEntities<I: IdBase>(forIdBases entityIds: [I]) throws
-        -> [I: EntityType] {
+    private func dictionaryWithEntities<I: IdBase, C: Collection>(forIdBases entityIds: C) throws
+        -> [I: EntityType] where C.Element == I {
             var result = [I: EntityType]()
             
             try store.obx_runInReadOnlyTransaction { _ in
@@ -261,47 +436,74 @@ extension Box {
     /// Gets all objects from the box.
     /// - Throws: ObjectBoxError
     /// - Returns: All stored Objects in this Box.
-    public func find() throws -> [EntityType] {
+    public func all() throws -> [EntityType] {
         var result = [EntityType]()
         
         try store.obx_runInReadOnlyTransaction { _ in
             guard let bytesArray = obx_box_get_all(cBox) else { try checkLastError(); return }
             defer { obx_bytes_array_free(bytesArray) }
-            result = try readAll(bytesArray.pointee)
+            result = Array(try readAll(bytesArray.pointee))
         }
         
         return result
     }
     
-    /// Gets all objects from the box.
-    ///
-    /// - Returns: All stored Objects in this Box.
-    public func all() throws -> [EntityType] {
-        var result = [EntityType]()
+    /// Variant of all() that is faster due to using ContiguousArray.
+    public func allContiguous() throws -> ContiguousArray<EntityType> {
+        var result = ContiguousArray<EntityType>()
         
-        result = try find()
+        try store.obx_runInReadOnlyTransaction { _ in
+            guard let bytesArray = obx_box_get_all(cBox) else { try checkLastError(); return }
+            defer { obx_bytes_array_free(bytesArray) }
+            result = try readAllContiguous(bytesArray.pointee)
+        }
         
         return result
     }
+
+    /// :nodoc:
+    @available(*, deprecated, message: "Use all() instead.")
+    public func find() throws -> [EntityType] {
+        return try all()
+    }
     
-    internal func readAll(_ bytesArray: OBX_bytes_array) throws -> [EntityType] {
-        var result = [EntityType]()
+    internal func readAllContiguous(_ bytesArray: OBX_bytes_array) throws -> ContiguousArray<EntityType> {
+        var result = ContiguousArray<EntityType>()
         result.reserveCapacity(bytesArray.count)
-        
+        let binding = EntityType.entityBinding
+        var flatBuffer = FlatBufferReader()
+
+        // Crashes when I use the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
+        // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
+        // empty user-defined entities may be expensive to create.
         try store.obx_runInReadOnlyTransaction { _ in
-            let binding = EntityType.entityBinding
-            var flatBuffer = FlatBufferReader()
-            
             for dataIndex in 0 ..< bytesArray.count {
                 flatBuffer.setCurrentlyReadTableBytes(bytesArray.bytes[dataIndex].data)
                 let entity = binding.createEntity(entityReader: flatBuffer, store: store)
                 result.append(entity)
             }
         }
-        
         return result
     }
     
+    internal func readAll(_ bytesArray: OBX_bytes_array) throws -> [EntityType] {
+        var result = [EntityType]()
+        result.reserveCapacity(bytesArray.count)
+        let binding = EntityType.entityBinding
+        var flatBuffer = FlatBufferReader()
+
+        // Crashes when I use the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
+        // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
+        // empty user-defined entities may be expensive to create.
+        try store.obx_runInReadOnlyTransaction { _ in
+            for dataIndex in 0 ..< bytesArray.count {
+                flatBuffer.setCurrentlyReadTableBytes(bytesArray.bytes[dataIndex].data)
+                let entity = binding.createEntity(entityReader: flatBuffer, store: store)
+                result.append(entity)
+            }
+        }
+        return result
+    }
 }
 
 // MARK: Visit
@@ -317,18 +519,21 @@ extension Box {
     /// - Parameter visitor: A closure that is called for each object in this box. Return true to keep going, false to
     ///                      abort the loop. Exceptions thrown by the closure are re-thrown.
     public func visit(_ visitor: ((EntityType) throws -> Bool)) throws {
-        try withoutActuallyEscaping(visitor) { callback in
-            let context: InstanceVisitorBase = InstanceVisitor(type: EntityType.self, store: store,
-                                                               visitor: callback)
-            
-            try checkLastError(obx_box_visit_all(cBox, { (contextPtr, ptr, size) -> Bool in
-                guard let safePtr = ptr else { return false }
-                let context: InstanceVisitorBase = Unmanaged.fromOpaque(contextPtr!).takeUnretainedValue()
-                return context.visit(ptr: safePtr, size: size) && context.userError == nil
-            }, Unmanaged.passUnretained(context).toOpaque()))
-            
-            if let userError = context.userError {
-                throw userError
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            try withoutActuallyEscaping(visitor) { callback in
+                let context: InstanceVisitorBase = InstanceVisitor(type: EntityType.self, store: store,
+                                                                   visitor: callback)
+                
+                var currBytes = try cursor.first()
+                while currBytes.data != nil {
+                    if !context.visit(ptr: currBytes.data, size: currBytes.size) || context.userError != nil { break }
+                    currBytes = try cursor.next()
+                }
+                
+                if let err = context.userError {
+                    throw err
+                }
             }
         }
     }
@@ -351,7 +556,8 @@ extension Box {
     /// - Parameter visitor: A closure that is called for each object requested. If an object with the requested ID
     ///                      can't be found, you get a callback with a NIL entity. Exceptions thrown by the closure are
     ///                      re-thrown.
-    public func `for`(_ ids: [EntityType.EntityBindingType.IdType], in visitor: ((EntityType?) throws -> Void)) throws {
+    public func `for`<C: Collection>(_ ids: C, in visitor: ((EntityType?) throws -> Void)) throws
+        where C.Element == EntityType.EntityBindingType.IdType {
         try self.visit(ids) { entity in
             try visitor(entity)
             return true
@@ -364,25 +570,22 @@ extension Box {
     /// - Parameter visitor: A closure that is called for each object requested. If an object with the requested ID
     ///                      can't be found, you get a callback with a NIL entity. Exceptions thrown by the closure are
     ///                      re-thrown.
-    public func visit(_ ids: [EntityType.EntityBindingType.IdType], in visitor: ((EntityType?) throws -> Bool)) throws {
-        try withoutActuallyEscaping(visitor) { callback in
-            let context: InstanceVisitorBase = InstanceVisitor(type: EntityType.self, store: store,
-                                                               optionalVisitor: callback)
-            
-            var entityIds = ids.map { currId -> Id in currId.value }
-            let numEntities = entityIds.count
-            try entityIds.withContiguousMutableStorageIfAvailable { cArray -> Void in
-                guard let safePtr = cArray.baseAddress else { return }
-                var obxArray = OBX_id_array(ids: safePtr, count: numEntities)
+    public func visit<C: Collection>(_ ids: C, in visitor: ((EntityType?) throws -> Bool)) throws
+    where C.Element == EntityType.EntityBindingType.IdType {
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            try withoutActuallyEscaping(visitor) { callback in
+                let context = InstanceVisitor(type: EntityType.self, store: store,
+                                                                   visitor: callback)
                 
-                try checkLastError(obx_box_visit_many(cBox, &obxArray, { (contextPtr, ptr, size) -> Bool in
-                    let context: InstanceVisitorBase = Unmanaged.fromOpaque(contextPtr!).takeUnretainedValue()
-                    return context.visit(ptr: ptr, size: size) && context.userError == nil
-                }, Unmanaged.passUnretained(context).toOpaque()))
-            }
-            
-            if let userError = context.userError {
-                throw userError
+                for currId in ids {
+                    let currBytes = try cursor.get(currId.value)
+                    if !context.visit(ptr: currBytes.data, size: currBytes.size) || context.userError != nil { break }
+                }
+                
+                if let err = context.userError {
+                    throw err
+                }
             }
         }
     }    
@@ -396,7 +599,7 @@ extension Box {
     ///
     /// - Parameter entityId: ID of the object to delete.
     /// - Returns: false if `entityId` is 0, true if the object was successfully deleted.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// - Throws: ObjectBoxError errors for database write errors, `.notFound` if there is no object of that ID.
     @discardableResult
     public func remove<I: UntypedIdBase>(_ entityId: I) throws -> Bool {
         guard entityId.value != 0 else { return false }
@@ -408,7 +611,7 @@ extension Box {
     ///
     /// - Parameter entityId: ID of the object to delete.
     /// - Returns: false if `entityId` is 0, true if the object was successfully deleted.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// - Throws: ObjectBoxError errors for database write errors, `.notFound` if there is no object of that ID.
     @discardableResult
     public func remove(_ entityId: EntityId<EntityType>) throws -> Bool {
         guard entityId.value != 0 else { return false }
@@ -420,7 +623,7 @@ extension Box {
     ///
     /// - Parameter entity: Object to delete.
     /// - Returns: false if the object was never persisted, true if the object was successfully deleted.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// - Throws: ObjectBoxError errors for database write errors, `.notFound` if there is no object of that ID anymore.
     @discardableResult
     public func remove(_ entity: EntityType) throws -> Bool {
         guard entity._id.value != 0 else { return false }
@@ -434,66 +637,204 @@ extension Box {
     ///
     /// - Parameter entities: Objects to delete.
     /// - Returns: Count of objects that were removed.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove<C: Collection>(_ entities: C) throws -> UInt64
+        where C.Element == EntityType {
+            var result: UInt64 = 0
+            
+            try store.obx_runInTransaction { swiftTx in
+                let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+                for currEntity in entities {
+                    if try cursor.remove(currEntity) {
+                        result += 1
+                    }
+                }
+            }
+            
+            return result
+    }
+    
+    /// :nodoc:
     @discardableResult
     public func remove(_ entities: [EntityType]) throws -> UInt64 {
         var result: UInt64 = 0
         
-        var entityIds = entities.compactMap { ($0._id.value != 0) ? $0._id.value : nil }
-        let numEntities = entityIds.count
-        try entityIds.withContiguousMutableStorageIfAvailable { cArray -> Void in
-            guard let safePtr = cArray.baseAddress else { result = 0; return }
-            var obxArray = OBX_id_array(ids: safePtr, count: numEntities)
-            try check(error: obx_box_remove_many(cBox, &obxArray, &result))
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            for currEntity in entities {
+                if try cursor.remove(currEntity) {
+                    result += 1
+                }
+            }
         }
         
         return result
     }
     
-    /// Removes (deletes) the objects with the given IDs in a single transaction.
-    ///
-    /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
-    /// entity is passed whose ID doesn't exist anymore, only the entities up to that entity will be removed.
-    ///
-    /// - Parameter entities: Objects to delete.
-    /// - Returns: Count of objects that were removed.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// Version of remove() that is faster because it uses ContiguousArray.
     @discardableResult
-    public func remove<I: UntypedIdBase>(_ entityIDs: [I]) throws -> UInt64 {
+    public func remove(_ entities: ContiguousArray<EntityType>) throws -> UInt64 {
         var result: UInt64 = 0
         
-        var entityIds = entityIDs.map { currId -> Id in currId.value }
-        let numEntities = entityIds.count
-        try entityIds.withContiguousMutableStorageIfAvailable { cArray -> Void in
-            guard let safePtr = cArray.baseAddress else { result = 0; return }
-            var obxArray = OBX_id_array(ids: safePtr, count: numEntities)
-            try checkLastError(obx_box_remove_many(cBox, &obxArray, &result))
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+
+            for currEntity in entities {
+                if try cursor.remove(currEntity) {
+                    result += 1
+                }
+            }
         }
         
         return result
     }
-    
+
+    /// Removes (deletes) the given objects (passed as individual parameters) in a single transaction.
+    ///
+    /// It is valid to pass objects here that haven't been persisted yet.
+    ///
+    /// - Parameter entities: Objects to delete.
+    /// - Returns: Count of objects that were removed.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove(_ entities: EntityType...) throws -> UInt64 {
+        return try self.remove(entities)
+    }
+
+    /// :nodoc:
+    @discardableResult
+    public func remove(_ entityIDs: [Id]) throws -> UInt64 {
+        var result: UInt64 = 0
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            for currId in entityIDs {
+                if try cursor.remove(currId.value) {
+                    result += 1
+                }
+            }
+        }
+        return result
+    }
+
     /// Removes (deletes) the objects with the given IDs in a single transaction.
+    ///
+    /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
+    /// entity is passed whose ID doesn't exist anymore, only the entities up to that entity will be removed.
+    ///
+    /// - Parameter ids: IDs of objects to delete.
+    /// - Returns: Count of objects that were removed.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove<I: UntypedIdBase, C: Collection>(_ ids: C) throws -> UInt64
+        where C.Element == I {
+            return try remove(collection: ids)
+    }
+    
+    /// :nodoc:
+    @discardableResult
+    internal func remove<I: UntypedIdBase, C: Collection>(collection ids: C) throws -> UInt64
+        where C.Element == I {
+            var result: UInt64 = 0
+
+            try store.obx_runInTransaction { swiftTx in
+                let cursor = Cursor<EntityType>(transaction: swiftTx)
+                for currId in ids {
+                    if try cursor.remove(currId.value) {
+                        result += 1
+                    }
+                }
+            }
+
+            return result
+    }
+    
+    /// Removes (deletes) the objects with the given IDs (passed as individual parameters) in a single
+    /// transaction.
     ///
     /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
     /// entity is passed whose ID doesn't exist anymore, only the entities up to that entity will be removed.
     ///
     /// - Parameter entities: Objects to delete.
     /// - Returns: Count of objects that were removed.
-    /// - Throws: ObjectBoxError errors for database write errors.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove<I: UntypedIdBase>(_ ids: I...) throws -> UInt64 {
+        return try remove(ids)
+    }
+
+    /// :nodoc:
+    @discardableResult
+    public func remove(_ ids: Id...) throws -> UInt64 {
+        return try remove(ids)
+    }
+
+    /// :nodoc:
     @discardableResult
     public func remove(_ entityIDs: [EntityId<EntityType>]) throws -> UInt64 {
         var result: UInt64 = 0
-        
-        var entityIds = entityIDs.map { currId -> Id in currId.value }
-        let numEntities = entityIds.count
-        try entityIds.withContiguousMutableStorageIfAvailable { cArray -> Void in
-            guard let safePtr = cArray.baseAddress else { result = 0; return }
-            var obxArray = OBX_id_array(ids: safePtr, count: numEntities)
-            try checkLastError(obx_box_remove_many(cBox, &obxArray, &result))
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            for currId in entityIDs {
+                if try cursor.remove(currId.value) {
+                    result += 1
+                }
+            }
         }
-        
         return result
+    }
+    
+    /// Removes (deletes) the objects with the given IDs in a single transaction.
+    ///
+    /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
+    /// entity is passed whose ID doesn't exist anymore, only the entities up to that entity will be removed.
+    ///
+    /// - Parameter ids: IDs of objects to delete.
+    /// - Returns: Count of objects that were removed.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove<C: Collection>(_ entityIDs: C) throws -> UInt64
+        where C.Element == EntityId<EntityType> {
+            return try remove(collection: entityIDs)
+    }
+    
+    /// :nodoc:
+    @discardableResult
+    internal func remove<C: Collection>(collection entityIDs: C) throws -> UInt64
+        where C.Element == EntityId<EntityType> {
+        var result: UInt64 = 0
+
+        try store.obx_runInTransaction { swiftTx in
+            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            for currId in entityIDs {
+                if try cursor.remove(currId.value) {
+                    result += 1
+                }
+            }
+        }
+
+        return result
+    }
+    
+    /// Removes (deletes) the objects with the given IDs (passed as individual objects) in a single transaction.
+    ///
+    /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
+    /// entity is passed whose ID doesn't exist anymore, only the entities up to that entity will be removed.
+    ///
+    /// - Parameter entities: Objects to delete.
+    /// - Returns: Count of objects that were removed.
+    /// - Throws: ObjectBoxError errors for database write errors. Will *not* throw if an object can't be found in the
+    ///           database. Use `contains()` or check the returned number of deleted entities if you need to fail.
+    @discardableResult
+    public func remove(_ ids: EntityId<EntityType>...) throws -> UInt64 {
+        return try remove(ids)
     }
     
     /// Removes (deletes) **all** objects in a single transaction.

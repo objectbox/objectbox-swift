@@ -342,11 +342,10 @@ internal class TypeTestBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.stringValue, at: 2 + 2 * 13), 2 + 2 * 13))
-        offsets.append((propertyCollector.prepare(bytes: entity.bytes, at: 2 + 2 * 15), 2 + 2 * 15))
-        offsets.append((propertyCollector.prepare(bytes: entity.byteArray, at: 2 + 2 * 16), 2 + 2 * 16))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_stringValue = propertyCollector.prepare(string: entity.stringValue)
+        let propertyOffset_bytes = propertyCollector.prepare(bytes: entity.bytes)
+        let propertyOffset_byteArray = propertyCollector.prepare(bytes: entity.byteArray)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.intValue, at: 2 + 2 * 2)
@@ -364,14 +363,12 @@ internal class TypeTestBinding: NSObject, ObjectBox.EntityBinding {
         propertyCollector.collect(entity.floatValue, at: 2 + 2 * 17)
         propertyCollector.collect(entity.doubleValue, at: 2 + 2 * 18)
         propertyCollector.collect(entity.dateValue, at: 2 + 2 * 19)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_stringValue, at: 2 + 2 * 13)
+        propertyCollector.collect(dataOffset: propertyOffset_bytes, at: 2 + 2 * 15)
+        propertyCollector.collect(dataOffset: propertyOffset_byteArray, at: 2 + 2 * 16)
     }
 
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = TypeTest()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)

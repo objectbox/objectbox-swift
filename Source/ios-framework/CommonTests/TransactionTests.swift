@@ -19,6 +19,10 @@ import XCTest
 
 // swiftlint:disable force_try
 
+enum TransactionTestError: Error {
+    case exceptionToAbortCommit
+}
+
 class TransactionTests: XCTestCase {
     var store: Store!
     
@@ -72,5 +76,24 @@ class TransactionTests: XCTestCase {
         }
         
         XCTAssert(flatBuffer1 !== flatBuffer2)
+    }
+    
+    func testTransactionAbortsDontWrite() throws {
+        let structBox = store.box(for: StructEntity.self)
+        var object = StructEntity(id: 0, message: "Don't write me.", date: Date())
+        do {
+            try store.runInTransaction {
+                try structBox.put(&object)
+                throw TransactionTestError.exceptionToAbortCommit
+            }
+            XCTFail("Expected an exception here.")
+        } catch TransactionTestError.exceptionToAbortCommit {
+            XCTAssertTrue(true)
+        } catch {
+            XCTFail("Unexpected exception thrown.")
+        }
+        
+        XCTAssertNotEqual(object.id, 0)
+        XCTAssertNil(try structBox.get(object.id))
     }
 }

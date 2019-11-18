@@ -24,10 +24,10 @@ import Foundation
 ///
 ///     let store = try Store(directoryPath: pathToStoreData)
 ///     let personBox = store.box(for: Person.self)
-///     let persons = personBox.all
+///     let persons = try personBox.all()
 ///
-/// - Note: You must use the code generator to create a Store initializer according to your data model.
-/// This generated initializer does not have a "model" parameter (that one is an internal initializer),
+/// - Note: You must run the code generator by building at least once to create a Store initializer according to
+/// your data model. This generated initializer does not have a "model" parameter (that one is an internal initializer),
 /// and comes with convenient defaults for its named parameters.
 ///
 
@@ -43,11 +43,9 @@ public class Store: CustomDebugStringConvertible {
         return String(utf8String: obx_version_string()) ?? ""
     }
 
-    /// The path that was passed to this instance when creating it.
+    /// The path to the directory containing our database files as it was passed to this instance when creating it.
     internal(set) public var directoryPath: String
     
-    private init() { directoryPath = "" }
-
     /// - important: this initializer is only used internally.
     /// Instead of this, use the generated initializer without the model parameter
     /// (trigger code generation if you don't see it yet).

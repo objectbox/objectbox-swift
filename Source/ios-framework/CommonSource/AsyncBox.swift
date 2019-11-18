@@ -17,8 +17,8 @@
 /// AsyncBox is a class that lets you asynchronously perform basic database write
 /// operations.
 /// Your program can just fire off these operations and forget about them, and they'll be
-/// executed for you on a background thread, without blocking your UI until writes have
-/// completed or the like.
+/// executed for you on a background thread, without blocking your UI or the like until writes have
+/// completed.
 /// - important: AsyncBox does not report errors that occur in asynchronous execution.
 public class AsyncBox<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
@@ -51,7 +51,7 @@ where E == E.EntityBindingType.EntityType {
     }
     
     internal func putOne(_ entity: EntityType, binding: EntityType.EntityBindingType,
-                         flatBuffer: FlatBufferBuilder) throws -> Id {
+                         flatBuffer: FlatBufferBuilder, mode: PutMode) throws -> Id {
         flatBuffer.isCollecting = true
         defer { flatBuffer.clear(); flatBuffer.isCollecting = false }
         
@@ -60,47 +60,107 @@ where E == E.EntityBindingType.EntityType {
         binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: box.store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
-        // TODO: How would one use obx_async_id_put here instead?
-        obx_async_put(cAsyncBox, actualId, data.data, data.size)
-        try checkLastError()
-        
+        try checkLastError(obx_async_put_mode(cAsyncBox, actualId, data.data, data.size, mode))
+
         return actualId
     }
     
     /// Queue up the given entity to be put asynchronously. If the entity hasn't been assigned a nonzero ID yet,
-    /// this will assign it a new ID. It will also return the entity's ID. If the entity is class, not a struct,
+    /// this will assign it a new ID. It will also return the entity's ID. If the entity is a class, not a struct,
     /// it will also adjust the entity's id property to match the returned ID.
     @discardableResult
-    public func put(_ entity: EntityType) throws -> EntityId<EntityType> {
+    public func put(_ entity: EntityType, mode: PutMode = .put) throws -> EntityId<EntityType> {
         let binding = EntityType.entityBinding
         let flatBuffer = FlatBufferBuilder.dequeue()
         defer { FlatBufferBuilder.return(flatBuffer) }
         
-        let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer)
+        let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode)
         binding.setEntityIdUnlessStruct(of: entity, to: entityId)
         return EntityId(entityId)
     }
     
     /// Queue up the given entities to be put asynchronously. If an entity hasn't been assigned a nonzero ID yet,
-    /// the Id it will be assigned when put will be assigned to the entity's id property, unless the entity is a struct.
+    /// this will assign it a new ID. It will also return all entities' IDs. If the entity is a class, not a struct,
+    /// it will also adjust each entity's ID property to match the returned ID.
     /// - returns: the IDs the entities were put under, so you can e.g. assign them to your structs manually.
     @discardableResult
-    public func put(_ entities: [EntityType]) throws -> [EntityId<EntityType>] {
-        let binding = EntityType.entityBinding
-        let flatBuffer = FlatBufferBuilder.dequeue()
-        defer { FlatBufferBuilder.return(flatBuffer) }
-        var entityIds = [EntityId<EntityType>]()
+    public func put<C: Collection>(_ entities: C, mode: PutMode = .put) throws -> [EntityId<EntityType>]
+        where C.Element == EntityType {
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            // swiftlint:disable opening_brace
+            return try [EntityId<EntityType>](unsafeUninitializedCapacity: entities.count)
+            { ptr, initializedCount in
+                initializedCount = 0
+                for entity in entities {
+                    let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode)
+                    binding.setEntityIdUnlessStruct(of: entity, to: entityId)
+                    ptr[initializedCount] = EntityId(entityId)
+                    initializedCount += 1
+                }
+            }
+            // swiftlint:enable opening_brace
+    }
+    
+    /// :nodoc:
+    @discardableResult
+    public func put(_ entities: [EntityType], mode: PutMode = .put) throws -> [EntityId<EntityType>] {
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            // swiftlint:disable opening_brace
+            return try [EntityId<EntityType>](unsafeUninitializedCapacity: entities.count)
+            { ptr, initializedCount in
+                initializedCount = 0
+                for entity in entities {
+                    let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode)
+                    binding.setEntityIdUnlessStruct(of: entity, to: entityId)
+                    ptr[initializedCount] = EntityId(entityId)
+                    initializedCount += 1
+                }
+            }
+            // swiftlint:enable opening_brace
+    }
 
-        for entity in entities {
-            let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer)
-            binding.setEntityIdUnlessStruct(of: entity, to: entityId)
-            entityIds.append(EntityId(entityId))
-        }
-        return entityIds
+    /// Version of `put([EntityType])` that is faster because it uses ContiguousArray
+    @discardableResult
+    public func put(_ entities: ContiguousArray<EntityType>, mode: PutMode = .put) throws
+        -> ContiguousArray<EntityId<EntityType>> {
+            let binding = EntityType.entityBinding
+            let flatBuffer = FlatBufferBuilder.dequeue()
+            defer { FlatBufferBuilder.return(flatBuffer) }
+            // swiftlint:disable opening_brace
+            return try ContiguousArray<EntityId<EntityType>>(unsafeUninitializedCapacity: entities.count)
+            { ptr, initializedCount in
+                initializedCount = 0
+                for entity in entities {
+                    let entityId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode)
+                    binding.setEntityIdUnlessStruct(of: entity, to: entityId)
+                    ptr[initializedCount] = EntityId(entityId)
+                    initializedCount += 1
+                }
+            }
+            // swiftlint:enable opening_brace
+    }
+
+    /// Queue up the given entities (provided as individual parameters, not as an array) to be put
+    /// asynchronously. If an entity hasn't been assigned a nonzero ID yet, this will assign it a new ID. It will also
+    /// return all entities' IDs. If the entity is a class, not a struct, it will also adjust each entity's ID property
+    /// to match the returned ID.
+    /// - returns: the IDs the entities were put under, so you can e.g. assign them to your structs manually.
+    @discardableResult
+    public func put(_ entities: EntityType..., mode: PutMode = .put) throws -> [EntityId<EntityType>] {
+        return try put(entities, mode: mode)
     }
         
     /// Queue up the entity with the given ID to be deleted from the database asynchronously.
     public func remove(_ entityId: EntityId<EntityType>) throws {
+        try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
+    }
+
+    /// Queue up the entity with the given ID to be deleted from the database asynchronously.
+    public func remove<I: UntypedIdBase>(_ entityId: I) throws {
         try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
     }
 
@@ -110,18 +170,46 @@ where E == E.EntityBindingType.EntityType {
     }
 
     /// Queue up the given entities to be deleted from the database asynchronously.
-    public func remove(_ entities: [EntityType]) throws {
+    public func remove<C: Collection>(_ entities: C) throws
+        where C.Element == EntityType {
         let binding = EntityType.entityBinding
         for entity in entities {
             try checkLastError(obx_async_remove(cAsyncBox, binding.entityId(of: entity)))
         }
     }
+
+    /// Queue up the given entities (provided as individual parameters, not as an array) to be deleted
+    /// from the database asynchronously.
+    public func remove(_ entities: EntityType...) throws {
+        try remove(entities)
+    }
     
     /// Queue up the entities with the given IDs to be deleted from the database asynchronously.
-    public func remove(_ entityIDs: [EntityId<EntityType>]) throws {
+    public func remove<C: Collection>(_ entityIDs: C) throws
+        where C.Element == EntityId<EntityType> {
         for entityId in entityIDs {
             try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
         }
+    }
+    
+    /// Queue up the entities with the given IDs to be deleted from the database asynchronously.
+    public func remove<I: UntypedIdBase, C: Collection>(_ entityIDs: C) throws
+        where C.Element == I {
+        for entityId in entityIDs {
+            try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
+        }
+    }
+    
+    /// Queue up the entities with the given IDs (provided as individual parameters, not as an array)
+    /// to be deleted from the database asynchronously.
+    public func remove(_ entityIDs: EntityId<EntityType>...) throws {
+        try remove(entityIDs)
+    }
+    
+    /// Queue up the entities with the given IDs (provided as individual parameters, not as an array)
+    /// to be deleted from the database asynchronously.
+    public func remove<I: UntypedIdBase>(_ entityIDs: I...) throws {
+        try remove(entityIDs)
     }
 }
 

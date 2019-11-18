@@ -340,12 +340,13 @@ class BoxTests: XCTestCase {
         
         try box.put(persons)
         
-        var currAge = 0
+        var personCount = 0
         try box.forEach { person in
-            XCTAssertEqual(currAge, person.age)
-            currAge += 1
+            let currPerson = persons.first { $0.age == person.age }
+            XCTAssertEqual(currPerson?.age, person.age)
+            personCount += 1
         }
-        XCTAssertEqual(persons.count, currAge)
+        XCTAssertEqual(persons.count, personCount)
     }
     
     func testForEachThrows() throws {
@@ -415,12 +416,13 @@ class BoxTests: XCTestCase {
         
         try box.put(persons)
         
-        var currAge = 1
+        var personCount = 1
         try box.for(persons.map { $0.id }.dropFirst().dropLast()) { person in
-            XCTAssertEqual(currAge, person?.age)
-            currAge += 1
+            let currPerson = persons.first { $0.age == person?.age }
+            XCTAssertEqual(currPerson?.age, person?.age)
+            personCount += 1
         }
-        XCTAssertEqual(persons.count - 1, currAge)
+        XCTAssertEqual(persons.count - 1, personCount)
     }
     
     func testForInThrows() throws {
@@ -433,13 +435,14 @@ class BoxTests: XCTestCase {
         
         try box.put(persons)
         
-        var currAge = 1
+        var personCount = 1
         XCTAssertThrowsError(try box.for(persons.map { $0.id }.dropFirst().dropLast()) { person in
-            XCTAssertEqual(currAge, person?.age)
-            currAge += 1
+            let currPerson = persons.first { $0.age == person?.age }
+            XCTAssertEqual(currPerson?.age, person?.age)
+            personCount += 1
             throw BoxTestError.generalError
         })
-        XCTAssertEqual(2, currAge)
+        XCTAssertEqual(2, personCount)
     }
     
     func testVisitIn() throws {
@@ -452,13 +455,14 @@ class BoxTests: XCTestCase {
         
         try box.put(persons)
         
-        var currAge = 1
+        var personCount = 1
         try box.visit(persons.map { $0.id }.dropFirst().dropLast()) { person in
-            XCTAssertEqual(currAge, person?.age)
-            currAge += 1
-            return currAge < 5
+            let currPerson = persons.first { $0.age == person?.age }
+            XCTAssertEqual(currPerson?.age, person?.age)
+            personCount += 1
+            return personCount < 5
         }
-        XCTAssertEqual(5, currAge)
+        XCTAssertEqual(5, personCount)
     }
     
     func testVisitInThrows() throws {
@@ -471,13 +475,14 @@ class BoxTests: XCTestCase {
         
         try box.put(persons)
         
-        var currAge = 1
+        var personCount = 1
         XCTAssertThrowsError(try box.visit(persons.map { $0.id }.dropFirst().dropLast()) { person in
-            XCTAssertEqual(currAge, person?.age)
-            currAge += 1
+            let currPerson = persons.first { $0.age == person?.age }
+            XCTAssertEqual(currPerson?.age, person?.age)
+            personCount += 1
             throw BoxTestError.generalError
             })
-        XCTAssertEqual(2, currAge)
+        XCTAssertEqual(2, personCount)
     }
     
     func testBoxDescription() throws {
@@ -604,5 +609,107 @@ class BoxTests: XCTestCase {
         }
         
         subscription.unsubscribe()
+    }
+    
+    func testVarArgPutGetRemove() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Jesse Faden", age: 29)
+        let person2 = TestPerson(name: "Κασσάνδρα", age: 1000)
+        let person3 = TestPerson(name: "Samus Aran", age: 33)
+        let person4 = TestPerson(name: "Faith Connors", age: 10)
+        let person5 = TestPerson(name: "Jane Shepard", age: -135)
+        let person6 = TestPerson(name: "Aveline de Grandpré", age: 37)
+
+        try box.put(person1, person2, person3, person4, person5, person6)
+        XCTAssertEqual(try box.count(), 6)
+        
+        try box.remove(person1, person3)
+        XCTAssertEqual(try box.count(), 4)
+        
+        try box.remove(person4.id, person2.id)
+        XCTAssertEqual(try box.count(), 2)
+        
+        try box.remove(person5.id.value, person6.id.value)
+        XCTAssertEqual(try box.count(), 0)
+    }
+    
+    func testCollectionPutCall() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Jesse Faden", age: 29)
+        let person2 = TestPerson(name: "Κασσάνδρα", age: 1000)
+        let persons: Set = [person1, person2]
+
+        try box.put(persons)
+        XCTAssertEqual(try box.count(), 2)
+    }
+
+    func testPutModifiableStruct() throws {
+        let box: Box<StructEntity> = store.box(for: StructEntity.self)
+
+        XCTAssertEqual(try box.count(), 0)
+
+        var entity1 = StructEntity(id: EntityId<StructEntity>(0), message: "Carol Kaehler wrote the docs.",
+                                   date: Date(timeIntervalSince1970: -500))
+        _ = try box.put(&entity1)
+
+        XCTAssertNotEqual(entity1.id.value, 0)
+        XCTAssertEqual(try box.count(), 1)
+    }
+    
+    
+    func testPutModifiableStructs() throws {
+        let box: Box<StructEntity> = store.box(for: StructEntity.self)
+        
+        XCTAssertEqual(try box.count(), 0)
+        
+        var entities = [
+            StructEntity(id: EntityId<StructEntity>(0), message: "Woke up.",
+                         date: Date(timeIntervalSince1970: 600)),
+            StructEntity(id: EntityId<StructEntity>(0), message: "Brushed my teeth.",
+                         date: Date(timeIntervalSince1970: 1600)),
+            StructEntity(id: EntityId<StructEntity>(0), message: "Went to the subway.",
+                         date: Date(timeIntervalSince1970: 2600))
+
+        ]
+        try box.put(&entities)
+        
+        XCTAssertNotEqual(entities[0].id.value, 0)
+        XCTAssertNotEqual(entities[0].id.value, entities[1].id.value)
+        XCTAssertNotEqual(entities[1].id.value, 0)
+        XCTAssertNotEqual(entities[1].id.value, entities[2].id.value)
+        XCTAssertNotEqual(entities[2].id.value, 0)
+        XCTAssertNotEqual(entities[2].id.value, entities[0].id.value)
+        XCTAssertEqual(try box.count(), 3)
+    }
+
+    func testInsert() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Darth Savik", age: 42)
+        let person1Id = try box.put(person1, mode: .insert)
+        
+        XCTAssertNotEqual(person1Id.value, 0)
+        XCTAssertEqual(try box.count(), 1)
+        
+        let person2 = TestPerson(name: "Satele Shan", age: 40)
+        person2.id = person1Id
+        XCTAssertThrowsError(try box.put(person2, mode: .insert))
+    }
+    
+    func testUpdate() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Darth Savik", age: 42)
+        XCTAssertThrowsError(try box.put(person1, mode: .update))
+        let person1Id = try box.put(person1, mode: .insert)
+        
+        XCTAssertNotEqual(person1Id.value, 0)
+        XCTAssertEqual(try box.count(), 1)
+        
+        let person2 = TestPerson(name: "Satele Shan", age: 40)
+        person2.id = person1Id
+        XCTAssertNoThrow(try box.put(person2, mode: .update))
     }
 }

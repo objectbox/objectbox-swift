@@ -14,30 +14,40 @@
 // limitations under the License.
 //
 
-/// Used to constrain extensions:
+/// Protocol an ObjectBox ID must conform to. Currently, there are two major types that can be used as IDs:
+/// - `EntityId<E>` which is a generic, type-safe ID struct
+/// - Id (or Int64) which is a simpler data type usable for IDs.
+/// Most methods that require you to specify an ID accept either type of ID.
+///
+/// Also used to constrain extensions:
 ///
 ///    extension Property where ValueType: IdBase { ... }
 ///
 /// (Swift doesn't have parameterized extensions, or else
 /// we could write `where ValueType == EntityId<T>`.)
 public protocol IdBase: Hashable, EntityPropertyTypeConvertible {
+    /// Initialize this (possibly type-specific) ID with an untyped ID as e.g. returned by the core.
     init(_ entityId: Id)
     
-    /// Numerical value of the ID.
+    /// Return this (possibly type-specific) ID as an untyped ID as needed to e.g. pass to the core.
     var value: Id { get }
 }
 
+/// A type that is usable as an object ID that doesn't enforce the type of entity it is for.
 public protocol UntypedIdBase: IdBase {}
 
 extension Id: UntypedIdBase {
     // public init(_ entityId: Id) not needed because Id can already be initialized with itself.
+    /// :nodoc:
     public var value: Id { return self } // Every Id is usable like a IdBase, too, now.
 }
 
 extension Int64: UntypedIdBase {
+    /// :nodoc:
     public init(_ entityId: Id) {
         self.init(bitPattern: entityId)
     }
+    /// :nodoc:
     public var value: Id { return UInt64(bitPattern: self) } // Every Int64 is usable like a IdBase, too, now.
 }
 

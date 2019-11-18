@@ -9,14 +9,14 @@
 set -e
 
 version=1.1
-core_version=0.7.3
+core_version=0.7.2
 
 my_dir=`dirname "$0"`
 my_dir=`realpath "${my_dir}"`
 
 cd $my_dir
 code_dir="${my_dir}/external/objectbox/"
-dest_dir="../../../objectbox-static/"
+dest_dir="${my_dir}/external/objectbox-static/"
 archive_path="${my_dir}/external/objectbox-static.zip"
 OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${core_version}.zip"
 

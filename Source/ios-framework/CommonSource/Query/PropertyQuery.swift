@@ -36,9 +36,9 @@ import Foundation
 /// `PropertyQuery` will respect the conditions of its base `Query`. So if you want to find the average age of all
 /// `Person`s above 30, this is how you can write it:
 ///
-///      let query = personBox.query { Person.age > 29 }
+///      let query = try personBox.query { Person.age > 29 }.build()
 ///      let ageQuery = query.property(Person.age)
-///      let averageAge = ageQuery.average
+///      let averageAge = try ageQuery.average()
 ///
 /// - Note: Property values do currently not consider any sorting order defined in the main `Query` object.
 public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPropertyTypeConvertible>
@@ -102,14 +102,12 @@ extension PropertyQuery {
         
         guard let longs = cResult?.pointee else { return [] }
         
-        var result = [Int64]()
-        result.reserveCapacity(longs.count)
-        
-        for longIndex in 0 ..< longs.count {
-            result.append(longs.items[longIndex])
+        return [Int64](unsafeUninitializedCapacity: longs.count) { (ptr, initializedCount) in
+            for longIndex in 0 ..< longs.count {
+                ptr[longIndex] = longs.items[longIndex]
+            }
+            initializedCount = longs.count
         }
-        
-        return result
     }
     
     internal func doubleSum(box: OpaquePointer /*OBX_box*/) throws -> Double {
@@ -147,14 +145,12 @@ extension PropertyQuery {
         
         guard let doubles = cResult?.pointee else { return [] }
         
-        var result = [Double]()
-        result.reserveCapacity(doubles.count)
-        
-        for doubleIndex in 0 ..< doubles.count {
-            result.append(doubles.items[doubleIndex])
+        return [Double](unsafeUninitializedCapacity: doubles.count) { (ptr, initializedCount) in
+            for doubleIndex in 0 ..< doubles.count {
+                ptr[doubleIndex] = doubles.items[doubleIndex]
+            }
+            initializedCount = doubles.count
         }
-        
-        return result
     }
     
     internal func average(box: OpaquePointer /*OBX_box*/) throws -> Double {
@@ -182,15 +178,14 @@ extension PropertyQuery {
         
         guard let strings = cResult?.pointee else { return [] }
         
-        var result = [String]()
-        result.reserveCapacity(strings.count)
-        
+        // Crashes when I use the unsafeUninitializedCapacity initializer below.
+        // Seems it tries to deinit the uninitialized memory on assignment.
+        var result = [String](repeating: "", count: strings.count)
         for stringIndex in 0 ..< strings.count {
             if let string = strings.items[stringIndex] {
-                result.append(String(utf8String: string)!)
+                result[stringIndex] = String(utf8String: string)!
             }
         }
-        
         return result
     }
 }

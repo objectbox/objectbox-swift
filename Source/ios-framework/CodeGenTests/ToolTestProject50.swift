@@ -106,12 +106,14 @@ func main(_ args: [String]) throws -> Int32 {
         }
 
         // This is mainly to ensure compilation isn't broken, but might as well verify that delete works:
+        print("note: Doing remove test.")
         try authorBox.remove(amanda.id)
         if let amandaRead = try authorBox.get(amanda.id) {
             throw TestErrors.testFailed(message: "Deletion failed: \(amandaRead)")
         }
 
         // This is mainly to ensure compilation isn't broken, but might as well verify that delete works:
+        print("note: Multi-remove test.")
         let deletions = try authorBox.remove([amanda.id, dhonielle.id])
         if deletions != 1 { // Amanda has already been deleted.
             throw TestErrors.testFailed(message: "Expected 1 deletion, got \(deletions)")

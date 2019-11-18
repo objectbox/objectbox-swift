@@ -34,7 +34,6 @@ extension Store {
     /// - Parameter block: Code that needs to run in a read/write transaction.
     /// - Returns: The forwarded result of `block`.
     /// - Throws: rethrows errors thrown inside, plus any ObjectBoxError that makes sense.
-    ///                 There is also a no-throw version that logs ObjectBoxErrors instead.
     public func runInTransaction<T>(_ block: () throws -> T) throws -> T {
         var result: T!
 
@@ -56,50 +55,9 @@ extension Store {
     }
     
     internal func obx_runInTransaction(_ block: (Transaction) throws -> Void) throws {
-        var fatalError: NSException?
-
-        if let transaction = Store.threadLocalTransaction.value, !transaction.isClosed {
-            if !transaction.isWritable {
-                throw ObjectBoxError.cannotWriteWhileReading(message: "Tried to create a write transaction inside a " +
-                    "read transaction.")
-            }
-            
-            try block(transaction)
-        } else {
-            let transaction = try Transaction(store: self, writable: true)
-            Store.threadLocalTransaction.value = transaction
-            
-            defer {
-                // Clean-up on error only. In that case, we don't want to overwrite the existing error with anything
-                //  close() reports.
-                if !transaction.isClosed {
-                    Store.threadLocalTransaction.value = nil
-                    try? transaction.close()
-                }
-            }
-            
-            var nonFatalError: NSError?
-            fatalError = catchFatalErrors(&nonFatalError, { outError in
-                do {
-                    try block(transaction)
-                } catch {
-                    outError?.pointee = error as NSError
-                }
-            })
-            if let nonFatalError = nonFatalError {
-                throw nonFatalError
-            }
-
-            if !transaction.isClosed {
-                try transaction.commit()
-            }
-            
-            // Clean-up in non-error cases. The commit itself may still fail, so we may produce an error ourselves.
-            Store.threadLocalTransaction.value = nil
-            try transaction.close()
-        }
-        
-        fatalError?.raise() // Rethrow any fatal ObjC exception now that cleanup has happened.
+        let transaction = try Transaction(store: self, writable: true)
+        try block(transaction)
+        try transaction.commit()
     }
 
     /// :nodoc::
@@ -120,7 +78,6 @@ extension Store {
     /// - Parameter block: Code that needs to run in a read or read/write transaction.
     /// - Returns: The forwarded result of `block`.
     /// - Throws: rethrows errors thrown inside, plus any ObjectBoxError that makes sense.
-    ///                 There is also a no-throw version that logs ObjectBoxErrors instead.
     public func runInReadOnlyTransaction<T>(_ block: () throws -> T) throws -> T {
         return try obx_runInReadOnlyTransaction({ _ in
             return try block()
@@ -144,35 +101,8 @@ extension Store {
         return result
     }
 
-    internal static let threadLocalTransaction = ThreadSpecific<Transaction?>(initialValue: nil)
-
     internal func obx_runInReadOnlyTransaction(_ block: (Transaction) throws -> Void) throws {
-        var fatalError: NSException?
-        
-        if let transaction = Store.threadLocalTransaction.value, !transaction.isClosed {
-            try block(transaction)
-        } else {
-            let transaction = try Transaction(store: self, writable: false)
-            Store.threadLocalTransaction.value = transaction
-            
-            defer {
-                Store.threadLocalTransaction.value = nil
-                try? transaction.close() // TODO: Can we hand this error out somehow?
-            }
-            
-            var nonFatalError: NSError?
-            fatalError = catchFatalErrors(&nonFatalError, { outError in
-                do {
-                    try block(transaction)
-                } catch {
-                    outError?.pointee = error as NSError
-                }
-            })
-            if let nonFatalError = nonFatalError {
-                throw nonFatalError
-            }
-        }
-        
-        fatalError?.raise() // Rethrow any fatal ObjC exception now that cleanup has happened.
+        let transaction = try Transaction(store: self, writable: false)
+        try block(transaction)
     }
 }

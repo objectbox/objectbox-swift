@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		5509A57E21BAB76900FBC0DC /* ToolTestProject1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509A57D21BAB76900FBC0DC /* ToolTestProject1.swift */; };
 		5509A58C21BAC56900FBC0DC /* ToolTestProject2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509A58021BAC4EA00FBC0DC /* ToolTestProject2.swift */; };
+		550DC2E4235F3F5F007A54A2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
+		550DC2ED235F3F75007A54A2 /* ToolTestProject56.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550DC2EC235F3F74007A54A2 /* ToolTestProject56.swift */; };
+		550DC2EF235F3F82007A54A2 /* EntityInfo.generated56.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550DC2EE235F3F82007A54A2 /* EntityInfo.generated56.swift */; };
+		550DC2F0235F3F98007A54A2 /* ToolTestProject55.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC6E2334F4C900456999 /* ToolTestProject55.swift */; };
+		550DC2F1235F3FAA007A54A2 /* EntityInfo.generated55.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC6C2334F4BD00456999 /* EntityInfo.generated55.swift */; };
 		55174ECF21C3F53C00337CFF /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
 		55174ED721C3F55100337CFF /* ToolTestProject26.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55174ED621C3F55100337CFF /* ToolTestProject26.swift */; };
 		55174EDB21C3F6C400337CFF /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
@@ -105,8 +110,6 @@
 		555CFC672334F48500456999 /* EntityInfo.generated53.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC662334F48500456999 /* EntityInfo.generated53.swift */; };
 		555CFC692334F49B00456999 /* ToolTestProject54.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC682334F49B00456999 /* ToolTestProject54.swift */; };
 		555CFC6B2334F4AC00456999 /* EntityInfo.generated54.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC6A2334F4AC00456999 /* EntityInfo.generated54.swift */; };
-		555CFC6D2334F4BE00456999 /* EntityInfo.generated55.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC6C2334F4BD00456999 /* EntityInfo.generated55.swift */; };
-		555CFC6F2334F4CA00456999 /* ToolTestProject55.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555CFC6E2334F4C900456999 /* ToolTestProject55.swift */; };
 		557C035422DE380D00A0606B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
 		557C035C22DE382F00A0606B /* ToolTestProject36.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C035B22DE382F00A0606B /* ToolTestProject36.swift */; };
 		557C035D22DE383700A0606B /* EntityInfo.generated36.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557C034F22DE380700A0606B /* EntityInfo.generated36.swift */; };
@@ -118,6 +121,9 @@
 		55A79D2E2302D6B900039BBB /* EntityInfo.generated43.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A79D2D2302D6B900039BBB /* EntityInfo.generated43.swift */; };
 		55A79D302302D6D500039BBB /* ToolTestProject42.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A79D2F2302D6D400039BBB /* ToolTestProject42.swift */; };
 		55A79D322302D6DE00039BBB /* ToolTestProject43.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A79D312302D6DE00039BBB /* ToolTestProject43.swift */; };
+		55B9A22723634F9400F75A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
+		55B9A23123634FB100F75A9B /* EntityInfo.generated57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9A23023634FB100F75A9B /* EntityInfo.generated57.swift */; };
+		55B9A23323634FC000F75A9B /* ToolTestProject57.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B9A23223634FBF00F75A9B /* ToolTestProject57.swift */; };
 		55BF108F231FD4B800C7C137 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
 		55BF109A231FD4C100C7C137 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
 		55BF10A5231FD4CB00C7C137 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C37BD721BFECCE0012BC0D /* main.swift */; };
@@ -175,6 +181,15 @@
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		5509A58321BAC50800FBC0DC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		550DC2E7235F3F5F007A54A2 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -498,6 +513,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		55B9A22B23634F9400F75A9B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		55BF1093231FD4B800C7C137 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -667,6 +691,9 @@
 		5509A57D21BAB76900FBC0DC /* ToolTestProject1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject1.swift; sourceTree = "<group>"; };
 		5509A58021BAC4EA00FBC0DC /* ToolTestProject2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTestProject2.swift; sourceTree = "<group>"; };
 		5509A58521BAC50800FBC0DC /* ToolTestProject2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ToolTestProject2; sourceTree = BUILT_PRODUCTS_DIR; };
+		550DC2EB235F3F5F007A54A2 /* ToolTestProject56 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ToolTestProject56; sourceTree = BUILT_PRODUCTS_DIR; };
+		550DC2EC235F3F74007A54A2 /* ToolTestProject56.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject56.swift; sourceTree = "<group>"; };
+		550DC2EE235F3F82007A54A2 /* EntityInfo.generated56.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated56.swift; sourceTree = "<group>"; };
 		55174ED521C3F53C00337CFF /* ToolTestProject26 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ToolTestProject26; sourceTree = BUILT_PRODUCTS_DIR; };
 		55174ED621C3F55100337CFF /* ToolTestProject26.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject26.swift; sourceTree = "<group>"; };
 		55174EE221C3F6C400337CFF /* ToolTestProject27 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ToolTestProject27; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -775,6 +802,9 @@
 		55A79D2D2302D6B900039BBB /* EntityInfo.generated43.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated43.swift; sourceTree = "<group>"; };
 		55A79D2F2302D6D400039BBB /* ToolTestProject42.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject42.swift; sourceTree = "<group>"; };
 		55A79D312302D6DE00039BBB /* ToolTestProject43.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject43.swift; sourceTree = "<group>"; };
+		55B9A22F23634F9400F75A9B /* ToolTestProject57 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ToolTestProject57; sourceTree = BUILT_PRODUCTS_DIR; };
+		55B9A23023634FB100F75A9B /* EntityInfo.generated57.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated57.swift; sourceTree = "<group>"; };
+		55B9A23223634FBF00F75A9B /* ToolTestProject57.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolTestProject57.swift; sourceTree = "<group>"; };
 		55BF1087231FD46200C7C137 /* ToolTestProject48.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTestProject48.swift; sourceTree = "<group>"; };
 		55BF1088231FD46200C7C137 /* ToolTestProject47.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTestProject47.swift; sourceTree = "<group>"; };
 		55BF1089231FD46300C7C137 /* ToolTestProject46.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTestProject46.swift; sourceTree = "<group>"; };
@@ -831,6 +861,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5509A58221BAC50800FBC0DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		550DC2E6235F3F5F007A54A2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1082,6 +1119,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		55B9A22A23634F9400F75A9B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		55BF1092231FD4B800C7C137 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1270,6 +1314,8 @@
 				555CFC642334F47100456999 /* ToolTestProject53.swift */,
 				555CFC682334F49B00456999 /* ToolTestProject54.swift */,
 				555CFC6E2334F4C900456999 /* ToolTestProject55.swift */,
+				550DC2EC235F3F74007A54A2 /* ToolTestProject56.swift */,
+				55B9A23223634FBF00F75A9B /* ToolTestProject57.swift */,
 				55C37BD721BFECCE0012BC0D /* main.swift */,
 				55C37BC821BFB8010012BC0D /* generated */,
 				5509A56821BAB58600FBC0DC /* Products */,
@@ -1334,6 +1380,8 @@
 				555CFC4D2334F42100456999 /* ToolTestProject53 */,
 				555CFC582334F42A00456999 /* ToolTestProject54 */,
 				555CFC632334F43400456999 /* ToolTestProject55 */,
+				550DC2EB235F3F5F007A54A2 /* ToolTestProject56 */,
+				55B9A22F23634F9400F75A9B /* ToolTestProject57 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1386,6 +1434,8 @@
 				555CFC662334F48500456999 /* EntityInfo.generated53.swift */,
 				555CFC6A2334F4AC00456999 /* EntityInfo.generated54.swift */,
 				555CFC6C2334F4BD00456999 /* EntityInfo.generated55.swift */,
+				550DC2EE235F3F82007A54A2 /* EntityInfo.generated56.swift */,
+				55B9A23023634FB100F75A9B /* EntityInfo.generated57.swift */,
 			);
 			path = generated;
 			sourceTree = "<group>";
@@ -1425,6 +1475,23 @@
 			name = ToolTestProject2;
 			productName = ToolTestProject2;
 			productReference = 5509A58521BAC50800FBC0DC /* ToolTestProject2 */;
+			productType = "com.apple.product-type.tool";
+		};
+		550DC2E1235F3F5F007A54A2 /* ToolTestProject56 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 550DC2E8235F3F5F007A54A2 /* Build configuration list for PBXNativeTarget "ToolTestProject56" */;
+			buildPhases = (
+				550DC2E2235F3F5F007A54A2 /* Sources */,
+				550DC2E6235F3F5F007A54A2 /* Frameworks */,
+				550DC2E7235F3F5F007A54A2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ToolTestProject56;
+			productName = ToolTestProject2;
+			productReference = 550DC2EB235F3F5F007A54A2 /* ToolTestProject56 */;
 			productType = "com.apple.product-type.tool";
 		};
 		55174ECB21C3F53C00337CFF /* ToolTestProject26 */ = {
@@ -2022,6 +2089,23 @@
 			productReference = 55A79D2A2302D62D00039BBB /* ToolTestProject43 */;
 			productType = "com.apple.product-type.tool";
 		};
+		55B9A22523634F9400F75A9B /* ToolTestProject57 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 55B9A22C23634F9400F75A9B /* Build configuration list for PBXNativeTarget "ToolTestProject57" */;
+			buildPhases = (
+				55B9A22623634F9400F75A9B /* Sources */,
+				55B9A22A23634F9400F75A9B /* Frameworks */,
+				55B9A22B23634F9400F75A9B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ToolTestProject57;
+			productName = ToolTestProject2;
+			productReference = 55B9A22F23634F9400F75A9B /* ToolTestProject57 */;
+			productType = "com.apple.product-type.tool";
+		};
 		55BF108D231FD4B800C7C137 /* ToolTestProject46 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55BF1094231FD4B800C7C137 /* Build configuration list for PBXNativeTarget "ToolTestProject46" */;
@@ -2414,6 +2498,8 @@
 				555CFC432334F42100456999 /* ToolTestProject53 */,
 				555CFC4E2334F42A00456999 /* ToolTestProject54 */,
 				555CFC592334F43400456999 /* ToolTestProject55 */,
+				550DC2E1235F3F5F007A54A2 /* ToolTestProject56 */,
+				55B9A22523634F9400F75A9B /* ToolTestProject57 */,
 			);
 		};
 /* End PBXProject section */
@@ -2436,6 +2522,16 @@
 				5509A58C21BAC56900FBC0DC /* ToolTestProject2.swift in Sources */,
 				55C37BD921BFECCE0012BC0D /* main.swift in Sources */,
 				552856F62293FC2D007AA7B8 /* EntityInfo.generated2.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		550DC2E2235F3F5F007A54A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				550DC2E4235F3F5F007A54A2 /* main.swift in Sources */,
+				550DC2ED235F3F75007A54A2 /* ToolTestProject56.swift in Sources */,
+				550DC2EF235F3F82007A54A2 /* EntityInfo.generated56.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2738,9 +2834,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				555CFC6F2334F4CA00456999 /* ToolTestProject55.swift in Sources */,
+				550DC2F1235F3FAA007A54A2 /* EntityInfo.generated55.swift in Sources */,
+				550DC2F0235F3F98007A54A2 /* ToolTestProject55.swift in Sources */,
 				555CFC5D2334F43400456999 /* main.swift in Sources */,
-				555CFC6D2334F4BE00456999 /* EntityInfo.generated55.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2781,6 +2877,16 @@
 				55A79D322302D6DE00039BBB /* ToolTestProject43.swift in Sources */,
 				55A79D2E2302D6B900039BBB /* EntityInfo.generated43.swift in Sources */,
 				55A79D232302D62C00039BBB /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		55B9A22623634F9400F75A9B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55B9A22723634F9400F75A9B /* main.swift in Sources */,
+				55B9A23123634FB100F75A9B /* EntityInfo.generated57.swift in Sources */,
+				55B9A23323634FC000F75A9B /* ToolTestProject57.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3150,6 +3256,46 @@
 					"@loader_path/../Frameworks",
 					"@executable_path/../../../",
 					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					ObjectBox,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		550DC2E9235F3F5F007A54A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/../../../",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					ObjectBox,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		550DC2EA235F3F5F007A54A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/../../../",
 				);
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -4550,6 +4696,46 @@
 			};
 			name = Debug;
 		};
+		55B9A22D23634F9400F75A9B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/../../../",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					ObjectBox,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		55B9A22E23634F9400F75A9B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"@executable_path/../../../",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					ObjectBox,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
 		55BF1095231FD4B800C7C137 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5300,6 +5486,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		550DC2E8235F3F5F007A54A2 /* Build configuration list for PBXNativeTarget "ToolTestProject56" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				550DC2E9235F3F5F007A54A2 /* Debug */,
+				550DC2EA235F3F5F007A54A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		55174ED221C3F53C00337CFF /* Build configuration list for PBXNativeTarget "ToolTestProject26" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -5611,6 +5806,15 @@
 			buildConfigurations = (
 				55A79D282302D62C00039BBB /* Debug */,
 				555F3CDA2326829700F51923 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		55B9A22C23634F9400F75A9B /* Build configuration list for PBXNativeTarget "ToolTestProject57" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				55B9A22D23634F9400F75A9B /* Debug */,
+				55B9A22E23634F9400F75A9B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

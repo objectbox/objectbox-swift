@@ -20,9 +20,9 @@ import ObjectBox
 // swiftlint:disable identifier_name line_length
 
 struct StructEntity {
-    let id: EntityId<StructEntity>
-    let message: String
-    let date: Date
+    var id: EntityId<StructEntity>
+    var message: String
+    var date: Date
 }
 
 extension StructEntity: Entity {}
@@ -113,14 +113,18 @@ internal class StructEntityCursor: EntityBinding {
         // Use the struct variants of the put methods on entities of struct StructEntity.
     }
     
+    internal func setStructEntityId(of entity: inout EntityType, to entityId: Id) {
+        entity.id = EntityId(entityId)
+    }
+    
     internal func entityId(of entity: EntityType) -> Id {
         return entity.id.value
     }
     
-    internal func collect(fromEntity entity: EntityType, id: Id, propertyCollector: PropertyCollector, store: Store) {
+    internal func collect(fromEntity entity: EntityType, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.message, at: 2 + 2 * 2), 2 + 2 * 2))
+        offsets.append((propertyCollector.prepare(string: entity.message), 2 + 2 * 2))
         
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.date, at: 2 + 2 * 3)
@@ -130,7 +134,7 @@ internal class StructEntityCursor: EntityBinding {
         }
     }
     
-    internal func createEntity(entityReader: EntityReader, store: Store) -> EntityType {
+    internal func createEntity(entityReader: FlatBufferReader, store: Store) -> EntityType {
         let entityId: EntityId<StructEntity> = entityReader.read(at: 2 + 2 * 1)
         let entity = StructEntity(
             id: entityId,
@@ -149,8 +153,8 @@ extension Box where E == StructEntity {
     /// - Parameter entity: Object to persist.
     /// - Returns: The stored object. If `entity`'s id is 0, an ID is generated.
     /// - Throws: ObjectBoxError errors for database write errors.
-    func put(struct entity: StructEntity) throws -> StructEntity {
-        let entityId: EntityId<StructEntity> = try self.put(entity)
+    func put(struct entity: StructEntity, mode: PutMode = .put) throws -> StructEntity {
+        let entityId: EntityId<StructEntity> = try self.put(entity, mode: mode)
         
         return StructEntity(
             id: entityId,
@@ -164,8 +168,8 @@ extension Box where E == StructEntity {
     /// - Parameter entities: Objects to persist.
     /// - Returns: The stored objects. If any entity's id is 0, an ID is generated.
     /// - Throws: ObjectBoxError errors for database write errors.
-    func put(structs entities: [StructEntity]) throws -> [StructEntity] {
-        let entityIds: [EntityId<StructEntity>] = try self.put(entities)
+    func put(structs entities: [StructEntity], mode: PutMode = .put) throws -> [StructEntity] {
+        let entityIds: [EntityId<StructEntity>] = try self.putAndReturnIDs(entities, mode: mode)
         var newEntities = [StructEntity]()
         
         for i in 0 ..< min(entities.count, entityIds.count) {

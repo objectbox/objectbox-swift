@@ -148,14 +148,18 @@ internal func ignoreAndLog(error: Error) {
 /// This method always throws and never returns.
 internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never {
     switch err {
-    /// Returned by e.g. get operations if nothing was found for a specific ID.
+        /// Returned by e.g. get operations if nothing was found for a specific ID.
     /// This is NOT an error condition, and thus no last error info is set.
     case OBX_NOT_FOUND:
         throw ObjectBoxError.notFound(message: message)
     
     // General errors
     case OBX_ERROR_ILLEGAL_STATE:
-        throw ObjectBoxError.illegalState(message: message)
+        if message.hasPrefix("Cannot start a write transaction inside a read only transaction") {
+            throw ObjectBoxError.cannotWriteWhileReading(message: message)
+        } else {
+            throw ObjectBoxError.illegalState(message: message)
+        }
     case OBX_ERROR_ILLEGAL_ARGUMENT:
         throw ObjectBoxError.illegalArgument(message: message)
     case OBX_ERROR_ALLOCATION:
@@ -175,8 +179,13 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
     case OBX_ERROR_STORE_MUST_SHUTDOWN:
         throw ObjectBoxError.storeMustShutdown(message: message)
     case OBX_ERROR_STORAGE_GENERAL:
+        #if os(macOS) // Only macOS needs an App Group to do its mutexes, iOS uses a different mutex.
+        if message.hasPrefix("Could not open env for DB") { // Error reported from obx_store_open().
+            throw ObjectBoxError.storageGeneral(message: message + " - did you perhaps forget to set up an "
+                + "\"App Group\" Capability in your target settings?")
+        }
+        #endif
         throw ObjectBoxError.storageGeneral(message: message)
-
     // Data errors
     case OBX_ERROR_UNIQUE_VIOLATED:
         throw ObjectBoxError.uniqueViolation(message: message)

@@ -62,14 +62,14 @@ class PureSwiftEntityBinding: EntityBinding {
 
     required init() {}
     
-    func collect(fromEntity entity: PureSwiftEntity, id: Id, propertyCollector: PropertyCollector, store: Store) {
+    func collect(fromEntity entity: PureSwiftEntity, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         propertyCollector.collect(id, at: 2 + 2*1)
         
         propertyCollector.collect(entity.integerValue, at: 2 + 2*2)
         propertyCollector.collect(entity.maybeLongValue, at: 2 + 2*3)
     }
     
-    func createEntity(entityReader: EntityReader, store: Store) -> PureSwiftEntity {
+    func createEntity(entityReader: FlatBufferReader, store: Store) -> PureSwiftEntity {
         let entity = PureSwiftEntity()
         entity.id = entityReader.read(at: 2 + 2*1)
         entity.integerValue = entityReader.read(at: 2 + 2*2)

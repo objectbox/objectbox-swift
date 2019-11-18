@@ -183,4 +183,38 @@ class ErrorHelperIntegrationTests: XCTestCase {
         
         XCTAssertThrowsError(try ObjectBox.check(error: OBX_ERROR_STD_OTHER, message: "Ignored right now."))
     }
+    
+    func testAppGroupsMissingError() {
+        do {
+            // This error is reported by `obx_store_open()` when no app group identifier has been set on macOS.
+            try throwObxErr(OBX_ERROR_STORAGE_GENERAL, message: "Could not open env for DB (1)")
+        } catch ObjectBoxError.storageGeneral(let message) {
+            #if os(macOS)
+            let testSuccess = message.contains("App Group")
+            #else
+            let testSuccess = !message.contains("App Group")
+            #endif
+            if testSuccess {
+                XCTAssertTrue(true)
+            } else {
+                XCTFail("Unexpected exception thrown: storageGeneral(message: \(message))")
+            }
+        } catch {
+            XCTFail("Unexpected exception thrown: \(error)")
+        }
+
+        // Any other error should go through unmodified:
+        let errMsg = "Could not open env"
+        do {
+            try throwObxErr(OBX_ERROR_STORAGE_GENERAL, message: errMsg)
+        } catch ObjectBoxError.storageGeneral(let message) {
+            if message == errMsg {
+                XCTAssertTrue(true)
+            } else {
+                XCTFail("Unexpected exception thrown: storageGeneral(message: \(message))")
+            }
+        } catch {
+            XCTFail("Unexpected exception thrown: \(error)")
+        }
+    }
 }

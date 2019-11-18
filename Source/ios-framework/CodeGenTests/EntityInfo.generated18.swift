@@ -102,20 +102,16 @@ internal class WashingMachineBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.lineName, at: 2 + 2 * 2), 2 + 2 * 2))
-        offsets.append((propertyCollector.prepare(string: entity.destinationName, at: 2 + 2 * 3), 2 + 2 * 3))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_lineName = propertyCollector.prepare(string: entity.lineName)
+        let propertyOffset_destinationName = propertyCollector.prepare(string: entity.destinationName)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_lineName, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_destinationName, at: 2 + 2 * 3)
     }
 
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = WashingMachine()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)

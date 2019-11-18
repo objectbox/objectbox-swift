@@ -39,6 +39,19 @@ func main(_ args: [String]) throws -> Int32 {
         let building2Written = try buildingBox.put(struct: testBuilding2)
         guard building2Written.id.value != 0 else { print("error: Couldn't write building 2."); return 1 }
 
+        let moreBuildings = try buildingBox.put(structs: [
+            Building(id: 0, buildingName: "Hildisriederstr.", buildingNumber: 6),
+            Building(id: 0, buildingName: "Reinhöfli", buildingNumber: 1)])
+        if moreBuildings.count != 2 {
+            print("error: Couldn't write \(2 - moreBuildings.count) of 2 more objects."); return 1
+        }
+        if moreBuildings[0].id == 0 {
+            print("error: Couldn't write moreBuildings[0]."); return 1
+        }
+        if moreBuildings[1].id == 0 {
+            print("error: Couldn't write moreBuildings[1]."); return 1
+        }
+
         guard let retrievedBuilding1 = try buildingBox.get(building1Id) else { print("error: Couldn't read back building 1."); return 1 }
         guard let retrievedBuilding2 = try buildingBox.get(building2Written.id) else { print("error: Couldn't read back building 2."); return 1 }
 

@@ -2,7 +2,8 @@
 // Remove it again afterwards.
 
 public extension Store {
-    /// A store with a fully configured model. Created by the code generator with your model's metadata in place.
+    /// A store with a fully configured model. This method is created by the code generator with your model's metadata
+    /// in place.
     ///
     /// - Parameter directoryPath: The path to the directory in which ObjectBox should store database files.
     /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk (default: 1 GiB).

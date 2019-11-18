@@ -14,15 +14,17 @@
 // limitations under the License.
 //
 
-#if COMBINE_SUPPORT
 import Combine
 
+/// :nodoc:
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension Observer: Subscription {
+    /// :nodoc:
     public func request(_ demand: Subscribers.Demand) {
         // We only inform on changes.
     }
     
+    /// :nodoc:
     public func cancel() {
         unsubscribe()
     }
@@ -32,6 +34,7 @@ extension Observer: Subscription {
 
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension Box {
+    /// Return a Combine publisher for this box that you can subscribe to, to be notified of changes in this box.
     public var publisher: BoxPublisher<EntityType> {
         return store.lazyAttachedObject(key: "BoxPublisher<\(EntityType.self)>") {
             return BoxPublisher<EntityType>(store: store)
@@ -39,24 +42,23 @@ extension Box {
     }
 }
 
+/// Combine publisher for an ObjectBox box. You obtain an instance of this type via the `publisher` property on `Box`.
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public class BoxPublisher<E>: Publisher
 where E: EntityInspectable & __EntityRelatable, E.EntityBindingType.EntityType == E {
+    /// The result type of this publisher.
     public typealias Output = [E]
+    /// The error type of this publisher.
     public typealias Failure = ObjectBoxError
     
-    private var store: Store
+    /// The store this publisher operates on.
+    private weak var store: Store!
     private var subscribers = [SubscriberId: Observer]()
     private var subscriberIdSeed: SubscriberId = 0
     private let subscriberLock = DispatchSemaphore(value: 1)
 
-    init(store: Store) {
-        Swift.print("Create publisher for box \(E.self)")
+    internal init(store: Store) {
         self.store = store
-    }
-    
-    deinit {
-        Swift.print("Destroy publisher for box \(E.self)")
     }
     
     /// Register a combine subscriber to be notified whenever entities are added/modified/removed.
@@ -129,31 +131,32 @@ extension BoxPublisher {
 
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension Query {
+    /// Return a Combine publisher for this query that you can subscribe to.
     public var publisher: QueryPublisher<EntityType> {
-        return store.lazyAttachedObject(key: "QueryPublisher<\(EntityType.self)>") {
+        return store.lazyAttachedObject(key: "QueryPublisher<\(EntityType.self)>\(Unmanaged.passUnretained(self).toOpaque())") {
             return QueryPublisher<EntityType>(query: self)
         }
     }
 }
 
+/// Combine publisher for an ObjectBox query. You obtain an instance of this type via the `publisher` property on
+/// `Query`.
 @available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public class QueryPublisher<E>: Publisher
 where E: EntityInspectable & __EntityRelatable, E.EntityBindingType.EntityType == E {
+    /// The result type of this publisher.
     public typealias Output = [E]
+    /// The error type of this publisher.
     public typealias Failure = ObjectBoxError
     
+    /// The query this publisher operates on.
     var query: Query<E>
     private var subscribers = [SubscriberId: Observer]()
     private var subscriberIdSeed: SubscriberId = 0
     private let subscriberLock = DispatchSemaphore(value: 1)
 
-    init(query: Query<E>) {
-        Swift.print("Create publisher for query \(E.self)")
+    internal init(query: Query<E>) {
         self.query = query
-    }
-    
-    deinit {
-        Swift.print("Destroy publisher for query \(E.self)")
     }
     
     /// Register a combine subscriber to be notified whenever the query's contents change.
@@ -226,5 +229,3 @@ extension QueryPublisher {
         subscriber.receive(subscription: observer)
     }
 }
-
-#endif /*COMBINE_SUPPORT*/

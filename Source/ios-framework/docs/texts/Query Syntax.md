@@ -20,17 +20,17 @@ extension Person {
 }
 
 // Then you can write:
-store.box(for: Person.self).query {
+try store.box(for: Person.self).query {
     Person.name.isEqual(to: "Steve", caseSensitiveCompare: true)
-}
+}.build()
 ```
 
 or more succinctly,
 
 ```swift
-store.box(for: Person.self).query {
+try store.box(for: Person.self).query {
     .name == "Steve"
-}
+}.build()
 ```
 
 A variety of conditions are available for your use in query expressions, depending on the type of the
@@ -63,8 +63,8 @@ Note that not all operators are available for every `Property.ValueType`.
 In addition to these conditional operators, there is the `.=` operator to create `PropertyAlias`es.
 
 ```swift
-store.box(for: Person.self).query {
+try store.box(for: Person.self).query {
     return "AgeRestriction" .= Person.age > 18
         && Person.name.startsWith("St")
-}
+}.build()
 ```

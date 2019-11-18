@@ -84,7 +84,7 @@ func main(_ args: [String]) throws -> Int32 {
         let symptomsOfAHeartbreak1 = Book(name: "Symptoms of a Heartbreak") // Sona Charaipotra
         let everlastingRose1 = Book(name: "The Everlasting Rose") // Dhonielle Clayton
         let theBelles1 = Book(name: "The Belles") // Dhonielle Clayton
-        let assignedBookIds = try bookBox.put([symptomsOfAHeartbreak1, everlastingRose1, theBelles1])
+        let assignedBookIds = try bookBox.putAndReturnIDs([symptomsOfAHeartbreak1, everlastingRose1, theBelles1])
         let symptomsOfAHeartbreak2 = try bookBox.get(assignedBookIds[0])!
         let everlastingRose2 = try bookBox.get(assignedBookIds[1])!
         let theBelles2 = try bookBox.get(assignedBookIds[2])!
@@ -92,7 +92,7 @@ func main(_ args: [String]) throws -> Int32 {
         print("note: Adding Authors:")
         var sona = Author(name: "Sona Charaipotra")
         var dhonielle = Author(name: "Dhonielle Clayton")
-        let assignedAuthorIds = try authorBox.put([sona, dhonielle])
+        let assignedAuthorIds = try authorBox.putAndReturnIDs([sona, dhonielle])
         sona = try authorBox.get(assignedAuthorIds[0])!
         dhonielle = try authorBox.get(assignedAuthorIds[1])!
 

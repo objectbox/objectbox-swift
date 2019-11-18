@@ -56,10 +56,10 @@ test_target_num () {
 
             echo "====="
             echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
-            echo "===== $TESTMODELFILE ====="
-            cat "$TESTMODELFILE"
-            echo "===== $ORIGINALMODELFILE ====="
-            cat "$ORIGINALMODELFILE"
+#             echo "===== $TESTMODELFILE ====="
+#             cat "$TESTMODELFILE"
+#             echo "===== $ORIGINALMODELFILE ====="
+#             cat "$ORIGINALMODELFILE"
             echo "====="
             FAIL=1
         fi
@@ -74,10 +74,10 @@ test_target_num () {
 
             echo "====="
             echo "opendiff \"$TESTSOURCEFILE\" \"$ORIGINALSOURCEFILE\" -merge \"$ORIGINALSOURCEFILE\""
-            echo "===== $TESTSOURCEFILE ====="
-            cat "$TESTSOURCEFILE"
-            echo "===== $ORIGINALSOURCEFILE ====="
-            cat "$ORIGINALSOURCEFILE"
+#             echo "===== $TESTSOURCEFILE ====="
+#             cat "$TESTSOURCEFILE"
+#             echo "===== $ORIGINALSOURCEFILE ====="
+#             cat "$ORIGINALSOURCEFILE"
             echo "====="
             FAIL=1
         fi
@@ -92,10 +92,10 @@ test_target_num () {
 
             echo "====="
             echo "opendiff \"$TESTDUMPFILE\" \"$ORIGINALDUMPFILE\" -merge \"$ORIGINALDUMPFILE\""
-            echo "===== $TESTDUMPFILE ====="
-            cat "$TESTDUMPFILE"
-            echo "===== $ORIGINALDUMPFILE ====="
-            cat "$ORIGINALDUMPFILE"
+#             echo "===== $TESTDUMPFILE ====="
+#             cat "$TESTDUMPFILE"
+#             echo "===== $ORIGINALDUMPFILE ====="
+#             cat "$ORIGINALDUMPFILE"
             echo "====="
             FAIL=1
         fi
@@ -186,10 +186,10 @@ fail_codegen_target_num () {
 
             echo "====="
             echo "opendiff \"$TESTMESSAGESFILE\" \"$ORIGINALMESSAGESFILE\" -merge \"$ORIGINALMESSAGESFILE\""
-            echo "===== $TESTMESSAGESFILE ====="
-            cat "$TESTMESSAGESFILE"
-            echo "===== $ORIGINALMESSAGESFILE ====="
-            cat "$ORIGINALMESSAGESFILE"
+#             echo "===== $TESTMESSAGESFILE ====="
+#             cat "$TESTMESSAGESFILE"
+#             echo "===== $ORIGINALMESSAGESFILE ====="
+#             cat "$ORIGINALMESSAGESFILE"
             echo "====="
             FAIL=1
         fi
@@ -204,10 +204,10 @@ fail_codegen_target_num () {
 
             echo "====="
             echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
-            echo "===== $TESTMODELFILE ====="
-            cat "$TESTMODELFILE"
-            echo "===== $ORIGINALMODELFILE ====="
-            cat "$ORIGINALMODELFILE"
+#             echo "===== $TESTMODELFILE ====="
+#             cat "$TESTMODELFILE"
+#             echo "===== $ORIGINALMODELFILE ====="
+#             cat "$ORIGINALMODELFILE"
             echo "====="
             FAIL=1
         fi
@@ -231,10 +231,10 @@ fail_codegen_target_num () {
 
                 echo "====="
                 echo "opendiff \"$TESTXCODELOGFILE\" \"$ORIGINALXCODELOGFILE\" -merge \"$ORIGINALXCODELOGFILE\""
-                echo "===== $TESTXCODELOGFILE ====="
-                cat "$TESTXCODELOGFILE"
-                echo "===== $ORIGINALXCODELOGFILE ====="
-                cat "$ORIGINALXCODELOGFILE"
+#                 echo "===== $TESTXCODELOGFILE ====="
+#                 cat "$TESTXCODELOGFILE"
+#                 echo "===== $ORIGINALXCODELOGFILE ====="
+#                 cat "$ORIGINALXCODELOGFILE"
                 echo "====="
                 FAIL=1
             fi
@@ -322,6 +322,8 @@ fail_codegen_target_num "Ensure we don't write JSON before ID errors" 52 || FAIL
 test_target_num "ToOne Backlink ensure applyToDb is needed" 53 || FAIL=1
 test_target_num "ToMany ensure applyToDb is needed" 54 || FAIL=1
 test_target_num "ToMany Backlink ensure applyToDb is needed" 55 || FAIL=1
+test_target_num "Swift Property Wrappers are treated as wrapped type" 56 || FAIL=1
+test_target_num "Optional Template Syntax recognized as optional" 57 || FAIL=1
 
 echo "note: Finished tests..."
 

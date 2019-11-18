@@ -22,6 +22,7 @@
 
 public final class QueryBuilder<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
+    /// The type of entity this query builder operates on.
     public typealias EntityType = E
     
     internal var store: Store
@@ -65,7 +66,8 @@ where E == E.EntityBindingType.EntityType {
     
     /// Request that query results for an entity query be returned sorted by the given property.
     /// Can not be called after the query has been used the first time.
-    /// Currently has no effect on the result of calling query.property(...).
+    ///
+    /// Currently has no effect on the result of calling `query.property(...)`.
     /// - Parameter property: The property by which to sort.
     /// - Parameter flags: Additional flags to control sort behaviour, like what to do with NIL values, or to sort
     ///     descending instead of ascending.
@@ -920,10 +922,12 @@ extension QueryBuilder {
     }
 }
 
+// MARK: - Queries Across Relations
+
 public extension QueryBuilder {
     /// Adds an and-relation to another entity referenced by a ToOne property of this entity to this query.
     ///
-    /// Note: in relational databases you would use a "join" for this.
+    /// - Note: in relational databases you would use a "join" for this.
     ///
     /// - parameter property: The ToOne relation property you wish to traverse for your query.
     /// - parameter conditions: The query you want to execute on the referenced property.

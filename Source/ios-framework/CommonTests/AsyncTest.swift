@@ -49,6 +49,47 @@ class AsyncBoxTests: XCTestCase {
         XCTAssertEqual(readAmy?.name, "Amy Winehouse")
     }
     
+    func testAsyncInsert() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let taylor = TestPerson(name: "Taylor Swift", age: 29)
+        let amy = TestPerson(name: "Amy Winehouse", age: 27)
+        amy.id = try box.async.put(taylor, mode: .insert)
+        store.awaitAsyncSubmitted()
+        
+        try box.async.put(amy, mode: .insert)
+        store.awaitAsyncSubmitted()
+        
+        let readTaylor = try box.get(amy.id) // Amy shouldn't have overwritten Taylor.
+        XCTAssertEqual(readTaylor?.name ?? "", taylor.name)
+        XCTAssertEqual(try box.count(), 1)
+    }
+    
+    func testAsyncUpdate() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let taylor = TestPerson(name: "Taylor Swift", age: 29)
+        try box.async.put(taylor, mode: .update)
+        store.awaitAsyncSubmitted()
+        
+        XCTAssertTrue(try box.isEmpty())
+
+        let taylorId = try box.async.put(taylor, mode: .insert)
+        store.awaitAsyncSubmitted()
+
+        XCTAssertEqual(try box.count(), 1)
+
+        let amy = TestPerson(name: "Amy Winehouse", age: 27)
+        amy.id = taylorId
+        try box.async.put(amy, mode: .update)
+        store.awaitAsyncSubmitted()
+        
+        XCTAssertEqual(try box.count(), 1)
+
+        let readAmy = try box.get(amy.id)
+        XCTAssertEqual(readAmy?.name ?? "", amy.name)
+    }
+    
     func testAsyncMultiPut() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
         
@@ -158,5 +199,32 @@ class AsyncBoxTests: XCTestCase {
         store.awaitAsyncCompleted()
         
         XCTAssertEqual(try box.get(aimee.id)?.name, "Aimee Allen")
+    }
+
+    func testVarArgPutGetRemove() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Jesse Faden", age: 29)
+        let person2 = TestPerson(name: "Κασσάνδρα", age: 1000)
+        let person3 = TestPerson(name: "Samus Aran", age: 33)
+        let person4 = TestPerson(name: "Faith Connors", age: 10)
+        let person5 = TestPerson(name: "Jane Shepard", age: -135)
+        let person6 = TestPerson(name: "Aveline de Grandpré", age: 37)
+
+        try box.async.put(person1, person2, person3, person4, person5, person6)
+        store.awaitAsyncCompleted()
+        XCTAssertEqual(try box.count(), 6)
+        
+        try box.async.remove(person1, person3)
+        store.awaitAsyncCompleted()
+        XCTAssertEqual(try box.count(), 4)
+        
+        try box.async.remove(person4.id, person2.id)
+        store.awaitAsyncCompleted()
+        XCTAssertEqual(try box.count(), 2)
+        
+        try box.async.remove(person5.id.value, person6.id.value)
+        store.awaitAsyncCompleted()
+        XCTAssertEqual(try box.count(), 0)
     }
 }

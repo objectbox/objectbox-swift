@@ -89,29 +89,21 @@ internal class BuildingBinding: NSObject, ObjectBox.EntityBinding {
 
     override internal required init() {}
 
-    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
-        // Use the struct variants of the put methods on entities of struct Building.
-    }
 
     internal func entityId(of entity: EntityType) -> ObjectBox.Id {
         return entity.id.value
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.PropertyCollector, store: ObjectBox.Store) {
-        var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
-        offsets.append((propertyCollector.prepare(string: entity.buildingName, at: 2 + 2 * 2), 2 + 2 * 2))
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+        let propertyOffset_buildingName = propertyCollector.prepare(string: entity.buildingName)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.buildingNumber, at: 2 + 2 * 3)
-
-
-        for value in offsets {
-            propertyCollector.collect(dataOffset: value.offset, at: value.index)
-        }
+        propertyCollector.collect(dataOffset: propertyOffset_buildingName, at: 2 + 2 * 2)
     }
 
-    internal func createEntity(entityReader: ObjectBox.EntityReader, store: ObjectBox.Store) -> EntityType {
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entityId: EntityId<Building> = entityReader.read(at: 2 + 2 * 1)
         let entity = Building(
             id: entityId, 
@@ -150,8 +142,9 @@ extension ObjectBox.Box where E == Building {
     /// - Returns: The stored objects. If any entity's id is 0, an ID is generated.
     /// - Throws: ObjectBoxError errors for database write errors.
     func put(structs entities: [Building]) throws -> [Building] {
-        let entityIds: [Building.EntityBindingType.IdType] = try self.put(entities)
+        let entityIds: [Building.EntityBindingType.IdType] = try self.putAndReturnIDs(entities)
         var newEntities = [Building]()
+        newEntities.reserveCapacity(entities.count)
 
         for i in 0 ..< min(entities.count, entityIds.count) {
             let entity = entities[i]

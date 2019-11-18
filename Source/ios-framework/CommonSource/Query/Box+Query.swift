@@ -18,7 +18,11 @@
 
 extension Box {
 
-    /// Create a blank QueryBuilder you can configure afterwards.
+    /// Create a blank QueryBuilder you can configure afterwards. This is useful if you don't want to filter but still
+    /// want to perform a link (join) or control the order of results.
+    ///
+    /// Call `build()` on the `QueryBuilder` to obtain a `Query` that you can actually run or whose placeholder
+    /// values you can modify.
     ///
     /// - Returns: QueryBuilder for a blank query.
     public func query() -> QueryBuilder<EntityType> {
@@ -30,39 +34,17 @@ extension Box {
         }
     }
 
-    /// Create a QueryBuilder for a query with initial conditions expressed inside the block.
-    ///
-    /// To create an object of the expected return type `QueryCondition`, you can use comparison operators
-    /// on the `Property` metadata object of your entity. Combine multiple conditions with boolean operators.
-    /// See the type declaration of `Property` for a list of methods.
+    /// Return a QueryBuilder that can be used to create a Query with conditions expressed inside a block.
     ///
     /// Example:
     ///
-    ///     class Person: Entity {
-    ///         var name: String
-    ///         var age: Int
+    ///     let personBox: Box<Person> = store.box()
+    ///     let query = personBox.query { Person.name.startsWith("M") && Person.age >= 18 }.build()
     ///
-    ///         // Code generator creates:
-    ///         //
-    ///         //     static var name: Property<Person, String>
-    ///         //     static var age: Property<Person, Int>
-    ///     }
+    /// The list of supported operators and methods for each property depends on its type. Number-based properties offer
+    /// methods like `isBetween`, while String-based properties offer `startsWith`, `contains` etc.
     ///
-    ///     let personBox: Box<Person>
-    ///     let query = personBox.query { Person.name.startsWith("M") && Person.age >= 18 }
-    ///
-    /// Operators you might be interested in:
-    ///
-    /// - Boolean: `&&` and `||`
-    /// - Containment: `∈` and `∉`
-    /// - Equality: `==` and `!=`
-    /// - Comparison: `<` and `>`
-    ///
-    /// Number-based properties also offer methods like `isBetween`, while String-based properties offer
-    /// `startsWith` and `contains`.
-    ///
-    /// The list of supported operations for each `Property<EntityType, ValueType>` depends on the `ValueType`;
-    /// you can explore Xcode's auto-completion or refer to our guide at <https://objectbox.io>.
+    /// You can explore Xcode's auto-completion or refer to our documentation at <https://swift.objectbox.io>.
     ///
     /// Call `build()` on the `QueryBuilder` to obtain a `Query` that you can actually run or whose placeholder
     /// values you can modify.

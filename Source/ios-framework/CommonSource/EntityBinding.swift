@@ -18,7 +18,7 @@
 /// transferring database values into your Swift objects and extracting them for writing out.
 ///
 /// You usually don't have to deal with this class.
-public protocol EntityBinding {
+public protocol EntityBinding: AnyObject {
     /// The type this binding serves as an adapter for.
     associatedtype EntityType: Entity & EntityInspectable
     
@@ -28,33 +28,48 @@ public protocol EntityBinding {
     /// Used by `Box` to create new EntityBinding adapter instances.
     init()
     
-    /// Writes the given entity's value to the given PropertyCollector, assigning it the given ID.
+    /// Writes the given entity's value to the given FlatBufferBuilder, assigning it the given ID.
     /// `entityId` _must_ not be 0.
-    func collect(fromEntity entity: EntityType, id entityId: Id, propertyCollector: PropertyCollector,
+    func collect(fromEntity entity: EntityType, id entityId: Id, propertyCollector: FlatBufferBuilder,
                  store: Store)
     
     /// The collected entity has been put and now it's time to attach and put all relations, if this entity is new.
     func postPut(fromEntity entity: EntityType, id entityId: Id,
                  store: Store)
     
-    /// Creates a new entity based on data from the given EntityReader.
+    /// Creates a new entity based on data from the given FlatBufferReader.
     /// Returns: The new entity.
-    func createEntity(entityReader: EntityReader, store: Store) -> EntityType
+    func createEntity(entityReader: FlatBufferReader, store: Store) -> EntityType
     
     /// For class types, this is used to write the new entity ID back to the entity when they are first put into a box.
     /// Note that this function only works on classes, it will quietly do nothing when used on a struct.
     func setEntityIdUnlessStruct(of entity: EntityType, to entityId: Id)
 
+    /// For struct types, this is used to write the new entity ID back to the entity when they are first put into a box.
+    /// Note that this function only works on structs, it will raise a fatal error when used on a class.
+    func setStructEntityId(of entity: inout EntityType, to entityId: Id)
+
     /// Used to read the ID of an entity.
     func entityId(of entity: EntityType) -> Id
 
+    /// Modify a ToOne relation using its property ID, used when modifying `ToOne` backlinks.
     func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: Id?)
 }
 
 extension EntityBinding {
+    /// The collected entity has been put and now it's time to attach and put all relations, if this entity is new.
     public func postPut(fromEntity entity: EntityType, id idNumber: Id, store: Store) {}
 
+    /// Modify a ToOne relation using its property ID, used when modifying `ToOne` backlinks.
     public func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: Id?) {
         fatalError("Attempt to set unknown ToOne relation \(propertyId)")
+    }
+
+    public func setStructEntityId(of entity: inout EntityType, to entityId: Id) {
+        fatalError("not a struct type!")
+    }
+
+    public func setEntityIdUnlessStruct(of entity: EntityType, to entityId: Id) {
+        // Use the struct variants of the put methods on entities of structs.
     }
 }
