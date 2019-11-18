@@ -8,8 +8,8 @@
 
 set -e
 
-version=1.0
-core_version=0.7.0
+version=1.1
+core_version=0.7.3
 
 my_dir=`dirname "$0"`
 my_dir=`realpath "${my_dir}"`

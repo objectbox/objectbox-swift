@@ -33,7 +33,7 @@ To install the `ObjectBox` pod, add the following line to your Podfile:
   pod 'ObjectBox'
 ```
 
-*Note:* use `pod 'ObjectBox501'` if you are still on Swift 5.0.1.
+*Note:* use `pod 'ObjectBox501'` if you are still on Swift 5.0.1. Consider switching to Swift 5.1 to use latest ObjectBox version.
   
 Then run this to install the ObjectBox framework:
 
