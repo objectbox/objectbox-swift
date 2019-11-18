@@ -34,20 +34,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             try noteBox.put(georgeMartin.writeNote(title: "Game of Thrones", text: "This book title would've been a better choice than this Ice & Fire stuff all along. Boy, writing this takes long in DOS."))
 
             logger.append("Reading all notes:")
-            logger.append("\(noteBox.all().readableDescription)\n")
+            logger.append("\(try noteBox.all().readableDescription)\n")
 
             logger.append("Reading notes containing 'writing':")
-            let allWritingNotes = noteBox.query { Note.text.contains("writing") }.build().all()
+            let allWritingNotes = try noteBox.query { Note.text.contains("writing") }.build().all()
             logger.append("\(allWritingNotes.readableDescription)\n")
 
             logger.append("Reading notes containing 'writing' by Peter Brett:")
-            let peterBrettsWritingNotes = noteBox.query { Note.text.contains("writing") && Note.author == peterBrett.id }.build().all()
+            let peterBrettsWritingNotes = try noteBox.query { Note.text.contains("writing") && Note.author.isEqual(to: peterBrett.id) }.build().all()
             logger.append("\(peterBrettsWritingNotes.readableDescription)\n")
 
             logger.append("Looking into Peter Brett's current object state again ...")
             logger.append("\(peterBrett)")
             logger.append("Note the lazy relation didn't update automatically once fetched.\nBut if we fetch a new instance by his id ...")
-            logger.append("\(authorBox.get(peterBrett.id)?.description ?? "(fetch failed)")")
+            logger.append("\(try authorBox.get(peterBrett.id)?.description ?? "(fetch failed)")")
         } catch {
             logger.append("❌ ERROR: \(error)")
         }
