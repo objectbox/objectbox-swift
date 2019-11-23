@@ -1,3 +1,4 @@
+#You don't need this, unless you want to get access to latest release candidates or preview versions:
 #source 'https://github.com/objectbox/objectbox-swift-spec-staging'
 
 use_frameworks!
