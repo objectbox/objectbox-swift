@@ -16,7 +16,8 @@ else
     POD_NAME="ObjectBox"
 fi
 
-my_dir=`dirname "$0"`
+# macOS does not have realpath and readlink does not have -f option, so do this instead:
+my_dir=$( cd "$(dirname "$0")" ; pwd -P )
 
 if [ "$TERM" == "" ] || [ "$TERM" == "dumb" ]; then
     SMSO=""

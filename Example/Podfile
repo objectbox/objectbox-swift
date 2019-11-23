@@ -1,11 +1,13 @@
+#source 'https://github.com/objectbox/objectbox-swift-spec-staging'
+
 use_frameworks!
 
 target 'NotesExample-iOS' do
   platform :ios, :deployment_target => '11.0'
-  pod 'ObjectBox', '1.1'
+  pod 'ObjectBox'
 end
 
 target 'NotesExample-macOS' do
   platform :osx, :deployment_target => '10.10'
-  pod 'ObjectBox', '1.1'
+  pod 'ObjectBox'
 end

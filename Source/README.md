@@ -17,19 +17,15 @@ Repository Contents
 Setup
 -----
 
-* Install Xcode 11.2+ (Swift 5.1+) with command line tools prepared to build from the shell
-* Run `git submodule update --init --recursive` to get external dependencies
-* Run `make build_swiftlint` to build the build SwiftLint from source into its `external/SwiftLint/.build` directory.
-* The Sourcery submodule contains a `_build.command` script that you can double-click to build a release-ready version of the code generator.
-* Build the framework using the `ObjectBox.xcodeproj`
+* Install latest Xcode (Swift 5.1+) with command line tools prepared to build from the shell
+* Ensure you have homebrew (e.g. setup.sh uses it to install [Carthage](https://github.com/Carthage/Carthage))
+* Run `./setup.sh` (see the [setup.sh](setup.sh) file for more comments if you want)
+* Open Xcode project in ios-framework/ObjectBox.xcodeproj
 
 To build the project for release:
 
-* Install [Carthage][], e.g. using Homebrew: `brew install carthage`
 * Run `cd ios-framework/; make all` to build the frameworks from source with Carthage
-* The `ios-framework/cocoapod/make_podspec_and_zip.command` script can be double-clicked to build a release-ready archive and Podspec file.
-
-[Carthage]: https://github.com/Carthage/Carthage
+* The `ios-framework/cocoapod/make-release.command` script can be double-clicked to build a release-ready archive and Podspec file.
 
 ### Generate the Documentation
 
@@ -46,7 +42,7 @@ Distributing the Framework
 
 Distribution of the framework as closed source works across these channels:
 
-- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets. (The `make_podspec_and_zip.command` script takes care of this)
+- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets. (The `make-release.command` script takes care of this)
 - **Carthage**, by uploading a `.zip` of the frameworks as binary attachments to a GitHub's release.
 
 ## Build with Carthage
@@ -103,7 +99,7 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
 Caveats
 -------
 
-To make to-one relations and their backlinks work, the `Entity` protocol was extended to require (1) an `EntityType` typealias, and (2) an `_id` property. The former was needed to disambiguate which concrete entity we're talking about when all we have is the protocol type, and this in turn is needed to specify the generic type requirement of `EntityId<T>`. Since the `Entity` protocol itself is intended to be no more than a convenient code annotation (which Sourcery can filter on), it's advised to get rid of this as soon as possible and find a different way to get the data needed for associations in Swift, for example using an `IdGetter<T>` like we do in Java and injecting it into `EntityInfo` from generated code.
+To make to-one relations and their backlinks work, the `Entity` protocol was extended to require (1) an `EntityType` typealias, and (2) an `_id` property. The former was needed to disambiguate which concrete entity we're talking about when all we have is the protocol type, and this in turn is needed to specify the generic type requirement of `Id<T>`. Since the `Entity` protocol itself is intended to be no more than a convenient code annotation (which Sourcery can filter on), it's advised to get rid of this as soon as possible and find a different way to get the data needed for associations in Swift, for example using an `IdGetter<T>` like we do in Java and injecting it into `EntityInfo` from generated code.
 
 How to Use the Framework
 ------------------------
@@ -117,7 +113,7 @@ Define entities:
 
     import ObjectBox
     final class Person: Entity {
-        var id: Id = 0
+        var id: Id<Person> = 0
         var age: Int
         var name: String
         var birthdate: Date
@@ -136,7 +132,7 @@ Run the code generator. This will configure a `ModelBuilder` and get the `Data` 
 Create and set up the ObjectBox types:
 
     let directory: String = "/path/to/the/store"
-    let store: Store = try Store(directoryPath: directory)
+    let store: Store = try! Store(directoryPath: directory)
     let personBox: Box<Person> = store.box(for: Person.self)
 
 This will call into the the generated (!) initializer that uses the private model builder's `modelBytes()` automatically.
@@ -150,10 +146,10 @@ Then you're all set to use entities with ObjectBox:
     assert(person.id == personId) // ID is set after put
     
     // Get by ID
-    assert(try personBox.get(personId) != nil)
+    assert(personBox.get(personId) != nil)
     
     // Get collections of entities
-    _ = try personBox.all()
-    _ = try personBox.query({ Person.name == "Fry" }).build().find()
+    _ = personBox.all()
+    _ = personBox.query({ Person.name == "Fry" }).build().find()
 
 That's it, it works now!

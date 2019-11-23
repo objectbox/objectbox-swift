@@ -23,8 +23,9 @@ integration_tests: download_statics
 	../external/objectbox-swift-generator/_build.command
 	xcodebuild $(XCOPTIONS) build -project ObjectBox.xcodeproj -scheme CodeGenTests -destination 'platform=OS X,arch=x86_64'
 
+# Note: If ObjectBox core repo is present, it won't download but build it instead
 download_statics:
-	@echo "$(BLUE)Downloading static libraries...$(NC)"
+	@echo "$(BLUE)Building/Downloading static libraries...$(NC)"
 	@../download_dependencies.command
 
 build_framework: download_statics

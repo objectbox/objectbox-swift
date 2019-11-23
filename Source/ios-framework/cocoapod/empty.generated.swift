@@ -15,7 +15,7 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 // MARK: - Store setup
 
 fileprivate func cModel() throws -> OpaquePointer {
-    let modelBuilder = try ModelBuilder()
+    let modelBuilder = try ObjectBox.ModelBuilder()
     modelBuilder.lastEntity(id: 0, uid: 0)
     return modelBuilder.finish()
 }

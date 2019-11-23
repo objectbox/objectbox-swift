@@ -8,25 +8,27 @@
 
 set -e
 
-version=1.1
-core_version=0.7.2
+# macOS does not have realpath and readlink does not have -f option, so do this instead:
+my_dir=$( cd "$(dirname "$0")" ; pwd -P )
 
-my_dir=`dirname "$0"`
-my_dir=`realpath "${my_dir}"`
-
-cd $my_dir
+cd "$my_dir"
 code_dir="${my_dir}/external/objectbox/"
 dest_dir="${my_dir}/external/objectbox-static/"
-archive_path="${my_dir}/external/objectbox-static.zip"
-OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${core_version}.zip"
 
+# Build?
 if [ -d "$code_dir" ]; then
     echo "Have repository, building."
     "$code_dir/xcode/build_objectbox_core.command" "$dest_dir" release 
     exit
 fi
     
+# Nothing to build, so download instead
 if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
+    version=1.1
+    core_version=0.7.2
+    archive_path="${my_dir}/external/objectbox-static.zip"
+    OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${core_version}.zip"
+
     mkdir -p "${dest_dir}"
     
     curl -L --fail "${OBXLIB_URL_apple_static}" --output "${archive_path}"

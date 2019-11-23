@@ -1,15 +1,12 @@
 #!/bin/bash
 
-#  RunToolTests.sh
-#  ObjectBox Swift
-#
-#  Created by Uli Kusterer on 07.12.18.
-#  
-
 echo -n "note: Starting tests at "
 date
 
-mydir=`dirname "$0"`
+# macOS does not have realpath and readlink does not have -f option, so do this instead:
+mydir=$( cd "$(dirname "$0")" ; pwd -P )
+cd "${mydir}"
+
 itestdir="$mydir/../IntegrationTests/"
 
 test_target_num () {

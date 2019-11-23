@@ -60,7 +60,6 @@ else
   is_cocoapods = true
 end
 POD_NAME = File.basename(OBJECTBOX_POD_ROOT)
-EMPTY_GENERATED_FILE = HELPER_FILES_ROOT + "/empty.generated.swift"
 
 args=ARGV
 SHOULD_SHOW_HELP = args.delete("--help") != nil
@@ -221,8 +220,6 @@ if generated_groupref.nil?
     project.main_group.children.insert(products_group_index, project.main_group.children.delete(generated_groupref))
 end
 
-empty_generated_file_template = File.read(EMPTY_GENERATED_FILE)
-
 app_targets.each do |target|
   puts ""
   puts "Target \"#{target.name}\":".bold
@@ -240,6 +237,7 @@ app_targets.each do |target|
     # Create placeholder files so Xcode finds the references
     puts "  🔹 Creating file \"#{generated_file_name}\" ..."
     FileUtils.mkdir_p(GENERATED_DIR_PATH)
+    empty_generated_file_template = File.read(HELPER_FILES_ROOT + "/empty.generated.swift")
     File.open(generated_code_path, 'w') do |file|
       file.puts("// Build your project to run Sourcery and create current contents for this file\n\n#{empty_generated_file_template}")
     end

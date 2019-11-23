@@ -2,10 +2,17 @@
 
 set -e
 
-myrealpath=`realpath "$0"`
-mydir=`dirname "$myrealpath"`
-
-sourcery="${mydir}/Sourcery.app/Contents/MacOS/Sourcery"
+# We symlink this script, but we must find the code generator relative to the symlink's target.
+# macOS does not have realpath and readlink does not have -f option, so do this instead:
+script_path=$( ruby -e "puts File.realpath('$0')" )
+script_dir=$( dirname "$script_path" )
+sourcery="${script_dir}/Sourcery.app/Contents/MacOS/Sourcery"
+if [ ! -f "$sourcery" ]; then
+  echo "Script: $0"
+  echo "Script realpath: $script_path"
+  echo "error: Cannot find Sourcery in the expected location at '$sourcery'"
+  exit 1
+fi
 
 # if this script had parameters, we would look for them here.
 
@@ -28,9 +35,4 @@ else
 fi
 
 # Actually call Sourcery:
-if [ -f "$sourcery" ]; then
-  "$sourcery" --xcode-project "${PROJECT_FILE_PATH}" --xcode-target "${TARGETNAME}" $MODULENAME1 $MODULENAME2 $@
-else
-  echo "error: Cannot find Sourcery in the expected location at '$sourcery'"
-  exit 1
-fi
+"$sourcery" --xcode-project "${PROJECT_FILE_PATH}" --xcode-target "${TARGETNAME}" $MODULENAME1 $MODULENAME2 $@

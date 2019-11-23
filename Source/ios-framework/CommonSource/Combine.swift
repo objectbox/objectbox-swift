@@ -133,7 +133,8 @@ extension BoxPublisher {
 extension Query {
     /// Return a Combine publisher for this query that you can subscribe to.
     public var publisher: QueryPublisher<EntityType> {
-        return store.lazyAttachedObject(key: "QueryPublisher<\(EntityType.self)>\(Unmanaged.passUnretained(self).toOpaque())") {
+        let keyString = "QueryPublisher<\(EntityType.self)>\(Unmanaged.passUnretained(self).toOpaque())"
+        return store.lazyAttachedObject(key: keyString) {
             return QueryPublisher<EntityType>(query: self)
         }
     }
