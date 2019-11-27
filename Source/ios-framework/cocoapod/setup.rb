@@ -289,7 +289,12 @@ app_targets.each do |target|
       else
         puts "  ⚪️ Target \"#{target.name}\" already has a build phase \"#{SOURCERY_BUILD_PHASE_NAME}\", but it seems to have been modified."
         print "  Replace the script with the recommended script? [y/N] "
-        shouldreplace = STDIN.gets.downcase
+        response = STDIN.gets
+        if response.nil?
+            STDERR.puts("Got no input. If you are running this from a script, consider the --replace-modified option.")
+            exit(1)
+        end
+        shouldreplace = response.downcase
       end
       if shouldreplace.start_with?("y")
         target.build_phases[build_phase_index].shell_script = obx_shell_script
