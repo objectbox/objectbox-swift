@@ -2,5 +2,5 @@ ruby "~> 2.3"
 
 source "https://rubygems.org"
 
-gem "jazzy", "~> 0.9"
+gem "jazzy", "~> 0.12"
 gem "cocoapods", "~> 1.8"
