@@ -107,7 +107,7 @@ func main(_ args: [String]) throws -> Int32 {
         print("note: Testing forward:")
         // Could do this without a relation by just looking for the book by name & asking for its authors,
         //  but we're testing queries over relations here, so do it the complicated way:
-        let tinyPrettyThingsAuthors = try authorBox.query().link(Author.books) { Book.name == tinyPrettyThings.name }.build().all()
+        let tinyPrettyThingsAuthors = try authorBox.query().link(Author.books) { Book.name == tinyPrettyThings.name }.build().find()
         if tinyPrettyThingsAuthors.count != 2 {
             print("error: Author count wrong. Expected 2, found \(tinyPrettyThingsAuthors.count)")
             return 1
@@ -122,7 +122,7 @@ func main(_ args: [String]) throws -> Int32 {
         }
 
         print("note: Testing backlink:")
-        let sonasBooks = try bookBox.query().link(Book.authors) { Author.name == sona.name }.build().all()
+        let sonasBooks = try bookBox.query().link(Book.authors) { Author.name == sona.name }.build().find()
         if sonasBooks.count != 2 {
             print("error: Book count wrong. Expected 2, found \(sonasBooks.count)")
             return 1

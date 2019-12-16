@@ -78,7 +78,7 @@ func main(_ args: [String]) throws -> Int32 {
         try amanda.books.applyToDb()
                 
         print("note: Testing forward:")
-        let dhoniellesBooks = try bookBox.query().link(Book.author) { Author.name == dhonielle.name }.build().all()
+        let dhoniellesBooks = try bookBox.query().link(Book.author) { Author.name == dhonielle.name }.build().find()
         if dhoniellesBooks.count != 2 {
             print("error: Book count wrong. Expected 2, found \(dhoniellesBooks.count)")
             return 1
@@ -95,7 +95,7 @@ func main(_ args: [String]) throws -> Int32 {
         print("note: Testing backlink:")
         let bellesAskingAuthors = try authorBox.query().link(Author.books) {
             Book.name == theBelles.name || Book.name == theArtOfAsking.name
-            }.build().all()
+            }.build().find()
         if bellesAskingAuthors.count != 2 {
             print("error: Author count wrong. Expected 2, found \(bellesAskingAuthors.count)")
             return 1

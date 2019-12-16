@@ -103,7 +103,7 @@ class BoxTests: XCTestCase {
         let entity = AllTypesEntity()
         entity.boolean = true
         entity.integer = Int32.max - 10
-        entity.uInteger = UInt.max - 3
+        entity.unsigned = UInt32.max - 3
         entity.aDouble = 12345.9876
         entity.date = Date(timeIntervalSince1970: 1234567890)
         entity.string = "a string"
@@ -117,7 +117,7 @@ class BoxTests: XCTestCase {
         XCTAssertNotNil(fetchedEntity)
         XCTAssertEqual(fetchedEntity?.boolean, entity.boolean)
         XCTAssertEqual(fetchedEntity?.integer, entity.integer)
-        XCTAssertEqual(fetchedEntity?.uInteger, entity.uInteger)
+        XCTAssertEqual(fetchedEntity?.unsigned, entity.unsigned)
         XCTAssertEqual(fetchedEntity?.aDouble, entity.aDouble)
         XCTAssertEqual(fetchedEntity?.date, entity.date)
         XCTAssertEqual(fetchedEntity?.string, entity.string)

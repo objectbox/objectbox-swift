@@ -80,7 +80,7 @@ func main(_ args: [String]) throws -> Int32 {
         try bookBox.put(allBooks) // We edited the authors, but the books contain the ToOne that needs persisting.
         
         print("note: Testing forward:")
-        let dhoniellesBooks = try bookBox.query().link(Book.author) { Author.name == dhonielle.name }.build().all()
+        let dhoniellesBooks = try bookBox.query().link(Book.author) { Author.name == dhonielle.name }.build().find()
         if dhoniellesBooks.count != 2 {
             throw TestErrors.testFailed(message: "Book count wrong. Expected 2, found \(dhoniellesBooks.count)")
         }
@@ -94,7 +94,7 @@ func main(_ args: [String]) throws -> Int32 {
         print("note: Testing backlink:")
         let bellesAskingAuthors = try authorBox.query().link(Author.books) {
             Book.name == theBelles.name || Book.name == theArtOfAsking.name
-            }.build().all()
+            }.build().find()
         if bellesAskingAuthors.count != 2 {
             throw TestErrors.testFailed(message: "Author count wrong. Expected 2, found \(bellesAskingAuthors.count)")
         }

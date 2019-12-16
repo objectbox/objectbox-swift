@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+// TODO: check if those still make sense like this; e.g. check property queries
+
 /// Marks all supported scalar value types as such.
 /// Used to provide 1 interface for e.g. `distinct`.
 public protocol EntityScalarPropertyType {}

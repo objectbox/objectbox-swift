@@ -51,3 +51,7 @@ where E == E.EntityBindingType.EntityType {
     /// The internal ID of the property, in terms of the database schema.
     public var propertyId: UInt32 { return base.propertyId }
 }
+
+/// Property represents a "value" and not a relation; TODO Decide if useful (one generic parameter less) or drop it
+public typealias ValueProperty<E: EntityInspectable & __EntityRelatable, V: EntityPropertyTypeConvertible> =
+        Property<E, V, Void> where E == E.EntityBindingType.EntityType

@@ -111,19 +111,31 @@ internal func checkLastError() throws {
 internal func checkLastError(_ error: obx_err) throws {
     if error == OBX_SUCCESS { return }
     let message = String(utf8String: obx_last_error_message()) ?? ""
+    if error != OBX_NOT_FOUND {
+        // In case the error is not catched, info might be lost; so better print it now(?), or is there a better way?
+        print("Error occurred: \(message) (\(error))")
+    }
     obx_last_error_clear()
     try throwObxErr(error, message: message)
 }
 
+/// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
 internal func failFatallyIfError() {
-    let error = obx_last_error_code()
-    if error == OBX_SUCCESS { return }
-    let message = String(utf8String: obx_last_error_message()) ?? ""
-    obx_last_error_clear()
-    do {
-        try throwObxErr(error, message: message)
-    } catch {
-        fatalError("Unexpected error \(error)")
+    checkFatalError(obx_last_error_code())
+}
+
+/// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
+internal func checkFatalError(_ err: obx_err) {
+    if err != OBX_SUCCESS {
+        for symbol in Thread.callStackSymbols {
+            // Print the stack trace without the "unexciting" symbols
+            if !symbol.contains("XCTest") && !symbol.contains("xctest") && !symbol.contains("CoreFoundation") 
+                       && !symbol.contains("checkFatalError") && !symbol.contains("failFatallyIfError") {
+                print(symbol)
+            }
+        }
+        let message = String(utf8String: obx_last_error_message()) ?? "Unknown"
+        fatalError("\(message) (\(err))")
     }
 }
 

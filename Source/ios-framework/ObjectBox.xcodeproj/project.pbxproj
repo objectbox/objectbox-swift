@@ -62,7 +62,6 @@
 		5070A9BB217F49AB002305F8 /* OBXErrorHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5052615720BD72A500405B13 /* OBXErrorHelper.mm */; };
 		5070A9C3217F49C7002305F8 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2821367CC900CB7871 /* Box.swift */; };
 		5070A9C4217F49CA002305F8 /* Store+SwiftRefinedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2621367CA900CB7871 /* Store+SwiftRefinedAPI.swift */; };
-		5070A9C5217F49CC002305F8 /* PropertyCollector+SwiftRefinedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */; };
 		5070A9F0217F4C72002305F8 /* SwiftRefinedAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9C9217F4C3B002305F8 /* SwiftRefinedAPITests.swift */; };
 		5070A9F1217F4C72002305F8 /* Entity+NullablePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D5217F4C3B002305F8 /* Entity+NullablePropertyTests.swift */; };
 		5070A9F2217F4C72002305F8 /* QueryOperatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9CA217F4C3B002305F8 /* QueryOperatorTests.swift */; };
@@ -107,7 +106,6 @@
 		50C365B120BE8FC200F77FA3 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB3B3F3120AB4B4B00418618 /* ObjectBox.framework */; };
 		50F7EC0D2114481B0050D924 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F7EC0B211447CF0050D924 /* Query.swift */; };
 		50FCFEFF212EEF0B00A44B32 /* PropertyAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FCFEFE212EEF0B00A44B32 /* PropertyAlias.swift */; };
-		50FE2F9721391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */; };
 		550974D42285D1EB006B24B7 /* ModelBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550974D32285D1EB006B24B7 /* ModelBuilder.swift */; };
 		550974D52285D1EB006B24B7 /* ModelBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550974D32285D1EB006B24B7 /* ModelBuilder.swift */; };
 		550974D92285D84F006B24B7 /* EntityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550974D82285D84F006B24B7 /* EntityBuilder.swift */; };
@@ -274,7 +272,6 @@
 		50C365B020BE8FC200F77FA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50F7EC0B211447CF0050D924 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		50FCFEFE212EEF0B00A44B32 /* PropertyAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyAlias.swift; sourceTree = "<group>"; };
-		50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PropertyCollector+SwiftRefinedAPI.swift"; sourceTree = "<group>"; };
 		550974D32285D1EB006B24B7 /* ModelBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBuilder.swift; sourceTree = "<group>"; };
 		550974D82285D84F006B24B7 /* EntityBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityBuilder.swift; sourceTree = "<group>"; };
 		551530802369A18900B2FF12 /* Cursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cursor.swift; sourceTree = "<group>"; };
@@ -391,7 +388,6 @@
 				551530802369A18900B2FF12 /* Cursor.swift */,
 				55D1A39C22B38EF60032361C /* InstanceVisitor.swift */,
 				5089AB2621367CA900CB7871 /* Store+SwiftRefinedAPI.swift */,
-				50FE2F9621391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift */,
 				55BC4172226F4A69008195D0 /* Transaction.swift */,
 				55D19CA0228036CD00BEAD37 /* EntityBinding.swift */,
 				55471202228B15D700DB4136 /* Store.swift */,
@@ -933,7 +929,6 @@
 				5070A99E217F4946002305F8 /* LazyProxyRelation.swift in Sources */,
 				5070A99C217F493E002305F8 /* Property.swift in Sources */,
 				5070A9B9217F49A5002305F8 /* PropertyAlias.swift in Sources */,
-				5070A9C5217F49CC002305F8 /* PropertyCollector+SwiftRefinedAPI.swift in Sources */,
 				5070A9B8217F49A3002305F8 /* PropertyQuery.swift in Sources */,
 				5070A9B4217F498D002305F8 /* Query.swift in Sources */,
 				55A79D1423018AB000039BBB /* ToManyProperty.swift in Sources */,
@@ -1056,7 +1051,6 @@
 				55D1A39922B28B3B0032361C /* FlatBufferReader.swift in Sources */,
 				50A28C72219B4C050024D1FC /* Box+BacklinkIds.swift in Sources */,
 				50FCFEFF212EEF0B00A44B32 /* PropertyAlias.swift in Sources */,
-				50FE2F9721391D19008B928C /* PropertyCollector+SwiftRefinedAPI.swift in Sources */,
 				5541760C2271C1E400B3A225 /* Errors.swift in Sources */,
 				5089AB2321367BF100CB7871 /* PropertyQuery.swift in Sources */,
 				5089AB2721367CA900CB7871 /* Store+SwiftRefinedAPI.swift in Sources */,

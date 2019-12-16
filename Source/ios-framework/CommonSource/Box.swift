@@ -462,7 +462,7 @@ extension Box {
     }
 
     /// :nodoc:
-    @available(*, deprecated, message: "Use all() instead.")
+    @available(*, deprecated, renamed: "all")
     public func find() throws -> [EntityType] {
         return try all()
     }

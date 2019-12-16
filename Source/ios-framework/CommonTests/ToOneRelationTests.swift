@@ -165,7 +165,7 @@ class ToOneRelationTests: XCTestCase {
         
         let foundOrders = try orderBox.query().link(Order.customer) {
             Customer.name == "Olivia Orderedit"
-            }.build().all()
+            }.build().find()
         XCTAssertEqual(foundOrders.count, 1)
         XCTAssertEqual(foundOrders.first?.customer.target?.name, "Olivia Orderedit")
     }
@@ -199,7 +199,7 @@ class ToOneRelationTests: XCTestCase {
             Order.name == order2.name
             }.link(Order.customer) {
                 Customer.name == orderCustomer.name
-            }.build().all()
+            }.build().find()
         XCTAssertEqual(foundOrders.count, 1)
         XCTAssertEqual(foundOrders.first?.customer.target?.name, "Olivia Orderedit")
     }
@@ -231,7 +231,7 @@ class ToOneRelationTests: XCTestCase {
         
         let foundCustomers = try customerBox.query().link(Customer.orders) {
                 Order.name == order2.name
-            }.build().all()
+            }.build().find()
         XCTAssertEqual(foundCustomers.count, 2)
         
         XCTAssertNotNil(foundCustomers.first(where: { $0.name == orderCustomer.name }))

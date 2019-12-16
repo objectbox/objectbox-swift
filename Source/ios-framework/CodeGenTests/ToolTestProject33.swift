@@ -49,7 +49,7 @@ func main(_ args: [String]) throws -> Int32 {
         }
         
         for entity in records {
-            let results = try box.query({ DataThing.firstData == entity.firstData }).build().all()
+            let results = try box.query({ DataThing.firstData == entity.firstData }).build().find()
             if results.count != 1 {
                 print("error: Expected one \(entity), \(results.count) found")
                 return 1

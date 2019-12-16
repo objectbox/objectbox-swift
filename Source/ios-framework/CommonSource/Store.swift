@@ -38,9 +38,27 @@ public class Store: CustomDebugStringConvertible {
     internal var attachedObjectsLock = DispatchSemaphore(value: 1)
     internal var attachedObjects = [String: AnyObject]()
 
-    /// Returns the version number of ObjectBox C API the framework was built against.
-    public static var version: String {
+    /// Returns the version of ObjectBox Swift.
+    public static var version = "1.2.0"
+
+    /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
+    public static var versionAll: String {
+        return version + " (lib: " + versionLib + ", core: " + versionCore + ")"
+    }
+
+    /// Returns the product name ("ObjectBox Swift") along with all versions (see versionAll()).
+    public static var versionFullInfo: String {
+        return "ObjectBox Swift " + versionAll
+    }
+
+    /// Returns the version of ObjectBox lib (C API).
+    public static var versionLib: String {
         return String(utf8String: obx_version_string()) ?? ""
+    }
+
+    /// Returns the version of ObjectBox core ("internal" version).
+    public static var versionCore: String {
+        return String(utf8String: obx_version_core_string()) ?? ""
     }
 
     /// The path to the directory containing our database files as it was passed to this instance when creating it.
@@ -51,7 +69,7 @@ public class Store: CustomDebugStringConvertible {
     /// (trigger code generation if you don't see it yet).
     /// - Parameter model: A model description generated using a `ModelBuilder`
     /// - Parameter directory: The path to the directory in which ObjectBox should store database files.
-    /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk (default: 1 GB).
+    /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk (default: 500 MB).
     /// - Parameter fileMode: The unix permissions (like 0o755) to use for creating the database files.
     /// - Parameter maxReaders: "readers" are a finite resource for which you need to define a maximum upfront. The
     ///                         default value is enough for most apps and usually you can ignore it completely. However,
@@ -61,7 +79,7 @@ public class Store: CustomDebugStringConvertible {
     ///                         server-like scenario), it can make sense to increase the maximum number of readers. The
     ///                         default value 0 (zero) lets ObjectBox choose an internal default (currently around 120).
     ///                         So if you hit this limit, try values around 200-500.
-    public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 1024 * 1024,
+    public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 500 * 1024,
                 fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
         directoryPath = directory
         cStore = try directory.withCString { ptr -> OpaquePointer? in

@@ -75,6 +75,8 @@ public class FlatBufferBuilder {
     }
 }
 
+// MARK: collect
+
 public extension FlatBufferBuilder {
     /// Take a value read from the given entity and write it to the given property.
     func collect(_ value: Bool, at propertyOffset: UInt16) {
@@ -175,5 +177,115 @@ public extension FlatBufferBuilder {
         return bytes.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
             return obx_fbb_prepare_bytes(fbb, bytes.baseAddress!, size)
         }
+    }
+}
+
+// MARK: collect optionals
+
+// Adapter methods for writing optionals and relations to a FlatBufferBuilder
+// Null values are simply not collected
+public extension FlatBufferBuilder {
+    /// :nodoc:
+    func collect(_ value: Int?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Int64?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+    
+    /// :nodoc:
+    func collect(_ value: Int32?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Int16?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Int8?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: UInt?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: UInt64?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: UInt32?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: UInt16?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: UInt8?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Bool?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Float?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect(_ value: Double?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+    
+    /// :nodoc:
+    func collect(_ value: String?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect<T>(_ value: EntityId<T>?, at propertyOffset: UInt16) {
+        guard let value = value else { return }
+        self.collect(value.value, at: propertyOffset)
+    }
+
+    /// :nodoc:
+    func collect<E: EntityInspectable & __EntityRelatable>(_ relation: ToOne<E>, at propertyOffset: UInt16,
+                                                                  store: Store)
+        where E == E.EntityBindingType.EntityType {
+            guard relation.hasValue else { return }
+            let relatedBox = store.box(for: type(of: relation).Target.self)
+            do {
+                guard let targetId = try relatedBox.put(relation) else { return }
+                self.collect(targetId.value, at: propertyOffset)
+            } catch {
+                objc_exception_throw(error)
+            }
     }
 }

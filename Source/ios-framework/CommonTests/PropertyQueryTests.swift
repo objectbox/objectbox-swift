@@ -62,6 +62,9 @@ class PropertyQueryTests: XCTestCase {
         // Per-property results count non-nil values
         XCTAssertEqual(try query.property(NullablePropertyEntity.double).count(), 1)
         XCTAssertEqual(try query.property(NullablePropertyEntity.string).count(), 1)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).count(), 1)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeBool).count(), 0)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).count(), 0)
     }
 
     func testPropertyQuery_CountDistinct() throws {
@@ -78,161 +81,234 @@ class PropertyQueryTests: XCTestCase {
         XCTAssertEqual(try query.property(NullablePropertyEntity.int32).distinct().count(), 2)
     }
 
-    // MARK: - Long
+    // MARK: - Integers
 
-    func testPropertyQuery_LongSum() throws {
-        try box.put([
-            NullablePropertyEntity(int64: 100),
-            NullablePropertyEntity(int64: 200),
-            NullablePropertyEntity(int64: 300),
-            NullablePropertyEntity(int64: 400)
-            ])
+    func intTest<T>(_ property: Property<NullablePropertyEntity, T, Void>) throws where T: FixedWidthInteger {
+        XCTAssertEqual(try box.count(), 6) // Precondition, e.g. no dirty DB before data was put
 
-        let query = try box.query { NullablePropertyEntity.int64.isIn([300, 400]) }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).sum(), 700)
+        // 2. and 3. conditions do not limit the result; just to increase condition coverage
+        let query = try box.query { property > 25 && property.isLessThan(99) && property.isNotNil() }.build()
+        try intTest(property, query, query.property(property))
     }
 
-    func testPropertyQuery_LongMax() throws {
-        try box.put([
-            NullablePropertyEntity(int64: 100),
-            NullablePropertyEntity(int64: 200),
-            NullablePropertyEntity(int64: 300),
-            NullablePropertyEntity(int64: 400)
-            ])
+    func intTest<E, T>(_ property: Property<E, T, Void>, _ query: Query<E>, _ propertyQuery: PropertyQuery<E, T>)
+    throws where T: FixedWidthInteger {
 
-        let query = try box.query { NullablePropertyEntity.int64 < 300 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).max(), 200)
+        // Aggregates
+
+        XCTAssertEqual(try propertyQuery.count(), 2)
+        XCTAssertEqual(try propertyQuery.sum(), 70)
+        XCTAssertEqual(try propertyQuery.max(), 40)
+        XCTAssertEqual(try propertyQuery.min(), 30)
+        XCTAssertEqual(try propertyQuery.average(), 35)
+
+        // find()
+
+        var results = try propertyQuery.find().sorted()
+        XCTAssertEqual(results.count, 2)
+        XCTAssertEqual(results[0], 30)
+        XCTAssertEqual(results[1], 40)
+
+        // Distinct
+
+        query.setParameter(property, to: 0)
+        XCTAssertEqual(try propertyQuery.count(), 6)
+        try propertyQuery.distinct()
+        XCTAssertEqual(try propertyQuery.count(), 4)
+
+        results = try propertyQuery.find().sorted()
+        XCTAssertEqual(results.count, 4)
+        XCTAssertEqual(results[0], 10)
+        XCTAssertEqual(results[1], 20)
+        XCTAssertEqual(results[2], 30)
+        XCTAssertEqual(results[3], 40)
+
+        // Unique
+        XCTAssertThrowsError(try propertyQuery.findUnique())
+        query.setParameter(property, to: 39)
+        XCTAssertEqual(try propertyQuery.findUnique(), 40)
     }
 
-    func testPropertyQuery_LongMin() throws {
+    func testPropertyQuery_Int64() throws {
         try box.put([
-            NullablePropertyEntity(int64: 100),
-            NullablePropertyEntity(int64: 200),
-            NullablePropertyEntity(int64: 300),
-            NullablePropertyEntity(int64: 400)
-            ])
+            NullablePropertyEntity(int64: 10),
+            NullablePropertyEntity(int64: 10),
+            NullablePropertyEntity(int64: 20),
+            NullablePropertyEntity(int64: 20),
+            NullablePropertyEntity(int64: 30),
+            NullablePropertyEntity(int64: 40)
+        ])
 
-        let query = try box.query { NullablePropertyEntity.int64 > 200 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).min(), 300)
+        try intTest(NullablePropertyEntity.int64)
     }
 
-    func testPropertyQuery_LongAverage() throws {
+    func testPropertyQuery_Int32() throws {
         try box.put([
-            NullablePropertyEntity(int64: 100),
-            NullablePropertyEntity(int64: 200),
-            NullablePropertyEntity(int64: 300),
-            NullablePropertyEntity(int64: 400)
-            ])
+            NullablePropertyEntity(int32: 10),
+            NullablePropertyEntity(int32: 10),
+            NullablePropertyEntity(int32: 20),
+            NullablePropertyEntity(int32: 20),
+            NullablePropertyEntity(int32: 30),
+            NullablePropertyEntity(int32: 40)
+        ])
 
-        let query = try box.query { NullablePropertyEntity.int64 < 400 && NullablePropertyEntity.int64 > 100 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).average(), 250)
+        try intTest(NullablePropertyEntity.int32)
     }
 
-    func testPropertyQuery_FindLongs() throws {
+    func testPropertyQuery_Int16() throws {
         try box.put([
-            NullablePropertyEntity(int64: 1),
-            NullablePropertyEntity(int64: 1),
-            NullablePropertyEntity(int64: 2),
-            NullablePropertyEntity(int64: 2)
-            ])
+            NullablePropertyEntity(int16: 10),
+            NullablePropertyEntity(int16: 10),
+            NullablePropertyEntity(int16: 20),
+            NullablePropertyEntity(int16: 20),
+            NullablePropertyEntity(int16: 30),
+            NullablePropertyEntity(int16: 40)
+        ])
 
-        let query = try box.query().build()
-
-        XCTAssertEqual(try query.count(), 4)
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).findInt64s().count, 4)
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int64).distinct().findInt64s().count, 2)
-//        let int64s = query.property(NullablePropertyEntity.int64).findInt64s(offset: 1, limit: 2)
-//        XCTAssertEqual(int64s.count, 2)
-//        // We don't really have an ordering guarantee, but currently we return in insertion order, which is why this
-//        // test works in practice.
-//        // TODO: This test should really use .ordered(), but that's not yet implemented for property queries.
-//        XCTAssertEqual(int64s[0], 1)
-//        XCTAssertEqual(int64s[1], 2)
-
-        // TODO: allow null?
-//        XCTAssertEqual(query.property(AllTypesEntity.string)
-//            .with(nullString: "x").findLongs().count, 5)
-//        XCTAssertEqual(query.property(AllTypesEntity.string)
-//            .distinct(caseSensitiveCompare: true)
-//            .with(nullString: "x").findLongs().count, 5)
-//        XCTAssertEqual(query.property(AllTypesEntity.string)
-//            .distinct(caseSensitiveCompare: false)
-//            .with(nullString: "x").findLongs().count, 3)
+        try intTest(NullablePropertyEntity.int16)
     }
 
-    func testPropertyQuery_FindLong() throws {
+    func testPropertyQuery_Int8() throws {
         try box.put([
-            NullablePropertyEntity(int64: 1),
-            NullablePropertyEntity(int64: 1),
-            NullablePropertyEntity(int64: 2),
-            NullablePropertyEntity(int64: 2)
-            ])
+            NullablePropertyEntity(int8: 10),
+            NullablePropertyEntity(int8: 10),
+            NullablePropertyEntity(int8: 20),
+            NullablePropertyEntity(int8: 20),
+            NullablePropertyEntity(int8: 30),
+            NullablePropertyEntity(int8: 40)
+        ])
 
-        let query = try box.query().build()
-
-        XCTAssertEqual(try query.count(), 4)
-        XCTAssertNotNil(try query.property(NullablePropertyEntity.int64).findInt64())
-        XCTAssertNotNil(try query.property(NullablePropertyEntity.int64).distinct().findInt64())
-        // TODO: The following was a fatal exception. Changed it to return NIL, which callers need to check for anyway.
-        XCTAssertThrowsError(try query.property(NullablePropertyEntity.int64).findUniqueInt64())
-
-        XCTAssertNoThrow(_ = try box.put(NullablePropertyEntity(int64: 100)))
-        XCTAssertEqual(try query.count(), 5)
-
-        // "unique" does not produce a unique result, but asserts there's only 1 result
-        XCTAssertThrowsError(try query.property(NullablePropertyEntity.int64).findUniqueInt64())
-        let uniqueQuery = try box.query { NullablePropertyEntity.int64 > 2 }.build()
-        XCTAssertEqual(try uniqueQuery.property(NullablePropertyEntity.int64).findUniqueInt64(), 100)
+        try intTest(NullablePropertyEntity.int8)
     }
 
-    // MARK: - Integer
-
-    func testPropertyQuery_IntegerSum() throws {
+    func testPropertyQuery_OptionalDate() throws {
         try box.put([
-            NullablePropertyEntity(int32: 100),
-            NullablePropertyEntity(int32: 200),
-            NullablePropertyEntity(int32: 300),
-            NullablePropertyEntity(int32: 400)
-            ])
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 10)),
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 10)),
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 20)),
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 20)),
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 30)),
+            NullablePropertyEntity(maybeDate: Date(unixTimestamp: 40))
+        ])
 
-        let query = try box.query { NullablePropertyEntity.int32.isIn([300, 400]) }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).sum(), 700)
+        let property: Property<NullablePropertyEntity, Date?, Void> = NullablePropertyEntity.maybeDate
+        // 2. and 3. conditions do not limit the result; just to increase condition coverage
+        let query = try box.query {
+            property > Date(unixTimestamp: 25) && property.isBefore(Date(unixTimestamp: 99)) && property.isNotNil()
+        }.build()
+
+        let intProperty = Property<NullablePropertyEntity, Int64, Void>(propertyId: property.propertyId,
+                isPrimaryKey: property.isPrimaryKey)
+        try intTest(intProperty, query, query.propertyInt64(property))
     }
 
-    func testPropertyQuery_IntegerMax() throws {
-        try box.put([
-            NullablePropertyEntity(int32: 100),
-            NullablePropertyEntity(int32: 200),
-            NullablePropertyEntity(int32: 300),
-            NullablePropertyEntity(int32: 400)
-            ])
+    // MARK: - Integers?
 
-        let query = try box.query { NullablePropertyEntity.int32 < 400 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).max(), 300)
+    func intOptionalTest<T>(_ property: Property<NullablePropertyEntity, T?, Void>) throws where T: FixedWidthInteger {
+        XCTAssertEqual(try box.count(), 6) // Precondition, e.g. no dirty DB before data was put
+
+        // 2. and 3. conditions do not limit the result; just to increase condition coverage
+        let query = try box.query { property > 25 && property < 99 && property.isNotNil() }.build()
+        try intTest(nonOptional(property), query, query.property(property))
     }
 
-    func testPropertyQuery_IntegerMin() throws {
+    func testPropertyQuery_Int64Optional() throws {
         try box.put([
-            NullablePropertyEntity(int32: 100),
-            NullablePropertyEntity(int32: 200),
-            NullablePropertyEntity(int32: 300),
-            NullablePropertyEntity(int32: 400)
-            ])
+            NullablePropertyEntity(maybeInt64: 10),
+            NullablePropertyEntity(maybeInt64: 10),
+            NullablePropertyEntity(maybeInt64: 20),
+            NullablePropertyEntity(maybeInt64: 20),
+            NullablePropertyEntity(maybeInt64: 30),
+            NullablePropertyEntity(maybeInt64: 40)
+        ])
 
-        let query = try box.query { NullablePropertyEntity.int32 > 100 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).min(), 200)
+        try intOptionalTest(NullablePropertyEntity.maybeInt64)
     }
 
-    func testPropertyQuery_IntegerAverage() throws {
+    func testPropertyQuery_Int32Optional() throws {
         try box.put([
-            NullablePropertyEntity(int32: 100),
-            NullablePropertyEntity(int32: 200),
-            NullablePropertyEntity(int32: 300),
-            NullablePropertyEntity(int32: 400)
-            ])
+            NullablePropertyEntity(maybeInt32: 10),
+            NullablePropertyEntity(maybeInt32: 10),
+            NullablePropertyEntity(maybeInt32: 20),
+            NullablePropertyEntity(maybeInt32: 20),
+            NullablePropertyEntity(maybeInt32: 30),
+            NullablePropertyEntity(maybeInt32: 40)
+        ])
 
-        let query = try box.query { NullablePropertyEntity.int32 > 200 }.build()
-        XCTAssertEqual(try query.property(NullablePropertyEntity.int32).average(), 350)
+        try intOptionalTest(NullablePropertyEntity.maybeInt32)
+    }
+
+    func testPropertyQuery_IntOptional16() throws {
+        try box.put([
+            NullablePropertyEntity(maybeInt16: 10),
+            NullablePropertyEntity(maybeInt16: 10),
+            NullablePropertyEntity(maybeInt16: 20),
+            NullablePropertyEntity(maybeInt16: 20),
+            NullablePropertyEntity(maybeInt16: 30),
+            NullablePropertyEntity(maybeInt16: 40)
+        ])
+
+        try intOptionalTest(NullablePropertyEntity.maybeInt16)
+    }
+
+    func testPropertyQuery_IntOptional8() throws {
+        try box.put([
+            NullablePropertyEntity(maybeInt8: 10),
+            NullablePropertyEntity(maybeInt8: 10),
+            NullablePropertyEntity(maybeInt8: 20),
+            NullablePropertyEntity(maybeInt8: 20),
+            NullablePropertyEntity(maybeInt8: 30),
+            NullablePropertyEntity(maybeInt8: 40)
+        ])
+
+        try intOptionalTest(NullablePropertyEntity.maybeInt8)
+    }
+
+    // TODO: this should be in QueryOperatorTests.swift, which does not support NullablePropertyEntity yet however
+    // Types less than 32 bits currently not supported by C API
+//    func testOptionalInt16_InCollection() throws {
+//        let box = store.box(for: NullablePropertyEntity.self)
+//
+//        failFatallyIfError()
+//
+//        let entity1 = NullablePropertyEntity(maybeInt16: 100)
+//        let entity2 = NullablePropertyEntity(maybeInt16: 200)
+//        let entity3 = NullablePropertyEntity(maybeInt16: 300)
+//        try box.put([entity1, entity2, entity3])
+//
+//        let values: [Int16] = [100, 0, 50]
+//
+//        let resultsIn = try box.query({ NullablePropertyEntity.maybeInt16 ∈ values }).build().find()
+//        XCTAssertEqual(resultsIn.count, 1)
+//        XCTAssertEqual(resultsIn[0].maybeInt16, 100)
+//
+//        let resultsNotIn = try box.query({ NullablePropertyEntity.maybeInt16 ∉ values }).build().find()
+//        XCTAssertEqual(resultsNotIn.count, 2)
+//        XCTAssertNotEqual(resultsNotIn[0].maybeInt16!, 100)
+//        XCTAssertNotEqual(resultsNotIn[1].maybeInt16!, 100)
+//    }
+
+    // TODO: this should be in QueryOperatorTests.swift, which does not support NullablePropertyEntity yet however
+    func testOptionalInt32_InCollection() throws {
+        let box = store.box(for: NullablePropertyEntity.self)
+
+        failFatallyIfError()
+
+        let entity1 = NullablePropertyEntity(maybeInt32: 100)
+        let entity2 = NullablePropertyEntity(maybeInt32: 200)
+        let entity3 = NullablePropertyEntity(maybeInt32: 300)
+        try box.put([entity1, entity2, entity3])
+
+        let values: [Int32] = [100, 0, 50]
+
+        let resultsIn = try box.query({ NullablePropertyEntity.maybeInt32 ∈ values }).build().find()
+        XCTAssertEqual(resultsIn.count, 1)
+        XCTAssertEqual(resultsIn[0].maybeInt32, 100)
+
+        let resultsNotIn = try box.query({ NullablePropertyEntity.maybeInt32 ∉ values }).build().find()
+        XCTAssertEqual(resultsNotIn.count, 2)
+        XCTAssertNotEqual(resultsNotIn[0].maybeInt32!, 100)
+        XCTAssertNotEqual(resultsNotIn[1].maybeInt32!, 100)
     }
 
     // MARK: - Double
@@ -249,6 +325,22 @@ class PropertyQueryTests: XCTestCase {
         XCTAssertEqual(try query.property(NullablePropertyEntity.double).sum(), 7.7)
     }
 
+    func testPropertyQuery_FloatOptional() throws {
+        try box.put([
+            NullablePropertyEntity(maybeFloat: 1.1),
+            NullablePropertyEntity(maybeFloat: 2.2),
+            NullablePropertyEntity(maybeFloat: 3.3),
+            NullablePropertyEntity(maybeFloat: 4.4)
+            ])
+
+        let query = try box.query { NullablePropertyEntity.maybeFloat > 2.5 }.build()
+        let propertyQuery = query.property(NullablePropertyEntity.maybeFloat)
+        XCTAssertEqual(try propertyQuery.sum(), 7.7, accuracy: 0.00001)
+
+        query.setParameter(NullablePropertyEntity.maybeFloat, to: Float(4))
+        XCTAssertEqual(try propertyQuery.average(), 4.4, accuracy: 0.00001)
+    }
+
     func testPropertyQuery_DoubleMax() throws {
         try box.put([
             NullablePropertyEntity(double: 1.1),
@@ -257,31 +349,13 @@ class PropertyQueryTests: XCTestCase {
             NullablePropertyEntity(double: 4.4)
             ])
 
-        let query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
+        var query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
         XCTAssertEqual(try query.property(NullablePropertyEntity.double).max(), 3.3)
-    }
 
-    func testPropertyQuery_DoubleMin() throws {
-        try box.put([
-            NullablePropertyEntity(double: 1.1),
-            NullablePropertyEntity(double: 2.2),
-            NullablePropertyEntity(double: 3.3),
-            NullablePropertyEntity(double: 4.4)
-            ])
-
-        let query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
+        query = try box.query { NullablePropertyEntity.double > 2 && NullablePropertyEntity.double < 4 }.build()
         XCTAssertEqual(try query.property(NullablePropertyEntity.double).min(), 2.2)
-    }
 
-    func testPropertyQuery_DoubleAverage() throws {
-        try box.put([
-            NullablePropertyEntity(double: 1.1),
-            NullablePropertyEntity(double: 2.2),
-            NullablePropertyEntity(double: 3.3),
-            NullablePropertyEntity(double: 4.4)
-            ])
-
-        let query = try box.query { NullablePropertyEntity.double > 1.0 }.build()
+        query = try box.query { NullablePropertyEntity.double > 1.0 }.build()
         XCTAssertEqual(try query.property(NullablePropertyEntity.double).average(), 2.75)
     }
 
@@ -300,7 +374,8 @@ class PropertyQueryTests: XCTestCase {
 
         XCTAssertEqual(try query.count(), 5)
         XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).findStrings().count, 4)
-        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).distinct().findStrings().count, 4)
+        XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString).distinct(caseSensitiveCompare: true)
+                .findStrings().count, 4)
         XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: true).findStrings().count, 4)
         XCTAssertEqual(try query.property(NullablePropertyEntity.maybeString)
@@ -335,7 +410,8 @@ class PropertyQueryTests: XCTestCase {
 
         XCTAssertEqual(try query.count(), 5)
         XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString).findString())
-        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString).distinct().findString())
+        XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString).distinct(caseSensitiveCompare: true)
+                .findString())
         XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString)
             .distinct(caseSensitiveCompare: true).findString())
         XCTAssertNotNil(try query.property(NullablePropertyEntity.maybeString)
@@ -366,35 +442,36 @@ class PropertyQueryTests: XCTestCase {
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector.isNil()
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector.isNotNil()
-        }).build().all().count, 2)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.maybeByteVector == secondBytes
-        }).build().all().count, 1)
-        
+        }).build().find().count, 2)
+
+        let queryEqual = try box.query({ NullablePropertyEntity.maybeByteVector == secondBytes }).build()
+        XCTAssertEqual(try queryEqual.findUnique()!.id, entity3.id)
+        queryEqual.setParameter(NullablePropertyEntity.maybeByteVector, to: firstBytes)
+        XCTAssertEqual(try queryEqual.findUnique()!.id, entity2.id)
+
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector < secondBytes
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.maybeByteVector > firstBytes
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector == secondBytes
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector < firstBytes
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         
         XCTAssertEqual(try box.query({
             NullablePropertyEntity.byteVector > firstBytes
-        }).build().all().count, 2)
+        }).build().find().count, 2)
     }
     
 }

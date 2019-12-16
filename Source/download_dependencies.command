@@ -24,8 +24,8 @@ fi
     
 # Nothing to build, so download instead
 if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-    version=1.1
-    core_version=0.7.2
+    version=1.2.0
+    core_version=0.8.1
     archive_path="${my_dir}/external/objectbox-static.zip"
     OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${core_version}.zip"
 

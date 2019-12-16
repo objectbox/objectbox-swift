@@ -42,11 +42,11 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.integer.isEqual(to: 100) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isEqual(to: 100) }).build().find()
         XCTAssertEqual(results1.count, 1)
         XCTAssert(results1.contains(where: { $0.integer == 100 }))
 
-        let results2 = try box.query({ AllTypesEntity.integer == 200 }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer == 200 }).build().find()
         XCTAssertEqual(results2.count, 1)
         XCTAssert(results2.contains(where: { $0.integer == 200 }))
     }
@@ -59,12 +59,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.integer.isNotEqual(to: 200) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isNotEqual(to: 200) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.integer == 100 }))
         XCTAssert(results1.contains(where: { $0.integer == 300 }))
 
-        let results2 = try box.query({ AllTypesEntity.integer != 100 }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer != 100 }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.integer == 200 }))
         XCTAssert(results2.contains(where: { $0.integer == 300 }))
@@ -78,12 +78,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
         
-        let results1 = try box.query({ AllTypesEntity.integer.isGreaterThan(100) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isGreaterThan(100) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.integer == 200 }))
         XCTAssert(results1.contains(where: { $0.integer == 300 }))
         
-        let results2 = try box.query({ AllTypesEntity.integer > 100 }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer > 100 }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.integer == 200 }))
         XCTAssert(results2.contains(where: { $0.integer == 300 }))
@@ -97,12 +97,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
         
-        let results1 = try box.query({ AllTypesEntity.integer.isLessThan(300) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isLessThan(300) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.integer == 200 }))
         XCTAssert(results1.contains(where: { $0.integer == 100 }))
         
-        let results2 = try box.query({ AllTypesEntity.integer < 300 }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer < 300 }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.integer == 200 }))
         XCTAssert(results2.contains(where: { $0.integer == 100 }))
@@ -118,11 +118,11 @@ class QueryOperatorTests: XCTestCase {
 
         let values: [Int32] = [100, 0, 50]
 
-        let results1 = try box.query({ AllTypesEntity.integer.isIn(values) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isIn(values) }).build().find()
         XCTAssertEqual(results1.count, 1)
         XCTAssert(results1.contains(where: { $0.integer == 100 }))
 
-        let results2 = try box.query({ AllTypesEntity.integer ∈ values }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer ∈ values }).build().find()
         XCTAssertEqual(results2.count, 1)
         XCTAssert(results2.contains(where: { $0.integer == 100 }))
     }
@@ -135,12 +135,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.integer.isNotIn([100, 0, 50]) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.integer.isNotIn([100, 0, 50]) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.integer == 200 }))
         XCTAssert(results1.contains(where: { $0.integer == 300 }))
 
-        let results2 = try box.query({ AllTypesEntity.integer ∉ [100, 0, 50] }).build().all()
+        let results2 = try box.query({ AllTypesEntity.integer ∉ [100, 0, 50] }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.integer == 200 }))
         XCTAssert(results2.contains(where: { $0.integer == 300 }))
@@ -154,16 +154,16 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(integer: 300)
         try box.put([entity1, entity2, entity3])
 
-        let resultsIsBetween = try box.query({ AllTypesEntity.integer.isBetween(-150, and: 250) }).build().all()
+        let resultsIsBetween = try box.query({ AllTypesEntity.integer.isBetween(-150, and: 250) }).build().find()
         XCTAssertEqual(resultsIsBetween.count, 2)
         XCTAssert(resultsIsBetween.contains(where: { $0.integer == -100 }))
         XCTAssert(resultsIsBetween.contains(where: { $0.integer == 200 }))
 
-        let resultsInRange = try box.query({ AllTypesEntity.integer.isIn(-100 ..< 200) }).build().all()
+        let resultsInRange = try box.query({ AllTypesEntity.integer.isIn(-100 ..< 200) }).build().find()
         XCTAssertEqual(resultsInRange.count, 1)
         XCTAssert(resultsInRange.contains(where: { $0.integer == -100 }))
 
-        let resultsInClosedRange = try box.query({ AllTypesEntity.integer.isIn(-1000 ... 200) }).build().all()
+        let resultsInClosedRange = try box.query({ AllTypesEntity.integer.isIn(-1000 ... 200) }).build().find()
         XCTAssertEqual(resultsInClosedRange.count, 2)
         XCTAssert(resultsInClosedRange.contains(where: { $0.integer == -100 }))
         XCTAssert(resultsInClosedRange.contains(where: { $0.integer == 200 }))
@@ -177,7 +177,7 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(double: 120.30)
         try box.put([entity1, entity2, entity3])
 
-        let results = try box.query({ AllTypesEntity.double.isEqual(to: 120.15, tolerance: 0.10) }).build().all()
+        let results = try box.query({ AllTypesEntity.double.isEqual(to: 120.15, tolerance: 0.10) }).build().find()
         XCTAssertEqual(results.count, 2)
         XCTAssert(results.contains(where: { $0.aDouble == 120.10 }))
         XCTAssert(results.contains(where: { $0.aDouble == 120.20 }))
@@ -191,12 +191,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(double: 1000.8)
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.double.isGreaterThan(10.003) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.double.isGreaterThan(10.003) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.aDouble == 100 }))
         XCTAssert(results1.contains(where: { $0.aDouble == 1000.8 }))
 
-        let results2 = try box.query({ AllTypesEntity.double > 10.003 }).build().all()
+        let results2 = try box.query({ AllTypesEntity.double > 10.003 }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.aDouble == 100 }))
         XCTAssert(results2.contains(where: { $0.aDouble == 1000.8 }))
@@ -210,7 +210,7 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(double: 123.457)
         try box.put([entity1, entity2, entity3])
 
-        let resultsIsBetween = try box.query({ AllTypesEntity.double.isBetween(123.457, and: 1002.1) }).build().all()
+        let resultsIsBetween = try box.query({ AllTypesEntity.double.isBetween(123.457, and: 1002.1) }).build().find()
         XCTAssertEqual(resultsIsBetween.count, 2)
         XCTAssert(resultsIsBetween.contains(where: { $0.aDouble == 123.457 }))
         XCTAssert(resultsIsBetween.contains(where: { $0.aDouble == 200.99 }))
@@ -286,7 +286,7 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(string: "Foundation")
         try box.put([entity1, entity2, entity3])
 
-        let result1 = try box.query({ AllTypesEntity.string.isLessThan("ISAAC") }).build().all()
+        let result1 = try box.query({ AllTypesEntity.string.isLessThan("ISAAC") }).build().find()
         XCTAssertEqual(result1.count, 2)
         XCTAssert(result1.contains(where: { $0.string == "Asimov" }))
         XCTAssert(result1.contains(where: { $0.string == "Foundation" }))
@@ -298,7 +298,7 @@ class QueryOperatorTests: XCTestCase {
         }).build().count(), 3)
 
         XCTAssertEqual(try box.query({ AllTypesEntity.string < "isaac" }).build().count(), 3)
-        let result2 = try box.query({ AllTypesEntity.string < "ISAAC" }).build().all()
+        let result2 = try box.query({ AllTypesEntity.string < "ISAAC" }).build().find()
         XCTAssertEqual(result2.count, 2)
         XCTAssert(result2.contains(where: { $0.string == "Asimov" }))
         XCTAssert(result2.contains(where: { $0.string == "Foundation" }))
@@ -312,7 +312,7 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(string: "foundation")
         try box.put([entity1, entity2, entity3])
 
-        let result1 = try box.query({ AllTypesEntity.string.isGreaterThan("asimov") }).build().all()
+        let result1 = try box.query({ AllTypesEntity.string.isGreaterThan("asimov") }).build().find()
         XCTAssertEqual(result1.count, 2)
         XCTAssert(result1.contains(where: { $0.string == "isaac" }))
         XCTAssert(result1.contains(where: { $0.string == "foundation" }))
@@ -324,7 +324,7 @@ class QueryOperatorTests: XCTestCase {
         }).build().count(), 3)
 
         XCTAssertEqual(try box.query({ AllTypesEntity.string > "ASIMOV" }).build().count(), 3)
-        let result2 = try box.query({ AllTypesEntity.string > "asimov" }).build().all()
+        let result2 = try box.query({ AllTypesEntity.string > "asimov" }).build().find()
         XCTAssertEqual(result2.count, 2)
         XCTAssert(result2.contains(where: { $0.string == "isaac" }))
         XCTAssert(result2.contains(where: { $0.string == "foundation" }))
@@ -421,11 +421,11 @@ class QueryOperatorTests: XCTestCase {
 
         let results1 = try box.query({
             AllTypesEntity.date.isEqual(to: Date(timeIntervalSince1970: 1000))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(results1.count, 1)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 1000}))
 
-        let results2 = try box.query({ AllTypesEntity.date == Date(timeIntervalSince1970: 0) }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date == Date(timeIntervalSince1970: 0) }).build().find()
         XCTAssertEqual(results2.count, 1)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
     }
@@ -440,12 +440,12 @@ class QueryOperatorTests: XCTestCase {
 
         let results1 = try box.query({
             AllTypesEntity.date.isNotEqual(to: Date(timeIntervalSince1970: 1000))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
 
-        let results2 = try box.query({ AllTypesEntity.date != Date(timeIntervalSince1970: 1000) }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date != Date(timeIntervalSince1970: 1000) }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
@@ -459,12 +459,12 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(date: Date(timeIntervalSince1970: +1000))
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.date.isBefore(Date(timeIntervalSince1970: 500)) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.date.isBefore(Date(timeIntervalSince1970: 500)) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
 
-        let results2 = try box.query({ AllTypesEntity.date < Date(timeIntervalSince1970: 500) }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date < Date(timeIntervalSince1970: 500) }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
@@ -478,11 +478,11 @@ class QueryOperatorTests: XCTestCase {
         let entity3 = AllTypesEntity.create(date: Date(timeIntervalSince1970: +1000))
         try box.put([entity1, entity2, entity3])
 
-        let results1 = try box.query({ AllTypesEntity.date.isAfter(Date(timeIntervalSince1970: 500)) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.date.isAfter(Date(timeIntervalSince1970: 500)) }).build().find()
         XCTAssertEqual(results1.count, 1)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 1000.0 }))
 
-        let results2 = try box.query({ AllTypesEntity.date > Date(timeIntervalSince1970: 500) }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date > Date(timeIntervalSince1970: 500) }).build().find()
         XCTAssertEqual(results2.count, 1)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 1000}))
     }
@@ -501,12 +501,12 @@ class QueryOperatorTests: XCTestCase {
             Date(timeIntervalSince1970: 0)
         ]
 
-        let results1 = try box.query({ AllTypesEntity.date.isIn(dates) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.date.isIn(dates) }).build().find()
         XCTAssertEqual(results1.count, 2)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 1000.0 }))
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
 
-        let results2 = try box.query({ AllTypesEntity.date ∈ dates }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date ∈ dates }).build().find()
         XCTAssertEqual(results2.count, 2)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 1000.0 }))
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
@@ -522,31 +522,31 @@ class QueryOperatorTests: XCTestCase {
 
         let resultsIsBetween = try box.query({
             AllTypesEntity.date.isBetween(Date(timeIntervalSince1970: -2000), and: Date(timeIntervalSince1970: +50))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(resultsIsBetween.count, 2)
         XCTAssert(resultsIsBetween.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(resultsIsBetween.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
 
         let resultsInRange1 = try box.query({
             AllTypesEntity.date.isIn(Date(timeIntervalSince1970: -2000) ..< Date(timeIntervalSince1970: 0))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(resultsInRange1.count, 1)
         XCTAssert(resultsInRange1.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         let resultsInRange2 = try box.query({
             AllTypesEntity.date ∈ Date(timeIntervalSince1970: -2000) ..< Date(timeIntervalSince1970: 0)
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(resultsInRange2.count, 1)
         XCTAssert(resultsInRange2.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
 
         let resultsInClosedRange1 = try box.query({
             AllTypesEntity.date.isIn(Date(timeIntervalSince1970: -2000) ... Date(timeIntervalSince1970: +50))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(resultsInClosedRange1.count, 2)
         XCTAssert(resultsInClosedRange1.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(resultsInClosedRange1.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
         let resultsInClosedRange2 = try box.query({
             AllTypesEntity.date ∈ Date(timeIntervalSince1970: -2000) ... Date(timeIntervalSince1970: +50)
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(resultsInClosedRange2.count, 2)
         XCTAssert(resultsInClosedRange2.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
         XCTAssert(resultsInClosedRange2.contains(where: { $0.date?.timeIntervalSince1970 == 0}))
@@ -566,11 +566,11 @@ class QueryOperatorTests: XCTestCase {
             Date(timeIntervalSince1970: 0)
         ]
 
-        let results1 = try box.query({ AllTypesEntity.date.isNotIn(dates) }).build().all()
+        let results1 = try box.query({ AllTypesEntity.date.isNotIn(dates) }).build().find()
         XCTAssertEqual(results1.count, 1)
         XCTAssert(results1.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
 
-        let results2 = try box.query({ AllTypesEntity.date ∉ dates }).build().all()
+        let results2 = try box.query({ AllTypesEntity.date ∉ dates }).build().find()
         XCTAssertEqual(results2.count, 1)
         XCTAssert(results2.contains(where: { $0.date?.timeIntervalSince1970 == -1000}))
     }
@@ -587,17 +587,17 @@ class QueryOperatorTests: XCTestCase {
 
         XCTAssertEqual(try box.query({
             AllTypesEntity.integer == 1 && (AllTypesEntity.double > 1.5 || AllTypesEntity.string == "3")
-        }).build().all().count, 2)
+        }).build().find().count, 2)
 
         // Order of operators should not matter:
         XCTAssertEqual(try box.query({
             (AllTypesEntity.double > 1.5 || AllTypesEntity.string == "3") && AllTypesEntity.integer == 1
-        }).build().all().count, 2)
+        }).build().find().count, 2)
 
         // But changing precedence with brackets should:
         XCTAssertEqual(try box.query({
             (AllTypesEntity.integer == 1 && AllTypesEntity.double > 1.5) || AllTypesEntity.string == "3"
-        }).build().all().count, 3)
+        }).build().find().count, 3)
     }
 }
 // swiftlint:enable line_length type_body_length

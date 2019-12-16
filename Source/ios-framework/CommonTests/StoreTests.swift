@@ -42,6 +42,14 @@ class StoreTests: XCTestCase {
     func rethrow(_ error: Error) throws {
         throw error
     }
+
+    func testVersions() {
+        print("Testing", Store.versionFullInfo)  // Actually print it so we see the used versions in the logs
+        // Update the expected versions every now and then...
+        XCTAssertGreaterThanOrEqual(Store.version, "1.2.0")  
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.8.1")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.5.0")
+    }
     
     func testReusesBoxInstances() {
         let testPersonBox1: Box<TestPerson> = store.box(for: TestPerson.self)

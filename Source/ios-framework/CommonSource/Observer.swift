@@ -260,7 +260,7 @@ extension Query {
                                     let result: ContiguousArray<EntityType>
                                     var resultError: ObjectBoxError?
                                     do {
-                                        result = try self.allContiguous()
+                                        result = try self.findContiguous()
                                     } catch let error as ObjectBoxError {
                                         resultError = error
                                         result = []

@@ -65,7 +65,7 @@ public class AllTypesEntity {
     public var boolean: Bool = false
     public var aLong: Int = 0
     public var integer: Int32 = 0
-    public var uInteger: UInt = 0
+    public var unsigned: UInt32 = 0
     public var aDouble: Double = 0
     public var date: Date?
     public var string: String?
@@ -87,36 +87,40 @@ public class AllTypesEntity {
         
         return newEntity
     }
-
+    
     static func create(integer: Int32) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.integer = integer
-        
+        return newEntity
+    }
+    
+    static func create(unsigned: UInt32) -> AllTypesEntity {
+        let newEntity = AllTypesEntity()
+        newEntity.unsigned = unsigned
         return newEntity
     }
 
     static func create(double: Double) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.aDouble = double
-        
         return newEntity
     }
     
     static func create(date: Date) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.date = date
-        
         return newEntity
     }
     
     static func create(string: String?) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.string = string
-        
+        return newEntity
+    }
+    
+    static func create(boolean: Bool) -> AllTypesEntity {
+        let newEntity = AllTypesEntity()
+        newEntity.boolean = boolean
         return newEntity
     }
 }
@@ -131,7 +135,7 @@ public func createTestModel() -> OpaquePointer {
     try! allTypesEntityBuilder.addProperty(name: "boolean", type: .bool, id: 2, uid: 2)
     try! allTypesEntityBuilder.addProperty(name: "aLong", type: .long, id: 3, uid: 3)
     try! allTypesEntityBuilder.addProperty(name: "integer", type: .int, id: 4, uid: 4)
-    try! allTypesEntityBuilder.addProperty(name: "uInteger", type: .int, flags: .unsigned, id: 5, uid: 5)
+    try! allTypesEntityBuilder.addProperty(name: "unsigned", type: .int, flags: .unsigned, id: 5, uid: 5)
     try! allTypesEntityBuilder.addProperty(name: "aDouble", type: .double, id: 6, uid: 6)
     try! allTypesEntityBuilder.addProperty(name: "date", type: .date, id: 7, uid: 7)
     try! allTypesEntityBuilder.addProperty(name: "string", type: .string, id: 8, uid: 8)
@@ -186,12 +190,20 @@ extension AllTypesEntity: Entity, EntityInspectable, __EntityRelatable {
 
     public var _id: EntityId<AllTypesEntity> { return self.id }
 
+    public static var boolean: Property<AllTypesEntity, Bool, Void> {
+        return Property(propertyId: 2, isPrimaryKey: false)
+    }
+    
     public static var long: Property<AllTypesEntity, Int, Void> {
         return Property(propertyId: 3, isPrimaryKey: false)
     }
-    
+
     public static var integer: Property<AllTypesEntity, Int32, Void> {
         return Property(propertyId: 4, isPrimaryKey: false)
+    }
+    
+    public static var unsigned: Property<AllTypesEntity, UInt32, Void> {
+        return Property(propertyId: 5, isPrimaryKey: false)
     }
     
     public static var double: Property<AllTypesEntity, Double, Void> {
@@ -261,7 +273,7 @@ public class AllTypesEntityCursor: EntityBinding {
         propertyCollector.collect(entity.boolean, at: AllTypesOffset.bool.rawValue)
         propertyCollector.collect(entity.aLong, at: AllTypesOffset.long.rawValue)
         propertyCollector.collect(entity.integer, at: AllTypesOffset.integer.rawValue)
-        propertyCollector.collect(entity.uInteger, at: AllTypesOffset.unsignedInteger.rawValue)
+        propertyCollector.collect(entity.unsigned, at: AllTypesOffset.unsignedInteger.rawValue)
         propertyCollector.collect(entity.aDouble, at: AllTypesOffset.double.rawValue)
         propertyCollector.collect(entity.date, at: AllTypesOffset.date.rawValue)
 
@@ -275,7 +287,7 @@ public class AllTypesEntityCursor: EntityBinding {
         result.boolean = entityReader.read(at: AllTypesOffset.bool.rawValue)
         result.aLong = entityReader.read(at: AllTypesOffset.long.rawValue)
         result.integer = entityReader.read(at: AllTypesOffset.integer.rawValue)
-        result.uInteger = entityReader.read(at: AllTypesOffset.unsignedInteger.rawValue)
+        result.unsigned = entityReader.read(at: AllTypesOffset.unsignedInteger.rawValue)
         result.aDouble = entityReader.read(at: AllTypesOffset.double.rawValue)
         result.date = entityReader.read(at: AllTypesOffset.date.rawValue)
         result.string = entityReader.read(at: AllTypesOffset.string.rawValue)

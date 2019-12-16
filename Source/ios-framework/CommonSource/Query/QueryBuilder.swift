@@ -24,7 +24,10 @@ public final class QueryBuilder<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
     /// The type of entity this query builder operates on.
     public typealias EntityType = E
-    
+
+    // TODO Use this for parameters in this class, once "Ambiguous reference to member..." is resolved
+    public typealias QueryProperty<T> = Property<EntityType, T, Void> where T: EntityPropertyTypeConvertible
+
     internal var store: Store
     internal var queryBuilder: OpaquePointer? /*OBX_query_builder*/
     internal var nestedQueryBuilders = [OpaquePointer]() /* [OBX_query_builder] */
@@ -72,10 +75,15 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameter flags: Additional flags to control sort behaviour, like what to do with NIL values, or to sort
     ///     descending instead of ascending.
     public func ordered<T>(by property: Property<EntityType, T, Void>, flags: OrderFlags = [])
-        -> QueryBuilder<EntityType> {
-            obx_qb_order(queryBuilder, property.propertyId, flags)
-            
-            return self
+                    -> QueryBuilder<EntityType> {
+        obx_qb_order(queryBuilder, property.propertyId, flags)
+        return self
+    }
+
+    /// Note: if a condition creator function (obx_qb_*) fails and returns 0 it is fine to proceed:
+    ///       the error is tracked in the query builder and causes to throw on build()
+    internal func wrap(_ cCondition: obx_qb_cond) -> PropertyQueryBuilderCondition {
+        return PropertyQueryBuilderCondition(cCondition, builder: queryBuilder)
     }
 }
 
@@ -101,8 +109,7 @@ extension QueryBuilder {
         conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_all(queryBuilder, ptr.baseAddress, numConditions)
         }
-        return QueryBuilderCondition(result, builder: queryBuilder)
-        
+        return wrap(result)
     }
     
     internal func or(_ conditions: [QueryBuilderCondition]) -> QueryBuilderCondition {
@@ -111,7 +118,7 @@ extension QueryBuilder {
         conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_any(queryBuilder, ptr.baseAddress, numConditions)
         }
-        return QueryBuilderCondition(result, builder: queryBuilder)
+        return wrap(result)
     }
 }
 
@@ -119,13 +126,11 @@ extension QueryBuilder {
 
 extension QueryBuilder {
     internal func `where`<T, R>(isNull queryProperty: Property<EntityType, T, R>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_null(queryBuilder, property.propertyId), builder: queryBuilder)
+        return wrap(obx_qb_null(queryBuilder, queryProperty.propertyId))
     }
     
     internal func `where`<T, R>(isNotNull queryProperty: Property<EntityType, T, R>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_not_null(queryBuilder, property.propertyId), builder: queryBuilder)
+        return wrap(obx_qb_not_null(queryBuilder, queryProperty.propertyId))
     }
 }
 
@@ -134,52 +139,39 @@ extension QueryBuilder {
 extension QueryBuilder {
     internal func `where`<R>(_ queryProperty: Property<EntityType, Id, R>,
                              isEqualTo entityId: Id) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, Int64(entityId)),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_equal(queryBuilder, queryProperty.propertyId, Int64(entityId)))
     }
     
     internal func `where`<R>(_ queryProperty: Property<EntityType, Id, R>,
                              isNotEqualTo entityId: Id) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId, Int64(entityId)),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_not_equal(queryBuilder, queryProperty.propertyId, Int64(entityId)))
     }
 }
 
-// MARK: - Integers
-// MARK: Int64
+// MARK: FixedWidthInteger
 
 extension QueryBuilder {
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isEqualTo integer: Int64) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isEqualTo integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_int_equal(queryBuilder, queryProperty.propertyId, Int64(truncatingIfNeeded: integer)))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isNotEqualTo integer: Int64) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isNotEqualTo integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_int_not_equal(queryBuilder, queryProperty.propertyId, Int64(truncatingIfNeeded: integer)))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isLessThan integer: Int64) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isLessThan integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_int_less(queryBuilder, queryProperty.propertyId, Int64(truncatingIfNeeded: integer)))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isGreaterThan integer: Int64) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isGreaterThan integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_int_greater(queryBuilder, queryProperty.propertyId, Int64(truncatingIfNeeded: integer)))
     }
-    
+
     /// Matches all property values between `lowerBound` and `upperBound`,
     /// including the bounds themselves. The order of the bounds does not matter.
     ///
@@ -187,434 +179,124 @@ extension QueryBuilder {
     /// - parameter lowerBound: Lower limiting value, inclusive.
     /// - parameter upperBound: Upper limiting value, inclusive.
     /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isBetween lowerBound: Int64,
-                             and upperBound: Int64) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, Int64(lowerBound),
-                                                                Int64(upperBound)), builder: queryBuilder)
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isBetween lowerBound: VALUE,
+                                    and upperBound: VALUE) -> PropertyQueryBuilderCondition
+        where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId,
+                Int64(truncatingIfNeeded: lowerBound), Int64(truncatingIfNeeded: upperBound)))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isIn range: Range<Int64>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, range.lowerBound,
-                                                                max(range.upperBound - 1, range.lowerBound)),
-                                             builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isIn range: Range<VALUE>)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        let lower = Int64(truncatingIfNeeded: range.lowerBound)
+        let upperValue: VALUE = VALUE.isSigned ? range.upperBound - 1 :
+                /* unsigned: avoid underflow */ range.upperBound == 0 ? 0 : range.upperBound - 1
+        let upper = max(Int64(upperValue), lower)
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId, lower, upper))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isIn range: ClosedRange<Int64>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, range.lowerBound,
-                                                                range.upperBound), builder: queryBuilder)
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isIn range: ClosedRange<VALUE>)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        let lower = Int64(truncatingIfNeeded: range.lowerBound)
+        let upper = Int64(truncatingIfNeeded: range.upperBound)
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId, lower, upper))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isContainedIn collection: [Int64]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
+
+    /// "IN" or "NOT IN" depending on parameter notIn
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isContainedIn collection: [VALUE],
+                                    notIn: Bool = false)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
         var result: obx_qb_cond = 0
         let numNums = Int32(collection.count)
-        collection.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
+        let propertyId = queryProperty.propertyId
+        let bits = VALUE.zero.bitWidth
+
+        if bits == 64 {
+            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) -> Void in
+                let dataPtr = UnsafePointer<Int64>(OpaquePointer(ptr.baseAddress))
+                result = notIn ? obx_qb_int64_not_in(queryBuilder, propertyId, dataPtr, numNums) :
+                        obx_qb_int64_in(queryBuilder, propertyId, dataPtr, numNums)
+            }
+        } else if bits == 32 {
+            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) -> Void in
+                let dataPtr = UnsafePointer<Int32>(OpaquePointer(ptr.baseAddress))
+                result = notIn ? obx_qb_int32_not_in(queryBuilder, propertyId, dataPtr, numNums) :
+                        obx_qb_int32_in(queryBuilder, propertyId, dataPtr, numNums)
+            }
+        } else if false && bits < 32 { // C API does currently not support smaller types
+            collection.map({ Int32(truncatingIfNeeded: $0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
+                result = notIn ? obx_qb_int32_not_in(queryBuilder, propertyId, ptr.baseAddress, numNums) :
+                        obx_qb_int32_in(queryBuilder, propertyId, ptr.baseAddress, numNums)
+            }
+        } else {
+            fatalError("Unsupported type with \(bits) bits: in/notIn currently only support 32 and 64 bit value types")
         }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
+        failFatallyIfError()
+
+        return wrap(result)
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int64, R>,
-                             isNotContainedIn collection: [Int64]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-    
+
 }
 
-// MARK: Int32
+// MARK: Bool
 
 extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isEqualTo integer: Int32) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+    internal func `where`<R>(_ queryProperty: Property<EntityType, Bool, R>,
+                             isEqualTo value: Bool) -> PropertyQueryBuilderCondition {
+        return wrap(obx_qb_int_equal(queryBuilder, queryProperty.propertyId, value ? 1 : 0))
     }
     
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isNotEqualTo integer: Int32) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
+    internal func `where`<R>(_ queryProperty: Property<EntityType, Bool, R>,
+                             isNotEqualTo value: Bool) -> PropertyQueryBuilderCondition {
+        return wrap(obx_qb_int_not_equal(queryBuilder, queryProperty.propertyId, value ? 1 : 0))
     }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isLessThan integer: Int32) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isGreaterThan integer: Int32) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isBetween lowerBound: Int32,
-                             and upperBound: Int32) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, Int64(lowerBound),
-                                                                Int64(upperBound)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isIn range: Range<Int32>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound),
-                                                                Int64(max(range.upperBound - 1, range.lowerBound))),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isIn range: ClosedRange<Int32>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound), Int64(range.upperBound)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isContainedIn collection: [Int32]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int32, R>,
-                             isNotContainedIn collection: [Int32]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-}
 
-// MARK: Int8
+    internal func `where`<R>(_ queryProperty: Property<EntityType, Bool?, R>,
+                             isEqualTo value: Bool) -> PropertyQueryBuilderCondition {
+        return wrap(obx_qb_int_equal(queryBuilder, queryProperty.propertyId, value ? 1 : 0))
+    }
 
-extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isEqualTo integer: Int8) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId,
-                                                              Int64(integer)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isNotEqualTo integer: Int8) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId,
-                                                                  Int64(integer)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isLessThan integer: Int8) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId,
-                                                             Int64(integer)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isGreaterThan integer: Int8) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId,
-                                                                Int64(integer)), builder: queryBuilder)
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isBetween lowerBound: Int8,
-                             and upperBound: Int8) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(lowerBound), Int64(upperBound)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isIn range: Range<Int8>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound),
-                                                                Int64(max(range.upperBound - 1, range.lowerBound))),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isIn range: ClosedRange<Int8>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound), Int64(range.upperBound)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isContainedIn collection: [Int8]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int32($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int8, R>,
-                             isNotContainedIn collection: [Int8]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int32($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-}
-
-// MARK: Int16
-
-extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isEqualTo integer: Int16) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isNotEqualTo integer: Int16) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isLessThan integer: Int16) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isGreaterThan integer: Int16) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isBetween lowerBound: Int16,
-                             and upperBound: Int16) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, Int64(lowerBound),
-                                                                Int64(upperBound)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isIn range: Range<Int16>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound),
-                                                                Int64(max(range.upperBound - 1, range.lowerBound))),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isIn range: ClosedRange<Int16>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound), Int64(range.upperBound)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isContainedIn collection: [Int16]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int32($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int16, R>,
-                             isNotContainedIn collection: [Int16]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int32($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int32_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-}
-
-// MARK: Int
-
-extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isEqualTo integer: Int) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isNotEqualTo integer: Int) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isLessThan integer: Int) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isGreaterThan integer: Int) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId, Int64(integer)),
-                                             builder: queryBuilder)
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isBetween lowerBound: Int,
-                             and upperBound: Int) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId, Int64(lowerBound),
-                                                                Int64(upperBound)), builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isIn range: Range<Int>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound),
-                                                                Int64(max(range.upperBound - 1, range.lowerBound))),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isIn range: ClosedRange<Int>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                Int64(range.lowerBound), Int64(range.upperBound)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isContainedIn collection: [Int]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int64($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Int, R>,
-                             isNotContainedIn collection: [Int]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
-        collection.map({ Int64($0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numNums)
-            failFatallyIfError()
-        }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
+    internal func `where`<R>(_ queryProperty: Property<EntityType, Bool?, R>,
+                             isNotEqualTo value: Bool) -> PropertyQueryBuilderCondition {
+        return wrap(obx_qb_int_not_equal(queryBuilder, queryProperty.propertyId, value ? 1 : 0))
     }
 }
 
 // MARK: - Floating points
-// MARK: Double
 
 extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Double, R>,
-                             isEqualTo value: Double, tolerance: Double) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_between(queryBuilder, property.propertyId,
-                                                                   value - tolerance, value + tolerance),
-                                             builder: queryBuilder)
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP, R>, isEqualTo value: FP, tolerance: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_between(queryBuilder, queryProperty.propertyId, Double(value - tolerance),
+                Double(value + tolerance)))
     }
     
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Double, R>,
-                             isLessThan value: Double) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_less(queryBuilder, property.propertyId, value),
-                                             builder: queryBuilder)
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP?, R>, isEqualTo value: FP, tolerance: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_between(queryBuilder, queryProperty.propertyId, Double(value - tolerance),
+                Double(value + tolerance)))
+    }
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP, R>, isLessThan value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_less(queryBuilder, queryProperty.propertyId, Double(value)))
     }
     
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Double, R>,
-                             isGreaterThan value: Double) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_greater(queryBuilder, property.propertyId, value),
-                                             builder: queryBuilder)
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP?, R>, isLessThan value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_less(queryBuilder, queryProperty.propertyId, Double(value)))
     }
-    
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP, R>, isGreaterThan value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_greater(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP?, R>, isGreaterThan value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_greater(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
     /// Matches all property values between `lowerBound` and `upperBound`,
     /// including the bounds themselves. The order of the bounds does not matter.
     ///
@@ -622,55 +304,14 @@ extension QueryBuilder {
     /// - parameter lowerBound: Lower limiting value, inclusive.
     /// - parameter upperBound: Upper limiting value, inclusive.
     /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Double, R>,
-                             isBetween lowerBound: Double,
-                             and upperBound: Double) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_between(queryBuilder, property.propertyId,
-                                                                   lowerBound, upperBound), builder: queryBuilder)
+    internal func `where`<FP, R>(_ property: Property<EntityType, FP, R>, isBetween lowerBound: FP, and upperBound: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_between(queryBuilder, property.propertyId, Double(lowerBound), Double(upperBound)))
     }
-}
 
-// MARK: Float
-
-extension QueryBuilder {
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Float, R>,
-                             isEqualTo value: Float, tolerance: Float) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_between(queryBuilder, property.propertyId,
-                                                                   Double(value - tolerance),
-                                                                   Double(value + tolerance)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Float, R>,
-                             isLessThan value: Float) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_less(queryBuilder, property.propertyId, Double(value)),
-                                             builder: queryBuilder)
-    }
-    
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Float, R>,
-                             isGreaterThan value: Float) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_greater(queryBuilder, property.propertyId, Double(value)),
-                                             builder: queryBuilder)
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: Same `QueryBuilder` instance after applying the condition.
-    internal func `where`<R>(_ queryProperty: Property<EntityType, Float, R>,
-                             isBetween lowerBound: Float,
-                             and upperBound: Float) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_double_between(queryBuilder, property.propertyId,
-                                                                   Double(lowerBound), Double(upperBound)),
-                                             builder: queryBuilder)
+    internal func `where`<FP, R>(_ property: Property<EntityType, FP?, R>, isBetween lowerBound: FP, and upperBound: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_double_between(queryBuilder, property.propertyId, Double(lowerBound), Double(upperBound)))
     }
 }
 
@@ -682,43 +323,33 @@ extension QueryBuilder {
                                 isEqualTo string: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_equal(queryBuilder, property.propertyId, string,
-                                                                     caseSensitive), builder: queryBuilder)
+            return wrap(obx_qb_string_equal(queryBuilder, queryProperty.propertyId, string, caseSensitive))
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isNotEqualTo string: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_not_equal(queryBuilder, property.propertyId, string,
-                                                                         caseSensitive), builder: queryBuilder)
+            return wrap(obx_qb_string_not_equal(queryBuilder, queryProperty.propertyId, string, caseSensitive))
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isLessThan string: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_less(queryBuilder, property.propertyId, string,
-                                                                    caseSensitive, false), builder: queryBuilder)
+            return wrap(obx_qb_string_less(queryBuilder, queryProperty.propertyId, string, caseSensitive, false))
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isGreaterThan string: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_greater(queryBuilder, property.propertyId, string,
-                                                                       caseSensitive, false), builder: queryBuilder)
+            return wrap(obx_qb_string_greater(queryBuilder, queryProperty.propertyId, string, caseSensitive, false))
     }
     
-    internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
-                                isContainedIn collection: [String],
+    internal func `where`<S, R>(_ property: Property<EntityType, S, R>, isContainedIn collection: [String],
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
             var strings: [UnsafePointer?] = collection.map { str -> UnsafePointer<Int8> in
                 return (str as NSString).utf8String!
             }
@@ -727,34 +358,28 @@ extension QueryBuilder {
             strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
                 result = obx_qb_string_in(queryBuilder, property.propertyId, ptr.baseAddress, numStrings, caseSensitive)
             }
-            return PropertyQueryBuilderCondition(result, builder: queryBuilder)
+            return wrap(result)
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 startsWith prefix: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_starts_with(queryBuilder, property.propertyId, prefix,
-                                                                           caseSensitive), builder: queryBuilder)
+            return wrap(obx_qb_string_starts_with(queryBuilder, queryProperty.propertyId, prefix, caseSensitive))
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 endsWith suffix: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_ends_with(queryBuilder, property.propertyId, suffix,
-                                                                         caseSensitive), builder: queryBuilder)
+            return wrap(obx_qb_string_ends_with(queryBuilder, queryProperty.propertyId, suffix, caseSensitive))
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 contains substring: String,
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            let property = queryProperty.base
-            return PropertyQueryBuilderCondition(obx_qb_string_contains(queryBuilder, property.propertyId, substring,
-                                                                        caseSensitive), builder: queryBuilder)
+            return wrap(obx_qb_string_contains(queryBuilder, queryProperty.propertyId, substring, caseSensitive))
     }
     
 }
@@ -766,60 +391,50 @@ extension QueryBuilder {
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isEqualTo data: Data) -> PropertyQueryBuilderCondition
         where S: DataPropertyType {
-            let property = queryProperty.base
             let bufferLength = data.count
             return data.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> PropertyQueryBuilderCondition in
-                return PropertyQueryBuilderCondition(obx_qb_bytes_equal(queryBuilder, property.propertyId,
-                                                                        buffer.baseAddress, bufferLength),
-                                                     builder: queryBuilder)
+                return wrap(obx_qb_bytes_equal(queryBuilder, queryProperty.propertyId, buffer.baseAddress,
+                        bufferLength))
             })
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isLessThan data: Data) -> PropertyQueryBuilderCondition
         where S: DataPropertyType {
-            let property = queryProperty.base
             let bufferLength = data.count
             return data.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> PropertyQueryBuilderCondition in
-                return PropertyQueryBuilderCondition(obx_qb_bytes_less(queryBuilder, property.propertyId,
-                                                                       buffer.baseAddress, bufferLength, false),
-                                                     builder: queryBuilder)
+                return wrap(obx_qb_bytes_less(queryBuilder, queryProperty.propertyId, buffer.baseAddress, bufferLength,
+                        false))
             })
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isLessThanEqual data: Data) -> PropertyQueryBuilderCondition
         where S: DataPropertyType {
-            let property = queryProperty.base
             let bufferLength = data.count
             return data.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> PropertyQueryBuilderCondition in
-                return PropertyQueryBuilderCondition(obx_qb_bytes_less(queryBuilder, property.propertyId,
-                                                                       buffer.baseAddress, bufferLength, true),
-                                                     builder: queryBuilder)
+                return wrap(obx_qb_bytes_less(queryBuilder, queryProperty.propertyId, buffer.baseAddress, bufferLength,
+                        true))
             })
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isGreaterThan data: Data) -> PropertyQueryBuilderCondition
         where S: DataPropertyType {
-            let property = queryProperty.base
             let bufferLength = data.count
             return data.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> PropertyQueryBuilderCondition in
-                return PropertyQueryBuilderCondition(obx_qb_bytes_greater(queryBuilder, property.propertyId,
-                                                                          buffer.baseAddress, bufferLength, false),
-                                                     builder: queryBuilder)
+                return wrap(obx_qb_bytes_greater(queryBuilder, queryProperty.propertyId, buffer.baseAddress,
+                        bufferLength, false))
             })
     }
     
     internal func `where`<S, R>(_ queryProperty: Property<EntityType, S, R>,
                                 isGreaterThanEqual data: Data) -> PropertyQueryBuilderCondition
         where S: DataPropertyType {
-            let property = queryProperty.base
             let bufferLength = data.count
             return data.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> PropertyQueryBuilderCondition in
-                return PropertyQueryBuilderCondition(obx_qb_bytes_greater(queryBuilder, property.propertyId,
-                                                                          buffer.baseAddress, bufferLength, true),
-                                                     builder: queryBuilder)
+                return wrap(obx_qb_bytes_greater(queryBuilder, queryProperty.propertyId, buffer.baseAddress,
+                        bufferLength, true))
             })
     }
     
@@ -831,30 +446,22 @@ extension QueryBuilder {
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isEqualTo date: Date) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_equal(queryBuilder, property.propertyId, date.unixTimestamp),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_equal(queryBuilder, queryProperty.propertyId, date.unixTimestamp))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isNotEqualTo date: Date) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_not_equal(queryBuilder, property.propertyId,
-                                                                  date.unixTimestamp), builder: queryBuilder)
+        return wrap(obx_qb_int_not_equal(queryBuilder, queryProperty.propertyId, date.unixTimestamp))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isBefore date: Date) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_less(queryBuilder, property.propertyId, date.unixTimestamp),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_less(queryBuilder, queryProperty.propertyId, date.unixTimestamp))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isAfter date: Date) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_greater(queryBuilder, property.propertyId, date.unixTimestamp),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_greater(queryBuilder, queryProperty.propertyId, date.unixTimestamp))
     }
     
     /// Matches all property values between `lowerBound` and `upperBound`,
@@ -867,58 +474,49 @@ extension QueryBuilder {
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isBetween lowerBound: Date,
                                 and upperBound: Date) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                lowerBound.unixTimestamp, upperBound.unixTimestamp),
-                                             builder: queryBuilder)
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId, lowerBound.unixTimestamp,
+                upperBound.unixTimestamp))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isIn range: Range<Date>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                range.lowerBound.unixTimestamp,
-                                                                max(range.upperBound.unixTimestamp - 1,
-                                                                    range.lowerBound.unixTimestamp)),
-                                             builder: queryBuilder)
+        let lower = range.lowerBound.unixTimestamp
+        let upper = max(range.upperBound.unixTimestamp - 1, lower)
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId, lower, upper))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isIn range: ClosedRange<Date>) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
-        return PropertyQueryBuilderCondition(obx_qb_int_between(queryBuilder, property.propertyId,
-                                                                range.lowerBound.unixTimestamp,
-                                                                range.upperBound.unixTimestamp), builder: queryBuilder)
+        return wrap(obx_qb_int_between(queryBuilder, queryProperty.propertyId, range.lowerBound.unixTimestamp,
+                range.upperBound.unixTimestamp))
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isContainedIn collection: [Date]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
         var result: obx_qb_cond = 0
         let dates: [Int64] = collection.map { date -> Int64 in
             return date.unixTimestamp
         }
         let numDates = Int32(dates.count)
         dates.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_in(queryBuilder, property.propertyId, ptr.baseAddress, numDates)
+            result = obx_qb_int64_in(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()
         }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
+        return wrap(result)
     }
     
     internal func `where`<D, R>(_ queryProperty: Property<EntityType, D, R>,
                                 isNotContainedIn collection: [Date]) -> PropertyQueryBuilderCondition {
-        let property = queryProperty.base
         var result: obx_qb_cond = 0
         let dates: [Int64] = collection.map { date -> Int64 in
             return date.unixTimestamp
         }
         let numDates = Int32(dates.count)
         dates.withContiguousStorageIfAvailable { (ptr) -> Void in
-            result = obx_qb_int64_not_in(queryBuilder, property.propertyId, ptr.baseAddress, numDates)
+            result = obx_qb_int64_not_in(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()
         }
-        return PropertyQueryBuilderCondition(result, builder: queryBuilder)
+        return wrap(result)
     }
 }
 

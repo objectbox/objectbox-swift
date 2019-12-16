@@ -75,8 +75,8 @@ Find the result in `ios-framework/ObjectBox-iOS-Aggregate.build/`
 
 This is essentially what comes for free with Carthage. Xcode 10 changed the build system a bit. The build script is adjusted accordingly. But you may have to adjust the script a bit for future Xcode versions; that's another point of failure you wouldn't have to worry about with Carthage.
 
-iOS Framework Project Organization
-----------------------------------
+Swift Framework Project Organization
+------------------------------------
 
 You look at and build the framework itself via `ios-framework/ObjectBox.xcodeproj`.
 

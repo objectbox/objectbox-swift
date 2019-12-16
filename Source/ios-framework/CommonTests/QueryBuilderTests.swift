@@ -52,7 +52,7 @@ class QueryBuilderTests: XCTestCase {
             }
             
             let query = try personBox.query().build()
-            let result = try query.all()
+            let result = try query.find()
             XCTAssertEqual(result.count, 1)
             
             XCTAssertEqual(result.first?.id.value, personId.value)
@@ -72,7 +72,7 @@ class QueryBuilderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query().build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -141,7 +141,7 @@ class QueryBuilderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put(person))
         
         do {
-            let result = try personBox.query().build().findUnique()
+            let result = try personBox.query().build().findUnique()!
             XCTAssertEqual(result.name, person.name)
             XCTAssertEqual(result.age, person.age)
         } catch {
@@ -261,7 +261,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = personBox.query { TestPerson.age == 98 }
-        let result = try query.build().all()
+        let result = try query.build().find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssertEqual(result.first?.age, person1.age)
@@ -277,7 +277,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = personBox.query { AllTypesEntity.double.isBetween(120.15 - 0.10, and: 120.15 + 0.10) }
-        let result = try query.build().all()
+        let result = try query.build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -296,30 +296,30 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         
         let count = try personBox.query({
             AllTypesEntity.string.isEqual(to: "foO", caseSensitive: true)
-        }).build().all().count
+        }).build().find().count
         XCTAssertEqual(count, 0)
         let count2 = try personBox.query({
             AllTypesEntity.string.isEqual(to: "foO", caseSensitive: false)
-        }).build().all().count
+        }).build().find().count
         XCTAssertEqual(count2, 1)
         let count3 = try personBox.query({
             AllTypesEntity.string.isEqual(to: "Foo", caseSensitive: true)
-        }).build().all().count
+        }).build().find().count
         XCTAssertEqual(count3, 1)
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isEqual(to: "foO")
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isEqual(to: "Foo")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string == "foO"
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string == "Foo"
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
     
     func testFind_Equals_Date() throws {
@@ -331,7 +331,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         
         let count = try personBox.query {
             AllTypesEntity.date.isEqual(to: Date(timeIntervalSince1970: 123456))
-        }.build().all().count
+        }.build().find().count
         XCTAssertEqual(count, 1)
     }
     
@@ -344,7 +344,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age != 98 }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -365,7 +365,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.date.isNotEqual(to: Date(timeIntervalSince1970: 123456))
-        }).build().all().count, 2)
+        }).build().find().count, 2)
     }
 
     func testFind_NotEquals_String() throws {
@@ -377,7 +377,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.name != "Asimov" }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -416,7 +416,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age < 98 }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -433,7 +433,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.double.isLessThan(123.457) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -450,7 +450,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.name < "Isaac" }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -470,10 +470,10 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isLessThan("foo", caseSensitive: false)
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isLessThan("foo", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
 
     func testFind_Less_Date() throws {
@@ -485,7 +485,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.date.isBefore(Date(timeIntervalSince1970: 500)) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -505,7 +505,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age > 98 }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -522,7 +522,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = personBox.query { AllTypesEntity.double.isGreaterThan(123.456) }
-        let result: [AllTypesEntity] = try query.build().all()
+        let result: [AllTypesEntity] = try query.build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -542,7 +542,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = personBox.query { TestPerson.name > "Asimov" }
-        let result: [TestPerson] = try query.build().all()
+        let result: [TestPerson] = try query.build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -561,10 +561,10 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isGreaterThan("Bar", caseSensitive: false)
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isGreaterThan("Bar", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
     
     func testFind_Greater_Date() throws {
@@ -576,7 +576,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.date.isAfter(Date(timeIntervalSince1970: 500)) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -610,7 +610,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.integer.isBetween(-200, and: 50) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -630,7 +630,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age.isBetween(5, and: 500) }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -650,7 +650,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age.isBetween(500, and: 5) }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -670,7 +670,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age.isBetween(12, and: 98) }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -690,7 +690,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.double.isBetween(20.0, and: 1000.0) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -713,7 +713,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.double.isBetween(400.8, and: 2.1) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -736,7 +736,7 @@ class QueryBuilderRangeTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.double.isBetween(123.457, and: 200.99) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -758,7 +758,7 @@ class QueryBuilderRangeTests: XCTestCase {
         let query = try personBox.query {
             AllTypesEntity.date.isBetween(Date(timeIntervalSince1970: -2000), and: Date(timeIntervalSince1970: 50))
         }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -795,7 +795,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age.isIn([1, 98, 12, 666]) }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -815,7 +815,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.name.isIn(["Isaac", "Frank", "Herbert", "Asimov"]) }.build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -835,13 +835,13 @@ class QueryBuilderCollectionTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isIn(["FoO", "Bar"], caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isIn(["foo", "BaR"], caseSensitive: true)
-        }).build().all().count, 0)
+        }).build().find().count, 0)
         XCTAssertEqual(try personBox.query({
             AllTypesEntity.string.isIn(["FOO", "BaR"], caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
 
     func testFind_InCollection_Date() throws {
@@ -856,7 +856,7 @@ class QueryBuilderCollectionTests: XCTestCase {
                      Date(timeIntervalSince1970: 1000),
                      Date(timeIntervalSince1970: 0)]
         let query = try personBox.query { AllTypesEntity.date.isIn(dates) }.build()
-        let result: [AllTypesEntity] = try query.all()
+        let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -875,7 +875,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         let person3 = TestPerson(name: "Foundation", age: 1000)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
-        let result: [TestPerson] = try personBox.query({ TestPerson.age.isNotIn([5, 1000, 98]) }).build().all()
+        let result: [TestPerson] = try personBox.query({ TestPerson.age.isNotIn([5, 1000, 98]) }).build().find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -894,7 +894,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         let dates = [Date(timeIntervalSince1970: 500),
                      Date(timeIntervalSince1970: 1000),
                      Date(timeIntervalSince1970: 100)]
-        let result: [AllTypesEntity] = try personBox.query({ AllTypesEntity.date.isNotIn(dates) }).build().all()
+        let result: [AllTypesEntity] = try personBox.query({ AllTypesEntity.date.isNotIn(dates) }).build().find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -910,7 +910,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         let person3 = TestPerson(name: "Moby Dick", age: 5)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
-        let result: [TestPerson] = try personBox.query({ TestPerson.name.startsWith("Is") }).build().all()
+        let result: [TestPerson] = try personBox.query({ TestPerson.name.startsWith("Is") }).build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -930,22 +930,22 @@ class QueryBuilderCollectionTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         XCTAssertEqual(try personBox.query({
-            TestPerson.name.startsWith("Is") }).build().all().count, 1)
+            TestPerson.name.startsWith("Is") }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.startsWith("is")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.startsWith("Is", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.startsWith("is", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.startsWith("Is", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.startsWith("is", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
     }
     
     func testFind_EndsWith_String() throws {
@@ -956,7 +956,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         let person3 = TestPerson(name: "Manuel", age: 12)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
-        let result = try personBox.query({ TestPerson.name.endsWith("el") }).build().all()
+        let result = try personBox.query({ TestPerson.name.endsWith("el") }).build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -977,22 +977,22 @@ class QueryBuilderCollectionTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("EL")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("el")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("EL", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("el", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("EL", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.endsWith("el", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
     
     func testFind_Contains_String() throws {
@@ -1003,7 +1003,7 @@ class QueryBuilderCollectionTests: XCTestCase {
         let person3 = TestPerson(name: "Manuel", age: 12)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
-        let result = try personBox.query({ TestPerson.name.contains("s") }).build().all()
+        let result = try personBox.query({ TestPerson.name.contains("s") }).build().find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -1021,22 +1021,22 @@ class QueryBuilderCollectionTests: XCTestCase {
         
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("SS")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("ss")
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("SS", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("ss", caseSensitive: false)
-        }).build().all().count, 2)
+        }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("SS", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("ss", caseSensitive: true)
-        }).build().all().count, 1)
+        }).build().find().count, 1)
     }
 }
 
@@ -1066,7 +1066,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age != 98 }.ordered(by: TestPerson.age).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssertEqual(result.first?.age, person2.age)
@@ -1084,7 +1084,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { TestPerson.age != 98 }.ordered(by: TestPerson.age, flags: .descending).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssertEqual(result.first?.age, person3.age)
@@ -1102,7 +1102,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query().ordered(by: TestPerson.age, flags: .descending).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssertEqual(result.first?.age, person3.age)
@@ -1122,7 +1122,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query().ordered(by: TestPerson.age).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssertEqual(result.first?.age, person2.age)
@@ -1142,7 +1142,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query().ordered(by: TestPerson.name, flags: .descending).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssertEqual(result.first?.age, person1.age)
@@ -1162,7 +1162,7 @@ class QueryBuilderOrderTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query().ordered(by: TestPerson.name).build()
-        let result: [TestPerson] = try query.all()
+        let result: [TestPerson] = try query.find()
         XCTAssertEqual(result.count, 3)
         
         XCTAssertEqual(result.first?.age, person2.age)
@@ -1220,7 +1220,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         
         let result = try personBox.query({
             TestPerson.name.startsWith("Foo") && TestPerson.name.endsWith("el")
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(result.count, 1)
         XCTAssertEqual(result.first?.name, "Foomuel")
         XCTAssertEqual(result.first?.age, 1)
@@ -1235,7 +1235,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let result = try personBox.query({ AllTypesEntity.string.startsWith("Thr")
-            || AllTypesEntity.integer.isGreaterThan(150) }).build().all()
+            || AllTypesEntity.integer.isGreaterThan(150) }).build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -1258,7 +1258,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         let result = try personBox.query({
             (AllTypesEntity.string.startsWith("T") && AllTypesEntity.integer.isLessThan(250))
                 || AllTypesEntity.double.isEqual(to: 3.0, tolerance: 0.5)
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -1281,7 +1281,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         let result = try personBox.query({
             (AllTypesEntity.double.isEqual(to: 1.0, tolerance: 0.5) || AllTypesEntity.string.startsWith("T"))
                 && AllTypesEntity.integer.isGreaterThan(250)
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(result.count, 1)
         
         XCTAssert(result.contains(where: { obj -> Bool in
@@ -1301,7 +1301,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         let result = try personBox.query({
             AllTypesEntity.string.startsWith("T")
                 && (AllTypesEntity.integer.isLessThan(250) || AllTypesEntity.double.isEqual(to: 3.0, tolerance: 0.5))
-        }).build().all()
+        }).build().find()
         XCTAssertEqual(result.count, 2)
         
         XCTAssert(result.contains(where: { obj -> Bool in

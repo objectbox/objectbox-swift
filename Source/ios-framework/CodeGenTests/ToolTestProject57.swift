@@ -46,7 +46,7 @@ func main(_ args: [String]) throws -> Int32 {
         try busBox.put(testRoute)
         try busBox.put(testRoute2)
 
-        let results = try busBox.query { BusRoute.driverName.isNil() }.build().all()
+        let results = try busBox.query { BusRoute.driverName.isNil() }.build().find()
         if results.count != 1 {
             throw TestErrors.testFailed(message: "Expected 1 result, found \(results.count)")
         }
