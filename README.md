@@ -121,19 +121,6 @@ Source code
 -----------
 Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
-Migrating from pre 1.0 versions
--------------------------------
-
-If you've used the ObjectBox betas, there are a few changes we made for the 1.0 release to
-improve the experience before we freeze the API for release. The adjustments you'll have to make are:
-
-1. `isEmpty()`, `count()`, `all()`, `sum()`, `min()`, `max()` etc. are now functions to make it clearer they may perform a database lookup and aren't just properties to read.
-2. To put a struct and update its ID, use `put(inout)` or `putAndReturnIDs()`. `putImmutable()` is gone.
-3. The old `Id<>` type has been renamed to `EntityId<>`. There is now a new `Id` type that does not use generics.
-4. Changes to standalone relations need to be saved explicitly using a call to `applyToDb()`.
-5. Most calls have been revised to now throw errors, so you'll have to add the requisite `try` statements.
-6. `ToMany` has been revised to no longer need the containing type as a second generic parameter, so change any `ToMany<A, B>` in your code to `ToMany<A>`.
-
 Other languages/bindings
 ------------------------
 ObjectBox is a multi platform database supporting [multiple languages](https://objectbox.io/dev-get-started/): 
@@ -142,7 +129,7 @@ ObjectBox is a multi platform database supporting [multiple languages](https://o
 * [ObjectBox Go](https://github.com/objectbox/objectbox-go): great for data-driven tools and server applications. 
 * [ObjectBox C](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
   also enables porting ObjectBox to other languages.
-* [ObjectBox Dart](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (early version) 
+* [ObjectBox Dart/Flutter](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (beta version) 
 
 License
 -------
