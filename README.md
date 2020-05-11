@@ -38,7 +38,7 @@ To install the `ObjectBox` pod, add the following line to your Podfile:
   pod 'ObjectBox'
 ```
 
-*Note:* use `pod 'ObjectBox501'` if you are still on Swift 5.0.1. Consider switching to Swift 5.1 to use latest ObjectBox version.
+*Note:* ObjectBox 1.3 was built using Swift 5.2. ObjectBox 1.2 works with Swift 5.1 but we highly recommend the update.
   
 Then run this to install the ObjectBox framework:
 
@@ -47,8 +47,6 @@ cd /path/to/your/project/folder/ # whatever folder your Podfile is in.
 pod install
 Pods/ObjectBox/setup.rb myproject.xcodeproj # whatever your Xcode project is named
 ```
-
-*Note:* run `Pods/ObjectBox501/setup.rb myproject.xcodeproj` if you are still on Swift 5.0.1.
 
 And, don't forget to close the Xcode project (.xcodeproj) and open the workspace (.xcworkspace) instead.
 Now, you are all set to define your first ObjectBox entities;
@@ -135,7 +133,7 @@ License
 -------
 All files in this repository are under the Apache 2 license:
 
-    Copyright 2018-2019 ObjectBox Ltd. All rights reserved.
+    Copyright 2018-2020 ObjectBox Ltd. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
