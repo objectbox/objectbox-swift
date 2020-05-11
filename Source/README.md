@@ -17,8 +17,10 @@ Repository Contents
 Setup
 -----
 
-* Install latest Xcode (Swift 5.1+) with command line tools prepared to build from the shell
+* Install latest Xcode (Swift 5.2+) with command line tools prepared to build from the shell
+  * Note: After Xcode updates, you may have to reinstall the CLI tools via `xcode-select --install`
 * Ensure you have homebrew (e.g. setup.sh uses it to install [Carthage](https://github.com/Carthage/Carthage))
+* Using homebrew, install basic build tools like cmake and ccache
 * Run `./setup.sh` (see the [setup.sh](setup.sh) file for more comments if you want)
 * Open Xcode project in ios-framework/ObjectBox.xcodeproj
 
@@ -153,3 +155,20 @@ Then you're all set to use entities with ObjectBox:
     _ = personBox.query({ Person.name == "Fry" }).build().find()
 
 That's it, it works now!
+
+Testing from commandline
+------------------------
+To execute all unit tests:
+```shell script
+cd ios-framework
+make unit_test
+```
+
+To execute a specific test. Change the last argument to specify your test. You can also execute a group/class by removing the last one/two parts of the filter.
+Note: `xcpretty` cleans up the output so you wan't see all the compiler calls but it also hides failed tests output. So once you see a failure, run without `xcpretty` to read the error. 
+```shell script
+xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=OS X,arch=x86_64' -only-testing ObjectBoxTests-macOS/StoreTests/test32vs64BitForOs | xcpretty
+xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11' -only-testing ObjectBoxTests-iOS/StoreTests/test32vs64BitForOs | xcpretty
+```
+
+

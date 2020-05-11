@@ -212,15 +212,15 @@ class BoxTests: XCTestCase {
         
         XCTAssertEqual(try box.count(), 0)
         
-        XCTAssertThrowsError(try store.obx_runInTransaction { _ in
+        XCTAssertThrowsError(try store.obx_runInTransaction(writable: true, { _ in
             try box.put(TestPerson.irrelevant)
             
-            try store.obx_runInTransaction { _ in
+            try store.obx_runInTransaction(writable: true, { _ in
                 try box.put(TestPerson.irrelevant)
                 
                 throw BoxTestError.generalError2
-            }
-        })
+            })
+        }))
         
         XCTAssertEqual(try box.count(), 0)
     }
@@ -230,15 +230,54 @@ class BoxTests: XCTestCase {
         
         XCTAssertEqual(try box.count(), 0)
         
-        XCTAssertThrowsError(try store.obx_runInTransaction { _ in
-            try store.obx_runInTransaction { _ in
+        XCTAssertThrowsError(try store.obx_runInTransaction(writable: true, { _ in
+            try store.obx_runInTransaction(writable: true, { _ in
                 throw BoxTestError.generalError2
-            }
+            })
             
             XCTAssertNoThrow(try box.put(TestPerson.irrelevant))
-        })
+        }))
         
         // TODO: Should the put itself be aborted or error-out? (Would need an early exit flag like isClosed)
+        XCTAssertEqual(try box.count(), 0)
+    }
+
+    func testBigObjects() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+
+        // Precondition
+        XCTAssertEqual(try box.count(), 0)
+
+        // 3x page size (4096) to meet the 32-bit limits
+        let longString = String(repeating: "A", count: 3 * 46)
+        let shortString = "Adam Short"
+        let id1 = try box.put(TestPerson(name: longString))
+        let id2 = try box.put(TestPerson(name: shortString))
+
+        XCTAssertEqual(try box.count(), 2)
+
+        do {
+            let objects = try box.all()
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects[0].name, longString)
+            XCTAssertEqual(objects[1].name, shortString)
+        }
+
+        do {
+            let objects = try box.allContiguous()
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects[0].name, longString)
+            XCTAssertEqual(objects[1].name, shortString)
+        }
+
+        do {
+            let objects = try box.dictionaryWithEntities(forIds: [id1, id2])
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects[id1]!.name, longString)
+            XCTAssertEqual(objects[id2]!.name, shortString)
+        }
+
+        XCTAssertEqual(2, Int(try box.removeAll()))
         XCTAssertEqual(try box.count(), 0)
     }
 

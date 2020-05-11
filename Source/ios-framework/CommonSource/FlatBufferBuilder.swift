@@ -277,7 +277,7 @@ public extension FlatBufferBuilder {
 
     /// :nodoc:
     func collect<E: EntityInspectable & __EntityRelatable>(_ relation: ToOne<E>, at propertyOffset: UInt16,
-                                                                  store: Store)
+                                                           store: Store)
         where E == E.EntityBindingType.EntityType {
             guard relation.hasValue else { return }
             let relatedBox = store.box(for: type(of: relation).Target.self)

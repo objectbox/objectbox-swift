@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,20 +21,20 @@
 /// Thread-safe.
 public class Box<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
 where E == E.EntityBindingType.EntityType {
-    
+
     /// The object type this box is managing.
     public typealias EntityType = E
-    
+
     internal let cBox: OpaquePointer /* OBX_box */
     internal let store: Store
-    
+
     internal init(store: Store) {
         self.store = store
         self.cBox = obx_box(store.cStore, EntityType.entityInfo.entitySchemaId)
     }
-    
+
     // MARK: Box Introspection
-    
+
     /// Indicates whether there are any objects stored inside the box.
     public func isEmpty() throws -> Bool { return try count(limit: 1) == 0 }
 
@@ -42,7 +42,7 @@ where E == E.EntityBindingType.EntityType {
     private(set) public lazy var async: AsyncBox<E> = {
         return AsyncBox(box: self, unownedAsyncBox: obx_async(self.cBox))
     }()
-    
+
     /// Returns the number of objects in this box, up to an optional maximum.
     ///
     /// - Parameter limit: Maximum value to count up to, or 0 for unlimited count.
@@ -52,7 +52,7 @@ where E == E.EntityBindingType.EntityType {
         try checkLastError(obx_box_count(cBox, UInt64(limit), &result))
         return Int(result) // Return as Int because that's what Swift Standard lib uses for arrays.
     }
-    
+
     /// Find out whether there is an object with the given ID in this box.
     ///
     /// - Parameter entityId: ID of the object.
@@ -62,24 +62,24 @@ where E == E.EntityBindingType.EntityType {
         try checkLastError(obx_box_contains(cBox, entityId.value, &result))
         return result
     }
-    
+
     /// Find out whether objects with the given IDs exist in this box.
     ///
     /// - Parameter ids: IDs of the objects.
     /// - Returns: true if all objects specified exist.
     public func contains(_ ids: [EntityType.EntityBindingType.IdType]) throws -> Bool {
         var result = true
-        
-        try store.obx_runInTransaction { swiftTx in
+
+        try store.obx_runInTransaction(writable: false, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
-            
+
             for currId in ids {
                 if try !cursor.contains(currId.value) {
                     result = false
                     return
                 }
             }
-        }
+        })
 
         return result
     }
@@ -110,20 +110,20 @@ extension Box {
         let binding = EntityType.entityBinding
         let flatBuffer = FlatBufferBuilder.dequeue()
         defer { FlatBufferBuilder.return(flatBuffer) }
-        
+
         var writtenId: Id = 0
-        
-        try store.obx_runInTransaction { swiftTx in
+
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
-            
+
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
             binding.postPut(fromEntity: entity, id: writtenId, store: store)
-        }
+        })
         binding.setStructEntityId(of: &entity, to: writtenId)
-        
+
         return EntityType.EntityBindingType.IdType(writtenId)
     }
-    
+
     /// Puts the given object in the box (aka persisting it). If the entity hadn't been persisted yet, it will be
     /// assigned an ID, and if the entity is not a struct, the ID will be written back to the entity's ID property.
     /// For a struct, either use the `put(inout EntityType)` variant or assign the returned ID to the ID property
@@ -140,34 +140,34 @@ extension Box {
         let binding = EntityType.entityBinding
         let flatBuffer = FlatBufferBuilder.dequeue()
         defer { FlatBufferBuilder.return(flatBuffer) }
-        
+
         var writtenId: Id = 0
-        
-        try store.obx_runInTransaction { swiftTx in
+
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
             binding.postPut(fromEntity: entity, id: writtenId, store: store)
-        }
+        })
         binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
-        
+
         return EntityType.EntityBindingType.IdType(writtenId)
     }
-    
+
     internal func putOne(_ entity: EntityType, binding: EntityType.EntityBindingType, flatBuffer: FlatBufferBuilder,
                          mode: PutMode, cursor: Cursor<EntityType>) throws -> Id {
         flatBuffer.isCollecting = true
         defer { flatBuffer.clear(); flatBuffer.isCollecting = false }
-        
+
         let actualId = cursor.idForPut(entity)
         binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
         try cursor.put(id: actualId, data: data, mode: mode)
-        
+
         return actualId
     }
-    
+
     /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
     /// assigned an ID. For classes, the entity's ID property will be set to match any newly-assigned IDs.
     /// For structs, use the `put(inout [EntityType])` variant or extract the IDs from the returned array of
@@ -187,13 +187,13 @@ extension Box {
                 return []
             }
             // swiftlint:disable opening_brace
-            var result = try [EntityType.EntityBindingType.IdType](unsafeUninitializedCapacity: entities.count)
+            let result = try [EntityType.EntityBindingType.IdType](unsafeUninitializedCapacity: entities.count)
             { ptr, initializedCount in
-                try store.obx_runInTransaction { swiftTx in
+                try store.obx_runInTransaction(writable: true, { swiftTx in
                     let binding = EntityType.entityBinding
                     let flatBuffer = FlatBufferBuilder.dequeue()
                     defer { FlatBufferBuilder.return(flatBuffer) }
-                    
+
                     let cursor = Cursor<EntityType>(transaction: swiftTx)
 
                     initializedCount = 0
@@ -205,7 +205,7 @@ extension Box {
                         ptr[initializedCount] = EntityType.EntityBindingType.IdType(writtenId)
                         initializedCount += 1
                     }
-                }
+                })
             }
             // swiftlint:enable opening_brace
             return result
@@ -224,11 +224,11 @@ extension Box {
             // Short-cut, we don't need a TX
             return
         }
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let binding = EntityType.entityBinding
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
-            
+
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
@@ -237,7 +237,7 @@ extension Box {
                 binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
-        }
+        })
     }
 
     /// :nodoc:
@@ -246,11 +246,11 @@ extension Box {
             // Short-cut, we don't need a TX
             return
         }
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let binding = EntityType.entityBinding
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
-            
+
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
@@ -259,7 +259,7 @@ extension Box {
                 binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
-        }
+        })
     }
 
     /// Version of put([EntityType]) that is faster because it uses ContiguousArray.
@@ -268,11 +268,11 @@ extension Box {
             // Short-cut, we don't need a TX
             return
         }
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let binding = EntityType.entityBinding
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
-            
+
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
@@ -281,7 +281,7 @@ extension Box {
                 binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
-        }
+        })
     }
 
 
@@ -297,11 +297,11 @@ extension Box {
             // Short-cut, we don't need a TX
             return
         }
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let binding = EntityType.entityBinding
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
-            
+
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for entityIndex in 0 ..< entities.count {
@@ -311,7 +311,7 @@ extension Box {
                 binding.postPut(fromEntity: newEntity, id: writtenId, store: store)
                 binding.setStructEntityId(of: &entities[entityIndex], to: writtenId)
             }
-        }
+        })
     }
 
     /// Puts the given entities in a box using a single transaction. Any entities that hadn't been persisted yet will be
@@ -346,7 +346,7 @@ extension Box {
 // MARK: Reading Objects
 
 extension Box {
-    
+
     /// This function *must* be called inside a valid transaction. The transaction guarantees that the pointers returned
     /// by obx_box_get() stay valid until we've actually copied them.
     internal func getOne(_ entityId: Id, binding: EntityType.EntityBindingType,
@@ -360,20 +360,20 @@ extension Box {
         flatBuffer.setCurrentlyReadTableBytes(UnsafeRawPointer(safePtr))
         return binding.createEntity(entityReader: flatBuffer, store: store)
     }
-    
+
     /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
     internal func get(id entityId: Id) throws -> EntityType? {
-        return try store.obx_runInReadOnlyTransaction { _ in
+        return try store.obx_runInTransaction(writable: false, { _ in
             let binding = EntityType.entityBinding
             var flatBuffer = FlatBufferReader()
-            
+
             return try getOne(entityId.value, binding: binding, flatBuffer: &flatBuffer)
-        }
+        })
     }
-    
+
     /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
@@ -381,7 +381,7 @@ extension Box {
     public func get<I: UntypedIdBase>(_ entityId: I) throws -> EntityType? {
         return try get(id: entityId.value)
     }
-    
+
     /// Get the stored object for the given ID.
     ///
     /// - Parameter entityId: ID of the object.
@@ -389,7 +389,7 @@ extension Box {
     public func get(_ entityId: EntityId<EntityType>) throws -> EntityType? {
         return try get(id: entityId.value)
     }
-    
+
     /// Gets entities from the box for each ID in `entityIds`.
     ///
     /// - Parameter entityIds: Object IDs to map to objects.
@@ -418,47 +418,68 @@ extension Box {
     private func dictionaryWithEntities<I: IdBase, C: Collection>(forIdBases entityIds: C) throws
         -> [I: EntityType] where C.Element == I {
             var result = [I: EntityType]()
-            
-            try store.obx_runInReadOnlyTransaction { _ in
+
+            try store.obx_runInTransaction(writable: false, { _ in
                 let binding = EntityType.entityBinding
                 var flatBuffer = FlatBufferReader()
-                
+
+                // TODO this could use obx_box_get_many() instead
                 for entityId in entityIds {
                     if let entity = try getOne(entityId.value, binding: binding, flatBuffer: &flatBuffer) {
                         result[entityId] = entity
                     }
                 }
-            }
-            
+            })
+
             return result
     }
-    
+
     /// Gets all objects from the box.
     /// - Throws: ObjectBoxError
     /// - Returns: All stored Objects in this Box.
     public func all() throws -> [EntityType] {
-        var result = [EntityType]()
-        
-        try store.obx_runInReadOnlyTransaction { _ in
-            guard let bytesArray = obx_box_get_all(cBox) else { try checkLastError(); return }
-            defer { obx_bytes_array_free(bytesArray) }
-            result = Array(try readAll(bytesArray.pointee))
+        if self.store.supportsLargeArrays {
+            return try store.obx_runInTransaction(writable: false, { _ in
+                guard let bytesArray = obx_box_get_all(cBox) else {
+                    try checkLastError()  // should always throw
+                    return [EntityType]()
+                }
+                defer {
+                    obx_bytes_array_free(bytesArray)
+                }
+                return Array(try readAll(bytesArray.pointee))
+            })
+        } else {
+            var result = [EntityType]()
+            try visit { item in
+                result.append(item)
+                return true
+            }
+            return result
         }
-        
-        return result
     }
-    
+
     /// Variant of all() that is faster due to using ContiguousArray.
     public func allContiguous() throws -> ContiguousArray<EntityType> {
-        var result = ContiguousArray<EntityType>()
-        
-        try store.obx_runInReadOnlyTransaction { _ in
-            guard let bytesArray = obx_box_get_all(cBox) else { try checkLastError(); return }
-            defer { obx_bytes_array_free(bytesArray) }
-            result = try readAllContiguous(bytesArray.pointee)
+        if self.store.supportsLargeArrays {
+            return try store.runInReadOnlyTransaction {
+                guard let bytesArray = obx_box_get_all(cBox) else {
+                    try checkLastError(); // should always throw
+                    return ContiguousArray<EntityType>()
+                }
+                defer {
+                    obx_bytes_array_free(bytesArray)
+                }
+                return try readAllContiguous(bytesArray.pointee)
+            }
+        } else {
+            var result = ContiguousArray<EntityType>()
+            try visit { item in
+                result.append(item)
+                return true
+            }
+            return result
         }
-        
-        return result
     }
 
     /// :nodoc:
@@ -466,7 +487,7 @@ extension Box {
     public func find() throws -> [EntityType] {
         return try all()
     }
-    
+
     internal func readAllContiguous(_ bytesArray: OBX_bytes_array) throws -> ContiguousArray<EntityType> {
         var result = ContiguousArray<EntityType>()
         result.reserveCapacity(bytesArray.count)
@@ -476,16 +497,16 @@ extension Box {
         // Crashes when I use the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
         // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
         // empty user-defined entities may be expensive to create.
-        try store.obx_runInReadOnlyTransaction { _ in
+        try store.obx_runInTransaction(writable: false, { _ in
             for dataIndex in 0 ..< bytesArray.count {
                 flatBuffer.setCurrentlyReadTableBytes(bytesArray.bytes[dataIndex].data)
                 let entity = binding.createEntity(entityReader: flatBuffer, store: store)
                 result.append(entity)
             }
-        }
+        })
         return result
     }
-    
+
     internal func readAll(_ bytesArray: OBX_bytes_array) throws -> [EntityType] {
         var result = [EntityType]()
         result.reserveCapacity(bytesArray.count)
@@ -495,13 +516,13 @@ extension Box {
         // Crashes when I use the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
         // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
         // empty user-defined entities may be expensive to create.
-        try store.obx_runInReadOnlyTransaction { _ in
+        try store.obx_runInTransaction(writable: false, { _ in
             for dataIndex in 0 ..< bytesArray.count {
                 flatBuffer.setCurrentlyReadTableBytes(bytesArray.bytes[dataIndex].data)
                 let entity = binding.createEntity(entityReader: flatBuffer, store: store)
                 result.append(entity)
             }
-        }
+        })
         return result
     }
 }
@@ -509,92 +530,98 @@ extension Box {
 // MARK: Visit
 
 extension Box {
-    
+
     // The "visit" APIs are the ones that can be aborted and are more like ObjectBox's C API, the "forXXX" APIs are
     // more like Swift's forEach and can't be aborted.
-    
+
     /// Iterate over all objects in this box, calling the given closure with each object.
     /// This lazily creates one object after the other and hands them to you, and if you do not hold on to the objects,
     /// will free their memory once done.
     /// - Parameter visitor: A closure that is called for each object in this box. Return true to keep going, false to
     ///                      abort the loop. Exceptions thrown by the closure are re-thrown.
-    public func visit(_ visitor: ((EntityType) throws -> Bool)) throws {
-        try store.obx_runInTransaction { swiftTx in
+    public func visit(writable: Bool = false, visitor: (EntityType) throws -> Bool) throws {
+        try store.obx_runInTransaction(writable: writable, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
             try withoutActuallyEscaping(visitor) { callback in
                 let context: InstanceVisitorBase = InstanceVisitor(type: EntityType.self, store: store,
-                                                                   visitor: callback)
-                
+                        visitor: callback)
+
                 var currBytes = try cursor.first()
                 while currBytes.data != nil {
                     if !context.visit(ptr: currBytes.data, size: currBytes.size) || context.userError != nil { break }
                     currBytes = try cursor.next()
                 }
-                
+
                 if let err = context.userError {
                     throw err
                 }
             }
-        }
+        })
     }
-    
+
     /// Iterate over all objects in this box, calling the given closure with each object.
     /// This lazily creates one object after the other and hands them to you, and if you do not hold on to the objects,
     /// will free their memory once done.
+    /// - Parameter writable: By default the objects are traversed for read-only access.
+    ///                       If you want to write, enable this flag to makes the enclosing transaction writable.
     /// - Parameter visitor: A closure that is called for each object in this box. Exceptions thrown by the closure are
     ///                      re-thrown.
-    public func forEach(_ visitor: ((EntityType) throws -> Void)) throws {
-        try self.visit { entity in
+    public func forEach(writable: Bool = false, _ visitor: (EntityType) throws -> Void) throws {
+        try self.visit(writable: writable) { entity in
             try visitor(entity)
             return true
         }
     }
-    
+
     /// Iterate over the objects in this box with the given IDs, calling the given closure with each object.
     /// This lazily creates one object after the other and hands them to you, and if you do not hold on to the objects,
     /// will free their memory once done.
+    /// - Parameter writable: By default the objects are traversed for read-only access.
+    ///                       If you want to write, enable this flag to makes the enclosing transaction writable.
     /// - Parameter visitor: A closure that is called for each object requested. If an object with the requested ID
     ///                      can't be found, you get a callback with a NIL entity. Exceptions thrown by the closure are
     ///                      re-thrown.
-    public func `for`<C: Collection>(_ ids: C, in visitor: ((EntityType?) throws -> Void)) throws
+    public func `for`<C: Collection>(writable: Bool = false, _ ids: C, in visitor: (EntityType?) throws -> Void) throws
         where C.Element == EntityType.EntityBindingType.IdType {
-        try self.visit(ids) { entity in
+        try self.visit(writable: writable, ids) { entity in
             try visitor(entity)
             return true
         }
     }
-    
+
     /// Iterate over the objects in this box with the given IDs, calling the given closure with each object.
     /// This lazily creates one object after the other and hands them to you, and if you do not hold on to the objects,
     /// will free their memory once done.
+    /// - Parameter writable: By default the objects are traversed for read-only access.
+    ///                       If you want to write, enable this flag to makes the enclosing transaction writable.
     /// - Parameter visitor: A closure that is called for each object requested. If an object with the requested ID
     ///                      can't be found, you get a callback with a NIL entity. Exceptions thrown by the closure are
     ///                      re-thrown.
-    public func visit<C: Collection>(_ ids: C, in visitor: ((EntityType?) throws -> Bool)) throws
+    public func visit<C: Collection>(writable: Bool = false, _ ids: C, in visitor: (EntityType?) throws -> Bool) throws
     where C.Element == EntityType.EntityBindingType.IdType {
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: writable, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
             try withoutActuallyEscaping(visitor) { callback in
                 let context = InstanceVisitor(type: EntityType.self, store: store,
                                                                    visitor: callback)
-                
+
                 for currId in ids {
                     let currBytes = try cursor.get(currId.value)
                     if !context.visit(ptr: currBytes.data, size: currBytes.size) || context.userError != nil { break }
                 }
-                
+
                 if let err = context.userError {
                     throw err
                 }
             }
-        }
-    }    
+        })
+    }
 }
 
 // MARK: Removing Objects
 
 extension Box {
-    
+
     /// Removes (deletes) the Object by its ID.
     ///
     /// - Parameter entityId: ID of the object to delete.
@@ -630,7 +657,7 @@ extension Box {
         try check(error: obx_box_remove(cBox, entity._id.value))
         return true
     }
-    
+
     /// Removes (deletes) the given objects in a single transaction.
     ///
     /// It is valid to pass objects here that haven't been persisted yet.
@@ -643,8 +670,8 @@ extension Box {
     public func remove<C: Collection>(_ entities: C) throws -> UInt64
         where C.Element == EntityType {
             var result: UInt64 = 0
-            
-            try store.obx_runInTransaction { swiftTx in
+
+            try store.obx_runInTransaction(writable: true, { swiftTx in
                 let cursor = Cursor<EntityType>(transaction: swiftTx)
 
                 for currEntity in entities {
@@ -652,17 +679,17 @@ extension Box {
                         result += 1
                     }
                 }
-            }
-            
+            })
+
             return result
     }
-    
+
     /// :nodoc:
     @discardableResult
     public func remove(_ entities: [EntityType]) throws -> UInt64 {
         var result: UInt64 = 0
-        
-        try store.obx_runInTransaction { swiftTx in
+
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for currEntity in entities {
@@ -670,17 +697,17 @@ extension Box {
                     result += 1
                 }
             }
-        }
-        
+        })
+
         return result
     }
-    
+
     /// Version of remove() that is faster because it uses ContiguousArray.
     @discardableResult
     public func remove(_ entities: ContiguousArray<EntityType>) throws -> UInt64 {
         var result: UInt64 = 0
-        
-        try store.obx_runInTransaction { swiftTx in
+
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             for currEntity in entities {
@@ -688,8 +715,8 @@ extension Box {
                     result += 1
                 }
             }
-        }
-        
+        })
+
         return result
     }
 
@@ -710,14 +737,14 @@ extension Box {
     @discardableResult
     public func remove(_ entityIDs: [Id]) throws -> UInt64 {
         var result: UInt64 = 0
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1
                 }
             }
-        }
+        })
         return result
     }
 
@@ -735,25 +762,25 @@ extension Box {
         where C.Element == I {
             return try remove(collection: ids)
     }
-    
+
     /// :nodoc:
     @discardableResult
     internal func remove<I: UntypedIdBase, C: Collection>(collection ids: C) throws -> UInt64
         where C.Element == I {
             var result: UInt64 = 0
 
-            try store.obx_runInTransaction { swiftTx in
+            try store.obx_runInTransaction(writable: true, { swiftTx in
                 let cursor = Cursor<EntityType>(transaction: swiftTx)
                 for currId in ids {
                     if try cursor.remove(currId.value) {
                         result += 1
                     }
                 }
-            }
+            })
 
             return result
     }
-    
+
     /// Removes (deletes) the objects with the given IDs (passed as individual parameters) in a single
     /// transaction.
     ///
@@ -779,17 +806,17 @@ extension Box {
     @discardableResult
     public func remove(_ entityIDs: [EntityId<EntityType>]) throws -> UInt64 {
         var result: UInt64 = 0
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1
                 }
             }
-        }
+        })
         return result
     }
-    
+
     /// Removes (deletes) the objects with the given IDs in a single transaction.
     ///
     /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
@@ -804,25 +831,25 @@ extension Box {
         where C.Element == EntityId<EntityType> {
             return try remove(collection: entityIDs)
     }
-    
+
     /// :nodoc:
     @discardableResult
     internal func remove<C: Collection>(collection entityIDs: C) throws -> UInt64
         where C.Element == EntityId<EntityType> {
         var result: UInt64 = 0
 
-        try store.obx_runInTransaction { swiftTx in
+        try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1
                 }
             }
-        }
+        })
 
         return result
     }
-    
+
     /// Removes (deletes) the objects with the given IDs (passed as individual objects) in a single transaction.
     ///
     /// It is valid to pass IDs of objects here that haven't been persisted yet (i.e. any 0 ID  is skipped). If an
@@ -836,7 +863,7 @@ extension Box {
     public func remove(_ ids: EntityId<EntityType>...) throws -> UInt64 {
         return try remove(ids)
     }
-    
+
     /// Removes (deletes) **all** objects in a single transaction.
     ///
     /// - Returns: Count of items that were removed.
@@ -847,7 +874,7 @@ extension Box {
         try check(error: obx_box_remove_all(cBox, &result))
         return result
     }
-    
+
     /// :nodoc:
     public var debugDescription: String {
         return "<ObjectBox.Box \(String(describing: EntityType.self))>"

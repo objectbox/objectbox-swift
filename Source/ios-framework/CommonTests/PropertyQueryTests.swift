@@ -264,6 +264,21 @@ class PropertyQueryTests: XCTestCase {
         try intOptionalTest(NullablePropertyEntity.maybeInt8)
     }
 
+    func testPropertyQuery_Int64Optional_NullValue() throws {
+        try box.put([
+            NullablePropertyEntity(maybeInt64: 10),
+            NullablePropertyEntity()
+        ])
+
+        let query = try box.query().build()
+        let propertyQuery = query.property(NullablePropertyEntity.maybeInt64)
+        propertyQuery.with(nullValue: Int64(42))
+        let result = try propertyQuery.find()
+
+        XCTAssertEqual(result[0], 10)
+        XCTAssertEqual(result[1], 42)
+    }
+
     // TODO: this should be in QueryOperatorTests.swift, which does not support NullablePropertyEntity yet however
     // Types less than 32 bits currently not supported by C API
 //    func testOptionalInt16_InCollection() throws {
@@ -429,9 +444,24 @@ class PropertyQueryTests: XCTestCase {
         XCTAssertEqual(try uniqueQuery.property(NullablePropertyEntity.maybeString).findUniqueString(), "qwertz")
     }
 
+    func testPropertyQueryDereferenceMainQuery() throws {
+        try box.put(NullablePropertyEntity(string: "hold me tight"))
+
+        // Single line caused Query to deinit before holding on to it in PropertyQuery
+        let result = try box.query().build().property(NullablePropertyEntity.string).distinct().findStrings()
+        XCTAssertEqual(result.count, 1)
+
+        // And now explicitly deref the query
+        var query: Query? = try box.query().build()
+        let propertyQuery = query!.property(NullablePropertyEntity.string)
+        query = nil  // Deref, propertyQuery should still hold on to Query
+        let uniqueResult = try propertyQuery.findUniqueString()!
+        XCTAssertEqual(uniqueResult, "hold me tight")
+    }
+
+    // MARK: - ByteVector
+
     func testByteVectorQueries() throws {
-        let box = store.box(for: NullablePropertyEntity.self)
-        
         let firstBytes = "CAROLSHAW".data(using: .utf8)!
         let secondBytes = "EVELYNBOYDGRANVILLE".data(using: .utf8)!
         let thirdBytes = "MARYKENNETHKELLER".data(using: .utf8)!

@@ -148,8 +148,8 @@ internal func check(error: obx_err, message: String = "") throws {
 /// Ignore and log the given Swift error.
 internal func ignoreAndLog(error: Error) {
     switch error {
-    case ObjectBoxError.unknown(let code):
-        print("Error: Unknown ObjectBox error \(code).")
+    case ObjectBoxError.unknown(let code, let message):
+        print("Error: Unknown ObjectBox error '\(message)' (\(code))")
     default:
         print("Error: \(error).")
     }

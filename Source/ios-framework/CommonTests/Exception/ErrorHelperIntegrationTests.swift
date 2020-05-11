@@ -92,6 +92,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
     // requested, or we've received a Swift error thrown telling us we blew the store's maxReaders limit, we fulfill
     // this expectation (each thread fulfills theirs, and waits on that of the additional reader it spawned).
     // Any exception thrown is put in the errorThrownOnThread instance variable of this test.
+    @available(iOS 10.0, *)
     func createReadersThrow(store: Store, maxReaders num: Int, iWasClosedExpectation: XCTestExpectation) {
         var innerBlockClosedExpectation: XCTestExpectation?
         if num > 1 {
@@ -125,6 +126,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
         }
     }
     
+    @available(iOS 10.0, *)
     func testDbMaxReadersExceptionThrow() {
         // Note: maxReaders doesn't work as expected. mdb_env_setup_locks() applies a minimum based on the rsize to the
         //  maxreaders, so on my Mac, I get 126 even when I request 1. There is also no API to query what it was set to

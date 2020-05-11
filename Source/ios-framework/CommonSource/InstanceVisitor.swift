@@ -16,6 +16,8 @@
 
 import Foundation
 
+// TODO Is there's enough value in those 2 classes? Might do visiting directly instead (maybe with helper function?)?
+
 /// Helper base class to allow us to pass a generic type through a C function callback.
 /// Can't be a subtype of Box or Query as that would make it generic again.
 internal class InstanceVisitorBase {

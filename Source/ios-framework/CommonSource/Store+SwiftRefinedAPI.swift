@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@ import Foundation
 
 extension Store {
 
-    /// A type that's marked as an `Entity` _and_ provides its own metadata.
-    public typealias InspectableEntity = Entity & EntityInspectable & __EntityRelatable
-
     // MARK: Transaction Management
 
     /// Runs the given block inside a read/write transaction.
@@ -37,40 +34,46 @@ extension Store {
     public func runInTransaction<T>(_ block: () throws -> T) throws -> T {
         var result: T!
 
-        try obx_runInTransaction({ _ in
+        try obx_runInTransaction(writable: true, { _ in
             result = try block()
         })
 
         return result
     }
-    
-    internal func obx_runInTransaction<T>(_ block: (Transaction) throws -> T) throws -> T {
-        var result: T!
-        
-        try obx_runInTransaction({ txn in
-            result = try block(txn)
-        })
-    
-        return result
+
+    /// Internal version that gives the block a Transaction
+    internal func obx_runInTransaction<T>(writable: Bool, _ block: (Transaction) throws -> T) throws -> T {
+        let transaction = try Transaction(store: self, writable: writable)
+        if writable {
+            let result = try block(transaction)
+            try transaction.commit()
+            return result
+        } else {
+            return try block(transaction)
+        }
+
     }
-    
-    internal func obx_runInTransaction(_ block: (Transaction) throws -> Void) throws {
-        let transaction = try Transaction(store: self, writable: true)
+
+    /// Internal version that gives the block a Transaction
+    internal func obx_runInTransaction(writable: Bool, _ block: (Transaction) throws -> Void) throws {
+        let transaction = try Transaction(store: self, writable: writable)
         try block(transaction)
-        try transaction.commit()
+        if writable {
+            try transaction.commit()
+        }
     }
 
     /// :nodoc::
     public func runInTransaction(_ block: () throws -> Void) throws {
-        try obx_runInTransaction({ _ in
+        try obx_runInTransaction(writable: true, { _ in
             try block()
         })
     }
     
     /// Runs the given block inside a read(-only) transaction.
     ///
-    /// Takes care of flattening nested transaction calls into a single transaction, and rolling back changes for you
-    /// on error. You can e.g. wrap multiple `get` calls into a single read transaction to increase performance by
+    /// Takes care of flattening nested transaction calls into a single transaction.
+    /// You can e.g. wrap multiple `get` calls into a single read transaction to increase performance by
     /// re-using the resources for reading data into memory.
     ///
     /// You can nest read-only transaction into read/write transactions, but not vice versa.
@@ -79,30 +82,15 @@ extension Store {
     /// - Returns: The forwarded result of `block`.
     /// - Throws: rethrows errors thrown inside, plus any ObjectBoxError that makes sense.
     public func runInReadOnlyTransaction<T>(_ block: () throws -> T) throws -> T {
-        return try obx_runInReadOnlyTransaction({ _ in
+        return try obx_runInTransaction(writable: false, { _ in
             return try block()
         })
     }
     
     /// :nodoc:
     public func runInReadOnlyTransaction(_ block: () throws -> Void) throws {
-        try obx_runInReadOnlyTransaction({ _ in
+        try obx_runInTransaction(writable: false, { _ in
             try block()
         })
-    }
-    
-    internal func obx_runInReadOnlyTransaction<T>(_ block: (Transaction) throws -> T) throws -> T {
-        var result: T!
-        
-        try obx_runInReadOnlyTransaction({ txn in
-            result = try block(txn)
-        })
-        
-        return result
-    }
-
-    internal func obx_runInReadOnlyTransaction(_ block: (Transaction) throws -> Void) throws {
-        let transaction = try Transaction(store: self, writable: false)
-        try block(transaction)
     }
 }

@@ -37,6 +37,38 @@ class QueryTests: XCTestCase {
 
     // MARK: - setParameter
 
+    func testBigObjects() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+
+        // Precondition
+        XCTAssertEqual(try box.count(), 0)
+
+        // 3x page size (4096) to meet the 32-bit limits
+        let longString = String(repeating: "A", count: 3 * 4096)
+        let shortString = "Adam Short"
+        try box.put(TestPerson(name: longString))
+        try box.put(TestPerson(name: shortString))
+
+        let query = try box.query({ TestPerson.name.startsWith("A") }).build()
+
+        do {
+            let objects = try query.find()
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects[0].name, longString)
+            XCTAssertEqual(objects[1].name, shortString)
+        }
+
+        do {
+            let objects = try query.findContiguous()
+            XCTAssertEqual(objects.count, 2)
+            XCTAssertEqual(objects[0].name, longString)
+            XCTAssertEqual(objects[1].name, shortString)
+        }
+
+        XCTAssertEqual(2, Int(try box.removeAll()))
+        XCTAssertEqual(try box.count(), 0)
+    }
+
     func testSetParameter_Long_SingleParameter() throws {
         let box = store.box(for: AllTypesEntity.self)
 
@@ -308,22 +340,22 @@ class QueryTests: XCTestCase {
         // Trying 2 param setter throws
         //XCTAssertThrowsError(query.setParameters("collectintegers", to: 90, 300))
     }
-    
+
     func testSetParameter_Bool_SingleParameter() throws {
         let box = store.box(for: AllTypesEntity.self)
-        
+
         let entity1 = AllTypesEntity.create(boolean: true)
         let entity2 = AllTypesEntity.create(boolean: false)
         let entity3 = AllTypesEntity.create(boolean: true)
         try box.put([entity1, entity2, entity3])
         XCTAssertEqual(try box.count(), 3)
-        
+
         let query = try box.query({ AllTypesEntity.boolean.isEqual(to: true) }).build()
         var results = try query.find()
         XCTAssertEqual(results.count, 2)
         XCTAssertEqual(results[0].boolean, true)
         XCTAssertEqual(results[1].boolean, true)
-        
+
         query.setParameter(AllTypesEntity.boolean, to: false)
         results = try query.find()
         XCTAssertEqual(results.count, 1)
@@ -333,13 +365,13 @@ class QueryTests: XCTestCase {
 
     func testQueryUnsigned() throws {
         let box = store.box(for: AllTypesEntity.self)
-        
+
         let entity1 = AllTypesEntity.create(unsigned: ~3)
         let entity2 = AllTypesEntity.create(unsigned: 42)
         let entity3 = AllTypesEntity.create(unsigned: 0)
         try box.put([entity1, entity2, entity3])
         XCTAssertEqual(try box.count(), 3)
-        
+
         let query = try box.query({ AllTypesEntity.unsigned > 100 }).build()
         let greater0 = try query.findUnique()!
         XCTAssertEqual(greater0.unsigned, ~3)
@@ -517,15 +549,15 @@ class QueryTests: XCTestCase {
         query.setParameter("minAge", to: 21)
         XCTAssertEqual(try query.count(), 2)
     }
-    
+
     func testRemoveQuery() throws {
         let personBox: Box<TestPerson> = store.box()
-        
+
         let person1 = TestPerson(name: "Talia Winters", age: 59)
         let person2 = TestPerson(name: "Susan Ivanova", age: 53)
         let person3 = TestPerson(name: "Lyta Alexander", age: 61)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
-        
+
         XCTAssertEqual(try personBox.query().build().count(), 3)
 
         let deletedCount = try personBox.query({ TestPerson.name.contains("er") }).build().remove()
@@ -537,32 +569,32 @@ class QueryTests: XCTestCase {
 
     func testFindIdsQuery() throws {
         let personBox: Box<TestPerson> = store.box()
-        
+
         let person1 = TestPerson(name: "Talia Winters", age: 59)
         let person2 = TestPerson(name: "Susan Ivanova", age: 53)
         let person3 = TestPerson(name: "Lyta Alexander", age: 61)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
-        
+
         let writtenPersonIDs = try personBox.query().build().find()
         XCTAssertEqual(writtenPersonIDs.count, 3)
-        
+
         let matchingIDs = try personBox.query({ TestPerson.name.contains("er") }).build().findIds()
         XCTAssertEqual(matchingIDs.count, 2)
-        
+
         XCTAssert(matchingIDs.contains(person1.id))
         XCTAssert(matchingIDs.contains(person3.id))
     }
-    
+
     func testQueryDebugDescription() throws {
         let box = store.box(for: AllTypesEntity.self)
-        
+
         let query = try box.query({ "longs" .= AllTypesEntity.long.isBetween(50, and: 60) }).build()
         let queryDescription = "\(query)"
         XCTAssert(queryDescription.contains("1 condition"))
         XCTAssert(queryDescription.contains("aLong"))
         XCTAssert(queryDescription.contains("50"))
         XCTAssert(queryDescription.contains("60"))
-        
+
         query.setParameters("longs", to: 90, 300)
         let queryDescription3 = "\(query)"
         XCTAssert(queryDescription3.contains("1 condition"))

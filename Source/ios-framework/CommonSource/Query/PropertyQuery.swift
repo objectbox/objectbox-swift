@@ -50,19 +50,27 @@ public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPr
     /// The type of the entity's property this query is targeting.
     public typealias ValueType = T
 
+    internal let query: Query<EntityType>  // Hold on to main query to keep it alive
     internal let box: Box<EntityType>
+
+    internal var cQueryProp: OpaquePointer /*OBX_query_prop*/
+
     internal var nullString: String?
     internal var nullLong: Int64?
     internal var nullDouble: Double?
-    internal var store: Store
-    internal var cQueryProp: OpaquePointer /*OBX_query_prop*/
-    internal var propertyId: obx_schema_id
 
-    internal init(query: OpaquePointer /*OBX_query*/, propertyId: obx_schema_id, store: Store) {
-        self.store = store
-        self.cQueryProp = obx_query_prop(query, propertyId)
-        self.propertyId = propertyId
-        self.box = store.box(for: EntityType.self)
+    internal init(query: Query<EntityType>, propertyId: obx_schema_id) {
+        self.query = query
+        self.box = query.store.box(for: EntityType.self)
+
+        let cPropertyQuery: OpaquePointer? = obx_query_prop(query.cQuery, propertyId)
+        if cPropertyQuery == nil {
+            // swiftlint:disable force_try
+            try! checkLastError() // Should always throw; runtime error is OK because is an dev error (wrong schema ID)
+            try! throwObxErr(0, message: "Should have thrown before")
+            // swiftlint:enable force_try
+        }
+        self.cQueryProp = cPropertyQuery!
     }
 
     internal func longSum(box: OpaquePointer /*OBX_box*/) throws -> Int64 {
@@ -106,16 +114,17 @@ public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPr
         return result.last
     }
     
-    internal func findDoubles(box: OpaquePointer /*OBX_box*/)
-        throws -> [Double] {
+    internal func findDoubles(box: OpaquePointer /*OBX_box*/) throws -> [Double] {
         let cResult: UnsafeMutablePointer<OBX_double_array>?
-        var nullValue: Double = nullDouble ?? 0.0
-        cResult = obx_query_prop_double_find(cQueryProp,
-                                             (nullDouble != nil) ? UnsafePointer<Double>(&nullValue) : nil)
+        if nullDouble != nil {
+            var nullValue: Double = nullDouble!
+            cResult = obx_query_prop_double_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_double_find(cQueryProp, nil)
+        }
+        defer { obx_double_array_free(cResult) }
         try checkLastError()
-        
-        defer { if let cResult = cResult { obx_double_array_free(cResult) } }
-        
+
         guard let doubles = cResult?.pointee else { return [] }
         
         return [Double](unsafeUninitializedCapacity: doubles.count) { (ptr, initializedCount) in
@@ -227,11 +236,15 @@ extension PropertyQuery where T: FixedWidthInteger {
 
     /// T: Int64 or UInt64 (only)
     internal func findInts64Internal() throws -> [T] {
-        var nullValue: Int64 = Int64(truncatingIfNeeded: nullLong ?? 0)
-        let cResult: UnsafeMutablePointer<OBX_int64_array>? = obx_query_prop_int64_find(cQueryProp,
-                (nullLong != nil) ? UnsafePointer<Int64>(&nullValue) : nil)
-        try checkLastError()
+        let cResult: UnsafeMutablePointer<OBX_int64_array>?
+        if nullLong != nil {
+            var nullValue: Int64 = Int64(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int64_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_int64_find(cQueryProp, nil)
+        }
         defer { obx_int64_array_free(cResult) }
+        try checkLastError()
 
         guard let cArray = cResult?.pointee else { return [] }
         return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
@@ -244,11 +257,15 @@ extension PropertyQuery where T: FixedWidthInteger {
 
     /// T: Int32 or UInt32 (only)
     internal func findInts32Internal() throws -> [T] {
-        var nullValue: Int32 = Int32(truncatingIfNeeded: nullLong ?? 0)
-        let cResult: UnsafeMutablePointer<OBX_int32_array>? = obx_query_prop_int32_find(cQueryProp,
-                (nullLong != nil) ? UnsafePointer<Int32>(&nullValue) : nil)
-        try checkLastError()
+        let cResult: UnsafeMutablePointer<OBX_int32_array>?
+        if nullLong != nil {
+            var nullValue: Int32 = Int32(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int32_find(cQueryProp, &nullValue)
+        } else {
+            cResult  = obx_query_prop_int32_find(cQueryProp, nil)
+        }
         defer { obx_int32_array_free(cResult) }
+        try checkLastError()
 
         guard let cArray = cResult?.pointee else { return [] }
         return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
@@ -261,11 +278,15 @@ extension PropertyQuery where T: FixedWidthInteger {
 
     /// T: Int16 or UInt16 (only)
     internal func findInts16Internal() throws -> [T] {
-        var nullValue: Int16 = Int16(truncatingIfNeeded: nullLong ?? 0)
-        let cResult: UnsafeMutablePointer<OBX_int16_array>? = obx_query_prop_int16_find(cQueryProp,
-                (nullLong != nil) ? UnsafePointer<Int16>(&nullValue) : nil)
-        try checkLastError()
+        let cResult: UnsafeMutablePointer<OBX_int16_array>?
+        if nullLong != nil {
+            var nullValue: Int16 = Int16(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int16_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_int16_find(cQueryProp, nil)
+        }
         defer { obx_int16_array_free(cResult) }
+        try checkLastError()
 
         guard let cArray = cResult?.pointee else { return [] }
         return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
@@ -278,11 +299,15 @@ extension PropertyQuery where T: FixedWidthInteger {
 
     /// T: Int8 or UInt8 (only)
     internal func findInts8Internal() throws -> [T] {
-        var nullValue: Int8 = Int8(truncatingIfNeeded: nullLong ?? 0)
-        let cResult: UnsafeMutablePointer<OBX_int8_array>? = obx_query_prop_int8_find(cQueryProp,
-                (nullLong != nil) ? UnsafePointer<Int8>(&nullValue) : nil)
-        try checkLastError()
+        let cResult: UnsafeMutablePointer<OBX_int8_array>?
+        if nullLong != nil {
+            var nullValue: Int8 = Int8(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int8_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_int8_find(cQueryProp, nil)
+        }
         defer { obx_int8_array_free(cResult) }
+        try checkLastError()
 
         guard let cArray = cResult?.pointee else { return [] }
         return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
@@ -324,6 +349,16 @@ extension PropertyQuery where T: FixedWidthInteger {
         return results.first
     }
 
+}
+
+extension PropertyQuery where T == Int64 {
+    /// Provide a value to return in place of `nil` from this property query.
+    /// - returns: `self` for chaining
+    @discardableResult
+    public func with(nullValue: Int64) -> PropertyQuery<EntityType, ValueType> {
+        nullLong = nullValue
+        return self
+    }
 }
 
 extension PropertyQuery where T == Int64? {

@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-/// A reusable query returning entities.
+/// A reusable query returning entities or their IDs.
 ///
-/// You can hold on to a `Query` once it is set up and re-evaluate it e.g. using `find()` or `all()`.
+/// You can hold on to a `Query` once it is set up and re-query it e.g. using `find()`.
 ///
 /// Use the block-based query method to state conditions using operator overloads, like:
 ///
@@ -26,19 +26,33 @@
 /// a `PropertyQuery`.
 ///
 
+// For use with obx_query_visit
+internal class CDataVisitorContext {
+    var fun: (UnsafeRawPointer?, Int) -> Bool
+
+    init(_ fun: @escaping (UnsafeRawPointer?, Int) -> Bool) {
+        self.fun = fun
+    }
+}
+
+internal func CDataVisitor(userData: UnsafeMutableRawPointer?, data: UnsafeRawPointer?, size: Int) -> CBool {
+    let context: CDataVisitorContext = Unmanaged.fromOpaque(userData!).takeUnretainedValue()
+    return context.fun(data, size)
+}
+
 public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
 where E == E.EntityBindingType.EntityType {
     /// The entity type this query is going to target.
     public typealias EntityType = E
-    
+
     internal var cQuery: OpaquePointer /*OBX_query*/
     internal var store: Store
-    
+
     internal init(query: OpaquePointer /*OBX_query*/, store: Store) {
         self.cQuery = query
         self.store = store
     }
-    
+
     deinit {
         obx_query_close(cQuery)
     }
@@ -50,40 +64,73 @@ where E == E.EntityBindingType.EntityType {
     ///   - limit: Maximum number of objects that may be returned (may give fewer).
     /// - Returns: Collection of objects matching the query conditions.
     public func find(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityType] {
-        var result = [EntityType]()
-        
-        try store.obx_runInReadOnlyTransaction { _ in
-            let box = self.store.box(for: EntityType.self)
-            if let bytesArray = obx_query_find(cQuery, offset, limit) {
-                try check(error: obx_last_error_code())
-                defer { obx_bytes_array_free(bytesArray) }
-                result = try box.readAll(bytesArray.pointee)
+        return try store.runInReadOnlyTransaction {
+            if self.store.supportsLargeArrays {
+                let box = self.store.box(for: EntityType.self)
+                guard let bytesArray = obx_query_find(cQuery, offset, limit) else {
+                    try check(error: obx_last_error_code())  // Should throw at this point
+                    return [EntityType]()
+                }
+                defer {
+                    obx_bytes_array_free(bytesArray)
+                }
+                return try box.readAll(bytesArray.pointee)
+            } else {
+                var flatBuffer = FlatBufferReader()
+                let binding = EntityType.entityBinding
+                var result = [EntityType]()
+
+                let context = CDataVisitorContext({ (data: UnsafeRawPointer?, _) -> Bool in
+                    guard let safePtr = data else {
+                        return false
+                    }
+                    flatBuffer.setCurrentlyReadTableBytes(UnsafeRawPointer(safePtr))
+                    result.append(binding.createEntity(entityReader: flatBuffer, store: self.store))
+                    return true
+                })
+
+                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque(), offset,
+                        limit)
+                try check(error: error)
+                return result
             }
-            try check(error: obx_last_error_code())
         }
-        
-        return result
     }
 
-    @available(*, deprecated, renamed: "find")
-    public func all() throws -> [EntityType] {
-        return try find()
-    }
-    
     // Variant of find() that is faster due to using ContiguousArray.
     public func findContiguous(offset: UInt64 = 0, limit: UInt64 = 0) throws -> ContiguousArray<EntityType> {
         var result = ContiguousArray<EntityType>()
-        
-        try store.obx_runInReadOnlyTransaction { _ in
-            let box = self.store.box(for: EntityType.self)
-            if let bytesArray = obx_query_find(cQuery, offset, limit) {
-                try check(error: obx_last_error_code())
-                defer { obx_bytes_array_free(bytesArray) }
-                result = try box.readAllContiguous(bytesArray.pointee)
+
+        try store.runInReadOnlyTransaction {
+            if self.store.supportsLargeArrays {
+                let box = self.store.box(for: EntityType.self)
+                if let bytesArray = obx_query_find(cQuery, offset, limit) {
+                    defer {
+                        obx_bytes_array_free(bytesArray)
+                    }
+                    result = try box.readAllContiguous(bytesArray.pointee)
+                } else {
+                    try check(error: obx_last_error_code())
+                }
+            } else {
+                var flatBuffer = FlatBufferReader()
+                let binding = EntityType.entityBinding
+
+                let context = CDataVisitorContext({ (data: UnsafeRawPointer?, _) -> Bool in
+                    guard let safePtr = data else {
+                        return false
+                    }
+                    flatBuffer.setCurrentlyReadTableBytes(UnsafeRawPointer(safePtr))
+                    result.append(binding.createEntity(entityReader: flatBuffer, store: self.store))
+                    return true
+                })
+
+                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque(), offset,
+                        limit)
+                try check(error: error)
             }
-            try check(error: obx_last_error_code())
         }
-        
+
         return result
     }
 
@@ -95,11 +142,11 @@ where E == E.EntityBindingType.EntityType {
     /// - Returns: Collection of object IDs matching the query conditions.
     public func findIds(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityId<EntityType>] {
         var result = [EntityId<EntityType>]()
-        
+
         if let idArray = obx_query_find_ids(cQuery, offset, limit) {
             try check(error: obx_last_error_code())
             defer { obx_id_array_free(idArray) }
-            
+
             // swiftlint:disable opening_brace
             result = [EntityId<EntityType>](unsafeUninitializedCapacity: idArray.pointee.count)
             { ptr, initializedCount in
@@ -111,7 +158,7 @@ where E == E.EntityBindingType.EntityType {
             // swiftlint:enable opening_brace
         }
         try check(error: obx_last_error_code())
-        
+
         return result
     }
 
@@ -122,10 +169,10 @@ where E == E.EntityBindingType.EntityType {
     @discardableResult
     public func remove() throws -> UInt64 {
         var result: UInt64 = 0
-        
-        obx_query_remove(cQuery, &result)
-        try check(error: obx_last_error_code())
-        
+
+        let err = obx_query_remove(cQuery, &result)
+        try check(error: err)
+
         return result
     }
 
@@ -147,7 +194,7 @@ where E == E.EntityBindingType.EntityType {
     /// The number of objects matching the query.
     public func count() throws -> Int {
         var result: UInt64 = 0
-        
+
         try check(error: obx_query_count(cQuery, &result))
 
         return Int(result) // Return as Int because that's what Swift Standard lib uses for arrays.
@@ -160,26 +207,25 @@ where E == E.EntityBindingType.EntityType {
     /// 
     /// - Parameter property: Object property to modify the query for.
     /// - Returns: New `PropertyQuery` to configure.
-    // TODO shouldn't we hold on to the main Query for ref counting?
     public func property<T>(_ property: Property<EntityType, T, Void>) -> PropertyQuery<EntityType, T>
         where T: EntityPropertyTypeConvertible {
-        return PropertyQuery(query: cQuery, propertyId: property.base.propertyId, store: store)
+        return PropertyQuery(query: self, propertyId: property.base.propertyId)
     }
 
     // Work-around to get rid of the optional value type in Property to enable standard PropertyQuery functionality.
     public func property<T>(_ property: Property<EntityType, T?, Void>) -> PropertyQuery<EntityType, T>
             where T: EntityPropertyTypeConvertible {
-        return PropertyQuery(query: cQuery, propertyId: property.base.propertyId, store: store)
+        return PropertyQuery(query: self, propertyId: property.base.propertyId)
     }
 
     /// Allows having a `PropertyQuery` for Date properties via their Int64 unix timestamps
     public func propertyInt64(_ property: Property<EntityType, Date, Void>) -> PropertyQuery<EntityType, Int64> {
-        return PropertyQuery(query: cQuery, propertyId: property.base.propertyId, store: store)
+        return PropertyQuery(query: self, propertyId: property.base.propertyId)
     }
 
     /// Allows having a `PropertyQuery` for Date properties via their Int64 unix timestamps
     public func propertyInt64(_ property: Property<EntityType, Date?, Void>) -> PropertyQuery<EntityType, Int64> {
-        return PropertyQuery(query: cQuery, propertyId: property.base.propertyId, store: store)
+        return PropertyQuery(query: self, propertyId: property.base.propertyId)
     }
 
     // MARK: - Parameter changes
@@ -193,7 +239,7 @@ where E == E.EntityBindingType.EntityType {
             checkFatalError(err)
         }
     }
-    
+
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [Int64]) {
         if property.type == .long {
             let numParams = Int32(collection.count)
@@ -212,7 +258,7 @@ where E == E.EntityBindingType.EntityType {
             }
         }
     }
-    
+
     internal func setParametersInternal(_ alias: String, to collection: [Int64]) {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
@@ -220,7 +266,7 @@ where E == E.EntityBindingType.EntityType {
             checkFatalErrorParam(err)
         }
     }
-    
+
     internal func setParametersInternal(_ alias: String, to collection: [Int32]) {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
@@ -239,24 +285,24 @@ where E == E.EntityBindingType.EntityType {
         let err = obx_query_int_param_alias(cQuery, alias, value)
         checkFatalErrorParam(err)
     }
-    
+
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Int64, _ value2: Int64) {
         let err = obx_query_int_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                              value1, value2)
         checkFatalErrorParam(err)
     }
-    
+
     /// Specify two values for a parameter of a sub-expression of a query.
     internal func setParametersInternal(_ alias: String, to value1: Int64, _ value2: Int64) {
         let err = obx_query_int_params_alias(cQuery, alias, value1, value2)
         checkFatalErrorParam(err)
     }
-    
+
     internal func setParameterInternal(property: PropertyDescriptor, to value: Double) {
         let err = obx_query_double_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
         checkFatalErrorParam(err)
     }
-    
+
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
     ///
     /// This is the binary operator variant. See `setParameters(alias:to:_:)` for operators with 2 values.
@@ -268,13 +314,13 @@ where E == E.EntityBindingType.EntityType {
         let err = obx_query_double_param_alias(cQuery, alias, value)
         checkFatalErrorParam(err)
     }
-    
+
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Double, _ value2: Double) {
         let err = obx_query_double_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                                 value1, value2)
         checkFatalErrorParam(err)
     }
-    
+
     /// Sets a parameter previously specified using a `ParameterAlias` to new values.
     ///
     /// This is the variant with 2 values, e.g. for `isBetween(_:and:)` comparison.
@@ -288,12 +334,12 @@ where E == E.EntityBindingType.EntityType {
         let err = obx_query_double_params_alias(cQuery, alias, value1, value2)
         checkFatalErrorParam(err)
     }
-    
+
     internal func setParameterInternal(property: PropertyDescriptor, to value: String) {
         let err = obx_query_string_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
         checkFatalErrorParam(err)
     }
-    
+
     /// Sets a parameter previously specified using a `ParameterAlias` to a new value.
     ///
     /// This is the binary operator variant. See `setParameters(alias:to:_:)` for operators with 2 values.
@@ -305,7 +351,7 @@ where E == E.EntityBindingType.EntityType {
         let err = obx_query_string_param_alias(cQuery, alias, string)
         checkFatalErrorParam(err)
     }
-    
+
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [String]) {
         let numStrings = Int32(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
@@ -315,7 +361,7 @@ where E == E.EntityBindingType.EntityType {
             checkFatalErrorParam(err)
         }
     }
-    
+
     /// Sets a parameter previously specified during query construction to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
@@ -331,20 +377,20 @@ where E == E.EntityBindingType.EntityType {
             checkFatalErrorParam(err)
         }
     }
-    
+
     /// :nodoc:
     public var debugDescription: String {
         var parts = [String]()
-        
+
         let descBuf = obx_query_describe(cQuery)
-        
+
         if let descBuf = descBuf, let descStr = String(utf8String: descBuf) {
             parts.append(descStr)
             if let paramsBuf = obx_query_describe_params(cQuery), let paramsStr = String(utf8String: paramsBuf) {
                 parts.append(paramsStr)
             }
         }
-        
+
         return "<ObjectBox.Query \"\(parts.joined(separator: ", "))\">"
     }
 }

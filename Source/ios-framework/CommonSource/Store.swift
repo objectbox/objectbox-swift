@@ -37,9 +37,10 @@ public class Store: CustomDebugStringConvertible {
     internal var boxesLock = DispatchSemaphore(value: 1)
     internal var attachedObjectsLock = DispatchSemaphore(value: 1)
     internal var attachedObjects = [String: AnyObject]()
+    internal var supportsLargeArrays = false
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.2.0"
+    public static var version = "1.3.0"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -82,6 +83,7 @@ public class Store: CustomDebugStringConvertible {
     public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 500 * 1024,
                 fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
         directoryPath = directory
+        supportsLargeArrays = obx_supports_bytes_array()
         cStore = try directory.withCString { ptr -> OpaquePointer? in
             var opts = obx_opt()
             try checkLastError()
