@@ -37,11 +37,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.append("\(try noteBox.all().readableDescription)\n")
 
             logger.append("Reading notes containing 'writing':")
-            let allWritingNotes = try noteBox.query { Note.text.contains("writing") }.build().all()
+            let allWritingNotes = try noteBox.query {
+                Note.text.contains("writing")
+            }.build().find()
             logger.append("\(allWritingNotes.readableDescription)\n")
 
             logger.append("Reading notes containing 'writing' by Peter Brett:")
-            let peterBrettsWritingNotes = try noteBox.query { Note.text.contains("writing") && Note.author.isEqual(to: peterBrett.id) }.build().all()
+            let peterBrettsWritingNotes = try noteBox.query {
+                Note.text.contains("writing") && Note.author.isEqual(to: peterBrett.id)
+            }.build().find()
             logger.append("\(peterBrettsWritingNotes.readableDescription)\n")
 
             logger.append("Looking into Peter Brett's current object state again ...")
@@ -53,7 +57,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         let viewController = NSApp.mainWindow?.contentViewController
-        logger.display(viewController: viewController!)
+        if viewController != nil {
+            logger.display(viewController: viewController!)
+        } else {
+            logger.append("No ViewController!?")  // fix this
+        }
         print(logger.string)
     }
     
