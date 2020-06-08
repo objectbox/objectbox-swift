@@ -1,5 +1,10 @@
 <img width="466" src="https://raw.githubusercontent.com/objectbox/objectbox-swift/master/images/logo.png">
 
+Do you ♥️ using ObjectBox?
+==========================
+We want to [hear about your app](https://docs.google.com/forms/d/e/1FAIpQLScIYiOIThcq-AnDVoCvnZOMgxO4S-fBtDSFPQfWldJnhi2c7Q/viewform)!
+It will - literally - take just a minute, but help us a lot. Thank you!​ 🙏​
+
 ObjectBox Swift
 ===============
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](#cocoapods)
@@ -30,9 +35,11 @@ or the [New to CocoaPods?](#new-to-cocoapods) section below for a quick intro.
 To install the `ObjectBox` pod, add the following line to your Podfile:
 
 ```ruby
-  pod 'ObjectBox', '1.0.0-rc.7'
+  pod 'ObjectBox'
 ```
 
+*Note:* ObjectBox 1.3 was built using Swift 5.2. ObjectBox 1.2 works with Swift 5.1 but we highly recommend the update.
+  
 Then run this to install the ObjectBox framework:
 
 ```bash
@@ -120,13 +127,13 @@ ObjectBox is a multi platform database supporting [multiple languages](https://o
 * [ObjectBox Go](https://github.com/objectbox/objectbox-go): great for data-driven tools and server applications. 
 * [ObjectBox C](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
   also enables porting ObjectBox to other languages.
-* [ObjectBox Dart](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (early version) 
+* [ObjectBox Dart/Flutter](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (beta version) 
 
 License
 -------
 All files in this repository are under the Apache 2 license:
 
-    Copyright 2018-2019 ObjectBox Ltd. All rights reserved.
+    Copyright 2018-2020 ObjectBox Ltd. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

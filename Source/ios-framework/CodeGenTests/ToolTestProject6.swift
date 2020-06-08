@@ -10,10 +10,10 @@ import ObjectBox
 
 
 class BusRoute: Entity {
-    // objectbox: objectId
-    var id: Id<BusRoute> = 0
-    // objectbox: objectId
-    var anotherId: Id<BusRoute> = 0
+    // objectbox: id
+    var id: EntityId<BusRoute> = 0
+    // objectbox: id
+    var anotherId: EntityId<BusRoute> = 0
 
     required init() {}
 }

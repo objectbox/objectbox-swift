@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-// Adapter methods for writing optionals and relations to a PropertyCollector
+// Adapter methods for writing optionals and relations to a FlatBufferBuilder
 // Null values are simply not collected
-extension PropertyCollector {
+extension FlatBufferBuilder {
     /// :nodoc:
     public func collect(_ value: Bool?, at propertyOffset: UInt16) {
         guard let value = value else { return }
@@ -36,7 +36,7 @@ extension PropertyCollector {
     }
     
     /// :nodoc:
-    public func collect<T>(_ value: Id<T>?, at propertyOffset: UInt16) {
+    public func collect<T>(_ value: EntityId<T>?, at propertyOffset: UInt16) {
         guard let value = value else { return }
         self.collect(value.value, at: propertyOffset)
     }
@@ -70,12 +70,6 @@ extension PropertyCollector {
         guard let value = value else { return }
         self.collect(value, at: propertyOffset)
     }
-
-    /// :nodoc:
-    public func collect(_ value: Date?, at propertyOffset: UInt16) {
-        guard let value = value else { return }
-        self.collect(value, at: propertyOffset)
-    }
     
     /// :nodoc:
     public func collect(_ value: String?, at propertyOffset: UInt16) {
@@ -88,9 +82,8 @@ extension PropertyCollector {
                                                                   store: Store)
         where E == E.EntityBindingType.EntityType {
             guard relation.hasValue else { return }
-            let relatedBox = store.box(for: relation)
+            let relatedBox = store.box(for: type(of: relation).Target.self)
             do {
-                // TODO: should we always call through to related Box.put?
                 guard let targetId = try relatedBox.put(relation) else { return }
                 self.collect(targetId.value, at: propertyOffset)
             } catch {

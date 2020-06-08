@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class Spaceship: Entity {
-    var id: Id<Spaceship> = 0
+    var id: EntityId<Spaceship> = 0
     // objectbox: uid = 13762
     var wibblyWobblyTimeyWimey: String = ""
     var destinationName: String = ""

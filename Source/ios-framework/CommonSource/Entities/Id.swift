@@ -14,33 +14,60 @@
 // limitations under the License.
 //
 
-/// Used to constrain extensions:
+/// Protocol an ObjectBox ID must conform to. Currently, there are two major types that can be used as IDs:
+/// - `EntityId<E>` which is a generic, type-safe ID struct
+/// - Id (or Int64) which is a simpler data type usable for IDs.
+/// Most methods that require you to specify an ID accept either type of ID.
+///
+/// Also used to constrain extensions:
 ///
 ///    extension Property where ValueType: IdBase { ... }
 ///
 /// (Swift doesn't have parameterized extensions, or else
-/// we could write `where ValueType == Id<T>`.)
-public protocol IdBase {
-    /// Numerical value of the ID.
-    var value: EntityId { get }
+/// we could write `where ValueType == EntityId<T>`.)
+public protocol IdBase: Hashable, EntityPropertyTypeConvertible {
+    /// Initialize this (possibly type-specific) ID with an untyped ID as e.g. returned by the core.
+    init(_ entityId: Id)
+    
+    /// Return this (possibly type-specific) ID as an untyped ID as needed to e.g. pass to the core.
+    var value: Id { get }
 }
 
-// swiftlint:disable type_name
+/// A type that is usable as an object ID that doesn't enforce the type of entity it is for.
+public protocol UntypedIdBase: IdBase {}
+
+extension Id: UntypedIdBase {
+    // public init(_ entityId: Id) not needed because Id can already be initialized with itself.
+    /// :nodoc:
+    public var value: Id { return self } // Every Id is usable like a IdBase, too, now.
+}
+
+extension Int64: UntypedIdBase {
+    /// :nodoc:
+    public init(_ entityId: Id) {
+        self.init(bitPattern: entityId)
+    }
+    /// :nodoc:
+    public var value: Id { return UInt64(bitPattern: self) } // Every Int64 is usable like a IdBase, too, now.
+}
+
+
+extension IdBase {
+    internal var needsIdGeneration: Bool { return value == 0 }
+}
+
 /// Object identifier type.
 ///
-/// Object identifiers are wrappers for `EntityId` values which are `UInt64`. These are used for persisted objects.
+/// Object identifiers are wrappers for `Id` values which are `UInt64`. These are used for persisted objects.
 /// Identifiers are assigned by the framework automatically when you call `Box.put`.
 ///
 /// A value of `0` indicates the object hasn't been persisted, yet.
-public struct Id<E: Entity>: IdBase, Hashable {
-
+public struct EntityId<R: EntityInspectable & __EntityRelatable>: IdBase, Hashable {
     /// Numerical value of the ID.
-    public let value: EntityId
+    public let value: Id
 
-    internal var needsIdGeneration: Bool { return value == 0 }
-
-    /// Convenient short-hand initializer
-    public init(_ identifier: EntityId) {
+    /// Initializer required by IdBase (but also a convenient short-hand).
+    public init(_ identifier: Id) {
         self.value = identifier
     }
 
@@ -52,24 +79,23 @@ public struct Id<E: Entity>: IdBase, Hashable {
         return value.hash(into: &hasher)
     }
 }
-// swiftlint:enable type_name
 
 // MARK: ExpressibleByIntegerLiteral
 
-extension Id: ExpressibleByIntegerLiteral {
+extension EntityId: ExpressibleByIntegerLiteral {
     /// Initializer to use integer literals directly, as in:
     ///
-    ///    var id: Id<Person> = 123
+    ///    var id: EntityId<Person> = 123
     ///
     /// - Parameter value: The integer value.
-    public init(integerLiteral value: EntityId) {
+    public init(integerLiteral value: Id) {
         self.init(value)
     }
 }
 
 // MARK: - Description
 
-extension Id: CustomStringConvertible {
+extension EntityId: CustomStringConvertible {
     /// A textual representation of this instance.
     public var description: String {
         return "\(String(describing: type(of: self)))(\(value))"

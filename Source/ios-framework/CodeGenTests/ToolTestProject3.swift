@@ -9,9 +9,9 @@
 import ObjectBox
 
 
-// objectbox: Entity
+// objectbox: entity
 class BusRoute {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     
     required init() {}
 }

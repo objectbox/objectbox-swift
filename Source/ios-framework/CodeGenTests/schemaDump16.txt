@@ -7,9 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<BusRoute>
+			propertyType = EntityId<BusRoute>
 			entityName = BusRoute
-			unwrappedPropertyType = Id<BusRoute>
+			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -69,9 +69,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<BusRoute>
+			propertyType = EntityId<BusRoute>
 			entityName = BusRoute
-			unwrappedPropertyType = Id<BusRoute>
+			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -85,9 +85,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<BusRoute>
+			propertyType = EntityId<BusRoute>
 			entityName = BusRoute
-			unwrappedPropertyType = Id<BusRoute>
+			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil

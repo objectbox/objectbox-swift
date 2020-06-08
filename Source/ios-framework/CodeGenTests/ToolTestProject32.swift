@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class Building: Entity, CustomDebugStringConvertible {
-    // objectbox:objectId
+    // objectbox:id
     var id: UInt64 = 0
     var buildingName: String
     var buildingNumber: Int
@@ -41,7 +41,7 @@ func main(_ args: [String]) throws -> Int32 {
         try buildingBox.put(testBuilding1)
         guard testBuilding1.id != 0 else { print("error: Couldn't write building 1."); return 1 }
 
-        guard let readBuilding1 = buildingBox.get(Id<Building>(testBuilding1.id)) else { print("error: Couldn't read building 1."); return 1 }
+        guard let readBuilding1 = try buildingBox.get(EntityId<Building>(testBuilding1.id)) else { print("error: Couldn't read building 1."); return 1 }
         guard testBuilding1.id == readBuilding1.id else { print("error: Read building 1 ID isn't the one written."); return 1 }
         guard testBuilding1.buildingName == readBuilding1.buildingName else { print("error: Read building 1 name isn't the one written."); return 1 }
         guard testBuilding1.buildingNumber == readBuilding1.buildingNumber else { print("error: Read building 1 number isn't the one written."); return 1 }
@@ -51,7 +51,7 @@ func main(_ args: [String]) throws -> Int32 {
         return 1
     }
     
-    print("note: Ran \(args.first ?? "???") tests.")
+    print("note: Ran \(args.count > 1 ? args[1] : "???") tests.")
 
     try? FileManager.default.removeItem(atPath: storeFolder.path)
 

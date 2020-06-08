@@ -35,3 +35,6 @@ Carthage/Checkouts
 
 #Other IDEs
 .idea/
+
+# ObjectBox model backups
+*.json.bak

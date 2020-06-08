@@ -17,19 +17,17 @@ Repository Contents
 Setup
 -----
 
-* Install Xcode 10.2+ (Swift 5.x) with command line tools prepared to build from the shell
-* Run `git submodule update --init --recursive` to get external dependencies
-* Run `make build_swiftlint` to build the build SwiftLint from source into its `external/SwiftLint/.build` directory.
-* The Sourcery submodule contains a `_build.command` script that you can double-click to build a release-ready version of the code generator.
-* Build the framework using the `ObjectBox.xcodeproj`
+* Install latest Xcode (Swift 5.2+) with command line tools prepared to build from the shell
+  * Note: After Xcode updates, you may have to reinstall the CLI tools via `xcode-select --install`
+* Ensure you have homebrew (e.g. setup.sh uses it to install [Carthage](https://github.com/Carthage/Carthage))
+* Using homebrew, install basic build tools like cmake and ccache
+* Run `./setup.sh` (see the [setup.sh](setup.sh) file for more comments if you want)
+* Open Xcode project in ios-framework/ObjectBox.xcodeproj
 
 To build the project for release:
 
-* Install [Carthage][], e.g. using Homebrew: `brew install carthage`
 * Run `cd ios-framework/; make all` to build the frameworks from source with Carthage
-* The `ios-framework/cocoapod/make_podspec_and_zip.command` script can be double-clicked to build a release-ready archive and Podspec file.
-
-[Carthage]: https://github.com/Carthage/Carthage
+* The `ios-framework/cocoapod/make-release.command` script can be double-clicked to build a release-ready archive and Podspec file.
 
 ### Generate the Documentation
 
@@ -46,7 +44,7 @@ Distributing the Framework
 
 Distribution of the framework as closed source works across these channels:
 
-- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets. (The `make_podspec_and_zip.command` script takes care of this)
+- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets. (The `make-release.command` script takes care of this)
 - **Carthage**, by uploading a `.zip` of the frameworks as binary attachments to a GitHub's release.
 
 ## Build with Carthage
@@ -79,8 +77,8 @@ Find the result in `ios-framework/ObjectBox-iOS-Aggregate.build/`
 
 This is essentially what comes for free with Carthage. Xcode 10 changed the build system a bit. The build script is adjusted accordingly. But you may have to adjust the script a bit for future Xcode versions; that's another point of failure you wouldn't have to worry about with Carthage.
 
-iOS Framework Project Organization
-----------------------------------
+Swift Framework Project Organization
+------------------------------------
 
 You look at and build the framework itself via `ios-framework/ObjectBox.xcodeproj`.
 
@@ -157,3 +155,20 @@ Then you're all set to use entities with ObjectBox:
     _ = personBox.query({ Person.name == "Fry" }).build().find()
 
 That's it, it works now!
+
+Testing from commandline
+------------------------
+To execute all unit tests:
+```shell script
+cd ios-framework
+make unit_test
+```
+
+To execute a specific test. Change the last argument to specify your test. You can also execute a group/class by removing the last one/two parts of the filter.
+Note: `xcpretty` cleans up the output so you wan't see all the compiler calls but it also hides failed tests output. So once you see a failure, run without `xcpretty` to read the error. 
+```shell script
+xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=OS X,arch=x86_64' -only-testing ObjectBoxTests-macOS/StoreTests/test32vs64BitForOs | xcpretty
+xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11' -only-testing ObjectBoxTests-iOS/StoreTests/test32vs64BitForOs | xcpretty
+```
+
+

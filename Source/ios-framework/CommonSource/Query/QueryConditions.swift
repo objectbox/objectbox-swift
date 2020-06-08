@@ -30,13 +30,14 @@
 ///
 ///     let alcoholRestriction: QueryCondition<Person> = Person.age > 18 && Person.age < 80
 ///     // ...
-///     let alcoholAllowedQuery = personBox.query {
+///     let alcoholAllowedQuery = try personBox.query {
 ///         return alcoholRestriction
 ///             || (Person.firstName == "Johnny" && Person.lastName == "Walker")
-///     }
+///     }.build()
 ///
 public class QueryCondition<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
+    /// The type of entity this query will return.
     public typealias EntityType = E
 
     internal let expression: (QueryBuilder<E>) -> QueryBuilderCondition
@@ -59,7 +60,7 @@ where E == E.EntityBindingType.EntityType {
 /// You can apply a short name (called _alias_, see `PropertyAlias`) to later identify specific expressions
 /// using the `.=` operator. This is useful to change the values. The example above with an alias would read:
 ///
-///     let query = personBox.query { "AgeRestriction" .= Person.age > 21 }.build()
+///     let query = try personBox.query { "AgeRestriction" .= Person.age > 21 }.build()
 ///     // Change the condition to `Person.age > 18`
 ///     query.setParameter("AgeRestriction", to: 18)
 ///
@@ -69,11 +70,11 @@ where E == E.EntityBindingType.EntityType {
 ///              "MinAge" .= Person.age > 21
 ///              && "MaxAge" .= Person.age < 80
 ///      // ...
-///      let alcoholAllowedQuery = personBox.query {
+///      let alcoholAllowedQuery = try personBox.query {
 ///          return alcoholRestriction
 ///              || (Person.firstName == "Johnny" && Person.lastName == "Walker")
 ///      }.build()
-///      alcoholAllowedQuery.setParameter("MinAge", to: 18)
+///      try alcoholAllowedQuery.setParameter("MinAge", to: 18)
 ///
 public class PropertyQueryCondition<E: EntityInspectable & __EntityRelatable, T: EntityPropertyTypeConvertible>:
     QueryCondition<E>
@@ -103,6 +104,12 @@ where E == E.EntityBindingType.EntityType {
     }
 }
 
+/// Work-around that makes the given property with an optional VALUE "non-optional" by creating a new Property.
+// Not sure if that is the best approach; maybe we should not carry optional values in Property in the first place?
+internal func nonOptional<E, VALUE>(_ property: Property<E, VALUE?, Void>) -> Property<E, VALUE, Void> {
+    return Property<E, VALUE, Void>(propertyId: property.propertyId, isPrimaryKey: property.isPrimaryKey)
+}
+
 // MARK: Operators
 
 /// :nodoc:
@@ -124,160 +131,32 @@ public func || <E>(lhs: QueryCondition<E>, rhs: QueryCondition<E>) -> QueryCondi
 infix operator ∈ : ComparisonPrecedence
 infix operator ∉ : ComparisonPrecedence
 
-// MARK: - Id<T>
+// MARK: - EntityId<T>
 
 /// :nodoc:
-public func == <E, T>(lhs: Property<E, Id<T>>, rhs: Id<T>)
+public func == <E, T>(lhs: Property<E, EntityId<T>, T>, rhs: EntityId<T>)
     -> PropertyQueryCondition<E, UInt64>
     where E: Entity, T: Entity {
     return lhs.isEqual(to: rhs.value)
 }
 
+// TODO: Figure out why entityIdProperty is needed here, can't we just use self?
 extension Property where Property.ValueType: IdBase {
-    internal var entityIdProperty: Property<EntityType, EntityId> {
-        return Property<EntityType, EntityId>(base: self.base)
+    internal var entityIdProperty: Property<EntityType, Id, ReferencedType> {
+        return Property<EntityType, Id, ReferencedType>(base: self.base)
     }
 
     /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: EntityId)
-        -> PropertyQueryCondition<EntityType, EntityId> {
+    public func isEqual(to value: Id)
+        -> PropertyQueryCondition<EntityType, Id> {
             return PropertyQueryCondition(expression: {
                 $0.where(self.entityIdProperty, isEqualTo: value)
             })
     }
 }
 
-// MARK: - Integer
 
-// MARK: Int8
-
-/// :nodoc:
-public func == <E>(lhs: Property<E, Int8>, rhs: Int8)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isEqual(to: rhs)
-}
-
-/// :nodoc:
-public func != <E>(lhs: Property<E, Int8>, rhs: Int8)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isNotEqual(to: rhs)
-}
-
-/// :nodoc:
-public func < <E>(lhs: Property<E, Int8>, rhs: Int8)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isLessThan(rhs)
-}
-
-/// :nodoc:
-public func > <E>(lhs: Property<E, Int8>, rhs: Int8)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isGreaterThan(rhs)
-}
-
-// swiftlint:disable identifier_name
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: Range<Int8>)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: ClosedRange<Int8>)
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int8>, rhs: [Int8])
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int8>, rhs: [Int8])
-    -> PropertyQueryCondition<E, Int8>
-    where E: Entity {
-        return lhs.isNotIn(rhs)
-}
-// swiftlint:enable identifier_name
-
-extension Property where Property.ValueType == Int8 {
-    /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
-    }
-    
-    /// Equivalent to the != operator in query blocks.
-    public func isNotEqual(to value: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
-    }
-    
-    /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ value: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
-    }
-    
-    /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ value: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
-    }
-    
-    /// Equivalent to the <= operator in query blocks.
-    public func isLessThanEqual(_ value: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isBetween: Int8.min, and: value) })
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Int8, and upperBound: Int8)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: {
-                $0.where(self, isBetween: lowerBound, and: upperBound)
-            })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: Range<Int8>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: ClosedRange<Int8>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ collection: [Int8])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection.map { Int8($0) }) })
-    }
-    
-    /// Equivalent to the ∉ operator in query blocks.
-    public func isNotIn(_ collection: [Int8])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isNotContainedIn: collection.map { Int8($0) }) })
-    }
-
+extension Property {
     public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(isNull: self) })
     }
@@ -288,403 +167,134 @@ extension Property where Property.ValueType == Int8 {
     }
 }
 
-// MARK: Int8?
-
-extension Property where Property.ValueType == Int8? {
-    /// Test whether an Int8 optional `Int8?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int16
+// MARK: Bool
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int16>, rhs: Int16)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isEqual(to: rhs)
-}
-
-/// :nodoc:
-public func != <E>(lhs: Property<E, Int16>, rhs: Int16)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isNotEqual(to: rhs)
-}
-
-/// :nodoc:
-public func < <E>(lhs: Property<E, Int16>, rhs: Int16)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isLessThan(rhs)
-}
-
-/// :nodoc:
-public func > <E>(lhs: Property<E, Int16>, rhs: Int16)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isGreaterThan(rhs)
-}
-
-// swiftlint:disable identifier_name
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: Range<Int16>)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: ClosedRange<Int16>)
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int16>, rhs: [Int16])
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int16>, rhs: [Int16])
-    -> PropertyQueryCondition<E, Int16>
-    where E: Entity {
-        return lhs.isNotIn(rhs)
-}
-// swiftlint:enable identifier_name
-
-extension Property where Property.ValueType == Int16 {
-    /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: Int16)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
-    }
-    
-    /// Equivalent to the != operator in query blocks.
-    public func isNotEqual(to value: Int16)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
-    }
-    
-    /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ value: Int16)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
-    }
-    
-    /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ value: Int16)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Int16, and upperBound: Int16)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: {
-                $0.where(self, isBetween: lowerBound, and: upperBound)
-            })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: Range<Int16>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: ClosedRange<Int16>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-    
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ collection: [Int16])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection) })
-    }
-    
-    /// Equivalent to the ∉ operator in query blocks.
-    public func isNotIn(_ collection: [Int16])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isNotContainedIn: collection) })
-    }
-
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int16?
-
-extension Property where Property.ValueType == Int16? {
-    /// Test whether an Int16 optional `Int16?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int16 optional `Int16?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int32
-
-/// :nodoc:
-public func == <E>(lhs: Property<E, Int32>, rhs: Int32)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
+public func == <E>(lhs: Property<E, Bool, Void>, rhs: Bool) -> PropertyQueryCondition<E, Bool> where E: Entity {
     return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int32>, rhs: Int32)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
+public func != <E>(lhs: Property<E, Bool, Void>, rhs: Bool) -> PropertyQueryCondition<E, Bool> where E: Entity {
     return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int32>, rhs: Int32)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isLessThan(rhs)
+public func == <E>(lhs: Property<E, Bool?, Void>, rhs: Bool) -> PropertyQueryCondition<E, Bool?> where E: Entity {
+    return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int32>, rhs: Int32)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isGreaterThan(rhs)
+public func != <E>(lhs: Property<E, Bool?, Void>, rhs: Bool) -> PropertyQueryCondition<E, Bool?> where E: Entity {
+    return lhs.isNotEqual(to: rhs)
 }
 
-// swiftlint:disable identifier_name
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: Range<Int32>)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: ClosedRange<Int32>)
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int32>, rhs: [Int32])
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int32>, rhs: [Int32])
-    -> PropertyQueryCondition<E, Int32>
-    where E: Entity {
-    return lhs.isNotIn(rhs)
-}
-// swiftlint:enable identifier_name
-
-extension Property where Property.ValueType == Int32 {
+extension Property where Property.ValueType == Bool {
     /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
+    public func isEqual(to value: Bool) -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
     }
 
     /// Equivalent to the != operator in query blocks.
-    public func isNotEqual(to value: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
+    public func isNotEqual(to value: Bool) -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
     }
+}
 
-    /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ value: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
-    }
-
-    /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ value: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
-    }
-    
-    /// Equivalent to the <= operator in query blocks.
-    public func isLessThanEqual(_ value: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isBetween: Int32.min, and: value) })
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Int32, and upperBound: Int32)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: {
-            $0.where(self, isBetween: lowerBound, and: upperBound)
-        })
+extension Property where Property.ValueType == Bool? {
+    /// Equivalent to the == operator in query blocks.
+    public func isEqual(to value: Bool) -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
     }
 
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: Range<Int32>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: ClosedRange<Int32>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ collection: [Int32])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection) })
-    }
-
-    /// Equivalent to the ∉ operator in query blocks.
-    public func isNotIn(_ collection: [Int32])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isNotContainedIn: collection) })
-    }
-
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
+    /// Equivalent to the != operator in query blocks.
+    public func isNotEqual(to value: Bool) -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
     }
 }
 
-// MARK: Int32?
-
-extension Property where Property.ValueType == Int32? {
-    /// Test whether an Int32 optional `Int32?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int32 optional `Int32?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int64
+// MARK: FixedWidthInteger
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Int64>, rhs: Int64)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func == <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Int64>, rhs: Int64)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func != <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Int64>, rhs: Int64)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func < <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Int64>, rhs: Int64)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func > <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isGreaterThan(rhs)
 }
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: Range<Int64>)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: Range<VALUE>)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: ClosedRange<Int64>)
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: ClosedRange<VALUE>)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
         return lhs.isIn(rhs)
 }
 
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int64>, rhs: [Int64])
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
-        return lhs.isIn(rhs)
+// :nodoc:
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: [VALUE])
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int64>, rhs: [Int64])
-    -> PropertyQueryCondition<E, Int64>
-    where E: Entity {
-        return lhs.isNotIn(rhs)
+public func ∉ <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: [VALUE])
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return lhs.isNotIn(rhs)
 }
+
 // swiftlint:enable identifier_name
 
-extension Property where Property.ValueType == Int64 {
+extension Property where Property.ValueType: FixedWidthInteger {
     /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: Int64)
+    public func isEqual(to value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
     }
-
+    
     /// Equivalent to the != operator in query blocks.
-    public func isNotEqual(to value: Int64)
+    public func isNotEqual(to value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
     }
-
+    
     /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ value: Int64)
+    public func isLessThan(_ value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
     }
-
+    
     /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ value: Int64)
-        -> PropertyQueryCondition<EntityType, ValueType> {
+    public func isGreaterThan(_ value: ValueType) -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
+    }
+    
+    /// Equivalent to the <= operator in query blocks.
+    @available(*, deprecated, message: "Do not use this yet if you want to set parameters! It will change!")
+    func isLessThanEqual(_ value: ValueType)
+        -> PropertyQueryCondition<EntityType, ValueType> {
+            return PropertyQueryCondition(expression: { $0.where(self, isBetween: ValueType.min, and: value) })
     }
     
     /// Matches all property values between `lowerBound` and `upperBound`,
@@ -694,241 +304,134 @@ extension Property where Property.ValueType == Int64 {
     /// - parameter lowerBound: Lower limiting value, inclusive.
     /// - parameter upperBound: Upper limiting value, inclusive.
     /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Int64, and upperBound: Int64)
+    public func isBetween(_ lowerBound: ValueType, and upperBound: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: {
                 $0.where(self, isBetween: lowerBound, and: upperBound)
             })
     }
-
+    
     /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: Range<Int64>)
+    public func isIn(_ range: ClosedRange<ValueType>)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
     }
 
     /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: ClosedRange<Int64>)
+    public func isIn(_ range: Range<ValueType>)
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
     }
 
     /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ collection: [Int64])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection) })
-    }
-
-    /// Equivalent to the ∉ operator in query blocks.
-    public func isNotIn(_ collection: [Int64])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isNotContainedIn: collection) })
-    }
-
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int64?
-
-extension Property where Property.ValueType == Int64? {
-    /// Test whether an Int64 optional `Int64?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int64 optional `Int64?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Int
-
-/// :nodoc:
-public func == <E>(lhs: Property<E, Int>, rhs: Int)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isEqual(to: rhs)
-}
-
-/// :nodoc:
-public func != <E>(lhs: Property<E, Int>, rhs: Int)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isNotEqual(to: rhs)
-}
-
-/// :nodoc:
-public func < <E>(lhs: Property<E, Int>, rhs: Int)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isLessThan(rhs)
-}
-
-/// :nodoc:
-public func > <E>(lhs: Property<E, Int>, rhs: Int)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isGreaterThan(rhs)
-}
-
-// swiftlint:disable identifier_name
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: Range<Int>)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: ClosedRange<Int>)
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∈ <E>(lhs: Property<E, Int>, rhs: [Int])
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isIn(rhs)
-}
-
-/// :nodoc:
-public func ∉ <E>(lhs: Property<E, Int>, rhs: [Int])
-    -> PropertyQueryCondition<E, Int>
-    where E: Entity {
-    return lhs.isNotIn(rhs)
-}
-// swiftlint:enable identifier_name
-
-extension Property where Property.ValueType == Int {
-    /// Equivalent to the == operator in query blocks.
-    public func isEqual(to value: Int)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: value) })
-    }
-
-    /// Equivalent to the != operator in query blocks.
-    public func isNotEqual(to value: Int)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isNotEqualTo: value) })
-    }
-
-    /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ value: Int)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
-    }
-
-    /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ value: Int)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Int, and upperBound: Int)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: {
-            $0.where(self, isBetween: lowerBound, and: upperBound)
-        })
-    }
-
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: Range<Int>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ range: ClosedRange<Int>)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isIn: range) })
-    }
-
-    /// Equivalent to the ∈ operator in query blocks.
-    public func isIn(_ collection: [Int])
-        -> PropertyQueryCondition<EntityType, ValueType> {
+    public func isIn(_ collection: [ValueType])
+                    -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection) })
     }
 
     /// Equivalent to the ∉ operator in query blocks.
-    public func isNotIn(_ collection: [Int])
-        -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isNotContainedIn: collection) })
-    }
-
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
+    public func isNotIn(_ collection: [ValueType])
+                    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: { $0.where(self, isContainedIn: collection, notIn: true) })
     }
 }
 
-// MARK: Int?
-
-extension Property where Property.ValueType == Int? {
-    /// Test whether an Int optional `Int?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int optional `Int?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: - Double
+// MARK: Optional<FixedWidthInteger>
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Double>, rhs: Double)
-    -> PropertyQueryCondition<E, Double>
-    where E: Entity {
+public func == <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isEqual(to: rhs)
+}
+
+/// :nodoc:
+public func != <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isNotEqual(to: rhs)
+}
+
+/// :nodoc:
+public func < <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isLessThan(rhs)
+}
+
+/// :nodoc:
+public func > <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isGreaterThan(rhs)
+}
+
+// swiftlint:disable identifier_name
+/// :nodoc:
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: Range<VALUE>)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isIn(rhs)
+}
+
+/// :nodoc:
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: ClosedRange<VALUE>)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isIn(rhs)
+}
+
+// :nodoc:
+public func ∈ <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: [VALUE])
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isIn(rhs)
+}
+
+/// :nodoc:
+public func ∉ <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: [VALUE])
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isNotIn(rhs)
+}
+
+// swiftlint:enable identifier_name
+
+// MARK: - Floating point
+
+/// :nodoc:
+public func < <FP, E>(lhs: Property<E, FP, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
     return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Double>, rhs: Double)
-    -> PropertyQueryCondition<E, Double>
-    where E: Entity {
+public func > <FP, E>(lhs: Property<E, FP, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
     return lhs.isGreaterThan(rhs)
 }
 
-extension Property where Property.ValueType == Double {
+/// :nodoc:
+public func < <FP, E>(lhs: Property<E, FP?, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return nonOptional(lhs).isLessThan(rhs)
+}
+
+/// :nodoc:
+public func > <FP, E>(lhs: Property<E, FP?, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return nonOptional(lhs).isGreaterThan(rhs)
+}
+
+extension Property where Property.ValueType: BinaryFloatingPoint {
     /// Equivalent to the == operator in query blocks.
-    public func isEqual(to other: Double, tolerance: Double)
+    public func isEqual(to other: ValueType, tolerance: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: other, tolerance: tolerance) })
     }
 
     /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ double: Double)
+    public func isLessThan(_ value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isLessThan: double) })
+        return PropertyQueryCondition(expression: { $0.where(self, isLessThan: value) })
     }
 
     /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ double: Double)
+    public func isGreaterThan(_ value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: double) })
+        return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
     }
 
     /// Matches all property values between `lowerBound` and `upperBound`,
@@ -938,185 +441,72 @@ extension Property where Property.ValueType == Double {
     /// - parameter lowerBound: Lower limiting value, inclusive.
     /// - parameter upperBound: Upper limiting value, inclusive.
     /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Double, and upperBound: Double)
+    public func isBetween(_ lowerBound: ValueType, and upperBound: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: {
             $0.where(self, isBetween: lowerBound, and: upperBound)
         })
     }
 
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
 }
-
-// MARK: Double?
-
-extension Property where Property.ValueType == Double? {
-    /// Test whether an Double optional `Double?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Double optional `Double?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: - Float
-
-/// :nodoc:
-public func < <E>(lhs: Property<E, Float>, rhs: Float)
-    -> PropertyQueryCondition<E, Float>
-    where E: Entity {
-        return lhs.isLessThan(rhs)
-}
-
-/// :nodoc:
-public func > <E>(lhs: Property<E, Float>, rhs: Float)
-    -> PropertyQueryCondition<E, Float>
-    where E: Entity {
-        return lhs.isGreaterThan(rhs)
-}
-
-extension Property where Property.ValueType == Float {
-    /// Equivalent to the == operator in query blocks.
-    public func isEqual(to other: Float, tolerance: Float)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isEqualTo: other, tolerance: tolerance) })
-    }
-    
-    /// Equivalent to the < operator in query blocks.
-    public func isLessThan(_ double: Float)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isLessThan: double) })
-    }
-    
-    /// Equivalent to the > operator in query blocks.
-    public func isGreaterThan(_ double: Float)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: double) })
-    }
-    
-    /// Matches all property values between `lowerBound` and `upperBound`,
-    /// including the bounds themselves. The order of the bounds does not matter.
-    ///
-    /// - parameter queryProperty: Entity property to compare values of.
-    /// - parameter lowerBound: Lower limiting value, inclusive.
-    /// - parameter upperBound: Upper limiting value, inclusive.
-    /// - returns: `QueryCondition` describing the property match condition.
-    public func isBetween(_ lowerBound: Float, and upperBound: Float)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: {
-                $0.where(self, isBetween: lowerBound, and: upperBound)
-            })
-    }
-
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
-// MARK: Float?
-
-extension Property where Property.ValueType == Float? {
-    /// Test whether an Float optional `Float?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Float optional `Float?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
-
 
 // MARK: - String
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, String>, rhs: String)
-    -> PropertyQueryCondition<E, String>
-    where E: Entity {
-        return lhs.isEqual(to: rhs)
+public func == <E>(lhs: Property<E, String, Void>, rhs: String) -> PropertyQueryCondition<E, String> where E: Entity {
+    return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, String>, rhs: String)
-    -> PropertyQueryCondition<E, String>
-    where E: Entity {
-        return lhs.isNotEqual(to: rhs)
+public func != <E>(lhs: Property<E, String, Void>, rhs: String) -> PropertyQueryCondition<E, String> where E: Entity {
+    return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, String>, rhs: String)
-    -> PropertyQueryCondition<E, String>
-    where E: Entity {
-        return lhs.isLessThan(rhs)
+public func < <E>(lhs: Property<E, String, Void>, rhs: String) -> PropertyQueryCondition<E, String> where E: Entity {
+    return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, String>, rhs: String)
-    -> PropertyQueryCondition<E, String>
-    where E: Entity {
-        return lhs.isGreaterThan(rhs)
+public func > <E>(lhs: Property<E, String, Void>, rhs: String) -> PropertyQueryCondition<E, String> where E: Entity {
+    return lhs.isGreaterThan(rhs)
 }
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, String>, rhs: [String])
-    -> PropertyQueryCondition<E, String>
-    where E: Entity {
-        return lhs.isIn(rhs)
+public func ∈ <E>(lhs: Property<E, String, Void>, rhs: [String]) -> PropertyQueryCondition<E, String> where E: Entity {
+    return lhs.isIn(rhs)
 }
+
 // swiftlint:enable identifier_name
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, String?>, rhs: String)
-    -> PropertyQueryCondition<E, String?>
-    where E: Entity {
-        return lhs.isEqual(to: rhs)
+public func == <E>(lhs: Property<E, String?, Void>, rhs: String) -> PropertyQueryCondition<E, String?> where E: Entity {
+    return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, String?>, rhs: String)
-    -> PropertyQueryCondition<E, String?>
-    where E: Entity {
-        return lhs.isNotEqual(to: rhs)
+public func != <E>(lhs: Property<E, String?, Void>, rhs: String) -> PropertyQueryCondition<E, String?> where E: Entity {
+    return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, String?>, rhs: String)
-    -> PropertyQueryCondition<E, String?>
-    where E: Entity {
-        return lhs.isLessThan(rhs)
+public func < <E>(lhs: Property<E, String?, Void>, rhs: String) -> PropertyQueryCondition<E, String?> where E: Entity {
+    return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, String?>, rhs: String)
-    -> PropertyQueryCondition<E, String?>
-    where E: Entity {
-        return lhs.isGreaterThan(rhs)
+public func > <E>(lhs: Property<E, String?, Void>, rhs: String) -> PropertyQueryCondition<E, String?> where E: Entity {
+    return lhs.isGreaterThan(rhs)
 }
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, String?>, rhs: [String])
-    -> PropertyQueryCondition<E, String?>
-    where E: Entity {
-        return lhs.isIn(rhs)
+public func ∈ <E>(lhs: Property<E, String?, Void>, rhs: [String]) -> PropertyQueryCondition<E, String?>
+        where E: Entity {
+    return lhs.isIn(rhs)
 }
+
 // swiftlint:enable identifier_name
 
 extension Property where Property.ValueType: StringPropertyType {
@@ -1188,62 +578,41 @@ extension Property where Property.ValueType: StringPropertyType {
             queryBuilder.where(self, contains: substring, caseSensitive: caseSensitive)})
     }
 
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
 }
 
-// MARK: String?
-
-extension Property where Property.ValueType == String? {
-    /// Test whether a String optional `String?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a String optional `String?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
 
 // MARK: - Data
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Data>, rhs: Data)
+public func == <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Data>, rhs: Data)
+public func < <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func <= <E>(lhs: Property<E, Data>, rhs: Data)
+public func <= <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isLessThanEqual(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Data>, rhs: Data)
+public func > <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
 }
 
 /// :nodoc:
-public func >= <E>(lhs: Property<E, Data>, rhs: Data)
+public func >= <E>(lhs: Property<E, Data, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data>
     where E: Entity {
         return lhs.isGreaterThanEqual(rhs)
@@ -1251,21 +620,21 @@ public func >= <E>(lhs: Property<E, Data>, rhs: Data)
 // swiftlint:enable identifier_name
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Data?>, rhs: Data)
+public func == <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Data?>, rhs: Data)
+public func < <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isLessThan(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Data?>, rhs: Data)
+public func > <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     -> PropertyQueryCondition<E, Data?>
     where E: Entity {
         return lhs.isGreaterThan(rhs)
@@ -1307,56 +676,34 @@ extension Property where Property.ValueType: DataPropertyType {
             return PropertyQueryCondition(expression: { queryBuilder in
                 queryBuilder.where(self, isGreaterThanEqual: data) })
     }
-    
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
 
-// MARK: Data?
-
-extension Property where Property.ValueType == Data? {
-    /// Test whether a Data optional `Data?` is `nil`, in a query on a property.
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Data optional `Data?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
 }
 
 // MARK: - Date
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Date>, rhs: Date)
+public func == <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Date>, rhs: Date)
+public func != <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Date>, rhs: Date)
+public func < <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isBefore(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Date>, rhs: Date)
+public func > <E>(lhs: Property<E, Date, Void>, rhs: Date)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isAfter(rhs)
@@ -1364,28 +711,28 @@ public func > <E>(lhs: Property<E, Date>, rhs: Date)
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: Range<Date>)
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: Range<Date>)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: ClosedRange<Date>)
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: ClosedRange<Date>)
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date>, rhs: [Date])
+public func ∈ <E>(lhs: Property<E, Date, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Date>, rhs: [Date])
+public func ∉ <E>(lhs: Property<E, Date, Void>, rhs: [Date])
     -> PropertyQueryCondition<E, Date>
     where E: Entity {
     return lhs.isNotIn(rhs)
@@ -1452,73 +799,51 @@ extension Property where Property.ValueType: DatePropertyType {
         return PropertyQueryCondition(expression: { $0.where(self, isAfter: other) })
     }
 
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
 }
 
 // MARK: - Date?
 
 /// :nodoc:
-public func == <E>(lhs: Property<E, Date?>, rhs: Date)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isEqual(to: rhs)
+public func == <E>(lhs: Property<E, Date?, Void>, rhs: Date) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isEqual(to: rhs)
 }
 
 /// :nodoc:
-public func != <E>(lhs: Property<E, Date?>, rhs: Date)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isNotEqual(to: rhs)
+public func != <E>(lhs: Property<E, Date?, Void>, rhs: Date) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isNotEqual(to: rhs)
 }
 
 /// :nodoc:
-public func < <E>(lhs: Property<E, Date?>, rhs: Date)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isBefore(rhs)
+public func < <E>(lhs: Property<E, Date?, Void>, rhs: Date) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isBefore(rhs)
 }
 
 /// :nodoc:
-public func > <E>(lhs: Property<E, Date?>, rhs: Date)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isAfter(rhs)
+public func > <E>(lhs: Property<E, Date?, Void>, rhs: Date) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isAfter(rhs)
 }
 
 // swiftlint:disable identifier_name
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: Range<Date>)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isIn(rhs)
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: Range<Date>) -> PropertyQueryCondition<E, Date?>
+        where E: Entity {
+    return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: ClosedRange<Date>)
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isIn(rhs)
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: ClosedRange<Date>) -> PropertyQueryCondition<E, Date?>
+        where E: Entity {
+    return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∈ <E>(lhs: Property<E, Date?>, rhs: [Date])
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isIn(rhs)
+public func ∈ <E>(lhs: Property<E, Date?, Void>, rhs: [Date]) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isIn(rhs)
 }
 
 /// :nodoc:
-public func ∉ <E>(lhs: Property<E, Date?>, rhs: [Date])
-    -> PropertyQueryCondition<E, Date?>
-    where E: Entity {
-        return lhs.isNotIn(rhs)
+public func ∉ <E>(lhs: Property<E, Date?, Void>, rhs: [Date]) -> PropertyQueryCondition<E, Date?> where E: Entity {
+    return lhs.isNotIn(rhs)
 }
 // swiftlint:enable identifier_name
 
@@ -1581,15 +906,5 @@ extension Property where Property.ValueType == Date? {
         -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isAfter: other) })
     }
-    
-    public func isNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNull: self) })
-    }
-    
-    /// Test whether a Int8 optional `Int8?` contains a value, not `nil`, in a query on a property.
-    public func isNotNil() -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: { $0.where(isNotNull: self) })
-    }
-}
 
-// MARK: Date?
+}

@@ -18,7 +18,7 @@
 #import "Constants.h"
 #include <stdexcept>
 #import "ObjectBoxC.h"
-#import "OBXPropertyConstants.h" // Just so Swift sees it used somewhere.
+
 
 extern "C" void runRethrowingExceptions(void (NS_NOESCAPE ^ _Nonnull block)()) {
     runWithExceptionHandling(nil, block);

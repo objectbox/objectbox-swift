@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class BusRoute: Entity {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     // deleted lineName string in a previous run.
     var newProperty: String = ""
     

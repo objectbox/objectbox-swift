@@ -7,9 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<WashingMachine>
+			propertyType = EntityId<WashingMachine>
 			entityName = WashingMachine
-			unwrappedPropertyType = Id<WashingMachine>
+			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -60,9 +60,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<WashingMachine>
+			propertyType = EntityId<WashingMachine>
 			entityName = WashingMachine
-			unwrappedPropertyType = Id<WashingMachine>
+			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil
@@ -76,9 +76,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id<WashingMachine>
+			propertyType = EntityId<WashingMachine>
 			entityName = WashingMachine
-			unwrappedPropertyType = Id<WashingMachine>
+			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil
 			modelIndexId = nil
 			backlinkName = nil

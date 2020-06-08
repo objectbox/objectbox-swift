@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class Building: Entity, CustomDebugStringConvertible {
-    var id: Id<Building> = 0
+    var id: EntityId<Building> = 0
     // objectbox: unique
     var buildingName: String = ""
     var buildingNumber: Int = 0
@@ -25,7 +25,7 @@ class Building: Entity, CustomDebugStringConvertible {
 }
 
 func main(_ args: [String]) throws -> Int32 {
-    let storeFolder = URL(fileURLWithPath: "/tmp/tooltestDB2/")
+    let storeFolder = URL(fileURLWithPath: "/tmp/tooltestDB30/")
     try? FileManager.default.removeItem(atPath: storeFolder.path)
     try FileManager.default.createDirectory(at: storeFolder, withIntermediateDirectories: false)
     
@@ -33,10 +33,10 @@ func main(_ args: [String]) throws -> Int32 {
     
     let buildingBox = store.box(for: Building.self)
 
-    var firstUniqueID: Id<Building>?
-    var secondNonUniqueID: Id<Building>?
-    var thirdUniqueID: Id<Building>?
-    var fourthUniqueID: Id<Building>?
+    var firstUniqueID: EntityId<Building>?
+    var secondNonUniqueID: EntityId<Building>?
+    var thirdUniqueID: EntityId<Building>?
+    var fourthUniqueID: EntityId<Building>?
 
     do {
         let testBuilding1 = Building()
@@ -74,14 +74,14 @@ func main(_ args: [String]) throws -> Int32 {
         print("error: \(error)")
     }
 
-    let retrievedBuilding1 = buildingBox.get(firstUniqueID!)
+    let retrievedBuilding1 = try buildingBox.get(firstUniqueID!)
     if retrievedBuilding1 == nil {
         print("error: Could not retrieve first building written.")
     } else {
         print("note: As expected, first building written.")
     }
     if let secondNonUniqueID = secondNonUniqueID {
-        if buildingBox.get(secondNonUniqueID) != nil {
+        if try buildingBox.get(secondNonUniqueID) != nil {
             print("error: Non-unique building was written despite everything.")
         } else {
             print("error: Received a building ID for writing the non-unique building.")
@@ -89,20 +89,20 @@ func main(_ args: [String]) throws -> Int32 {
     } else {
         print("note: As expected, second building not written.")
     }
-    let retrievedBuilding3 = buildingBox.get(thirdUniqueID!)
+    let retrievedBuilding3 = try buildingBox.get(thirdUniqueID!)
     if retrievedBuilding3 == nil {
         print("error: Could not retrieve third building written.")
     } else {
         print("note: As expected, third building written.")
     }
-    let retrievedBuilding4 = buildingBox.get(fourthUniqueID!)
+    let retrievedBuilding4 = try buildingBox.get(fourthUniqueID!)
     if retrievedBuilding4 == nil {
         print("error: Could not retrieve fourth building written.")
     } else {
         print("note: As expected, fourth building written.")
     }
     
-    print("note: Ran \(args.first ?? "???") tests.")
+    print("note: Ran \(args.count > 1 ? args[1] : "???") tests.")
 
     try? FileManager.default.removeItem(atPath: storeFolder.path)
 

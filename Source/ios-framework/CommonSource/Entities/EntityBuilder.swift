@@ -41,24 +41,23 @@ public class EntityBuilder<T> {
     }
     
     /// Add the given property to this entity.
-    public func addProperty(name: String, type: OBXPropertyType, flags: EntityPropertyFlag = [], id propertyID: UInt32,
+    public func addProperty(name: String, type: PropertyType, flags: PropertyFlags = [], id propertyID: UInt32,
                             uid UID: UInt64, indexId indexID: UInt32 = 0, indexUid indexUID: UInt64 = 0) throws {
         let err1 = obx_model_property(model, name, type, propertyID, UID)
-        try check(error: err1, message: String(utf8String: obx_last_error_message())!)
-        let err2 = obx_model_property_flags(model,
-                                            OBXPropertyFlags(rawValue: OBXPropertyFlags.RawValue(flags.rawValue)))
-        try check(error: err2, message: String(utf8String: obx_last_error_message())!)
+        try checkLastError(err1)
+        let err2 = obx_model_property_flags(model, flags)
+        try checkLastError(err2)
         if indexID != 0 && indexUID != 0 {
             let err3 = obx_model_property_index_id(model, indexID, indexUID)
-            try check(error: err3, message: String(utf8String: obx_last_error_message())!)
+            try checkLastError(err3)
         }
     }
     
     // swiftlint:disable function_parameter_count
     /// Add a to-one-relation (e.g. a pointer from a parent to its children) to the model.
-    public func addToOneRelation(name: String, targetEntityInfo: EntityInfo, flags: EntityPropertyFlag = [],
-                                 id propertyID: UInt32, uid propertyUID: UInt64, indexId indexID: UInt32,
-                                 indexUid indexUID: UInt64) throws {
+    public func addToOneRelation(name: String, targetEntityInfo: EntityInfo, flags: PropertyFlags = [],
+                                 id propertyID: UInt32, uid propertyUID: UInt64,
+                                 indexId indexID: UInt32, indexUid indexUID: UInt64) throws {
         var finalFlags = flags
         finalFlags.insert(.indexed)
         finalFlags.insert(.indexPartialSkipZero)
@@ -67,13 +66,20 @@ public class EntityBuilder<T> {
                         indexId: indexID, indexUid: indexUID)
         
         let err1 = obx_model_property_relation(model, targetEntityInfo.entityName, indexID, indexUID)
-        try check(error: err1, message: String(utf8String: obx_last_error_message())!)
+        try checkLastError(err1)
     }
     // swiftlint:enable function_parameter_count
 
+    /// Add a standalone to-many-relation from this entity to another to the model.
+    public func addToManyRelation(id relationId: obx_schema_id, uid relationUid: obx_uid,
+                                  targetId: obx_schema_id, targetUid: obx_uid) throws {
+        let err1 = obx_model_relation(model, relationId, relationUid, targetId, targetUid)
+        try checkLastError(err1)
+    }
+    
     /// Register the highest property ID used for this entity.
     public func lastProperty(id propertyID: UInt32, uid propertyUID: UInt64) throws {
         let err1 = obx_model_entity_last_property_id(model, propertyID, propertyUID)
-        try check(error: err1, message: String(utf8String: obx_last_error_message())!)
+        try checkLastError(err1)
     }
 }

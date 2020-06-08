@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class WashingMachine: Entity {
-    var id: Id<WashingMachine> = 0
+    var id: EntityId<WashingMachine> = 0
     // objectbox: uid = 15616
     var dryerRack: String = ""
     var destinationName: String = ""

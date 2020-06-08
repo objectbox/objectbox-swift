@@ -79,7 +79,7 @@ public protocol EntityReader {
     func read(at index: UInt16) -> [UInt8]
 
     /// - Returns: The ID read, if present, or the invalid ID of 0 if no ID was present.
-    func read<E: EntityInspectable & __EntityRelatable>(at index: UInt16) -> Id<E>
+    func read<E: EntityInspectable & __EntityRelatable>(at index: UInt16) -> EntityId<E>
         where E == E.EntityBindingType.EntityType
     /// - Returns: A to-one relation, ID will == 0 if the relation hasn't been connected yet.
     func read<T: EntityInspectable & __EntityRelatable>(at index: UInt16, store: Store) -> ToOne<T>

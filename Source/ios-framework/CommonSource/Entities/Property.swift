@@ -23,13 +23,16 @@
 /// queries.
 /// Below you see a list of methods that are available to you for property queries, apart from the operators described
 /// under [Query Syntax](../query-syntax.html).
-public struct Property<E: EntityInspectable & __EntityRelatable, T: EntityPropertyTypeConvertible>
+public struct Property<E: EntityInspectable & __EntityRelatable, V: EntityPropertyTypeConvertible, R>
 where E == E.EntityBindingType.EntityType {
     /// Entity type that contains the property this object is describing.
     public typealias EntityType = E
 
     /// Supported property value type this is describing.
-    public typealias ValueType = T
+    public typealias ValueType = V
+
+    /// If this is a ToOne property, this is the type it refers to. Otherwise Void.
+    public typealias ReferencedType = R
 
     internal let base: PropertyDescriptor
 
@@ -39,7 +42,7 @@ where E == E.EntityBindingType.EntityType {
 
     public init(propertyId: UInt32, isPrimaryKey: Bool = false) {
         self.init(base: PropertyDescriptor(propertyId: propertyId, isPrimaryKey: isPrimaryKey,
-                                           type: T.entityPropertyType))
+                                           type: V.entityPropertyType))
     }
 
     /// Indicates if the property is the entity's primary key.
@@ -48,3 +51,7 @@ where E == E.EntityBindingType.EntityType {
     /// The internal ID of the property, in terms of the database schema.
     public var propertyId: UInt32 { return base.propertyId }
 }
+
+/// Property represents a "value" and not a relation; TODO Decide if useful (one generic parameter less) or drop it
+public typealias ValueProperty<E: EntityInspectable & __EntityRelatable, V: EntityPropertyTypeConvertible> =
+        Property<E, V, Void> where E == E.EntityBindingType.EntityType

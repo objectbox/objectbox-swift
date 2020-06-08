@@ -68,6 +68,13 @@ public enum ObjectBoxError: Swift.Error {
     case schema(message: String)
     /// The database file has errors, e.g. has a structural inconsistency.
     case fileCorrupt(message: String)
+    /// Attempted to establish a relation to an entity that hasn't been assigned an ID yet.
+    case cannotRelateToUnsavedEntities(message: String)
+    /// Unexpected error, should never occur in practice, but for pragmatic reasons, we cover the case.
+    /// Used in some cases where ObjectBox e.g. calls a function (which can only say throws and not what it throws)
+    /// If you encounter this error in your use of ObjectBox, please report it to us, as it's likely a bug in the
+    /// binding.
+    case unexpected(error: Error)
 }
 
 // This method uses our Swift code for generating ObjectBoxErrors and then wraps that ObjectBoxError in an ObjC error.
@@ -104,19 +111,31 @@ internal func checkLastError() throws {
 internal func checkLastError(_ error: obx_err) throws {
     if error == OBX_SUCCESS { return }
     let message = String(utf8String: obx_last_error_message()) ?? ""
+    if error != OBX_NOT_FOUND {
+        // In case the error is not catched, info might be lost; so better print it now(?), or is there a better way?
+        print("Error occurred: \(message) (\(error))")
+    }
     obx_last_error_clear()
     try throwObxErr(error, message: message)
 }
 
+/// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
 internal func failFatallyIfError() {
-    let error = obx_last_error_code()
-    if error == OBX_SUCCESS { return }
-    let message = String(utf8String: obx_last_error_message()) ?? ""
-    obx_last_error_clear()
-    do {
-        try throwObxErr(error, message: message)
-    } catch {
-        fatalError("Unexpected error \(error)")
+    checkFatalError(obx_last_error_code())
+}
+
+/// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
+internal func checkFatalError(_ err: obx_err) {
+    if err != OBX_SUCCESS {
+        for symbol in Thread.callStackSymbols {
+            // Print the stack trace without the "unexciting" symbols
+            if !symbol.contains("XCTest") && !symbol.contains("xctest") && !symbol.contains("CoreFoundation") 
+                       && !symbol.contains("checkFatalError") && !symbol.contains("failFatallyIfError") {
+                print(symbol)
+            }
+        }
+        let message = String(utf8String: obx_last_error_message()) ?? "Unknown"
+        fatalError("\(message) (\(err))")
     }
 }
 
@@ -129,8 +148,8 @@ internal func check(error: obx_err, message: String = "") throws {
 /// Ignore and log the given Swift error.
 internal func ignoreAndLog(error: Error) {
     switch error {
-    case ObjectBoxError.unknown(let code):
-        print("Error: Unknown ObjectBox error \(code).")
+    case ObjectBoxError.unknown(let code, let message):
+        print("Error: Unknown ObjectBox error '\(message)' (\(code))")
     default:
         print("Error: \(error).")
     }
@@ -141,14 +160,18 @@ internal func ignoreAndLog(error: Error) {
 /// This method always throws and never returns.
 internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never {
     switch err {
-    /// Returned by e.g. get operations if nothing was found for a specific ID.
+        /// Returned by e.g. get operations if nothing was found for a specific ID.
     /// This is NOT an error condition, and thus no last error info is set.
     case OBX_NOT_FOUND:
         throw ObjectBoxError.notFound(message: message)
     
     // General errors
     case OBX_ERROR_ILLEGAL_STATE:
-        throw ObjectBoxError.illegalState(message: message)
+        if message.hasPrefix("Cannot start a write transaction inside a read only transaction") {
+            throw ObjectBoxError.cannotWriteWhileReading(message: message)
+        } else {
+            throw ObjectBoxError.illegalState(message: message)
+        }
     case OBX_ERROR_ILLEGAL_ARGUMENT:
         throw ObjectBoxError.illegalArgument(message: message)
     case OBX_ERROR_ALLOCATION:
@@ -168,8 +191,13 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
     case OBX_ERROR_STORE_MUST_SHUTDOWN:
         throw ObjectBoxError.storeMustShutdown(message: message)
     case OBX_ERROR_STORAGE_GENERAL:
+        #if os(macOS) // Only macOS needs an App Group to do its mutexes, iOS uses a different mutex.
+        if message.hasPrefix("Could not open env for DB") { // Error reported from obx_store_open().
+            throw ObjectBoxError.storageGeneral(message: message + " - did you perhaps forget to set up an "
+                + "\"App Group\" Capability in your target settings?")
+        }
+        #endif
         throw ObjectBoxError.storageGeneral(message: message)
-
     // Data errors
     case OBX_ERROR_UNIQUE_VIOLATED:
         throw ObjectBoxError.uniqueViolation(message: message)

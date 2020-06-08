@@ -36,9 +36,9 @@ import Foundation
 /// `PropertyQuery` will respect the conditions of its base `Query`. So if you want to find the average age of all
 /// `Person`s above 30, this is how you can write it:
 ///
-///      let query = personBox.query { Person.age > 29 }
+///      let query = try personBox.query { Person.age > 29 }.build()
 ///      let ageQuery = query.property(Person.age)
-///      let averageAge = ageQuery.average
+///      let averageAge = try ageQuery.average()
 ///
 /// - Note: Property values do currently not consider any sorting order defined in the main `Query` object.
 public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPropertyTypeConvertible>
@@ -50,86 +50,62 @@ public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPr
     /// The type of the entity's property this query is targeting.
     public typealias ValueType = T
 
+    internal let query: Query<EntityType>  // Hold on to main query to keep it alive
     internal let box: Box<EntityType>
+
+    internal var cQueryProp: OpaquePointer /*OBX_query_prop*/
+
     internal var nullString: String?
     internal var nullLong: Int64?
     internal var nullDouble: Double?
-    /// True if only distinct values should be returned (e.g. 1,2,3 instead of 1,1,2,3,3,3).
-    internal var makeDistinct = false
-    internal var makeCompareCaseSensitive = true
-    internal var store: Store
-    internal var cQuery: OpaquePointer /*OBX_query*/
-    internal var propertyId: obx_schema_id
 
-    internal init(query: OpaquePointer /*OBX_query*/, propertyId: obx_schema_id, store: Store) {
-        self.store = store
-        self.cQuery = query
-        self.propertyId = propertyId
-        self.box = store.box(for: EntityType.self)
+    internal init(query: Query<EntityType>, propertyId: obx_schema_id) {
+        self.query = query
+        self.box = query.store.box(for: EntityType.self)
+
+        let cPropertyQuery: OpaquePointer? = obx_query_prop(query.cQuery, propertyId)
+        if cPropertyQuery == nil {
+            // swiftlint:disable force_try
+            try! checkLastError() // Should always throw; runtime error is OK because is an dev error (wrong schema ID)
+            try! throwObxErr(0, message: "Should have thrown before")
+            // swiftlint:enable force_try
+        }
+        self.cQueryProp = cPropertyQuery!
     }
-}
 
-// MARK: - Central bottlenecks
-
-extension PropertyQuery {
     internal func longSum(box: OpaquePointer /*OBX_box*/) throws -> Int64 {
         var result = Int64(0)
-        try checkLastError(obx_query_prop_sum_int(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_sum_int(cQueryProp, &result, nil))
         return result
     }
     
     internal func longMax(box: OpaquePointer /*OBX_box*/) throws -> Int64 {
         var result = Int64(0)
-        try checkLastError(obx_query_prop_max_int(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_max_int(cQueryProp, &result, nil))
         return result
     }
     
     internal func longMin(box: OpaquePointer /*OBX_box*/) throws -> Int64 {
         var result = Int64(0)
-        try checkLastError(obx_query_prop_min_int(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_min_int(cQueryProp, &result, nil))
         return result
     }
-    
-    internal func findLong(box: OpaquePointer /*OBX_box*/) throws -> Int64? {
-        let result = try findLongs(box: box)
-        return result.last
-    }
-    
-    internal func findLongs(box: OpaquePointer /*OBX_box*/) throws -> [Int64] {
-        let cResult: UnsafeMutablePointer<OBX_int64_array>?
-        var nullValue: Int64 = nullLong ?? 0
-        cResult = obx_query_prop_int64_find(cQuery, box, propertyId,
-                                            (nullLong != nil) ? UnsafePointer<Int64>(&nullValue) : nil, makeDistinct)
-        try checkLastError()
-        defer { obx_int64_array_free(cResult) }
-        
-        guard let longs = cResult?.pointee else { return [] }
-        
-        var result = [Int64]()
-        result.reserveCapacity(longs.count)
-        
-        for longIndex in 0 ..< longs.count {
-            result.append(longs.items[longIndex])
-        }
-        
-        return result
-    }
-    
+
     internal func doubleSum(box: OpaquePointer /*OBX_box*/) throws -> Double {
         var result = Double(0)
-        try checkLastError(obx_query_prop_sum(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_sum(cQueryProp, &result, nil))
         return result
     }
     
     internal func doubleMax(box: OpaquePointer /*OBX_box*/) throws -> Double {
         var result = Double(0)
-        try checkLastError(obx_query_prop_max(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_max(cQueryProp, &result, nil))
         return result
     }
     
     internal func doubleMin(box: OpaquePointer /*OBX_box*/) throws -> Double {
         var result = Double(0)
-        try checkLastError(obx_query_prop_min(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_min(cQueryProp, &result, nil))
         return result
     }
     
@@ -138,44 +114,44 @@ extension PropertyQuery {
         return result.last
     }
     
-    internal func findDoubles(box: OpaquePointer /*OBX_box*/)
-        throws -> [Double] {
+    internal func findDoubles(box: OpaquePointer /*OBX_box*/) throws -> [Double] {
         let cResult: UnsafeMutablePointer<OBX_double_array>?
-        var nullValue: Double = nullDouble ?? 0.0
-        cResult = obx_query_prop_double_find(cQuery, box, propertyId,
-                                             (nullDouble != nil) ? UnsafePointer<Double>(&nullValue) : nil,
-                                             makeDistinct)
+        if nullDouble != nil {
+            var nullValue: Double = nullDouble!
+            cResult = obx_query_prop_double_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_double_find(cQueryProp, nil)
+        }
+        defer { obx_double_array_free(cResult) }
         try checkLastError()
-        
-        defer { if let cResult = cResult { obx_double_array_free(cResult) } }
-        
+
         guard let doubles = cResult?.pointee else { return [] }
         
-        var result = [Double]()
-        result.reserveCapacity(doubles.count)
-        
-        for doubleIndex in 0 ..< doubles.count {
-            result.append(doubles.items[doubleIndex])
+        return [Double](unsafeUninitializedCapacity: doubles.count) { (ptr, initializedCount) in
+            for doubleIndex in 0 ..< doubles.count {
+                ptr[doubleIndex] = doubles.items[doubleIndex]
+            }
+            initializedCount = doubles.count
         }
-        
-        return result
     }
     
     internal func average(box: OpaquePointer /*OBX_box*/) throws -> Double {
         var result = Double(0)
-        try checkLastError(obx_query_prop_avg(cQuery, box, propertyId, &result))
+        try checkLastError(obx_query_prop_avg(cQueryProp, &result, nil))
         return result
     }
     
+    internal func averageIntInternal(box: OpaquePointer /*OBX_box*/) throws -> Int64 {
+        var result = Int64(0)
+        try checkLastError(obx_query_prop_avg_int(cQueryProp, &result, nil))
+        return result
+    }
+
     internal func findStrings(box: OpaquePointer /*OBX_box*/)
         throws -> [String] {
         let fetch = { (ptr: UnsafePointer<Int8>?) -> UnsafeMutablePointer<OBX_string_array>? in
             let result: UnsafeMutablePointer<OBX_string_array>?
-            var flags: OBXQueryFlags = []
-            if self.makeDistinct {
-                flags.insert(self.makeCompareCaseSensitive ? .DISTINCT_CASE_SENSITIVE : .DISTINCT_CASE_INSENSITIVE)
-            }
-            result = obx_query_prop_string_find(self.cQuery, box, self.propertyId, ptr, flags)
+            result = obx_query_prop_string_find(self.cQueryProp, ptr)
             try checkLastError()
             return result
         }
@@ -190,256 +166,198 @@ extension PropertyQuery {
         
         guard let strings = cResult?.pointee else { return [] }
         
-        var result = [String]()
-        result.reserveCapacity(strings.count)
-        
+        // Crashes when I use the unsafeUninitializedCapacity initializer below.
+        // Seems it tries to deinit the uninitialized memory on assignment.
+        var result = [String](repeating: "", count: strings.count)
         for stringIndex in 0 ..< strings.count {
             if let string = strings.items[stringIndex] {
-                result.append(String(utf8String: string)!)
+                result[stringIndex] = String(utf8String: string)!
             }
         }
-        
         return result
     }
-}
 
-extension PropertyQuery {
     /// The count of objects matching this query.
-    public var count: Int {
+    public func count() throws -> Int {
         var result: UInt64 = 0
-        
-        do {
-            try checkLastError(obx_query_prop_count(cQuery, box.cBox, propertyId, makeDistinct, &result))
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
+        try checkLastError(obx_query_prop_count(cQueryProp, &result))
         return Int(result)
     }
-}
 
-// MARK: - Distinct
-
-extension PropertyQuery where T: EntityScalarPropertyType {
     /// Enable that only distinct values should be returned (e.g. 1,2,3 instead of 1,1,2,3,3,3).
     ///
     /// - Note: Cannot be unset.
     /// - Returns: `self` for chaining
     @discardableResult
-    public func distinct() -> PropertyQuery<EntityType, ValueType> {
-        makeDistinct = true
+    public func distinct() throws -> PropertyQuery<EntityType, ValueType> {
+        obx_query_prop_distinct(cQueryProp, true)
+        try checkLastError()
         return self
     }
 }
 
-// MARK: - Integer Aggregates
+// MARK: - Integer
 
-// `longSum` guarantees Int64, but Int may be Int32 on some platforms;
-// so we wrap it in the easy-to-consume Int, except for Int64
-
-extension PropertyQuery where T == Int {
+extension PropertyQuery where T: FixedWidthInteger {
     /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Int {
-        var result: Int64 = 0
-        
-        do {
-            result = try longSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int(result)
+    public func sum() throws -> Int64 {
+        return try longSum(box: box.cBox)
+    }
+
+    /// Sums up all values for the given property over all Objects matching the query.
+    public func sumInt() throws -> Int {
+        return try Int(longSum(box: box.cBox))
+    }
+
+    /// Sums up all values for the given property over all Objects matching the query.
+    public func sumUnsigned() throws -> UInt64 {
+        return try UInt64(truncatingIfNeeded: longSum(box: box.cBox))
     }
 
     /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Int {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int(result)
+    public func max() throws -> T {
+        return try T(longMax(box: box.cBox))
     }
 
     /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Int {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int(result)
+    public func min() throws -> T {
+        return try T(longMin(box: box.cBox))
     }
 
     /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-            
-        return result
+    public func average() throws -> Double {
+        return try average(box: box.cBox)
     }
 
-    /// Find the values for the given property for objects matching the query.
-    ///
-    /// - Note: Results are not guaranteed to be in any particular order.
-    /// - Returns: Values for the given property.
-    public func findIntegers() -> [Int] {
-        var result: [Int64] = []
-        
-        do {
-            result = try findLongs(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result.map { Int($0) }
+    /// Calculates the average of all values for the given property over all Objects matching the query.
+    public func averageInt() throws -> T {
+        return try T(averageIntInternal(box: box.cBox))
     }
 
-    /// Find a value for the given property.
-    ///
-    /// - Returns: A value of the objects matching the query, `nil` if no value was found.
-    public func findInteger() -> Int? {
-        var result: Int64?
-        
-        do {
-            result = try findLong(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        if let result = result {
-            return Int(result)
+    /// T: Int64 or UInt64 (only)
+    internal func findInts64Internal() throws -> [T] {
+        let cResult: UnsafeMutablePointer<OBX_int64_array>?
+        if nullLong != nil {
+            var nullValue: Int64 = Int64(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int64_find(cQueryProp, &nullValue)
         } else {
-            return nil
+            cResult = obx_query_prop_int64_find(cQueryProp, nil)
+        }
+        defer { obx_int64_array_free(cResult) }
+        try checkLastError()
+
+        guard let cArray = cResult?.pointee else { return [] }
+        return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
+            for longIndex in 0..<cArray.count {
+                ptr[longIndex] = T(truncatingIfNeeded: cArray.items[longIndex])
+            }
+            initializedCount = cArray.count
         }
     }
-}
 
-extension PropertyQuery where T: LongPropertyType {
-    /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Int64 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
+    /// T: Int32 or UInt32 (only)
+    internal func findInts32Internal() throws -> [T] {
+        let cResult: UnsafeMutablePointer<OBX_int32_array>?
+        if nullLong != nil {
+            var nullValue: Int32 = Int32(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int32_find(cQueryProp, &nullValue)
+        } else {
+            cResult  = obx_query_prop_int32_find(cQueryProp, nil)
         }
-        
-        return result
+        defer { obx_int32_array_free(cResult) }
+        try checkLastError()
+
+        guard let cArray = cResult?.pointee else { return [] }
+        return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
+            for longIndex in 0..<cArray.count {
+                ptr[longIndex] = T(truncatingIfNeeded: cArray.items[longIndex])
+            }
+            initializedCount = cArray.count
+        }
     }
 
-    /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Int64 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
+    /// T: Int16 or UInt16 (only)
+    internal func findInts16Internal() throws -> [T] {
+        let cResult: UnsafeMutablePointer<OBX_int16_array>?
+        if nullLong != nil {
+            var nullValue: Int16 = Int16(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int16_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_int16_find(cQueryProp, nil)
         }
-        
-        return result
+        defer { obx_int16_array_free(cResult) }
+        try checkLastError()
+
+        guard let cArray = cResult?.pointee else { return [] }
+        return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
+            for longIndex in 0..<cArray.count {
+                ptr[longIndex] = T(truncatingIfNeeded: cArray.items[longIndex])
+            }
+            initializedCount = cArray.count
+        }
     }
 
-    /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Int64 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
+    /// T: Int8 or UInt8 (only)
+    internal func findInts8Internal() throws -> [T] {
+        let cResult: UnsafeMutablePointer<OBX_int8_array>?
+        if nullLong != nil {
+            var nullValue: Int8 = Int8(truncatingIfNeeded: nullLong ?? 0)
+            cResult = obx_query_prop_int8_find(cQueryProp, &nullValue)
+        } else {
+            cResult = obx_query_prop_int8_find(cQueryProp, nil)
         }
-        
-        return result
-    }
+        defer { obx_int8_array_free(cResult) }
+        try checkLastError()
 
-    /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
+        guard let cArray = cResult?.pointee else { return [] }
+        return [T](unsafeUninitializedCapacity: cArray.count) { (ptr, initializedCount) in
+            for longIndex in 0..<cArray.count {
+                ptr[longIndex] = T(truncatingIfNeeded: cArray.items[longIndex])
+            }
+            initializedCount = cArray.count
         }
-        
-        return result
     }
 
     /// Find the values for the given property for objects matching the query.
     ///
     /// - Note: Results are not guaranteed to be in any particular order.
     /// - Returns: Values for the given property.
-    public func findLongs() -> [Int64] {
-        return findInt64s()
+    public func find() throws -> [T] {
+        let bits = T.self.zero.bitWidth
+        if bits == 64 { return try findInts64Internal() }
+        if bits == 32 { return try findInts32Internal() }
+        if bits == 16 { return try findInts16Internal() }
+        if bits == 8 { return try findInts8Internal() }
+        throw ObjectBoxError.illegalArgument(message: "Unsupported int type with \(bits) bits")
     }
 
-    /// Find the values for the given property for objects matching the query.
-    ///
-    /// - Note: Results are not guaranteed to be in any particular order.
-    /// - Returns: Values for the given property.
-    public func findInt64s() -> [Int64] {
-        var result: [Int64] = []
-        
-        do {
-            result = try findLongs(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-
-    /// Find a value for the given property.
-    ///
-    /// - Returns: A value of the objects matching the query, `nil` if no value was found, or unique was requested and
-    ///             not exactly 1 result was returned.
-    public func findLong() -> Int64? {
-        return findInt64()
-    }
-
-    /// Find a value for the given property.
-    ///
-    /// - Returns: A value of the objects matching the query, `nil` if no value was found.
-    public func findInt64() -> Int64? {
-        var result: Int64?
-        
-        do {
-            result = try findLong(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    @available(*, deprecated, renamed: "find")
+    public func findIntegers() throws -> [T] {
+        return try find()
     }
 
     /// Find a unique value for the given property.
     ///
     /// - Returns: A value of the objects matching the query, `nil` if no value was found.
     /// - Throws: ObjectBoxError.uniqueViolation if more than 1 result was found.
-    public func findUniqueInt64() throws -> Int64? {
-        var result: Int64?
-        
-        let results = try findLongs(box: box.cBox)
+    public func findUnique() throws -> T? {
+        // Note: C API could expose this functionality in the future (core does that efficiently)
+        let results = try find()
         guard results.count < 2 else {
-            throw ObjectBoxError.uniqueViolation(message: "Expected a unique integer here, found several.")
+            throw ObjectBoxError.uniqueViolation(message: "Expected a unique integer, but found \(results.count)")
         }
-        result = results.last
-        
-        return result
+        return results.first
+    }
+
+}
+
+extension PropertyQuery where T == Int64 {
+    /// Provide a value to return in place of `nil` from this property query.
+    /// - returns: `self` for chaining
+    @discardableResult
+    public func with(nullValue: Int64) -> PropertyQuery<EntityType, ValueType> {
+        nullLong = nullValue
+        return self
     }
 }
 
@@ -453,255 +371,37 @@ extension PropertyQuery where T == Int64? {
     }
 }
 
-extension PropertyQuery where T == Int32 {
-    /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Int {
-        var result: Int64 = 0
-        
-        do {
-            result = try longSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int(result)
-    }
-    
-    /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Int32 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int32(result)
-    }
-    
-    /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Int32 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int32(result)
-    }
-
-    /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-}
-
-extension PropertyQuery where T == Int16 {
-    /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Int {
-        var result: Int = 0
-        
-        do {
-            result = Int(try longSum(box: box.cBox))
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-    
-    /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Int16 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int16(result)
-    }
-    
-    /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Int16 {
-        var result: Int64 = 0
-        
-        do {
-            result = try longMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int16(result)
-    }
-
-    /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-}
-
-extension PropertyQuery where T == Int8 {
-    /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Int {
-        var result: Int64 = 0
-        
-        do {
-            result = try longSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int(result)
-    }
-    
-    /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Int8 {
-        var result: Int = 0
-        
-        do {
-            result = Int(try longMax(box: box.cBox))
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int8(result)
-    }
-    
-    /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Int8 {
-        var result: Int = 0
-        
-        do {
-            result = Int(try longMin(box: box.cBox))
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Int8(result)
-    }
-
-    /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-}
-
 // MARK: - Floating Point Aggregates
 
 extension PropertyQuery where T == Double {
     /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Double {
-        var result: Double = 0
-        
-        do {
-            result = try doubleSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func sum() throws -> Double {
+        return try doubleSum(box: box.cBox)
     }
     
     /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Double {
-        var result: Double = 0
-        
-        do {
-            result = try doubleMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func max() throws -> Double {
+        return try doubleMax(box: box.cBox)
     }
     
     /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Double {
-        var result: Double = 0
-        
-        do {
-            result = try doubleMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func min() throws -> Double {
+        return try doubleMin(box: box.cBox)
     }
 
     /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Double {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func average() throws -> Double {
+        return try average(box: box.cBox)
     }
 
     /// Find the values for the given property for objects matching the query.
     ///
     /// - Note: Results are not guaranteed to be in any particular order.
     /// - Returns: Values for the given property.
-    public func findDoubles() -> [Double] {
-        var result: [Double] = []
-        
-        do {
-            result = try findDoubles(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func findDoubles() throws -> [Double] {
+        return try findDoubles(box: box.cBox)
     }
-    
-    /// Find a value for the given property.
-    ///
-    /// - Returns: A value of the objects matching the query, `nil` if no value was found, or unique was requested and
-    ///             not exactly 1 result was returned.
-    public func findDouble() -> Double? {
-        var result: Double?
-        
-        do {
-            result = try findDouble(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
-    }
-    
+
     /// Find a unique value for the given property.
     ///
     /// - Returns: A value of the objects matching the query, `nil` if no value was found.
@@ -728,88 +428,33 @@ extension PropertyQuery where T == Double? {
 
 extension PropertyQuery where T == Float {
     /// Sums up all values for the given property over all Objects matching the query.
-    public var sum: Float {
-        var result: Double = 0
-        
-        do {
-            result = try doubleSum(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Float(result)
+    public func sum() throws -> Double {
+        return try doubleSum(box: box.cBox)
     }
     
     /// Finds the maximum value for the given property over all Objects matching the query.
-    public var max: Float {
-        var result: Double = 0
-        
-        do {
-            result = try doubleMax(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Float(result)
+    public func max() throws -> Float {
+        return try Float(doubleMax(box: box.cBox))
     }
     
     /// Finds the minimum value for the given property over all Objects matching the query.
-    public var min: Float {
-        var result: Double = 0
-        
-        do {
-            result = try doubleMin(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Float(result)
+    public func min() throws -> Float {
+        return try Float(doubleMin(box: box.cBox))
     }
 
     /// Calculates the average of all values for the given property over all Objects matching the query.
-    public var average: Float {
-        var result: Double = 0
-        
-        do {
-            result = try average(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return Float(result)
+    public func average() throws -> Double {
+        return try average(box: box.cBox)
     }
 
     /// Find the values for the given property for objects matching the query.
     ///
     /// - Note: Results are not guaranteed to be in any particular order.
     /// - Returns: Values for the given property.
-    public func findFloats() -> [Float] {
-        var result: [Double] = []
-        
-        do {
-            result = try findDoubles(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result.map { Float($0) }
+    public func findFloats() throws -> [Float] {
+        return try findDoubles(box: box.cBox).map { Float($0) }
     }
-    
-    /// Find a value for the given property.
-    ///
-    /// - Returns: A value of the objects matching the query, `nil` if no value was found.
-    public func findFloat() -> Float? {
-        var result: Double?
-        
-        do {
-            result = try findDouble(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result.map { Float($0) }
-    }
-    
+
     /// Find a unique value for the given property.
     ///
     /// - Returns: A value of the objects matching the query, `nil` if no value was found.
@@ -840,9 +485,9 @@ extension PropertyQuery where T: StringPropertyType {
     /// - parameter caseSensitiveCompare: Specifies if ["foo", "FOO", "Foo"] counts as 1.
     /// - returns: `self` for chaining
     @discardableResult
-    public func distinct(caseSensitiveCompare: Bool = true) -> PropertyQuery<EntityType, ValueType> {
-        self.makeDistinct = true
-        self.makeCompareCaseSensitive = caseSensitiveCompare
+    public func distinct(caseSensitiveCompare: Bool = true) throws -> PropertyQuery<EntityType, ValueType> {
+        obx_query_prop_distinct_case(cQueryProp, true, caseSensitiveCompare)
+        try checkLastError()
         return self
     }
 
@@ -850,31 +495,15 @@ extension PropertyQuery where T: StringPropertyType {
     ///
     /// - Note: Results are not guaranteed to be in any particular order.
     /// - Returns: String values for the given property.
-    public func findStrings() -> [String] {
-        var result = [String]()
-        
-        do {
-            result = try findStrings(box: box.cBox)
-        } catch {
-            ignoreAndLog(error: error)
-        }
-
-        return result
+    public func findStrings() throws -> [String] {
+        return try findStrings(box: box.cBox)
     }
 
     /// Find a value for the given property.
     ///
     /// - Returns: A value of the objects matching the query, `nil` if no value was found.
-    public func findString() -> String? {
-        var result: String?
-        
-        do {
-            result = try findStrings(box: box.cBox).last
-        } catch {
-            ignoreAndLog(error: error)
-        }
-        
-        return result
+    public func findString() throws -> String? {
+        return try findStrings(box: box.cBox).last
     }
 
     /// Find a value for the given property.

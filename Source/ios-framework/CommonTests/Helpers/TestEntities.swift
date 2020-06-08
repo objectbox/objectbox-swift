@@ -31,8 +31,8 @@ enum AllTypesOffset: UInt16 {
 }
 
 
-public class TestPerson {
-    var id: Id<TestPerson> = 0
+public class TestPerson: CustomDebugStringConvertible {
+    var id: EntityId<TestPerson> = 0
     var name: String?
     var age: Int
     
@@ -44,14 +44,28 @@ public class TestPerson {
         self.name = name
         self.age = age
     }
+    
+    public var debugDescription: String {
+        return "TestPerson(\(id.value): \(name ?? "") @\(age))"
+    }
+}
+
+extension TestPerson: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    public static func == (lhs: TestPerson, rhs: TestPerson) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name && lhs.age == rhs.age
+    }
 }
 
 public class AllTypesEntity {
-    public var id: Id<AllTypesEntity> = 0
+    public var id: EntityId<AllTypesEntity> = 0
     public var boolean: Bool = false
     public var aLong: Int = 0
     public var integer: Int32 = 0
-    public var uInteger: UInt = 0
+    public var unsigned: UInt32 = 0
     public var aDouble: Double = 0
     public var date: Date?
     public var string: String?
@@ -73,36 +87,40 @@ public class AllTypesEntity {
         
         return newEntity
     }
-
+    
     static func create(integer: Int32) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.integer = integer
-        
+        return newEntity
+    }
+    
+    static func create(unsigned: UInt32) -> AllTypesEntity {
+        let newEntity = AllTypesEntity()
+        newEntity.unsigned = unsigned
         return newEntity
     }
 
     static func create(double: Double) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.aDouble = double
-        
         return newEntity
     }
     
     static func create(date: Date) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.date = date
-        
         return newEntity
     }
     
     static func create(string: String?) -> AllTypesEntity {
         let newEntity = AllTypesEntity()
-        
         newEntity.string = string
-        
+        return newEntity
+    }
+    
+    static func create(boolean: Bool) -> AllTypesEntity {
+        let newEntity = AllTypesEntity()
+        newEntity.boolean = boolean
         return newEntity
     }
 }
@@ -117,7 +135,7 @@ public func createTestModel() -> OpaquePointer {
     try! allTypesEntityBuilder.addProperty(name: "boolean", type: .bool, id: 2, uid: 2)
     try! allTypesEntityBuilder.addProperty(name: "aLong", type: .long, id: 3, uid: 3)
     try! allTypesEntityBuilder.addProperty(name: "integer", type: .int, id: 4, uid: 4)
-    try! allTypesEntityBuilder.addProperty(name: "uInteger", type: .int, flags: .unsigned, id: 5, uid: 5)
+    try! allTypesEntityBuilder.addProperty(name: "unsigned", type: .int, flags: .unsigned, id: 5, uid: 5)
     try! allTypesEntityBuilder.addProperty(name: "aDouble", type: .double, id: 6, uid: 6)
     try! allTypesEntityBuilder.addProperty(name: "date", type: .date, id: 7, uid: 7)
     try! allTypesEntityBuilder.addProperty(name: "string", type: .string, id: 8, uid: 8)
@@ -150,13 +168,13 @@ extension TestPerson: Entity, EntityInspectable, __EntityRelatable {
     
     public static var entityInfo = EntityInfo(name: "TestPerson", id: 2)
     
-    public var _id: Id<TestPerson> { return self.id }
+    public var _id: EntityId<TestPerson> { return self.id }
 
-    public static var age: Property<TestPerson, Int> {
+    public static var age: Property<TestPerson, Int, Void> {
         return Property(propertyId: 2, isPrimaryKey: false)
     }
 
-    public static var name: Property<TestPerson, String> {
+    public static var name: Property<TestPerson, String, Void> {
         return Property(propertyId: 3, isPrimaryKey: false)
     }
 }
@@ -170,53 +188,62 @@ extension AllTypesEntity: Entity, EntityInspectable, __EntityRelatable {
     
     public static var entityInfo = EntityInfo(name: "AllTypesEntity", id: 1)
 
-    public var _id: Id<AllTypesEntity> { return self.id }
+    public var _id: EntityId<AllTypesEntity> { return self.id }
 
-    public static var long: Property<AllTypesEntity, Int> {
-        return Property(propertyId: 3, isPrimaryKey: false)
+    public static var boolean: Property<AllTypesEntity, Bool, Void> {
+        return Property(propertyId: 2, isPrimaryKey: false)
     }
     
-    public static var integer: Property<AllTypesEntity, Int32> {
+    public static var long: Property<AllTypesEntity, Int, Void> {
+        return Property(propertyId: 3, isPrimaryKey: false)
+    }
+
+    public static var integer: Property<AllTypesEntity, Int32, Void> {
         return Property(propertyId: 4, isPrimaryKey: false)
     }
     
-    public static var double: Property<AllTypesEntity, Double> {
+    public static var unsigned: Property<AllTypesEntity, UInt32, Void> {
+        return Property(propertyId: 5, isPrimaryKey: false)
+    }
+    
+    public static var double: Property<AllTypesEntity, Double, Void> {
         return Property(propertyId: 6, isPrimaryKey: false)
     }
     
-    public static var string: Property<AllTypesEntity, String?> {
+    public static var string: Property<AllTypesEntity, String?, Void> {
         return Property(propertyId: 8, isPrimaryKey: false)
     }
     
-    public static var date: Property<AllTypesEntity, Date?> {
+    public static var date: Property<AllTypesEntity, Date?, Void> {
         return Property(propertyId: 7, isPrimaryKey: false)
     }
 }
 
 public class TestPersonCursor: EntityBinding {
     public typealias EntityType = TestPerson
-    
+    public typealias IdType = EntityId<TestPerson>
+
     public required init() {}
 
-    public func setEntityId(of entity: TestPerson, to entityId: EntityId) {
-        entity.id = Id(entityId)
+    public func setEntityIdUnlessStruct(of entity: TestPerson, to entityId: Id) {
+        entity.id = EntityId(entityId)
     }
     
-    public func entityId(of entity: TestPerson) -> EntityId {
+    public func entityId(of entity: TestPerson) -> Id {
         return entity.id.value
     }
     
-    public func collect(fromEntity entity: TestPerson, id: EntityId, propertyCollector: PropertyCollector,
+    public func collect(fromEntity entity: TestPerson, id: Id, propertyCollector: FlatBufferBuilder,
                         store: Store) {
-        let nameOffset = propertyCollector.prepare(string: entity.name, at: 8)
+        let nameOffset = propertyCollector.prepare(string: entity.name)
         propertyCollector.collect(id, at: 4)
         propertyCollector.collect(entity.age, at: 6)
         propertyCollector.collect(dataOffset: nameOffset, at: 8)
     }
     
-    public func createEntity(entityReader: EntityReader, store: Store) -> TestPerson {
+    public func createEntity(entityReader: FlatBufferReader, store: Store) -> TestPerson {
         let result = TestPerson()
-        result.id = Id(entityReader.read(at: 4))
+        result.id = EntityId(entityReader.read(at: 4))
         result.age = entityReader.read(at: 6)
         result.name = entityReader.read(at: 8)
         return result
@@ -226,40 +253,41 @@ public class TestPersonCursor: EntityBinding {
 
 public class AllTypesEntityCursor: EntityBinding {
     public typealias EntityType = AllTypesEntity
+    public typealias IdType = EntityId<AllTypesEntity>
 
      public required init() {}
 
-    public func setEntityId(of entity: AllTypesEntity, to entityId: EntityId) {
-        entity.id = Id(entityId)
+    public func setEntityIdUnlessStruct(of entity: AllTypesEntity, to entityId: Id) {
+        entity.id = EntityId(entityId)
     }
     
-    public func entityId(of entity: AllTypesEntity) -> EntityId {
+    public func entityId(of entity: AllTypesEntity) -> Id {
         return entity.id.value
     }
     
-     public func collect(fromEntity entity: AllTypesEntity, id: EntityId, propertyCollector: PropertyCollector,
+     public func collect(fromEntity entity: AllTypesEntity, id: Id, propertyCollector: FlatBufferBuilder,
                          store: Store) {
-        let offset = propertyCollector.prepare(string: entity.string, at: AllTypesOffset.string.rawValue)
+        let offset = propertyCollector.prepare(string: entity.string)
         
         propertyCollector.collect(id, at: AllTypesOffset.ID.rawValue)
         propertyCollector.collect(entity.boolean, at: AllTypesOffset.bool.rawValue)
         propertyCollector.collect(entity.aLong, at: AllTypesOffset.long.rawValue)
         propertyCollector.collect(entity.integer, at: AllTypesOffset.integer.rawValue)
-        propertyCollector.collect(entity.uInteger, at: AllTypesOffset.unsignedInteger.rawValue)
+        propertyCollector.collect(entity.unsigned, at: AllTypesOffset.unsignedInteger.rawValue)
         propertyCollector.collect(entity.aDouble, at: AllTypesOffset.double.rawValue)
         propertyCollector.collect(entity.date, at: AllTypesOffset.date.rawValue)
 
         propertyCollector.collect(dataOffset: offset, at: AllTypesOffset.string.rawValue)
     }
     
-     public func createEntity(entityReader: EntityReader, store: Store) -> AllTypesEntity {
+     public func createEntity(entityReader: FlatBufferReader, store: Store) -> AllTypesEntity {
         let result = AllTypesEntity()
         
-        result.id = Id(entityReader.read(at: AllTypesOffset.ID.rawValue))
+        result.id = EntityId(entityReader.read(at: AllTypesOffset.ID.rawValue))
         result.boolean = entityReader.read(at: AllTypesOffset.bool.rawValue)
         result.aLong = entityReader.read(at: AllTypesOffset.long.rawValue)
         result.integer = entityReader.read(at: AllTypesOffset.integer.rawValue)
-        result.uInteger = entityReader.read(at: AllTypesOffset.unsignedInteger.rawValue)
+        result.unsigned = entityReader.read(at: AllTypesOffset.unsignedInteger.rawValue)
         result.aDouble = entityReader.read(at: AllTypesOffset.double.rawValue)
         result.date = entityReader.read(at: AllTypesOffset.date.rawValue)
         result.string = entityReader.read(at: AllTypesOffset.string.rawValue)

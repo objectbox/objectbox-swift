@@ -10,14 +10,14 @@ import ObjectBox
 
 
 class BusRoute: Entity {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     var lineName: String = ""
     
     required init() {}
 }
 
 class Building: Entity {
-    var id: Id<Building> = 0
+    var id: EntityId<Building> = 0
     var buildingName: String = ""
     var buildingNumber: Int = 0
 

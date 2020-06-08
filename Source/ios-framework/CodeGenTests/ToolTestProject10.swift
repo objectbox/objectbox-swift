@@ -10,9 +10,9 @@ import ObjectBox
 
 
 class BusRoute: Entity {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     var text: String = ""
-    // objectbox: nameInDb = "text"
+    // objectbox: name = "text"
     var Text: String = ""
 
     required init() {}

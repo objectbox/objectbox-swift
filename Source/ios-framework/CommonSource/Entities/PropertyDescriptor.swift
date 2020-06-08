@@ -19,9 +19,9 @@ import Foundation
 internal struct PropertyDescriptor {
     public var propertyId: UInt32
     public var isPrimaryKey: Bool
-    public var type: OBXPropertyType
+    public var type: PropertyType
     
-    public init(propertyId: UInt32, isPrimaryKey: Bool, type: OBXPropertyType) {
+    public init(propertyId: UInt32, isPrimaryKey: Bool, type: PropertyType) {
         self.propertyId = propertyId
         self.isPrimaryKey = isPrimaryKey
         self.type = type

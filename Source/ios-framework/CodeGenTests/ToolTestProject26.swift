@@ -10,7 +10,7 @@ import ObjectBox
 
 
 class BusRoute: Entity {
-    var id: Id<BusRoute> = 0
+    var id: EntityId<BusRoute> = 0
     var lineName: String = ""
     // objectbox: index
     var destinationName: String = ""

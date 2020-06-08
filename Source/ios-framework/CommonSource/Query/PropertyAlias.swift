@@ -19,9 +19,9 @@
 ///
 /// Example of the operator in the block-based syntax:
 ///
-///     let query1 = personBox.query { "AgeRestriction" .= Person.age > 21 }
-///     let query2 = personBox.query { "AgeRestriction" .= Person.age > 18 }
-///     query1.setParameter("AgeRestriction", to: 18)
+///     let query1 = try personBox.query { "AgeRestriction" .= Person.age > 21 }.build()
+///     let query2 = try personBox.query { "AgeRestriction" .= Person.age > 18 }.build()
+///     try query1.setParameter("AgeRestriction", to: 18)
 ///     // Now query1 and query2 produce the same results
 ///
 /// Currently, aliases do not work for non-block-based queries.
