@@ -47,21 +47,18 @@ class StoreTests: XCTestCase {
         print("Testing", Store.versionFullInfo)  // Actually print it so we see the used versions in the logs
         // Update the expected versions every now and then...
         XCTAssertGreaterThanOrEqual(Store.version, "1.3.1")  
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.8.2")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.6.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.8.100")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.6.1")
     }
 
     func test32vs64BitForOs() {
-        let is64Bit = Store.versionFullInfo.contains("64 bit")
-        let is32Bit = Store.versionFullInfo.contains("32 bit")
+        let isChunked = Store.versionFullInfo.contains("chunk")
         #if os(iOS)
             print("Hello iOS")
-            XCTAssert(is32Bit)
-            XCTAssert(!is64Bit)
+            XCTAssert(isChunked)
         #else
             print("Hello macOS")
-            XCTAssert(!is32Bit)
-            XCTAssert(is64Bit)
+            XCTAssert(!isChunked)
         #endif
     }
     

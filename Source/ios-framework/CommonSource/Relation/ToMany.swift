@@ -356,8 +356,7 @@ extension ToMany: RangeReplaceableCollection {
     }
 
     public func replaceSubrange<C, R>(_ subrange: R, with newElements: __owned C)
-        where C: Collection, R: RangeExpression, ReferencedType == C.Element, Index == R.Bound
-    {
+        where C: Collection, R: RangeExpression, ReferencedType == C.Element, Index == R.Bound {
         relationCacheLock.wait()
         defer { relationCacheLock.signal() }
         if resolverAndCollection.collection.isEmpty && newElements.isEmpty { return }
@@ -428,7 +427,7 @@ extension ToMany {
     /// Helper object to provide custom comparison to entities based on ID,
     /// so we can keep a Set of entities.
     struct IdComparableReferencedType: Hashable, Comparable {
-        static func <(lhs: ToMany<S>.IdComparableReferencedType, rhs: ToMany<S>.IdComparableReferencedType) -> Bool {
+        static func < (lhs: ToMany<S>.IdComparableReferencedType, rhs: ToMany<S>.IdComparableReferencedType) -> Bool {
             return lhs.entityId < rhs.entityId
         }
 

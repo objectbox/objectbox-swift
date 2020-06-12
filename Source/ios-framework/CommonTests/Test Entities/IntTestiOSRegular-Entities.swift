@@ -63,7 +63,7 @@ class Author {
 
     // objectbox: backlink = "author"
     var notes: ToMany<Note>
-    var yearOfBirth: UInt16? = nil
+    var yearOfBirth: UInt16?
 
 
     // An initializer with no parameters is required by ObjectBox
