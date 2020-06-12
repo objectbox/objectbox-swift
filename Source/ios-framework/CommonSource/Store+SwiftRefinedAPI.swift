@@ -51,7 +51,6 @@ extension Store {
         } else {
             return try block(transaction)
         }
-
     }
 
     /// Internal version that gives the block a Transaction

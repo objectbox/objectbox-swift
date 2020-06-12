@@ -61,23 +61,25 @@ extension Box {
             return idArray(sourceIds, type: SourceType.self)
     }
     
-    internal func removeRelation(relationId: obx_schema_id, owningId: Id, referencedId: Id) throws {
-        if owningId == 0 {
+    internal func removeRelation(relationId: obx_schema_id, sourceId: Id, targetId: Id) throws {
+        if sourceId == 0 {
             throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Owning object hasn't been put yet.")
         }
-        if referencedId == 0 {
+        if targetId == 0 {
             throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Referenced object hasn't been put yet.")
         }
-        try check(error: obx_box_rel_remove(cBox, relationId, owningId, referencedId))
+        let obxErr = obx_box_rel_remove(cBox, relationId, sourceId, targetId)
+        try check(error: obxErr, message: "Could not remove relation data")
     }
     
-    internal func putRelation(relationId: obx_schema_id, owningId: Id, referencedId: Id) throws {
-        if owningId == 0 {
+    internal func putRelation(relationId: obx_schema_id, sourceId: Id, targetId: Id) throws {
+        if sourceId == 0 {
             throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Owning object hasn't been put yet.")
         }
-        if referencedId == 0 {
+        if targetId == 0 {
             throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Referenced object hasn't been put yet.")
         }
-        try check(error: obx_box_rel_put(cBox, relationId, referencedId, owningId))
+        let obxErr = obx_box_rel_put(cBox, relationId, sourceId, targetId)
+        try check(error: obxErr, message: "Could not add relation data")
     }
 }

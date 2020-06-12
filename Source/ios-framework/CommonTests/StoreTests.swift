@@ -46,7 +46,7 @@ class StoreTests: XCTestCase {
     func testVersions() {
         print("Testing", Store.versionFullInfo)  // Actually print it so we see the used versions in the logs
         // Update the expected versions every now and then...
-        XCTAssertGreaterThanOrEqual(Store.version, "1.3.0")  
+        XCTAssertGreaterThanOrEqual(Store.version, "1.3.1")  
         XCTAssertGreaterThanOrEqual(Store.versionLib, "0.8.2")
         XCTAssertGreaterThanOrEqual(Store.versionCore, "2.6.0")
     }

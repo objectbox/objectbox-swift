@@ -34,6 +34,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		28A6B3DB247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */; };
+		28A6B3DC247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */; };
+		28A6B3DD247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */; };
+		28A6B3DE247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */; };
+		28A6B3E0247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
+		28A6B3E1247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		503962EB216363A1000DFB7E /* ToMany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503962EA216363A1000DFB7E /* ToMany.swift */; };
 		5052616320BD72A500405B13 /* OBXErrorHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614720BD72A500405B13 /* OBXErrorHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5052616920BD72A500405B13 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614D20BD72A500405B13 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -227,6 +233,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-Entities.swift"; sourceTree = "<group>"; };
+		28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-EntityInfo-generated.swift"; sourceTree = "<group>"; };
+		28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyToManyTests.swift; sourceTree = "<group>"; };
 		503962EA216363A1000DFB7E /* ToMany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToMany.swift; sourceTree = "<group>"; };
 		5042FDB220CBE18600EBCA52 /* ObjectBoxTests-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectBoxTests-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		5052614720BD72A500405B13 /* OBXErrorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBXErrorHelper.h; sourceTree = "<group>"; };
@@ -444,6 +453,7 @@
 				5070A9D4217F4C3B002305F8 /* QueryTests.swift */,
 				5070A9D6217F4C3B002305F8 /* PropertyQueryTests.swift */,
 				5070A9D9217F4C3B002305F8 /* ToOneRelationTests.swift */,
+				28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */,
 				55C14CEB2307103D00F10D7D /* AsyncTest.swift */,
 				55FBE6C6230C4D2A00F41F88 /* CombineTests.swift */,
 				5070A9CC217F4C3B002305F8 /* Test Entities */,
@@ -456,6 +466,8 @@
 		5070A9CC217F4C3B002305F8 /* Test Entities */ = {
 			isa = PBXGroup;
 			children = (
+				28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */,
+				28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */,
 				5070A9CF217F4C3B002305F8 /* NullablePropertyEntity.swift */,
 				5070A9D2217F4C3B002305F8 /* PureSwiftEntity.swift */,
 				5070A9CD217F4C3B002305F8 /* RelatedEntities.swift */,
@@ -961,6 +973,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5070AA00217F4CF7002305F8 /* NullablePropertyEntity.swift in Sources */,
+				28A6B3DE247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */,
+				28A6B3DC247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */,
 				5070A9FA217F4CA8002305F8 /* TestExceptionProducer.mm in Sources */,
 				55D19CAC2280632E00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA02217F4CF7002305F8 /* RelatedEntities.swift in Sources */,
@@ -980,6 +994,7 @@
 				5070A9F8217F4CA8002305F8 /* ExceptionHelpers.m in Sources */,
 				558A79012281B65A00BAE9C9 /* StructEntity.swift in Sources */,
 				5070AA01217F4CF7002305F8 /* PureSwiftEntity.swift in Sources */,
+				28A6B3E1247EEB8700C163B4 /* ManyToManyTests.swift in Sources */,
 				5070A9F5217F4C72002305F8 /* ToOneRelationTests.swift in Sources */,
 				5070A9F7217F4CA8002305F8 /* OBErrorHelperTests.mm in Sources */,
 			);
@@ -990,6 +1005,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5070AA0E217F4EC7002305F8 /* NullablePropertyEntity.swift in Sources */,
+				28A6B3DD247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */,
+				28A6B3DB247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */,
 				5070AA0A217F4EC4002305F8 /* QueryOperatorTests.swift in Sources */,
 				55D19CAB2280632D00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA0D217F4EC4002305F8 /* ToOneRelationTests.swift in Sources */,
@@ -1009,6 +1026,7 @@
 				5070AA13217F4ECF002305F8 /* ExceptionHelpers.m in Sources */,
 				5070AA0B217F4EC4002305F8 /* QueryTests.swift in Sources */,
 				5515307A2368880F00B2FF12 /* CombineTests.swift in Sources */,
+				28A6B3E0247EEB8700C163B4 /* ManyToManyTests.swift in Sources */,
 				5070AA0C217F4EC4002305F8 /* PropertyQueryTests.swift in Sources */,
 				5070AA15217F4ECF002305F8 /* TestExceptionProducer.mm in Sources */,
 			);

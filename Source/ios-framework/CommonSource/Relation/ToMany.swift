@@ -130,6 +130,9 @@ where S == S.EntityBindingType.EntityType {
         precondition(!targetId.needsIdGeneration, "Can form Backlinks for persisted entities only.")
         self.resolverAndCollection = ResolverAndCollection({
             do {
+                #if DEBUG
+                print("RESOLVE", "propertyId:", sourceProperty.propertyId, "entityId:", targetId.value)
+                #endif
                 return try sourceBox
                     .backlinkIds(propertyId: sourceProperty.propertyId, entityId: targetId.value)
                     .compactMap { try sourceBox.get(id: $0.value) }
@@ -148,6 +151,9 @@ where S == S.EntityBindingType.EntityType {
             // Entity hasn't been written yet and has no array? It's empty.
             guard sourceId.value != 0 else { return [] }
             do {
+                #if DEBUG
+                print ("RESOLVE STANDALONE", "relationId:", relationId, "sourceId:", sourceId.value)
+                #endif
                 let ids: [ReferencedType.EntityBindingType.IdType] = try targetBox.relationTargetIds(
                     relationId: relationId,
                     sourceId: sourceId.value,
@@ -173,6 +179,9 @@ where S == S.EntityBindingType.EntityType {
             // Entity hasn't been written yet and has no array? It's empty.
             guard targetId.value != 0 else { return [] }
             do {
+                #if DEBUG
+                print ("RESOLVE STANDALONE_BACK", "relationId:", relationId, "targetId:", targetId.value)
+                #endif
                 return try sourceBox
                     .relationSourceIds(relationId: relationId, targetId: targetId.value, targetType: OwningType.self)
                     .compactMap { try sourceBox.get($0.value) }
@@ -203,35 +212,42 @@ where S == S.EntityBindingType.EntityType {
     }
     
     /// - Important: Must lock relationCacheLock to call this.
-    internal func applyToManyToDb(relationId: obx_schema_id, referencedId: Id) throws {
+    internal func applyToManyStandaloneToDb(relationId: obx_schema_id, ownerObjectId: Id) throws {
         guard let owningBox = owningBox else { return }
-        if referencedId == 0 {
+        if ownerObjectId == 0 {
             throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Referenced object hasn't been put yet.")
         }
-        for currEntity in removed {
-            if currEntity.entityId == 0 {
+        // Note: decided against sorted IDs; relations are written two way ({SOURCE}{TARGET} and {TARGET}{SOURCE}).
+        //       Thus the internal relation cursor has to seek back and forth anyway, probably voiding any perf gain.
+
+        for target in removed {
+            if target.entityId == 0 {
                 throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Owning object hasn't been put yet.")
             }
-            try check(error: obx_box_rel_remove(owningBox, relationId, currEntity.entityId, referencedId))
+            let obxErr = obx_box_rel_remove(owningBox, relationId, ownerObjectId, target.entityId)
+            try check(error: obxErr, message: "Could not remove relation data")
         }
-        for currEntity in added {
-            if currEntity.entityId == 0 {
+        for target in added {
+            if target.entityId == 0 {
                 throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Owning object hasn't been put yet.")
             }
-            try check(error: obx_box_rel_put(owningBox, relationId, referencedId, currEntity.entityId))
+            let obxErr = obx_box_rel_put(owningBox, relationId, ownerObjectId, target.entityId)
+            try check(error: obxErr, message: "Could not add relation data")
         }
     }
     
     /// - Important: Must lock relationCacheLock to call this.
-    internal func applyToManyBacklinkToDb(relationId: obx_schema_id, owningId: Id) throws {
+    internal func applyToManyStandaloneBacklinkToDb(relationId: obx_schema_id, ownerObjectId: Id) throws {
+        // Need to use the target box as it owns the relation.
+        // Thus we need to "reverse" the direction, e.g. the owning object of the ToMany becomes the relation target.
         guard let referencedBox = referencedBox else { return }
-        for currEntity in removed {
+        for target in removed {
             try referencedBox.removeRelation(relationId: relationId,
-                                             owningId: owningId, referencedId: currEntity.entityId)
+                                             sourceId: target.entityId, targetId: ownerObjectId)
         }
-        for currEntity in added {
+        for target in added {
             try referencedBox.putRelation(relationId: relationId,
-                                          owningId: owningId, referencedId: currEntity.entityId)
+                                          sourceId: target.entityId, targetId: ownerObjectId)
         }
     }
     
@@ -261,13 +277,13 @@ where S == S.EntityBindingType.EntityType {
                         throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Owning entity of backlink hasn't "
                             + "been put yet.")
                     }
-                    try applyToManyBacklinkToDb(relationId: relationId, owningId: owningId)
+                    try applyToManyStandaloneBacklinkToDb(relationId: relationId, ownerObjectId: owningId)
                 } else if case .toMany(let relationId, let referencedId) = info {
                     if referencedId == 0 {
                         throw ObjectBoxError.cannotRelateToUnsavedEntities(message: "Related entity hasn't "
                             + "been put yet")
                     }
-                    try applyToManyToDb(relationId: relationId, referencedId: referencedId)
+                    try applyToManyStandaloneToDb(relationId: relationId, ownerObjectId: referencedId)
                 }
             }
         } else {
@@ -338,24 +354,52 @@ extension ToMany: RangeReplaceableCollection {
     public convenience init() {
         self.init(nilLiteral: ())
     }
-    
+
     public func replaceSubrange<C, R>(_ subrange: R, with newElements: __owned C)
-        where C: Collection, R: RangeExpression, ReferencedType == C.Element, Index == R.Bound {
-            relationCacheLock.wait()
-            defer { relationCacheLock.signal() }
-            if resolverAndCollection.collection.isEmpty && newElements.isEmpty { return }
-            
-            let replacedComparableElements = resolverAndCollection.collection[subrange].map {
-                return IdComparableReferencedType(entity: $0)
+        where C: Collection, R: RangeExpression, ReferencedType == C.Element, Index == R.Bound
+    {
+        relationCacheLock.wait()
+        defer { relationCacheLock.signal() }
+        if resolverAndCollection.collection.isEmpty && newElements.isEmpty { return }
+
+        let slice: ArraySlice<S> = resolverAndCollection.collection[subrange]
+        var removeSet = Set<IdComparableReferencedType>(minimumCapacity: slice.count)
+        for obj in slice {
+            removeSet.insert(IdComparableReferencedType(entity: obj))
+        }
+
+        var addSet = Set<IdComparableReferencedType>(minimumCapacity: newElements.count)
+        for obj in newElements {
+            let wrapped = IdComparableReferencedType(entity: obj)
+            if wrapped.entityId != 0 {
+                if removeSet.contains(wrapped) {
+                    removeSet.remove(wrapped)  // unchanged relation; neither add nor remove
+                } else {
+                    addSet.insert(wrapped)  // actually new
+                }
+            } else {
+                // We cannot throw here, better this than nothing for now:
+                print("Warning: ignoring new object (its ID is 0) in ToMany (unsupported as of now)")
             }
-            let newComparableElements = newElements.map { return IdComparableReferencedType(entity: $0) }
-            
-            newComparableElements.forEach { removed.remove($0) }
-            replacedComparableElements.forEach { removed.insert($0) }
-            replacedComparableElements.forEach { added.remove($0) }
-            newComparableElements.forEach { added.insert($0) }
-            
-            resolverAndCollection.collection.replaceSubrange(subrange, with: newElements)
+        }
+
+        for objRemove in removeSet {
+            if added.contains(objRemove) {
+                added.remove(objRemove)  // remove after add: cancel add
+            } else {
+                removed.insert(objRemove)  // actually remove
+            }
+        }
+
+        for objAdd in addSet {
+            if removed.contains(objAdd) {
+                removed.remove(objAdd)  // add after remove: cancel remove
+            } else {
+                added.insert(objAdd)  // actually add
+            }
+        }
+
+        resolverAndCollection.collection.replaceSubrange(subrange, with: newElements)
     }
 }
 
@@ -383,7 +427,11 @@ extension ToMany: CustomDebugStringConvertible {
 extension ToMany {
     /// Helper object to provide custom comparison to entities based on ID,
     /// so we can keep a Set of entities.
-    struct IdComparableReferencedType: Hashable {
+    struct IdComparableReferencedType: Hashable, Comparable {
+        static func <(lhs: ToMany<S>.IdComparableReferencedType, rhs: ToMany<S>.IdComparableReferencedType) -> Bool {
+            return lhs.entityId < rhs.entityId
+        }
+
         let entity: ReferencedType
         
         var entityId: Id {
