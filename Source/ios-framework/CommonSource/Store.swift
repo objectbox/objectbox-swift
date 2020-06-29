@@ -93,8 +93,8 @@ public class Store: CustomDebugStringConvertible {
             obx_opt_directory(opts, ptr)
             try checkLastError()
             obx_opt_max_db_size_in_kb(opts, Int(maxDbSizeInKByte))
-            obx_opt_file_mode(opts, Int32(fileMode))
-            obx_opt_max_readers(opts, Int32(maxReaders))
+            obx_opt_file_mode(opts, UInt32(fileMode))
+            obx_opt_max_readers(opts, UInt32(maxReaders))
             let result = obx_store_open(opts)
             opts = nil // store owns it now, make sure defer doesn't free it.
             try checkLastError()
