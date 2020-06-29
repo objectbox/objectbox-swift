@@ -1,10 +1,5 @@
 <img width="466" src="https://raw.githubusercontent.com/objectbox/objectbox-swift/master/images/logo.png">
 
-Do you ♥️ using ObjectBox?
-==========================
-We want to [hear about your app](https://docs.google.com/forms/d/e/1FAIpQLScIYiOIThcq-AnDVoCvnZOMgxO4S-fBtDSFPQfWldJnhi2c7Q/viewform)!
-It will - literally - take just a minute, but help us a lot. Thank you!​ 🙏​
-
 ObjectBox Swift
 ===============
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](#cocoapods)
@@ -125,7 +120,7 @@ ObjectBox is a multi platform database supporting [multiple languages](https://o
 
 * [ObjectBox Java](https://github.com/objectbox/objectbox-java): runs on Android, desktop and servers.
 * [ObjectBox Go](https://github.com/objectbox/objectbox-go): great for data-driven tools and server applications. 
-* [ObjectBox C](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
+* [ObjectBox C and C++](https://github.com/objectbox/objectbox-c): native speed with zero copy access to FlatBuffer objects;
   also enables porting ObjectBox to other languages.
 * [ObjectBox Dart/Flutter](https://github.com/objectbox/objectbox-dart/): build cross-platform apps using Flutter (beta version) 
 
