@@ -77,22 +77,6 @@ public enum ObjectBoxError: Swift.Error {
     case unexpected(error: Error)
 }
 
-// This method uses our Swift code for generating ObjectBoxErrors and then wraps that ObjectBoxError in an ObjC error.
-//  This means that it allows Objective-C code to "throw" Swift errors, but only ones for which an obx_err exists.
-//
-// NOTE: _cdecl is a temporary feature of Swift that may get removed/replaced in the future.
-//  It also doesn't actually check that the signature of the parameter and return types can be expressed in C. You have
-//  to do all of that correctly in your C header. Since it happens at link/compile time, I deem it safe to use.
-@_cdecl("OBXErrorToNSError")
-internal func errorToSwift(_ error: Int32 /* obx_err */, _ msg: UnsafePointer<CChar>) -> NSError? {
-    do {
-        try check(error: obx_err(error), message: String(utf8String: msg) ?? "Error \(error).")
-        return nil
-    } catch {
-        return error as NSError
-    }
-}
-
 /// Check whether obx_last_error_code() contains an error, and if yes, throw that as a Swift error, together with the
 /// text from obx_last_error_message(). Note that C API functions with a void return do not give errors. Call this only
 /// for C API functions with a return value, or call checkLastError(error:) for C API functions that return obx_err.

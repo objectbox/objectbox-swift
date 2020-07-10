@@ -41,16 +41,12 @@
 		28A6B3E0247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		28A6B3E1247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		503962EB216363A1000DFB7E /* ToMany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503962EA216363A1000DFB7E /* ToMany.swift */; };
-		5052616320BD72A500405B13 /* OBXErrorHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614720BD72A500405B13 /* OBXErrorHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5052616920BD72A500405B13 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614D20BD72A500405B13 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5052616C20BD72A500405B13 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052615020BD72A500405B13 /* Constants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5052617320BD72A500405B13 /* OBXErrorHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5052615720BD72A500405B13 /* OBXErrorHelper.mm */; };
 		506858CF211B1864003F7D02 /* QueryConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506858CE211B1864003F7D02 /* QueryConditions.swift */; };
 		506B0938215377410016C7AA /* ToOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B0937215377410016C7AA /* ToOne.swift */; };
 		506B093A2153775E0016C7AA /* LazyProxyRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B09392153775E0016C7AA /* LazyProxyRelation.swift */; };
 		5070A96E217F479C002305F8 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5070A965217F479C002305F8 /* ObjectBox.framework */; };
 		5070A97D217F48D7002305F8 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614D20BD72A500405B13 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5070A97E217F48DD002305F8 /* Constants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052615020BD72A500405B13 /* Constants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5070A998217F4934002305F8 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2A21367D0200CB7871 /* Entity.swift */; };
 		5070A999217F4937002305F8 /* EntityPropertyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2C21367D3500CB7871 /* EntityPropertyType.swift */; };
 		5070A99B217F493B002305F8 /* Id.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2E21367D5A00CB7871 /* Id.swift */; };
@@ -64,8 +60,6 @@
 		5070A9B7217F4997002305F8 /* QueryConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506858CE211B1864003F7D02 /* QueryConditions.swift */; };
 		5070A9B8217F49A3002305F8 /* PropertyQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2221367BF100CB7871 /* PropertyQuery.swift */; };
 		5070A9B9217F49A5002305F8 /* PropertyAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FCFEFE212EEF0B00A44B32 /* PropertyAlias.swift */; };
-		5070A9BA217F49A9002305F8 /* OBXErrorHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5052614720BD72A500405B13 /* OBXErrorHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5070A9BB217F49AB002305F8 /* OBXErrorHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5052615720BD72A500405B13 /* OBXErrorHelper.mm */; };
 		5070A9C3217F49C7002305F8 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2821367CC900CB7871 /* Box.swift */; };
 		5070A9C4217F49CA002305F8 /* Store+SwiftRefinedAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2621367CA900CB7871 /* Store+SwiftRefinedAPI.swift */; };
 		5070A9F0217F4C72002305F8 /* SwiftRefinedAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9C9217F4C3B002305F8 /* SwiftRefinedAPITests.swift */; };
@@ -238,10 +232,7 @@
 		28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyToManyTests.swift; sourceTree = "<group>"; };
 		503962EA216363A1000DFB7E /* ToMany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToMany.swift; sourceTree = "<group>"; };
 		5042FDB220CBE18600EBCA52 /* ObjectBoxTests-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectBoxTests-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		5052614720BD72A500405B13 /* OBXErrorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBXErrorHelper.h; sourceTree = "<group>"; };
 		5052614D20BD72A500405B13 /* ObjectBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectBox.h; sourceTree = "<group>"; };
-		5052615020BD72A500405B13 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		5052615720BD72A500405B13 /* OBXErrorHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OBXErrorHelper.mm; sourceTree = "<group>"; };
 		506858CE211B1864003F7D02 /* QueryConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryConditions.swift; sourceTree = "<group>"; };
 		506B0937215377410016C7AA /* ToOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToOne.swift; sourceTree = "<group>"; };
 		506B09392153775E0016C7AA /* LazyProxyRelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyProxyRelation.swift; sourceTree = "<group>"; };
@@ -383,12 +374,9 @@
 			isa = PBXGroup;
 			children = (
 				5052614D20BD72A500405B13 /* ObjectBox.h */,
-				5052615020BD72A500405B13 /* Constants.h */,
 				50C82D5620DBF3ED00A0EB3C /* Entities */,
 				506B0935215377300016C7AA /* Relation */,
 				5086A1DB210869A400F9B628 /* Query */,
-				5052614720BD72A500405B13 /* OBXErrorHelper.h */,
-				5052615720BD72A500405B13 /* OBXErrorHelper.mm */,
 				55420B562326A9C50070BB3E /* GeneratedStoreInitializer.swift */,
 				5541760B2271C1E400B3A225 /* Errors.swift */,
 				55471224228C767800DB4136 /* Date+Timestamp.swift */,
@@ -605,13 +593,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5070A9BA217F49A9002305F8 /* OBXErrorHelper.h in Headers */,
 				5070A97D217F48D7002305F8 /* ObjectBox.h in Headers */,
 				55EB4BF122AA69490091CDB1 /* flatbuffers.h in Headers */,
 				55EB4BF322AA69490091CDB1 /* stl_emulation.h in Headers */,
 				5547123F228D656D00DB4136 /* ObjectBoxC.h in Headers */,
 				55DD1A492268AFC5007F8D30 /* obx_fbb.h in Headers */,
-				5070A97E217F48DD002305F8 /* Constants.h in Headers */,
 				55EB4BF522AA69490091CDB1 /* base.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -632,8 +618,6 @@
 				55DD1A482268AFC5007F8D30 /* obx_fbb.h in Headers */,
 				55EB4BF022AA69490091CDB1 /* flatbuffers.h in Headers */,
 				55EB4BF222AA69490091CDB1 /* stl_emulation.h in Headers */,
-				5052616320BD72A500405B13 /* OBXErrorHelper.h in Headers */,
-				5052616C20BD72A500405B13 /* Constants.h in Headers */,
 				55EB4BF422AA69490091CDB1 /* base.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -956,7 +940,6 @@
 				55C14CEA2306ECF800F10D7D /* AsyncBox.swift in Sources */,
 				55BC4174226F4A69008195D0 /* Transaction.swift in Sources */,
 				5541760D2271C1E400B3A225 /* Errors.swift in Sources */,
-				5070A9BB217F49AB002305F8 /* OBXErrorHelper.mm in Sources */,
 				550974DA2285D84F006B24B7 /* EntityBuilder.swift in Sources */,
 				551530822369A18900B2FF12 /* Cursor.swift in Sources */,
 				55D1A39E22B38EF60032361C /* InstanceVisitor.swift in Sources */,
@@ -1062,7 +1045,6 @@
 				55BC4173226F4A69008195D0 /* Transaction.swift in Sources */,
 				5089AB2921367CC900CB7871 /* Box.swift in Sources */,
 				5089AB2F21367D5A00CB7871 /* Id.swift in Sources */,
-				5052617320BD72A500405B13 /* OBXErrorHelper.mm in Sources */,
 				55A79D1323018AB000039BBB /* ToManyProperty.swift in Sources */,
 				55471225228C767800DB4136 /* Date+Timestamp.swift in Sources */,
 				5527B7A22292CC0000585FD2 /* QueryBuilderCondition.swift in Sources */,

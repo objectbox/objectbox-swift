@@ -13,10 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// TODO can we get rid of this file?
 
-#import "Constants.h"
-
-// Temporarily exposed, private, do not use directly!
-#import "OBXErrorHelper.h"
+#import <Foundation/Foundation.h> // we still depend on stuff like
 #import "obx_fbb.h"
 #import "ObjectBoxC.h"
