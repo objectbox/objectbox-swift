@@ -184,7 +184,9 @@ class NullablePropertyEntityBinding: EntityBinding {
     typealias IdType = EntityId<NullablePropertyEntity>
 
     required init() {}
-    
+
+    func generatorBindingVersion() -> Int { 1 }
+
     func collect(fromEntity entity: NullablePropertyEntity, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         let maybeStringOffset = propertyCollector.prepare(string: entity.maybeString)
         let maybeByteVectorOffset = propertyCollector.prepare(bytes: entity.maybeByteVector)

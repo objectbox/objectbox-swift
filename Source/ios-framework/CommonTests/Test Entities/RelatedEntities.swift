@@ -49,6 +49,13 @@ class Order: Entity {
         self.date = Date()
         self.name = ""
     }
+
+    convenience init(name: String = "", target: Customer? = nil) {
+        self.init()
+        self.name = name
+        customer.target = target
+    }
+
 }
 
 fileprivate func cModel() throws -> OpaquePointer {
@@ -81,7 +88,7 @@ extension Customer: __EntityRelatable {
 
 extension Customer: EntityInspectable {
     typealias EntityBindingType = CustomerCursor
-    
+
     /// Generated metadata used by ObjectBox to persist the entity.
     static var entityInfo = EntityInfo(name: "Customer", id: 4)
     static var entityBinding = EntityBindingType()
@@ -110,7 +117,7 @@ extension Customer {
     ///
     ///     box.query { Customer.name.startsWith("X") }
     static var name: Property<Customer, String, Void> { return Property<Customer, String, Void>(propertyId: 2, isPrimaryKey: false) }
-    
+
     static var orders: ToManyProperty<Order> { return ToManyProperty<Order>(.valuePropertyId(3)) }
 
     fileprivate  func __setId(identifier: Id) {
@@ -120,16 +127,18 @@ extension Customer {
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Customer.entityBinding`.
 class CustomerCursor: EntityBinding {
-    
+
     typealias EntityType = Customer
     typealias IdType = EntityId<Customer>
 
     required init() {}
-    
+
+    public func generatorBindingVersion() -> Int { 1 }
+
     func setEntityIdUnlessStruct(of entity: Customer, to entityId: Id) {
         entity.__setId(identifier: entityId)
     }
-    
+
     func entityId(of entity: Customer) -> Id {
         return entity.id.value
     }
@@ -145,7 +154,7 @@ class CustomerCursor: EntityBinding {
         }
     }
 
-    internal func postPut(fromEntity entity: EntityType, id: Id, store: Store) {
+     internal func postPut(fromEntity entity: EntityType, id: Id, store: Store) throws {
         if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
             let orders = ToMany<Order>.backlink(
                 sourceBox: store.box(for: ToMany<Order>.ReferencedType.self),
@@ -156,7 +165,9 @@ class CustomerCursor: EntityBinding {
             }
             entity.orders = orders
         }
+        try entity.orders.applyToDb()
     }
+
     func createEntity(entityReader: FlatBufferReader, store: Store) -> Customer {
         let entity = Customer()
 
@@ -181,7 +192,7 @@ extension Order: __EntityRelatable {
 
 extension Order: EntityInspectable {
     public typealias EntityBindingType = OrderCursor
-    
+
     /// Generated metadata used by ObjectBox to persist the entity.
     static var entityInfo = EntityInfo(name: "Order", id: 5)
     static var entityBinding = EntityBindingType()
@@ -229,23 +240,25 @@ class OrderCursor: EntityBinding {
     typealias IdType = EntityId<Order>
 
     required init() {}
-    
+
+    public func generatorBindingVersion() -> Int { 1 }
+
     func setEntityIdUnlessStruct(of entity: Order, to entityId: Id) {
         entity.__setId(identifier: entityId)
     }
-    
+
     func entityId(of entity: Order) -> Id {
         return entity.id.value
     }
 
-    func collect(fromEntity entity: Order, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
+    func collect(fromEntity entity: Order, id: Id, propertyCollector: FlatBufferBuilder, store: Store) throws {
         var offsets: [(offset: OBXDataOffset, index: UInt16)] = []
         offsets.append((propertyCollector.prepare(string: entity.name), 2 + 2*4))
-        
+
         propertyCollector.collect(id, at: 2 + 2*1)
-        
+
         propertyCollector.collect(entity.date, at: 2 + 2*2)
-        propertyCollector.collect(entity.customer, at: 2 + 2*3, store: store)
+        try propertyCollector.collect(entity.customer, at: 2 + 2*3, store: store)
 
         for value in offsets {
             propertyCollector.collect(dataOffset: value.offset, at: value.index)

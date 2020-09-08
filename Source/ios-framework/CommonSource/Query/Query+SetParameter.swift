@@ -420,7 +420,7 @@ extension Query {
     internal func setParameterInternal(_ property: PropertyDescriptor, to value: Data) {
         let bufferLength = value.count
         value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> Void in
-            let err = obx_query_bytes_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
+            let err = obx_query_param_bytes(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                     buffer.baseAddress, bufferLength)
             checkFatalErrorParam(err)
         })
@@ -455,7 +455,7 @@ extension Query {
     public func setParameter(_ alias: String, to value: Data) {
         let bufferLength = value.count
         value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> Void in
-            let err = obx_query_bytes_param_alias(cQuery, alias, buffer.baseAddress, bufferLength)
+            let err = obx_query_param_alias_bytes(cQuery, alias, buffer.baseAddress, bufferLength)
             checkFatalErrorParam(err)
         })
     }

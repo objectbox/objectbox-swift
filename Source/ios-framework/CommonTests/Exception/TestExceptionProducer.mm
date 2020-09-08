@@ -15,7 +15,6 @@
 //
 
 #import "TestExceptionProducer.h"
-#import "OBXErrorHelper.h"
 #import <stdexcept>
 
 @implementation TestExceptionProducer
@@ -27,10 +26,5 @@
 + (void)raiseGenericCppException {
     throw std::invalid_argument("throwing invalid_argument");
 }
-
-+(NSError *) swiftErrorFromObjCForCode: (int)errCode msg: (NSString *)msg {
-    return OBXErrorToNSError(errCode, msg.UTF8String);
-}
-
 
 @end

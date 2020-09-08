@@ -1,10 +1,7 @@
 #!/bin/bash
 
-#  RunToolTests.sh
-#  ObjectBox Swift
-#
-#  Created by Uli Kusterer on 07.12.18.
-#  
+#  Run this script from Xcode (target & scheme "CodeGenTests"):
+#  it has a dependency and also relies on variables set by Xcode
 
 echo -n "note: Starting tests at "
 date
@@ -14,6 +11,7 @@ MYDIR="${PROJECT_DIR}/CodeGenTests/" # Xcode copies our script into DerivedData 
 SOURCERY_APP="${PROJECT_DIR}/../external/objectbox-swift-generator/bin/Sourcery.app"
 SOURCERY="${SOURCERY_APP}/Contents/MacOS/Sourcery"
 
+EXPECTED_DIR="${MYDIR}/expected"
 TESTPROJECT="${MYDIR}/ToolTestProject.xcodeproj"
 MYOUTPUTDIR="${MYDIR}/generated/"
 
@@ -26,12 +24,12 @@ test_target_num () {
 
     echo "note: ******************** $2: $1 ********************"
 
-    PREMODELFILE="${MYDIR}/model${2}.before.json"
-    ORIGINALMODELFILE="${MYDIR}/model${2}.json"
+    PREMODELFILE="${EXPECTED_DIR}/model/model${2}.before.json"
+    ORIGINALMODELFILE="${EXPECTED_DIR}/model/model${2}.json"
     TESTMODELFILE="${BUILT_PRODUCTS_DIR}/model${2}.json"
-    ORIGINALDUMPFILE="${MYDIR}/schemaDump${2}.txt"
+    ORIGINALDUMPFILE="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
     TESTDUMPFILE="${MYOUTPUTDIR}/schemaDump${2}.txt"
-    ORIGINALSOURCEFILE="${MYDIR}/EntityInfo.generated${2}.swift"
+    ORIGINALSOURCEFILE="${EXPECTED_DIR}/entity-info/EntityInfo.generated${2}.swift"
     TESTSOURCEFILE="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
 
     if [[ -f "$PREMODELFILE" ]]; then
@@ -55,7 +53,8 @@ test_target_num () {
             echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
+            diff "$TESTMODELFILE" "$ORIGINALMODELFILE"
+#            echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
 #             echo "===== $TESTMODELFILE ====="
 #             cat "$TESTMODELFILE"
 #             echo "===== $ORIGINALMODELFILE ====="
@@ -73,7 +72,8 @@ test_target_num () {
             echo "error: $2: $1: Output files DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$TESTSOURCEFILE\" \"$ORIGINALSOURCEFILE\" -merge \"$ORIGINALSOURCEFILE\""
+            diff "$TESTSOURCEFILE" "$ORIGINALSOURCEFILE"
+#            echo "opendiff \"$TESTSOURCEFILE\" \"$ORIGINALSOURCEFILE\" -merge \"$ORIGINALSOURCEFILE\""
 #             echo "===== $TESTSOURCEFILE ====="
 #             cat "$TESTSOURCEFILE"
 #             echo "===== $ORIGINALSOURCEFILE ====="
@@ -153,12 +153,12 @@ fail_codegen_target_num () {
 
     echo "note: ******************** $2: $1 ********************"
 
-    ORIGINALMODELFILE="${MYDIR}/model${2}.json"
-    ORIGINALMESSAGESFILE="${MYDIR}/messages${2}.log"
-    PREMODELFILE="${MYDIR}/model${2}.before.json"
+    ORIGINALMODELFILE="${EXPECTED_DIR}/model/model${2}.json"
+    ORIGINALMESSAGESFILE="${EXPECTED_DIR}/model/messages${2}.log"
+    PREMODELFILE="${EXPECTED_DIR}/model/model${2}.before.json"
     TESTMODELFILE="${BUILT_PRODUCTS_DIR}/model${2}.json"
     TESTMESSAGESFILE="${BUILT_PRODUCTS_DIR}/messages${2}.log"
-    ORIGINALDUMPFILE="${MYDIR}/schemaDump${2}.txt"
+    ORIGINALDUMPFILE="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
     TESTDUMPFILE="${MYOUTPUTDIR}/schemaDump${2}.txt"
     TESTSOURCEFILE="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
     ORIGINALXCODELOGFILE="${MYDIR}/xcode${2}.log"

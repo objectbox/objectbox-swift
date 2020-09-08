@@ -21,5 +21,4 @@
 
 + (void)raiseGenericCppException;
 
-+ (NSError *)swiftErrorFromObjCForCode: (int)errCode msg: (NSString*)msg;
 @end

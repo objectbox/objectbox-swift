@@ -114,11 +114,13 @@ extension ObjectBox.Property where E == Author {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Author.EntityBindingType`.
-internal class AuthorBinding: NSObject, ObjectBox.EntityBinding {
+internal class AuthorBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Author
     internal typealias IdType = EntityId<Author>
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -137,7 +139,7 @@ internal class AuthorBinding: NSObject, ObjectBox.EntityBinding {
         propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
     }
 
-    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) {
+    func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
         if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
             let notesStandalone = ToMany<Note>.relation(
                 sourceId: EntityId<Author>(id.value),
@@ -156,6 +158,8 @@ internal class AuthorBinding: NSObject, ObjectBox.EntityBinding {
             }
             entity.notes = notes
         }
+        try entity.notesStandalone.applyToDb()
+        try entity.notes.applyToDb()
     }
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = Author()
@@ -255,11 +259,13 @@ extension ObjectBox.Property where E == AuthorStruct {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `AuthorStruct.EntityBindingType`.
-internal class AuthorStructBinding: NSObject, ObjectBox.EntityBinding {
+internal class AuthorStructBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = AuthorStruct
     internal typealias IdType = EntityId<AuthorStruct>
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setStructEntityId(of entity: inout EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -484,11 +490,13 @@ extension ObjectBox.Property where E == Note {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Note.EntityBindingType`.
-internal class NoteBinding: NSObject, ObjectBox.EntityBinding {
+internal class NoteBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Note
     internal typealias IdType = Id
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -499,7 +507,7 @@ internal class NoteBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
         let propertyOffset_title = propertyCollector.prepare(string: entity.title)
         let propertyOffset_text = propertyCollector.prepare(string: entity.text)
 
@@ -508,7 +516,7 @@ internal class NoteBinding: NSObject, ObjectBox.EntityBinding {
         propertyCollector.collect(entity.modificationDate, at: 2 + 2 * 5)
         propertyCollector.collect(entity.done, at: 2 + 2 * 7)
         propertyCollector.collect(entity.upvotes, at: 2 + 2 * 8)
-        propertyCollector.collect(entity.author, at: 2 + 2 * 6, store: store)
+        try propertyCollector.collect(entity.author, at: 2 + 2 * 6, store: store)
         propertyCollector.collect(dataOffset: propertyOffset_title, at: 2 + 2 * 2)
         propertyCollector.collect(dataOffset: propertyOffset_text, at: 2 + 2 * 3)
     }
@@ -659,11 +667,13 @@ extension ObjectBox.Property where E == NoteStruct {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `NoteStruct.EntityBindingType`.
-internal class NoteStructBinding: NSObject, ObjectBox.EntityBinding {
+internal class NoteStructBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = NoteStruct
     internal typealias IdType = Id
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setStructEntityId(of entity: inout EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -674,14 +684,14 @@ internal class NoteStructBinding: NSObject, ObjectBox.EntityBinding {
     }
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
-                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) {
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
         let propertyOffset_title = propertyCollector.prepare(string: entity.title)
         let propertyOffset_text = propertyCollector.prepare(string: entity.text)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.creationDate, at: 2 + 2 * 4)
         propertyCollector.collect(entity.modificationDate, at: 2 + 2 * 5)
-        propertyCollector.collect(entity.author, at: 2 + 2 * 6, store: store)
+        try propertyCollector.collect(entity.author, at: 2 + 2 * 6, store: store)
         propertyCollector.collect(dataOffset: propertyOffset_title, at: 2 + 2 * 2)
         propertyCollector.collect(dataOffset: propertyOffset_text, at: 2 + 2 * 3)
     }
@@ -839,11 +849,13 @@ extension ObjectBox.Property where E == Student {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Student.EntityBindingType`.
-internal class StudentBinding: NSObject, ObjectBox.EntityBinding {
+internal class StudentBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Student
     internal typealias IdType = Id
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -861,7 +873,7 @@ internal class StudentBinding: NSObject, ObjectBox.EntityBinding {
         propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
     }
 
-    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) {
+    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
         if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
             let teachers = ToMany<Teacher>.relation(
                 sourceId: EntityId<Student>(id.value),
@@ -872,7 +884,9 @@ internal class StudentBinding: NSObject, ObjectBox.EntityBinding {
             }
             entity.teachers = teachers
         }
+        try entity.teachers.applyToDb()
     }
+
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = Student()
 
@@ -964,11 +978,13 @@ extension ObjectBox.Property where E == Teacher {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Teacher.EntityBindingType`.
-internal class TeacherBinding: NSObject, ObjectBox.EntityBinding {
+internal class TeacherBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Teacher
     internal typealias IdType = Id
 
-    override internal required init() {}
+    internal required init() {}
+
+    func generatorBindingVersion() -> Int { 1 }
 
     internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
         entity.__setId(identifier: entityId)
@@ -986,7 +1002,7 @@ internal class TeacherBinding: NSObject, ObjectBox.EntityBinding {
         propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
     }
 
-    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) {
+    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
         if entityId(of: entity) == 0 { // Written for first time? Attach ToMany relations:
             let students = ToMany<Student>.backlink(
                 sourceBox: store.box(for: ToMany<Student>.ReferencedType.self),
@@ -997,6 +1013,7 @@ internal class TeacherBinding: NSObject, ObjectBox.EntityBinding {
             }
             entity.students = students
         }
+        try entity.students.applyToDb()
     }
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
         let entity = Teacher()
@@ -1043,7 +1060,7 @@ extension ObjectBox.Store {
     ///   - maxDbSizeInKByte: Limit of on-disk space for the database files. Default is `1024 * 1024` (1 GiB).
     ///   - fileMode: UNIX-style bit mask used for the database files; default is `0o755`.
     ///   - maxReaders: Maximum amount of concurrent readers, tailored to your use case. Default is `0` (unlimited).
-    internal convenience init(directoryPath: String, maxDbSizeInKByte: UInt64 = 1024 * 1024, fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
+    internal convenience init(directoryPath: String, maxDbSizeInKByte: UInt64 = 1024 * 1024, fileMode: UInt32 = 0o644, maxReaders: UInt32 = 0) throws {
         try self.init(
             model: try cModel(),
             directory: directoryPath,

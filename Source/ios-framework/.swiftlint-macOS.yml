@@ -10,3 +10,8 @@ disabled_rules:
     - trailing_whitespace
     - todo
     - vertical_whitespace
+identifier_name:
+    excluded:
+        - id
+        - ok
+        - tx

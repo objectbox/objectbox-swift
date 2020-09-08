@@ -51,9 +51,9 @@ class TestSubscriber<T: __EntityRelatable & EntityInspectable>: Subscriber {
         print("Subscription completed.")
         group.leave()
     }
-    
-    func wait() {
-        group.wait()
+
+    func wait(seconds: Int = 5) -> Bool {
+        return group.wait(timeout: .now() + .seconds(seconds)) == .success
     }
 }
 
@@ -89,7 +89,7 @@ class CombineTests: XCTestCase {
             try box.put(person2)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             
@@ -124,7 +124,7 @@ class CombineTests: XCTestCase {
             try box.put(changedPerson)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             
@@ -155,7 +155,7 @@ class CombineTests: XCTestCase {
             try box.remove(person2)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             
@@ -198,7 +198,7 @@ class CombineTests: XCTestCase {
             try box.put(person3)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             
@@ -247,7 +247,7 @@ class CombineTests: XCTestCase {
             try box.put(person3)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             
@@ -297,7 +297,7 @@ class CombineTests: XCTestCase {
             try box.remove(person3)
             
             print("Waiting")
-            testSubscriber.wait()
+            XCTAssert(testSubscriber.wait())
             
             XCTAssertNil(testSubscriber.error, "No error occurred in subscription")
             

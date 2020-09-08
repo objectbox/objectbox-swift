@@ -16,6 +16,9 @@
 
 internal func observerCallback(_ ptr: UnsafeMutableRawPointer?) {
     let context: Observer = Unmanaged.fromOpaque(ptr!).takeUnretainedValue()
+    // Before obx_observer_close() checked for locking failures, we had it freezing sporadically here:
+    // the observer context deinited from this method (not sure why yet...) causing a call to obx_observer_close().
+    // After the change to obx_observer_close() this did not occur anymore (also no errors on obx_observer_close()!?)
     context.dispatchQueue.async {
         context.changeHandler()
     }
@@ -64,9 +67,13 @@ public class Observer {
     /// but since not using an object in Swift can lead to warnings, this method is provided so you
     /// can unsubscribe explicitly and make the Swift compiler aware the object _is_ being used.
     public func unsubscribe() {
-        if let cObserver = cObserver {
-            obx_observer_close(cObserver)
-            self.cObserver = nil
+        if let observerToClose = cObserver {
+            cObserver = nil
+            let err = obx_observer_close(observerToClose)
+            if err != OBX_SUCCESS {
+                cObserver = observerToClose  // We can (should) try again on error
+            }
+            checkLastErrorNoThrow(err)
         }
     }
 }

@@ -76,7 +76,7 @@ class BoxTests: XCTestCase {
         XCTAssertEqual(fetchedPerson2?.age, person2.age)
     }
     
-    func testPutGetDictionary() throws {
+    func testGetArrayAndDictionary() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
         
         XCTAssertEqual(try box.count(), 0)
@@ -89,8 +89,14 @@ class BoxTests: XCTestCase {
         XCTAssertNotEqual(person2Id.value, 0)
         XCTAssertNotEqual(person3Id.value, 0)
         XCTAssertEqual(try box.count(), 3)
+
+        let objects = try box.get([person3Id.value, person1Id.value])
+        XCTAssertEqual(["Baz", "Foo"], objects.map { $0.name })
+
+        let objects1 = try box.get([42, 27, person3Id.value, person1Id.value], maxCount: 1)
+        XCTAssertEqual(["Baz"], objects1.map { $0.name })
         
-        let entitiesById = try box.dictionaryWithEntities(forIds: [person3Id, person1Id])
+        let entitiesById = try box.getAsDictionary([person3Id, person1Id])
         XCTAssertEqual(entitiesById.count, 2)
         XCTAssertEqual(entitiesById[person1Id]?.name, "Foo")
         XCTAssertNil(entitiesById[person2Id])
@@ -249,7 +255,7 @@ class BoxTests: XCTestCase {
         XCTAssertEqual(try box.count(), 0)
 
         // 3x page size (4096) to meet the 32-bit limits
-        let longString = String(repeating: "A", count: 3 * 46)
+        let longString = String(repeating: "A", count: 3 * 4096)
         let shortString = "Adam Short"
         let id1 = try box.put(TestPerson(name: longString))
         let id2 = try box.put(TestPerson(name: shortString))
@@ -271,7 +277,7 @@ class BoxTests: XCTestCase {
         }
 
         do {
-            let objects = try box.dictionaryWithEntities(forIds: [id1, id2])
+            let objects = try box.getAsDictionary([id1, id2])
             XCTAssertEqual(objects.count, 2)
             XCTAssertEqual(objects[id1]!.name, longString)
             XCTAssertEqual(objects[id2]!.name, shortString)

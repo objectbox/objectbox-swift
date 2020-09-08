@@ -14,13 +14,13 @@
 // limitations under the License.
 //
 
-// swiftlint:disable identifier_name
+// TODO Merge with ToOne; State might stay
 internal class LazyProxyRelation<Target: EntityInspectable & __EntityRelatable>
 where Target == Target.EntityBindingType.EntityType {
 
-    internal let box: Box<Target>?
+    var box: Box<Target>?
 
-    internal var hasValue: Bool {
+    var hasValue: Bool {
         switch _state {
         case .none:
             return false
@@ -148,7 +148,13 @@ where Target == Target.EntityBindingType.EntityType {
             return _state.entityId
         }
         set {
-            _state = State(targetId: newValue)
+            if newValue != _state.entityId {
+                if newValue == nil {
+                    _state = .none
+                } else {
+                    _state = .lazy(id: newValue!)
+                }
+            }
         }
     }
 

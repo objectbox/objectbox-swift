@@ -61,7 +61,9 @@ class PureSwiftEntityBinding: EntityBinding {
     typealias IdType = EntityId<PureSwiftEntity>
 
     required init() {}
-    
+
+    public func generatorBindingVersion() -> Int { 1 }
+
     func collect(fromEntity entity: PureSwiftEntity, id: Id, propertyCollector: FlatBufferBuilder, store: Store) {
         propertyCollector.collect(id, at: 2 + 2*1)
         

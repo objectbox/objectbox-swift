@@ -23,35 +23,39 @@ public class StoreHelper {
         let directoryPath = StoreHelper.newTemporaryDirectory().path
         var store: Store! = nil
         do {
-            store = try Store(model: model, directory: directoryPath, maxDbSizeInKByte: 500, fileMode: 0o755,
-                              maxReaders: 10)
+            store = try Store(model: model, directory: directoryPath, maxDbSizeInKByte: 500, fileMode: 0o644,
+                    maxReaders: 10)
         } catch {
             NSException(name: NSExceptionName.genericException, reason: "tempStore failed with error: \(error)",
-                userInfo: [NSUnderlyingErrorKey: error]).raise()
+                    userInfo: [NSUnderlyingErrorKey: error]).raise()
         }
         return store
     }
-    
+
     /// :nodoc:
     public class func newTemporaryDirectory() -> URL {
-        let directoryURL = temporaryDirectoryBase().appendingPathComponent(UUID().uuidString)
-        do {
-            try ensurePathExists(directoryURL)
-        } catch {
-            NSException(name: NSExceptionName.genericException,
-                        reason: "Cannot create temporary directory at \(directoryURL.path), "
-                            + "error: \(error)", userInfo: ["URL": directoryURL]).raise()
+        let base = temporaryDirectoryBase()
+        ensurePathExists(base)
+        let directoryURL = base.appendingPathComponent(UUID().uuidString)
+        let path = directoryURL.path
+        if FileManager.default.fileExists(atPath: path) {
+            fatalError("Random dir already exists: " + path)
         }
+        print("Test store will be created at temp path " + path)
         return directoryURL
     }
-    
+
     internal class func temporaryDirectoryBase() -> URL {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("objectbox-test")
     }
-    
-    internal class func ensurePathExists(_ url: URL) throws {
+
+    internal class func ensurePathExists(_ url: URL) {
         if !FileManager.default.fileExists(atPath: url.path) {
-            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            do {
+                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                fatalError("Could not create dir: " + url.path)
+            }
         }
     }
 }

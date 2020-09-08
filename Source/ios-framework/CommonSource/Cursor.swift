@@ -35,7 +35,7 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     }
     
     func put(id entityId: Id, data: OBX_bytes, mode: PutMode) throws {
-        try checkLastError(obx_cursor_put_mode(cCursor, entityId, data.data, data.size, mode))
+        try checkLastError(obx_cursor_put4(cCursor, entityId, data.data, data.size, mode))
     }
     
     func remove(_ entity: EntityType) throws -> Bool {

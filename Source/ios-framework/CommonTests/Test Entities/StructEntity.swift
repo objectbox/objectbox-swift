@@ -108,7 +108,9 @@ internal class StructEntityCursor: EntityBinding {
     internal typealias IdType = EntityId<StructEntity>
 
     internal required init() {}
-    
+
+    public func generatorBindingVersion() -> Int { 1 }
+
     internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: Id) {
         // Use the struct variants of the put methods on entities of struct StructEntity.
     }

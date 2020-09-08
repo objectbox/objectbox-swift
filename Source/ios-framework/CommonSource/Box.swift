@@ -117,7 +117,7 @@ extension Box {
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
-            binding.postPut(fromEntity: entity, id: writtenId, store: store)
+            try binding.postPut(fromEntity: entity, id: writtenId, store: store)
         })
         binding.setStructEntityId(of: &entity, to: writtenId)
 
@@ -147,7 +147,7 @@ extension Box {
             let cursor = Cursor<EntityType>(transaction: swiftTx)
 
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
-            binding.postPut(fromEntity: entity, id: writtenId, store: store)
+            try binding.postPut(fromEntity: entity, id: writtenId, store: store)
         })
         binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
 
@@ -160,7 +160,7 @@ extension Box {
         defer { flatBuffer.clear(); flatBuffer.isCollecting = false }
 
         let actualId = cursor.idForPut(entity)
-        binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: store)
+        try binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
         try cursor.put(id: actualId, data: data, mode: mode)
@@ -200,7 +200,7 @@ extension Box {
                     for entity in entities {
                         let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
                                                    mode: mode, cursor: cursor)
-                        binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                        try binding.postPut(fromEntity: entity, id: writtenId, store: store)
                         binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
                         ptr[initializedCount] = EntityType.EntityBindingType.IdType(writtenId)
                         initializedCount += 1
@@ -234,7 +234,7 @@ extension Box {
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
                                            mode: mode, cursor: cursor)
-                binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                try binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
         })
@@ -256,7 +256,7 @@ extension Box {
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
                                            mode: mode, cursor: cursor)
-                binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                try binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
         })
@@ -278,7 +278,7 @@ extension Box {
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
                                            mode: mode, cursor: cursor)
-                binding.postPut(fromEntity: entity, id: writtenId, store: store)
+                try binding.postPut(fromEntity: entity, id: writtenId, store: store)
                 binding.setEntityIdUnlessStruct(of: entity, to: writtenId)
             }
         })
@@ -308,7 +308,7 @@ extension Box {
                 let newEntity = entities[entityIndex]
                 let writtenId = try putOne(newEntity, binding: binding, flatBuffer: flatBuffer,
                                            mode: mode, cursor: cursor)
-                binding.postPut(fromEntity: newEntity, id: writtenId, store: store)
+                try binding.postPut(fromEntity: newEntity, id: writtenId, store: store)
                 binding.setStructEntityId(of: &entities[entityIndex], to: writtenId)
             }
         })
@@ -336,11 +336,6 @@ extension Box {
     public func put(_ entities: EntityType..., mode: PutMode = .put) throws {
         try put(entities, mode: mode)
     }
-
-    internal func put(_ relatedEntity: ToOne<EntityType>) throws -> EntityType.EntityBindingType.IdType? {
-        guard let entity = relatedEntity.target else { return nil }
-        return try put(entity)
-    }
 }
 
 // MARK: Reading Objects
@@ -349,11 +344,11 @@ extension Box {
 
     /// This function *must* be called inside a valid transaction. The transaction guarantees that the pointers returned
     /// by obx_box_get() stay valid until we've actually copied them.
-    internal func getOne(_ entityId: Id, binding: EntityType.EntityBindingType,
-                         flatBuffer: inout FlatBufferReader) throws -> EntityType? {
+    func getOne(_ id: Id, binding: EntityType.EntityBindingType,
+                flatBuffer: inout FlatBufferReader) throws -> EntityType? {
         var ptr: UnsafeMutableRawPointer?
         var size: Int = 0
-        let err = obx_box_get(cBox, entityId, &ptr, &size)
+        let err = obx_box_get(cBox, id, &ptr, &size)
         if err == OBX_NOT_FOUND { obx_last_error_clear(); return nil }
         try checkLastError(err)
         guard let safePtr = ptr else { return nil }
@@ -365,12 +360,12 @@ extension Box {
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
-    internal func get(id entityId: Id) throws -> EntityType? {
+    func get(id: Id) throws -> EntityType? {
         return try store.obx_runInTransaction(writable: false, { _ in
             let binding = EntityType.entityBinding
             var flatBuffer = FlatBufferReader()
 
-            return try getOne(entityId.value, binding: binding, flatBuffer: &flatBuffer)
+            return try getOne(id.value, binding: binding, flatBuffer: &flatBuffer)
         })
     }
 
@@ -386,52 +381,82 @@ extension Box {
     ///
     /// - Parameter entityId: ID of the object.
     /// - Returns: The entity, if an object with `entityId` was found, `nil` otherwise.
-    public func get(_ entityId: EntityId<EntityType>) throws -> EntityType? {
-        return try get(id: entityId.value)
+    public func get(_ id: EntityId<EntityType>) throws -> EntityType? {
+        return try get(id: id.value)
     }
 
-    /// Gets entities from the box for each ID in `entityIds`.
+    /// Gets the objects for the given IDs as an array.
     ///
-    /// - Parameter entityIds: Object IDs to map to objects.
-    /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
-    ///   Nothing is added to the dictionary for entities that can't be found.
-    public func dictionaryWithEntities<C: Collection>(forIds entityIds: C) throws
-        -> [EntityId<EntityType>: EntityType] where C.Element == EntityId<EntityType> {
-            return try dictionaryWithEntities(forIdBases: entityIds)
-    }
+    /// - Parameter ids: Object IDs to map to objects.
+    /// - Returns: An array of the objects that were actually found; in the order of the given IDs.
+    public func get<I: IdBase, C: Collection>(_ ids: C, maxCount: Int = 0)
+    throws -> [EntityType] where C.Element == I {
 
-    /// Gets entities from the box for each ID in `entityIds`.
-    ///
-    /// - Parameter entityIds: Object IDs to map to objects.
-    /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
-    ///   Nothing is added to the dictionary for entities that can't be found.
-    public func dictionaryWithEntities<I: UntypedIdBase, C: Collection>(forIds entityIds: C) throws
-        -> [I: EntityType] where C.Element == I {
-            return try dictionaryWithEntities(forIdBases: entityIds)
-    }
+        var result: [EntityType] = []
+        result.reserveCapacity(maxCount > 0 ? maxCount : ids.count)
 
-    /// Gets entities from the box for each ID in `entityIds`.
-    ///
-    /// - Parameter entityIds: Object IDs to map to objects.
-    /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
-    ///   Nothing is added to the dictionary for entities that can't be found.
-    private func dictionaryWithEntities<I: IdBase, C: Collection>(forIdBases entityIds: C) throws
-        -> [I: EntityType] where C.Element == I {
-            var result = [I: EntityType]()
+        let binding = EntityType.entityBinding
+        var flatBuffer = FlatBufferReader()
 
-            try store.obx_runInTransaction(writable: false, { _ in
-                let binding = EntityType.entityBinding
-                var flatBuffer = FlatBufferReader()
-
-                // TODO this could use obx_box_get_many() instead
-                for entityId in entityIds {
-                    if let entity = try getOne(entityId.value, binding: binding, flatBuffer: &flatBuffer) {
-                        result[entityId] = entity
-                    }
+        try store.runInReadOnlyTransaction {
+            var count = 0
+            // Prefer getting one by one: zero overhead calling into static library.
+            // Consumes less memory compared to e.g. obx_box_get_many().
+            for id in ids {
+                if let entity = try getOne(id.value, binding: binding, flatBuffer: &flatBuffer) {
+                    result.append(entity)
+                    count += 1
+                    if count == maxCount { break }
                 }
-            })
+            }
+        }
 
-            return result
+        return result
+    }
+
+    /// Gets the objects for the given IDs as a dictionary.
+    ///
+    /// - Parameter ids: Object IDs to map to objects.
+    /// - Returns: Dictionary of all `ids` and the corresponding objects.
+    ///   Nothing is added to the dictionary for entities that can't be found.
+    public func getAsDictionary<C: Collection>(_ ids: C) throws
+        -> [EntityId<EntityType>: EntityType] where C.Element == EntityId<EntityType> {
+            return try getAsDictionary(forIdBases: ids)
+    }
+
+    /// Gets the objects for the given IDs as a dictionary.
+    ///
+    /// - Parameter ids: Object IDs to map to objects.
+    /// - Returns: Dictionary of all `ids` and the corresponding objects.
+    ///   Nothing is added to the dictionary for entities that can't be found.
+    public func getAsDictionary<I: UntypedIdBase, C: Collection>(_ ids: C) throws
+        -> [I: EntityType] where C.Element == I {
+            return try getAsDictionary(forIdBases: ids)
+    }
+
+    /// Gets the objects for the given IDs as a dictionary.
+    ///
+    /// - Parameter entityIds: Object IDs to map to objects.
+    /// - Returns: Dictionary of all `entityIds` and the corresponding objects.
+    ///   Nothing is added to the dictionary for entities that can't be found.
+    private func getAsDictionary<I: IdBase, C: Collection>(forIdBases ids: C) throws
+                    -> [I: EntityType] where C.Element == I {
+        var result = [I: EntityType](minimumCapacity: ids.count)
+
+        let binding = EntityType.entityBinding
+        var flatBuffer = FlatBufferReader()
+        try store.runInReadOnlyTransaction {
+
+            // Prefer getting one by one: zero overhead calling into static library.
+            // Consumes less memory compared to e.g. obx_box_get_many().
+            for id in ids {
+                if let entity = try getOne(id.value, binding: binding, flatBuffer: &flatBuffer) {
+                    result[id] = entity
+                }
+            }
+        }
+
+        return result
     }
 
     /// Gets all objects from the box.

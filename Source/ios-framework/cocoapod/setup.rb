@@ -200,6 +200,12 @@ if ARGV.size > 1
   end
 else # If not given a path, just pick all targets that result in runnables (hopefully the Mac and iOS app targets):
   app_targets = project.targets.select { |t| t.launchable_target_type? }
+  if app_targets.size == 0
+    puts "🛑 No launchable Xcode targets found in \"#{project_path}\""
+    puts "ℹ️ Please specify project and target explicitly; run with --help for help"
+    puts ""
+    exit 1
+  end
 end
 
 SOURCERY_BUILD_PHASE_NAME = "[OBX] Update Sourcery Generated Files"
@@ -212,9 +218,9 @@ generated_groupref = project.groups
 .first
 if generated_groupref.nil?
     puts "🔹 Adding a new group for generated files at `./#{GENERATED_DIR_NAME}/`..."
-    
+
     generated_groupref = project.new_group("generated", GENERATED_DIR_NAME)
-    
+
     # Move group from the end to before the build Products
     products_group_index = project.main_group.children.index { |g| g.name == "Products" } || 2
     project.main_group.children.insert(products_group_index, project.main_group.children.delete(generated_groupref))
@@ -270,24 +276,26 @@ app_targets.each do |target|
     # Move code gen phase to the top, before compilation
     compile_phase_index = target.build_phases.index { |p| p.is_a?(Xcodeproj::Project::Object::PBXSourcesBuildPhase) } || 0
     target.build_phases.insert(compile_phase_index, target.build_phases.delete(codegen_phase))
-    
+
     puts "  ✅ Done."
   else
     existing_script = target.build_phases[build_phase_index].shell_script
-    
+
     # If we ever modify the shell script build phase in a later release, this comparison needs to be updated to detect
     # when existing_script is outdated. It can upgrade it to the new version instead of claiming it had been modified.
     if existing_script == obx_shell_script
       puts "  🔹 Skipping target \"#{target.name}\", build phase \"#{SOURCERY_BUILD_PHASE_NAME}\" already up to date."
     else
+      puts "  🔸 Script was modified."
+      puts "  🔸 Existing script: #{existing_script}"
+      puts "  🔸 Expected script: #{obx_shell_script}"
+
       if SHOULD_REPLACE_MODIFIED_SCRIPTS
         shouldreplace = "y"
-        puts "  🔸 Script was modified."
       elsif SHOULD_SKIP_MODIFIED_SCRIPTS
         shouldreplace = "n"
-        puts "  🔸 Script was modified."
       else
-        puts "  ⚪️ Target \"#{target.name}\" already has a build phase \"#{SOURCERY_BUILD_PHASE_NAME}\", but it seems to have been modified."
+        puts "  ⚪️ Target \"#{target.name}\" already has a build phase \"#{SOURCERY_BUILD_PHASE_NAME}\" with a diverging script."
         print "  Replace the script with the recommended script? [y/N] "
         response = STDIN.gets
         if response.nil?
@@ -316,6 +324,7 @@ if project.dirty?
   puts " ✅ Project changes saved. ".reverse_color
 else
   puts " 🔸 No changes made to project. ".reverse_color
+  puts " ℹ️ If your code generation was not setup properly run with --help to see options"
 end
 if is_cocoapods
   puts ""

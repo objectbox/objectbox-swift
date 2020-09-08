@@ -26,7 +26,7 @@ integration_tests: download_statics
 # Note: If ObjectBox core repo is present, it won't download but build it instead
 download_statics:
 	@echo "$(BLUE)Building/Downloading static libraries...$(NC)"
-	@../download_dependencies.command
+	@../fetch_dependencies.command
 
 build_framework: download_statics
 	@echo "$(BLUE)Building Frameworks with Carthage...$(NC)"

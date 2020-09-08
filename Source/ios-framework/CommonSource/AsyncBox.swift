@@ -57,10 +57,10 @@ where E == E.EntityBindingType.EntityType {
         
         let entityId = binding.entityId(of: entity)
         let actualId = obx_box_id_for_put(box.cBox, entityId)
-        binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: box.store)
+        try binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: box.store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
-        try checkLastError(obx_async_put_mode(cAsyncBox, actualId, data.data, data.size, mode))
+        try checkLastError(obx_async_put5(cAsyncBox, actualId, data.data, data.size, mode))
 
         return actualId
     }

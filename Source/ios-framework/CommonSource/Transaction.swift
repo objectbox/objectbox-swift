@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2020 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 
 import Foundation
 
-internal class Transaction {
-    private(set) var isClosed: Bool = false
-    private(set) var isWritable: Bool
-    internal var cTransaction: OpaquePointer? /* OBX_txn */
-    
+/// Thin wrapper around OBX_txn.
+/// Note that Swift does not support RAII, so please call close() if you do not call commit() (e.g. read transactions):
+/// this ensures to release resources asap.
+/// Also not that usually there no strict 'defer' needed for closing, it's not that critical to compromise on perf.
+class Transaction {
+    let isWritable: Bool
+    var cTransaction: OpaquePointer? /* OBX_txn */
+    var isClosed: Bool { cTransaction == nil }
+
     init(store: Store, writable: Bool) throws {
         isWritable = writable
         if isWritable {
@@ -30,28 +34,27 @@ internal class Transaction {
         }
         try checkLastError()
     }
-    
+
     deinit {
         try? close()
     }
-    
+
     func commit() throws {
-        assert(!isClosed)
-        assert(isWritable)
-        obx_txn_success(cTransaction)
-        cTransaction = nil
-        isClosed = true
-        try checkLastError()
-    }
-    
-    func close() throws {
-        guard !isClosed else { return }
-        
-        if cTransaction != nil {
-            obx_txn_close(cTransaction)
+        guard let tx = cTransaction else {
+            throw ObjectBoxError.illegalState(message: "Cannot commit an already closed transaction")
         }
         cTransaction = nil
-        isClosed = true
+
+        obx_txn_success(tx)
+        try checkLastError()
+    }
+
+    /// Call this if you do not call commit(), e.g. for read transactions: release resources asap (Swift has no RAII).
+    /// See class comments for details.
+    func close() throws {
+        guard let tx = cTransaction else { return }
+        cTransaction = nil
+        obx_txn_close(tx)
         try checkLastError()
     }
 }

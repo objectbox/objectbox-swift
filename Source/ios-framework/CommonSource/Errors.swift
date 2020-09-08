@@ -66,8 +66,10 @@ public enum ObjectBoxError: Swift.Error {
     case stdOther(message: String)
     /// The database schema does not match. (Is there a problem with your model.json?)
     case schema(message: String)
-    /// The database file has errors, e.g. has a structural inconsistency.
+    /// DB file has errors, e.g. illegal values or structural inconsistencies were detected.
     case fileCorrupt(message: String)
+    /// DB file has errors related to pages, e.g. bad page refs outside of the file.
+    case filePagesCorrupt(message: String)
     /// Attempted to establish a relation to an entity that hasn't been assigned an ID yet.
     case cannotRelateToUnsavedEntities(message: String)
     /// Unexpected error, should never occur in practice, but for pragmatic reasons, we cover the case.
@@ -75,6 +77,10 @@ public enum ObjectBoxError: Swift.Error {
     /// If you encounter this error in your use of ObjectBox, please report it to us, as it's likely a bug in the
     /// binding.
     case unexpected(error: Error)
+
+    /// An error related to sync
+    case sync(message: String)
+
 }
 
 /// Check whether obx_last_error_code() contains an error, and if yes, throw that as a Swift error, together with the
@@ -103,6 +109,17 @@ internal func checkLastError(_ error: obx_err) throws {
     try throwObxErr(error, message: message)
 }
 
+/// E.g. prints error
+func checkLastErrorNoThrow(_ error: obx_err) {
+    if error == OBX_SUCCESS { return }
+    let message = String(utf8String: obx_last_error_message()) ?? ""
+    if error != OBX_NOT_FOUND {
+        // In case the error is not catched, info might be lost; so better print it now(?), or is there a better way?
+        print("Error occurred: \(message) (\(error))")
+    }
+    obx_last_error_clear()
+}
+
 /// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
 internal func failFatallyIfError() {
     checkFatalError(obx_last_error_code())
@@ -125,8 +142,13 @@ internal func checkFatalError(_ err: obx_err) {
 
 /// Throw the given error code and optional string as an error message, if the code given didn't indicate success.
 internal func check(error: obx_err, message: String = "") throws {
-    if error == OBX_SUCCESS { return }
-    try throwObxErr(error, message: message)
+    if error != OBX_SUCCESS {
+        try throwObxErr(error, message: message)
+    }
+}
+
+internal func checkCResult(_ cResultCode: obx_err, message: String = "") throws {
+    try check(error: cResultCode, message: message)
 }
 
 /// Ignore and log the given Swift error.
@@ -213,6 +235,8 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
         throw ObjectBoxError.schema(message: message)
     case OBX_ERROR_FILE_CORRUPT:
         throw ObjectBoxError.fileCorrupt(message: message)
+    case OBX_ERROR_FILE_PAGES_CORRUPT:
+        throw ObjectBoxError.filePagesCorrupt(message: message)
 
     case 2: // testStorageException receives this code for a Store on a nonexistent file path.
         throw ObjectBoxError.storageGeneral(message: message.isEmpty ? "Storage error \(err)" : message)

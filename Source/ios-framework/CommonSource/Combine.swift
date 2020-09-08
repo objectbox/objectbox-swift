@@ -88,13 +88,11 @@ extension BoxPublisher {
         return subscriberIdSeed
     }
     
-    // swiftlint:disable identifier_name
     private func setSubscriber(id: SubscriberId, observer: Observer?) {
         subscriberLock.wait()
         defer { subscriberLock.signal() }
         subscribers[id] = observer
     }
-    // swiftlint:enable identifier_name
 
     /// Register a combine subscriber to be notified whenever entities are added/modified/removed.
     /// - Parameter subscriber: The subscriber you want to receive the subscription.
@@ -189,13 +187,11 @@ extension QueryPublisher {
         return subscriberIdSeed
     }
     
-    // swiftlint:disable identifier_name
     private func setSubscriber(id: SubscriberId, observer: Observer?) {
         subscriberLock.wait()
         defer { subscriberLock.signal() }
         subscribers[id] = observer
     }
-    // swiftlint:enable identifier_name
 
     /// Register a combine subscriber to be notified whenever the query's contents change.
     /// - Parameter subscriber: The subscriber you want to receive the subscription.

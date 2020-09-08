@@ -52,8 +52,8 @@ where T == T.EntityBindingType.EntityType {
     /// The type of object this relation will produce.
     public typealias Target = T
     
-    private var lazyTargetLock = DispatchSemaphore(value: 1)
-    private var _lazyTarget: LazyProxyRelation<Target>
+    private let lazyTargetLock = DispatchSemaphore(value: 1)
+    private let _lazyTarget: LazyProxyRelation<Target>
     
     /// Whether the relation was set to a target object.
     public var hasValue: Bool {
@@ -106,8 +106,7 @@ where T == T.EntityBindingType.EntityType {
         set {
             lazyTargetLock.wait()
             defer { lazyTargetLock.signal() }
-            _lazyTarget = LazyProxyRelation<Target>(box: _lazyTarget.box,
-                                                    initialState: (newValue != nil ) ? .lazy(id: newValue!) : .none)
+            _lazyTarget.targetId = newValue
         }
     }
     /// Initialize an empty relation.
@@ -119,8 +118,6 @@ where T == T.EntityBindingType.EntityType {
     ///        // ...
     ///    }
     public required init(nilLiteral: ()) {
-        lazyTargetLock.wait()
-        defer { lazyTargetLock.signal() }
         self._lazyTarget = LazyProxyRelation<Target>(box: nil, initialState: .none)
     }
     
@@ -131,17 +128,13 @@ where T == T.EntityBindingType.EntityType {
         self._lazyTarget = LazyProxyRelation<Target>(box: nil, initialState: .init(entity: entity))
     }
     
-    // swiftlint:disable identifier_name
     internal init(box: Box<Target>, id: EntityId<Target>) {
         self._lazyTarget = LazyProxyRelation<Target>(box: box, initialState: .init(id: id))
     }
-    // swiftlint:enable identifier_name
-    
+
     /// :nodoc:
     public func attach(to box: Box<Target>) {
-        lazyTargetLock.wait()
-        defer { lazyTargetLock.signal() }
-        _lazyTarget = LazyProxyRelation<Target>(box: box, original: _lazyTarget)
+        _lazyTarget.box = box
     }
     
     /// If this relation's target has already been persisted, unload the entity

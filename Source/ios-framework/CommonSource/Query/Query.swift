@@ -57,6 +57,14 @@ where E == E.EntityBindingType.EntityType {
         obx_query_close(cQuery)
     }
 
+    private func setOffsetLimit(_ offset: UInt64, _ limit: UInt64) throws {
+        try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
+    }
+
+    private func resetOffsetLimit() {
+        obx_query_offset_limit(cQuery, 0, 0)  // Ignore result; do not throw
+    }
+
     /// Find all objects matching the query between the given offset and limit.
     ///
     /// - Parameters:
@@ -67,9 +75,9 @@ where E == E.EntityBindingType.EntityType {
         return try store.runInReadOnlyTransaction {
             if self.store.supportsLargeArrays {
                 let box = self.store.box(for: EntityType.self)
-                guard let bytesArray = obx_query_find(cQuery, offset, limit) else {
-                    try check(error: obx_last_error_code())  // Should throw at this point
-                    return [EntityType]()
+                try setOffsetLimit(offset, limit)
+                guard let bytesArray = obx_query_find(cQuery) else {
+                    try throwObxErr(obx_last_error_code())
                 }
                 defer {
                     obx_bytes_array_free(bytesArray)
@@ -89,8 +97,8 @@ where E == E.EntityBindingType.EntityType {
                     return true
                 })
 
-                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque(), offset,
-                        limit)
+                try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
+                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque())
                 try check(error: error)
                 return result
             }
@@ -104,14 +112,14 @@ where E == E.EntityBindingType.EntityType {
         try store.runInReadOnlyTransaction {
             if self.store.supportsLargeArrays {
                 let box = self.store.box(for: EntityType.self)
-                if let bytesArray = obx_query_find(cQuery, offset, limit) {
-                    defer {
-                        obx_bytes_array_free(bytesArray)
-                    }
-                    result = try box.readAllContiguous(bytesArray.pointee)
-                } else {
-                    try check(error: obx_last_error_code())
+                try setOffsetLimit(offset, limit)
+                guard let bytesArray = obx_query_find(cQuery) else {
+                    try throwObxErr(obx_last_error_code())
                 }
+                defer {
+                    obx_bytes_array_free(bytesArray)
+                }
+                result = try box.readAllContiguous(bytesArray.pointee)
             } else {
                 var flatBuffer = FlatBufferReader()
                 let binding = EntityType.entityBinding
@@ -125,8 +133,8 @@ where E == E.EntityBindingType.EntityType {
                     return true
                 })
 
-                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque(), offset,
-                        limit)
+                try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
+                let error = obx_query_visit(cQuery, CDataVisitor, Unmanaged.passUnretained(context).toOpaque())
                 try check(error: error)
             }
         }
@@ -143,21 +151,21 @@ where E == E.EntityBindingType.EntityType {
     public func findIds(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityId<EntityType>] {
         var result = [EntityId<EntityType>]()
 
-        if let idArray = obx_query_find_ids(cQuery, offset, limit) {
-            try check(error: obx_last_error_code())
-            defer { obx_id_array_free(idArray) }
-
-            // swiftlint:disable opening_brace
-            result = [EntityId<EntityType>](unsafeUninitializedCapacity: idArray.pointee.count)
-            { ptr, initializedCount in
-                for idIndex in 0 ..< idArray.pointee.count {
-                    ptr[idIndex] = EntityId<EntityType>(idArray.pointee.ids[idIndex])
-                }
-                initializedCount = idArray.pointee.count
-            }
-            // swiftlint:enable opening_brace
+        try setOffsetLimit(offset, limit)
+        guard let idArray = obx_query_find_ids(cQuery) else {
+            try throwObxErr(obx_last_error_code())
         }
-        try check(error: obx_last_error_code())
+        defer { obx_id_array_free(idArray) }
+
+        // swiftlint:disable opening_brace
+        result = [EntityId<EntityType>](unsafeUninitializedCapacity: idArray.pointee.count)
+        { ptr, initializedCount in
+            for idIndex in 0 ..< idArray.pointee.count {
+                ptr[idIndex] = EntityId<EntityType>(idArray.pointee.ids[idIndex])
+            }
+            initializedCount = idArray.pointee.count
+        }
+        // swiftlint:enable opening_brace
 
         return result
     }
@@ -178,6 +186,7 @@ where E == E.EntityBindingType.EntityType {
 
     /// Find the first Object matching the query.
     public func findFirst() throws -> EntityType? {
+        defer { resetOffsetLimit() }  // reset the internal state set by find()
         return try find(offset: 0, limit: 1).first
     }
 
@@ -186,6 +195,7 @@ where E == E.EntityBindingType.EntityType {
     /// - Returns: The one and only object matching the query conditions, or nil if the query did not match anything.
     /// - Throws: ObjectBoxError.nonUniqueResult when there is more than one match
     public func findUnique() throws -> EntityType? {
+        defer { resetOffsetLimit() }  // reset the internal state set by find()
         let found = try find(offset: 0, limit: 2)
         guard found.count < 2 else { throw ObjectBoxError.nonUniqueResult(message: "More than 1 result in database.") }
         return found.count == 1 ? found[0] : nil
@@ -244,7 +254,7 @@ where E == E.EntityBindingType.EntityType {
         if property.type == .long {
             let numParams = Int32(collection.count)
             collection.withContiguousStorageIfAvailable { ptr -> Void in
-                let err = obx_query_int64_params_in(cQuery, EntityType.entityInfo.entitySchemaId,
+                let err = obx_query_param_int64s(cQuery, EntityType.entityInfo.entitySchemaId,
                                           property.propertyId, ptr.baseAddress, numParams)
                 checkFatalErrorParam(err)
             }
@@ -252,7 +262,7 @@ where E == E.EntityBindingType.EntityType {
             let i32collection = collection.map { Int32($0) }
             let numParams = Int32(i32collection.count)
             i32collection.withContiguousStorageIfAvailable { ptr -> Void in
-                let err = obx_query_int32_params_in(cQuery, EntityType.entityInfo.entitySchemaId,
+                let err = obx_query_param_int32s(cQuery, EntityType.entityInfo.entitySchemaId,
                                           property.propertyId, ptr.baseAddress, numParams)
                 checkFatalErrorParam(err)
             }
@@ -262,7 +272,7 @@ where E == E.EntityBindingType.EntityType {
     internal func setParametersInternal(_ alias: String, to collection: [Int64]) {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
-            let err = obx_query_int64_params_in_alias(cQuery, alias, ptr.baseAddress, numParams)
+            let err = obx_query_param_alias_int64s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
         }
     }
@@ -270,36 +280,36 @@ where E == E.EntityBindingType.EntityType {
     internal func setParametersInternal(_ alias: String, to collection: [Int32]) {
         let numParams = Int32(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
-            let err = obx_query_int32_params_in_alias(cQuery, alias, ptr.baseAddress, numParams)
+            let err = obx_query_param_alias_int32s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
         }
     }
 
     internal func setParameterInternal(property: PropertyDescriptor, to value: Int64) {
-        let err = obx_query_int_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
+        let err = obx_query_param_int(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
         checkFatalErrorParam(err)
     }
 
     /// Specify a value for a parameter of a sub-expression of a query.
     internal func setParameterInternal(_ alias: String, to value: Int64) {
-        let err = obx_query_int_param_alias(cQuery, alias, value)
+        let err = obx_query_param_alias_int(cQuery, alias, value)
         checkFatalErrorParam(err)
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Int64, _ value2: Int64) {
-        let err = obx_query_int_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
+        let err = obx_query_param_2ints(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                              value1, value2)
         checkFatalErrorParam(err)
     }
 
     /// Specify two values for a parameter of a sub-expression of a query.
     internal func setParametersInternal(_ alias: String, to value1: Int64, _ value2: Int64) {
-        let err = obx_query_int_params_alias(cQuery, alias, value1, value2)
+        let err = obx_query_param_alias_2ints(cQuery, alias, value1, value2)
         checkFatalErrorParam(err)
     }
 
     internal func setParameterInternal(property: PropertyDescriptor, to value: Double) {
-        let err = obx_query_double_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
+        let err = obx_query_param_double(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
         checkFatalErrorParam(err)
     }
 
@@ -311,12 +321,12 @@ where E == E.EntityBindingType.EntityType {
     ///   - alias: Condition's alias.
     ///   - value: New value.
     internal func setParameterInternal(_ alias: String, to value: Double) {
-        let err = obx_query_double_param_alias(cQuery, alias, value)
+        let err = obx_query_param_alias_double(cQuery, alias, value)
         checkFatalErrorParam(err)
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Double, _ value2: Double) {
-        let err = obx_query_double_params(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
+        let err = obx_query_param_2doubles(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                                 value1, value2)
         checkFatalErrorParam(err)
     }
@@ -331,12 +341,12 @@ where E == E.EntityBindingType.EntityType {
     ///   - value1: New first value for the condition.
     ///   - value2: New second value for the condition.
     internal func setParametersInternal(_ alias: String, to value1: Double, _ value2: Double) {
-        let err = obx_query_double_params_alias(cQuery, alias, value1, value2)
+        let err = obx_query_param_alias_2doubles(cQuery, alias, value1, value2)
         checkFatalErrorParam(err)
     }
 
     internal func setParameterInternal(property: PropertyDescriptor, to value: String) {
-        let err = obx_query_string_param(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
+        let err = obx_query_param_string(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
         checkFatalErrorParam(err)
     }
 
@@ -348,7 +358,7 @@ where E == E.EntityBindingType.EntityType {
     ///   - alias: Condition's alias.
     ///   - string: New value.
     public func setParameter(_ alias: String, to string: String) {
-        let err = obx_query_string_param_alias(cQuery, alias, string)
+        let err = obx_query_param_alias_string(cQuery, alias, string)
         checkFatalErrorParam(err)
     }
 
@@ -356,7 +366,7 @@ where E == E.EntityBindingType.EntityType {
         let numStrings = Int32(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
-            let err = obx_query_string_params_in(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
+            let err = obx_query_param_strings(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                                        ptr.baseAddress, numStrings)
             checkFatalErrorParam(err)
         }
@@ -373,7 +383,7 @@ where E == E.EntityBindingType.EntityType {
         let numStrings = Int32(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
-            let err = obx_query_string_params_in_alias(cQuery, alias, ptr.baseAddress, numStrings)
+            let err = obx_query_param_alias_strings(cQuery, alias, ptr.baseAddress, numStrings)
             checkFatalErrorParam(err)
         }
     }

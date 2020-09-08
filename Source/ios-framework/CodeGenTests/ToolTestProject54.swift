@@ -80,24 +80,21 @@ func main(_ args: [String]) throws -> Int32 {
     let bookBox = store.box(for: Book.self)
 
     do {
-        let symptomsOfAHeartbreak = Book(name: "Symptoms of a Heartbreak")
-        try bookBox.put(symptomsOfAHeartbreak)
-        
         let sona = Author(name: "Sona Charaipotra")
+        let symptomsOfAHeartbreak = Book(name: "Symptoms of a Heartbreak")
         sona.books.replace([symptomsOfAHeartbreak])
         try authorBox.put(sona)
-        try bookBox.put(symptomsOfAHeartbreak)
-        
+
         let readSona = try authorBox.get(sona.id)!
         let bookCount = readSona.books.count
-        if bookCount != 0 {
-            throw TestErrors.testFailed(message: "Author should have no books, has \(bookCount)")
+        if bookCount != 1 {
+            throw TestErrors.testFailed(message: "Author should have 1 book, has \(bookCount)")
         }
         
         let readSymptomsOfAHeartbreak = try bookBox.get(symptomsOfAHeartbreak.id)!
         let authorCount = readSymptomsOfAHeartbreak.authors.count
-        if authorCount != 0 {
-            throw TestErrors.testFailed(message: "Book should have no authors, has \(authorCount)")
+        if authorCount != 1 {
+            throw TestErrors.testFailed(message: "Book should have 1 author, has \(authorCount)")
         }
     } catch TestErrors.testFailed(let message) {
         print("error: \(message)")

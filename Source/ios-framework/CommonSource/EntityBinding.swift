@@ -17,7 +17,7 @@
 /// The code generator generates concrete instances of EntityBinding objects that perform the actual work of
 /// transferring database values into your Swift objects and extracting them for writing out.
 ///
-/// You usually don't have to deal with this class.
+/// As an ObjectBox user, you don't need to deal with this (directly).
 public protocol EntityBinding: AnyObject {
     /// The type this binding serves as an adapter for.
     associatedtype EntityType: Entity & EntityInspectable
@@ -27,15 +27,24 @@ public protocol EntityBinding: AnyObject {
 
     /// Used by `Box` to create new EntityBinding adapter instances.
     init()
+
+    /// Allows to check for a matching/compatible generator version.
+    /// Failing this check will raise a fatal error at runtime.
+    /// This version refers the bindings the generator generates, not the generator version itself.
+    /// It will only change when there are (relevant) changes in the generated binding.
+    ///
+    /// Version history (with Swift library version which first relied on the version):
+    /// 1 (1.4 2020-09-07): Added generatorBindingVersion() - you need to update if you get error like this:
+    ///                     Type '...' does not conform to protocol 'EntityBinding'
+    func generatorBindingVersion() -> Int
     
     /// Writes the given entity's value to the given FlatBufferBuilder, assigning it the given ID.
     /// `entityId` _must_ not be 0.
-    func collect(fromEntity entity: EntityType, id entityId: Id, propertyCollector: FlatBufferBuilder,
-                 store: Store)
+    func collect(fromEntity entity: EntityType, id entityId: Id, propertyCollector: FlatBufferBuilder, store: Store)
+    throws
     
     /// The collected entity has been put and now it's time to attach and put all relations, if this entity is new.
-    func postPut(fromEntity entity: EntityType, id entityId: Id,
-                 store: Store)
+    func postPut(fromEntity entity: EntityType, id entityId: Id, store: Store) throws
     
     /// Creates a new entity based on data from the given FlatBufferReader.
     /// Returns: The new entity.

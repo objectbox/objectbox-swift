@@ -225,6 +225,8 @@ public class TestPersonCursor: EntityBinding {
 
     public required init() {}
 
+    public func generatorBindingVersion() -> Int { 1 }
+
     public func setEntityIdUnlessStruct(of entity: TestPerson, to entityId: Id) {
         entity.id = EntityId(entityId)
     }
@@ -255,7 +257,9 @@ public class AllTypesEntityCursor: EntityBinding {
     public typealias EntityType = AllTypesEntity
     public typealias IdType = EntityId<AllTypesEntity>
 
-     public required init() {}
+    public required init() {}
+
+    public func generatorBindingVersion() -> Int { 1 }
 
     public func setEntityIdUnlessStruct(of entity: AllTypesEntity, to entityId: Id) {
         entity.id = EntityId(entityId)

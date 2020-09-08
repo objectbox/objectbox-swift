@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-// swiftlint:disable force_try force_cast
+// swiftlint:disable force_try
 
 import XCTest
 @testable import ObjectBox
@@ -27,11 +27,11 @@ class ErrorHelperIntegrationTests: XCTestCase {
     func testStorageException() {
         do {
             _ = try Store(model: createTestModel(), directory: "/dev/DOESNOTEXIST/really/should/fail",
-                          maxDbSizeInKByte: 10, fileMode: 0o755, maxReaders: 10)
+                          maxDbSizeInKByte: 10, fileMode: 0o644, maxReaders: 10)
             XCTFail("Expected exception here.")
         } catch ObjectBoxError.storageGeneral(let message) {
             print("Storage error \(message) caught as expected.")
-            XCTAssertEqual(message, "Dir does not exist: /dev/DOESNOTEXIST/really/should/fail (2)")
+            XCTAssertEqual(message, "Could not prepare directory: /dev/DOESNOTEXIST/really/should/fail (2)")
         } catch {
             XCTAssertNoThrow(try rethrow(error))
         }
@@ -43,7 +43,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
             _ = try Store(model: createTestModel(),
                           directory: path,
                           maxDbSizeInKByte: 1,
-                          fileMode: 0o755,
+                          fileMode: 0o644,
                           maxReaders: 10)
             XCTFail("Expected exception here.")
         } catch ObjectBoxError.dbFull(let message) {
@@ -63,7 +63,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
             let store = try Store(model: createTestModel(),
                                   directory: path,
                                   maxDbSizeInKByte: 20,
-                                  fileMode: 0o755,
+                                  fileMode: 0o644,
                                   maxReaders: 10)
             let box = store.box(for: TestPerson.self)
 
@@ -135,7 +135,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
         let store = try! Store(model: createTestModel(),
                                directory: StoreHelper.newTemporaryDirectory().path,
                                maxDbSizeInKByte: 100,
-                               fileMode: 0o755,
+                               fileMode: 0o644,
                                maxReaders: 1)
         
         let count = 500
@@ -153,33 +153,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
             XCTAssert(false)
         }
     }
-        
-    func testObjCToSwiftErrorCreation() {
-        if case ObjectBoxError.notFound = TestExceptionProducer.swiftErrorFromObjC(forCode: OBX_NOT_FOUND,
-                                                                                   msg: "Ignored right now.")
-            as! ObjectBoxError {
-            XCTAssert(true)
-        } else {
-            XCTAssert(false)
-        }
-        
-        if case ObjectBoxError.notFound = TestExceptionProducer.swiftErrorFromObjC(forCode: OBX_ERROR_DB_FULL,
-                                                                                   msg: "Ignored right now.")
-            as! ObjectBoxError {
-            XCTAssert(false)
-        } else {
-            XCTAssert(true)
-        }
-        
-        if case ObjectBoxError.dbFull = TestExceptionProducer.swiftErrorFromObjC(forCode: OBX_ERROR_DB_FULL,
-                                                                                 msg: "Ignored right now.")
-            as! ObjectBoxError {
-            XCTAssert(true)
-        } else {
-            XCTAssert(false)
-        }
-    }
-    
+
     func testSwiftErrorChecker() {
         XCTAssertNoThrow(try ObjectBox.check(error: OBX_SUCCESS, message: "Ignored right now."))
         

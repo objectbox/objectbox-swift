@@ -40,7 +40,7 @@ public class Store: CustomDebugStringConvertible {
     internal var supportsLargeArrays = false
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.3.1"
+    public static var version = "1.4.0"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -64,7 +64,7 @@ public class Store: CustomDebugStringConvertible {
 
     /// The path to the directory containing our database files as it was passed to this instance when creating it.
     internal(set) public var directoryPath: String
-    
+
     /// - important: this initializer is only used internally.
     /// Instead of this, use the generated initializer without the model parameter
     /// (trigger code generation if you don't see it yet).
@@ -80,8 +80,8 @@ public class Store: CustomDebugStringConvertible {
     ///                         server-like scenario), it can make sense to increase the maximum number of readers. The
     ///                         default value 0 (zero) lets ObjectBox choose an internal default (currently around 120).
     ///                         So if you hit this limit, try values around 200-500.
-    public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 500 * 1024,
-                fileMode: UInt32 = 0o755, maxReaders: UInt32 = 0) throws {
+    public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 1024 * 1024,
+                fileMode: UInt32 = 0o644, maxReaders: UInt32 = 0, readOnly: Bool = false) throws {
         directoryPath = directory
         supportsLargeArrays = obx_supports_bytes_array()
         cStore = try directory.withCString { ptr -> OpaquePointer? in
@@ -95,17 +95,18 @@ public class Store: CustomDebugStringConvertible {
             obx_opt_max_db_size_in_kb(opts, Int(maxDbSizeInKByte))
             obx_opt_file_mode(opts, UInt32(fileMode))
             obx_opt_max_readers(opts, UInt32(maxReaders))
+            obx_opt_read_only(opts, readOnly)
             let result = obx_store_open(opts)
             opts = nil // store owns it now, make sure defer doesn't free it.
             try checkLastError()
             return result
         }
     }
-    
+
     deinit {
         close()
     }
-    
+
     internal func close() {
         if let cStore = cStore {
             self.cStore = nil
@@ -115,7 +116,7 @@ public class Store: CustomDebugStringConvertible {
             }
         }
     }
-    
+
     /// Return a box for reading/writing entities of the given class from/to the database.
     /// Obtain a a `Box` for the given type.
     ///
@@ -125,20 +126,32 @@ public class Store: CustomDebugStringConvertible {
         guard T.entityInfo.entitySchemaId != 0 else {
             fatalError("entitySchemaId shouldn't be 0") // Swift doesn't know raise() never returns.
         }
-        
+
         boxesLock.wait()
         defer { boxesLock.signal() }
-        
+
         if let box = boxes[T.entityInfo.entitySchemaId] as? Box<T> {
             return box
         }
-        
+
         let box: Box<T> = Box(store: self)
+
+        let libVersion = 1
+        let genVersion = T.entityBinding.generatorBindingVersion()
+        if libVersion != genVersion {
+            let libOlderOrNewer = libVersion > genVersion ? "newer" : "older"
+            fatalError("ObjectBox detected a version mismatch. The ObjectBox library version seems to be " +
+                    "\(libOlderOrNewer) than the ObjectBox version that generated the binding code for " +
+                    "type \"\(T.entityInfo.entityName)\" (version \(libVersion) vs. \(genVersion)).\n" +
+                    "Please update ObjectBox to a consistent version and build again.\n" +
+                    "For update instructions please visit https://swift.objectbox.io/install")
+        }
+
         boxes[T.entityInfo.entitySchemaId] = box
-        
+
         return box
     }
-    
+
     /// Delete the database files on disk. This Store object will not be usable after calling this.
     public func closeAndDeleteAllFiles() throws {
         self.close()
@@ -153,21 +166,21 @@ public class Store: CustomDebugStringConvertible {
          This method looks up the first suitable application group identifier in the app's code signature
          and tells LMDB about it:
          */
-        
+
         var myCodeObject: SecCode? // Swift takes care of releasing myCodeObject
         let err1 = SecCodeCopySelf([], &myCodeObject)
         if err1 == noErr, let myCodeObject = myCodeObject {
             var entitlementsInfo: CFDictionary?
-            
+
             var staticCode: SecStaticCode?
             let err2 = SecCodeCopyStaticCode(myCodeObject, [], &staticCode)
             guard err2 == noErr else { print("Error finding static code: \(err2)"); return true }
             let err3 = SecCodeCopySigningInformation(staticCode!, SecCSFlags(rawValue: kSecCSSigningInformation),
-                                                     &entitlementsInfo)
+                    &entitlementsInfo)
             if err3 == noErr, let signingInfo = entitlementsInfo as? [NSString: NSObject],
-                let entitlements = signingInfo[kSecCodeInfoEntitlementsDict] as? [NSString: NSObject],
-                let applicationGroups = entitlements["com.apple.security.application-groups"] as? [NSString] {
-                
+               let entitlements = signingInfo[kSecCodeInfoEntitlementsDict] as? [NSString: NSObject],
+               let applicationGroups = entitlements["com.apple.security.application-groups"] as? [NSString] {
+
                 if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 20 }) {
                     obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
                     //print("found appGroupIdentifier \(appGroupIdentifier)")
@@ -177,15 +190,15 @@ public class Store: CustomDebugStringConvertible {
             } else if err3 != noErr { // noErr means app has no entitlements, likely not sandboxed.
                 print("Error reading entitlements: \(err3)")
             }
-            
+
         } else {
             print("Error finding entitlements: \(err1)")
         }
         #endif
-        
+
         return true
     }()
-    
+
     /// :nodoc:
     public func lazyAttachedObject<T: AnyObject>(key: String, creationBlock: () -> T) -> T {
         attachedObjectsLock.wait()
@@ -201,5 +214,85 @@ public class Store: CustomDebugStringConvertible {
     /// :nodoc:
     public var debugDescription: String {
         return "<ObjectBox.Store \"\(directoryPath)\">"
+    }
+
+    /// The SyncClient associated with this store. To create one, please check the Sync class and its makeClient().
+    internal(set) public var syncClient: SyncClient?
+
+    // MARK: Explicit Transactions
+
+    /// Runs the given block inside a read/write transaction.
+    ///
+    /// You can e.g. wrap multiple `put` calls into a single write transaction to ensure a "all or nothing" semantic.
+    /// Also, this is more efficient and provides better performance than having one transactions for each operation.
+    ///
+    /// You can nest read-only transaction into read/write transactions, but not vice versa.
+    ///
+    /// - Parameter block: Code that needs to run in a read/write transaction.
+    /// - Returns: The forwarded result of `block`.
+    /// - Throws: rethrows errors thrown inside, plus any ObjectBoxError that makes sense.
+    public func runInTransaction<T>(_ block: () throws -> T) throws -> T {
+        var result: T!
+
+        try obx_runInTransaction(writable: true, { _ in
+            result = try block()
+        })
+
+        return result
+    }
+
+    /// Internal version that gives the block a Transaction
+    internal func obx_runInTransaction<T>(writable: Bool, _ block: (Transaction) throws -> T) throws -> T {
+        let transaction = try Transaction(store: self, writable: writable)
+        if writable {
+            let result = try block(transaction)
+            try transaction.commit()
+            return result
+        } else {
+            let result = try block(transaction)
+            try transaction.close()
+            return result
+        }
+    }
+
+    /// Internal version that gives the block a Transaction
+    internal func obx_runInTransaction(writable: Bool, _ block: (Transaction) throws -> Void) throws {
+        let transaction = try Transaction(store: self, writable: writable)
+        try block(transaction)
+        if writable {
+            try transaction.commit()
+        } else {
+            try transaction.close()
+        }
+    }
+
+    /// :nodoc::
+    public func runInTransaction(_ block: () throws -> Void) throws {
+        try obx_runInTransaction(writable: true, { _ in
+            try block()
+        })
+    }
+
+    /// Runs the given block inside a read(-only) transaction.
+    ///
+    /// You can e.g. wrap multiple `get` calls into a single read transaction to have a single consistent view on data.
+    /// Also, this is more efficient and provides better performance than having one transactions for each operation.
+    ///
+    /// You can nest read-only transaction into read/write transactions, but not vice versa.
+    ///
+    /// - Parameter block: Code that needs to run in a read or read/write transaction.
+    /// - Returns: The forwarded result of `block`.
+    /// - Throws: rethrows errors thrown inside, plus any ObjectBoxError that makes sense.
+    public func runInReadOnlyTransaction<T>(_ block: () throws -> T) throws -> T {
+        return try obx_runInTransaction(writable: false, { _ in
+            return try block()
+        })
+    }
+
+    /// :nodoc:
+    public func runInReadOnlyTransaction(_ block: () throws -> Void) throws {
+        try obx_runInTransaction(writable: false, { _ in
+            try block()
+        })
     }
 }

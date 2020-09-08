@@ -1,0 +1,54 @@
+//
+// Copyright (c) 2020 ObjectBox. All rights reserved.
+//
+
+import Foundation
+import XCTest
+@testable import ObjectBox
+
+class SyncDryTests: XCTestCase {
+
+    var store: Store!
+
+    override func setUpWithError() throws {
+        super.setUp()
+        store = StoreHelper.tempStore(model: createTestModel())
+    }
+
+    func testSyncClientAvailable() throws {
+        XCTAssertFalse(Sync.isAvailable())
+
+        let credentials = SyncCredentials.makeUnchecked()
+        var client: SyncClient?
+        XCTAssertThrowsError(client = try Sync.makeClient(
+                store: store, urlString: "ws://127.0.0.1:9999", credentials: credentials)) { error in
+            XCTAssertNotNil(error as? ObjectBoxError)
+        }
+
+        if client != nil { // Never, just ensure some basics compile
+            client?.listener = AllListener()
+            try client!.start()
+            try client!.stop()
+            client!.close()
+        }
+    }
+
+    class AllListener: SyncListener {
+        func loggedIn() {
+        }
+
+        func loginFailed(result: SyncCode) {
+        }
+
+        func updatesCompleted() {
+        }
+
+        func connected() {
+        }
+
+        func disconnected() {
+        }
+
+    }
+
+}

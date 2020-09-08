@@ -276,16 +276,19 @@ public extension FlatBufferBuilder {
     }
 
     /// :nodoc:
-    func collect<E: EntityInspectable & __EntityRelatable>(_ relation: ToOne<E>, at propertyOffset: UInt16,
-                                                           store: Store)
-        where E == E.EntityBindingType.EntityType {
-            guard relation.hasValue else { return }
-            let relatedBox = store.box(for: type(of: relation).Target.self)
-            do {
-                guard let targetId = try relatedBox.put(relation) else { return }
-                self.collect(targetId.value, at: propertyOffset)
-            } catch {
-                objc_exception_throw(error)
+    func collect<E: EntityInspectable & __EntityRelatable>(_ toOne: ToOne<E>, at propertyOffset: UInt16,
+                                                           store: Store) throws
+            where E == E.EntityBindingType.EntityType {
+        guard toOne.hasValue else { return }
+        var targetId = toOne.targetId?.value
+        if targetId == nil {  // TODO move this before collecting: putting is a surprising thing to do here
+            let relatedBox = store.box(for: type(of: toOne).Target.self)
+            guard let target = toOne.target else {
+                fatalError("Internal error: to-one target has neither id nor entity")
             }
+            targetId = try relatedBox.put(target).value
+        }
+
+        self.collect(targetId!.value, at: propertyOffset)
     }
 }

@@ -45,10 +45,12 @@ class StoreTests: XCTestCase {
 
     func testVersions() {
         print("Testing", Store.versionFullInfo)  // Actually print it so we see the used versions in the logs
-        // Update the expected versions every now and then...
-        XCTAssertGreaterThanOrEqual(Store.version, "1.3.1")  
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.9.1")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.6.1")
+        // Update the expected versions every now and then.
+        // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
+        //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
+        XCTAssertGreaterThanOrEqual(Store.version, "1.4.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.10.0")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.7.2-2020-09-07")
     }
 
     func test32vs64BitForOs() {
@@ -241,5 +243,18 @@ class StoreTests: XCTestCase {
         let debugDescription = "\(store!)"
         XCTAssert(debugDescription.hasPrefix("<ObjectBox.Store"))
         XCTAssert(debugDescription.contains(store.directoryPath))
+    }
+
+    func testReadOnlyStore() throws {
+        let path = store.directoryPath
+        let person = TestPerson(name: "Adelheid")
+        let id = try store.box(for: TestPerson.self).put(person)
+        store.close()
+
+        store = try Store(model: createTestModel(), directory: path, readOnly: true)
+        let personRead = try store.box(for: TestPerson.self).get(id)!
+        XCTAssertEqual(personRead.name, "Adelheid")
+        XCTAssertThrowsError(try store.runInTransaction({}))
+        XCTAssertThrowsError(try store.box(for: TestPerson.self).put(personRead))
     }
 }

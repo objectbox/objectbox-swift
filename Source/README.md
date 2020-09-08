@@ -7,16 +7,14 @@ These Swift classes internally use [ObjectBox's C API](https://github.com/object
 
 Repository Contents
 -------------------
-
 - `ios-framework/`: The Cocoa Swift framework.
     - `docs/swift_output/`: The generated framework documentation.
 - `external/`: git submodule and pre-built binary container. This contains the ObjectBoxCore static libraries and our code generator.
-- `download_dependencies.command`: Script for downloading libObjectBoxCore into `externals`. You must run this script before you can build the framework.
+- `fetch_dependencies.command`: Script for downloading libObjectBoxCore into `externals`. You must run this script before you can build the framework.
 - `docs/`: Documentation and discussion of concepts, ideas, and approaches to bring ObjectBox to Swift.
 
 Setup
 -----
-
 * Install latest Xcode (Swift 5.2+) with command line tools prepared to build from the shell
   * Note: After Xcode updates, you may have to reinstall the CLI tools via `xcode-select --install`
 * Ensure you have homebrew (e.g. setup.sh uses it to install [Carthage](https://github.com/Carthage/Carthage))
@@ -79,7 +77,6 @@ This is essentially what comes for free with Carthage. Xcode 10 changed the buil
 
 Swift Framework Project Organization
 ------------------------------------
-
 You look at and build the framework itself via `ios-framework/ObjectBox.xcodeproj`.
 
 * `ObjectBox.xcproject` targets
@@ -98,14 +95,20 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
     * `ObjectBox-macOS` contains macOS-specific files, including the framework's Info.plist
     * `ObjectBox-iOS` contains iOS-specific files, including the framework's Info.plist
 
+Build notes
+-----------
+* Build phases; check Xcode project
+  * "Rename C Header": takes the standard C objectbox.h and augments it with some Swift specifics into ObjectBoxC.h
+    (TODO: Can we do this differently, e.g. use the standard objectbox.h and then have a second .h for Swift specifics?)
+* SwiftLint (macOS build only): calls `swiftlint lint --config .swiftlint-macOS.yml`
+  * Edit .swiftlint-macOS.yml file to customize (e.g. "id" is OK despite less than 3 chars)
+
 Caveats
 -------
-
 To make to-one relations and their backlinks work, the `Entity` protocol was extended to require (1) an `EntityType` typealias, and (2) an `_id` property. The former was needed to disambiguate which concrete entity we're talking about when all we have is the protocol type, and this in turn is needed to specify the generic type requirement of `Id<T>`. Since the `Entity` protocol itself is intended to be no more than a convenient code annotation (which Sourcery can filter on), it's advised to get rid of this as soon as possible and find a different way to get the data needed for associations in Swift, for example using an `IdGetter<T>` like we do in Java and injecting it into `EntityInfo` from generated code.
 
 How to Use the Framework
 ------------------------
-
 - The example project in this repository is a good starting point to see how to interact with the framework.
 - Have a look at the `ios-framework/CommonTests/Test Entities/RelatedEntities.swift` file to see how self-contained entity code & generated cursor code look. You should be able to copy and paste the contents into a test app if you want. This should also help in case you cannot get the code generator running in 2024 :)
 

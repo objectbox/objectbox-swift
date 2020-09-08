@@ -55,9 +55,15 @@ class ManyToManyTests: XCTestCase {
         }
     }
 
-
     func testManyToMany_applyToDb_notPutYet() throws {
+        // No changes, no cry
+        try teacher1.students.applyToDb()
+        try student3.teachers.applyToDb()
+
+        teacher1.students.append(student1)
         XCTAssertThrowsError(try teacher1.students.applyToDb())
+
+        student3.teachers.append(teacher2)
         XCTAssertThrowsError(try student3.teachers.applyToDb())
     }
 
@@ -69,14 +75,30 @@ class ManyToManyTests: XCTestCase {
         try student3.teachers.applyToDb()
     }
 
-    func testManyToMany_applyToDb_newObjectIgnored() throws {
+    func testManyToMany_applyToDb_newObjects() throws {
         try teacherBox.put(teacher1)
-        // New object without ID is ignored for now; we might support this later
-        teacher1.students.append(Student(name: "Subzero"))
+        teacher1.students.append(student1)
+        teacher1.students.append(student2)
+        teacher1.students.removeFirst()
+
         try teacher1.students.applyToDb()
         
         teacher1.students.reset()
-        XCTAssertEqual(teacher1.students.count, 0)
+        XCTAssertEqual(teacher1.students.count, 1)
+        XCTAssertEqual(teacher1.students[0].name, student2.name)
+    }
+
+    func testManyToMany_backlink_applyToDb_newObjects() throws {
+        try studentBox.put(student1)
+        student1.teachers.append(teacher1)
+        student1.teachers.append(teacher2)
+        student1.teachers.removeFirst()
+
+        try student1.teachers.applyToDb()
+
+        student1.teachers.reset()
+        XCTAssertEqual(student1.teachers.count, 1)
+        XCTAssertEqual(student1.teachers[0].name, teacher2.name)
     }
 
     func testManyToMany_appendRemoveAndApply() throws {
@@ -222,6 +244,20 @@ class ManyToManyTests: XCTestCase {
         XCTAssertEqual(teacher1.students.count, 2)
         XCTAssertEqual(teacher1.students[0].id, student2.id)
         XCTAssertEqual(teacher1.students[1].id, dan.id)
+    }
+
+    func testManyToMany_unsavedHost() throws {
+        XCTAssertEqual(teacher1.students.count, 0)
+        XCTAssertEqual(student1.teachers.count, 0)
+
+        teacher1.students.append(student2)
+        XCTAssertThrowsError(try teacher1.students.applyToDb())
+        XCTAssertFalse(teacher1.students.canInteractWithDb)
+        try teacherBox.put(teacher1)
+        XCTAssert(teacher1.students.canInteractWithDb)
+        try teacher1.students.applyToDb()
+        XCTAssertNotEqual(teacher1.id, 0)
+        XCTAssertNotEqual(student2.id, 0)
     }
 
 }
