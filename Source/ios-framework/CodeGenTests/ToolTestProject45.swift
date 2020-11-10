@@ -1,4 +1,5 @@
- import ObjectBox
+import ObjectBox
+import Foundation
 
 
 enum TestErrors: Error {

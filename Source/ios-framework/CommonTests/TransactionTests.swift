@@ -60,7 +60,7 @@ class TransactionTests: XCTestCase {
         XCTAssert(flatBuffer1 === flatBuffer2)
     }
     
-    @available(iOS 10.0, *)
+    @available(iOS 10.0, macOS 10.12, *)
     func testFlatBuffersAreSeparateOnThreads() {
         var threadDone: Bool = false
         let flatBuffer1 = FlatBufferBuilder.dequeue()

@@ -27,14 +27,14 @@ if [ "$verify_only" = true ]; then
 else
 
 if [ -d "$code_dir" ]; then # Do we have an existing code repo?
-    cd "$code_dir"  # todo fix this workaround for building into cbuild dir in "our" objectbox-swift dir
+    pushd "$code_dir"  # todo fix this workaround for building into cbuild dir in "our" objectbox-swift dir
     echo "Have repository, building."
     "$code_dir/scripts/apple-build-static-libs.sh" "$dest_dir" release
-    exit
+    popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.4.0
-        c_version=0.10.0
+        version=1.4.1
+        c_version=0.11.0
         archive_path="${my_dir}/external/objectbox-static.zip"
         OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${c_version}.zip"
 
@@ -42,8 +42,9 @@ else # Download static public release and unzip into $dest
 
         curl -L --fail "${OBXLIB_URL_apple_static}" --output "${archive_path}"
 
-        cd "${dest_dir}"
+        pushd "${dest_dir}"
         unzip "${archive_path}"
+        popd
 
         if [ -d "${dest_dir}/build-artifacts/" ]; then
             mv "${dest_dir}/build-artifacts/"* "${dest_dir}/"
@@ -54,6 +55,9 @@ else # Download static public release and unzip into $dest
     fi
 fi
 fi # verify_only
+
+# Update the header file actually used by our Swift sources
+cp "$dest_dir/objectbox.h" "ios-framework/CommonSource/Internal/objectbox-c.h"
 
 # Print versions for allow verification of built libs (is it the one we expect?)
 echo "============================================================================================"

@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2020 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class Store: CustomDebugStringConvertible {
     internal var supportsLargeArrays = false
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.4.0"
+    public static var version = "1.4.1"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {

@@ -6,20 +6,24 @@ import Foundation
 
 // Internal note: sync implementation uses augmented C enums; maybe switch that to Swift enums too?
 
-public enum SyncCredentialsType: UInt {
+public enum SyncCredentialsType: UInt32 {
     case
             unchecked = 0,
             sharedSecret = 1,
             googleAuth = 2
 }
 
-public enum RequestUpdatesMode: UInt {
+/// Once logged in, do we request updates?
+public enum RequestUpdatesMode: UInt32 {
+    /// Do not request any updates automatically
     case manual = 0,
+        /// Request updates automatically including subsequent pushes for data changes
          auto = 1,
+         /// Request updates automatically once without subsequent pushes for data changes
          autoNoPushes = 2
 }
 
-public enum SyncState: UInt {
+public enum SyncState: UInt32 {
     case
             created = 1,
             started = 2,
@@ -30,7 +34,7 @@ public enum SyncState: UInt {
             dead = 7
 }
 
-public enum SyncCode: UInt {
+public enum SyncCode: UInt32 {
     case
             ok = 20,
             reqRejected = 40,

@@ -1,62 +1,52 @@
 {
-  "_note1" : "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
-  "_note2" : "ObjectBox manages crucial IDs for your object model. See docs for details.",
-  "_note3" : "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
-  "entities" : [
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
     {
-      "id" : "2:23552",
-      "lastPropertyId" : "5:22528",
-      "name" : "DataThing",
-      "properties" : [
+      "id": "2:23552",
+      "lastPropertyId": "5:22528",
+      "name": "DataThing",
+      "properties": [
         {
-          "flags" : 1,
-          "id" : "1:18688",
-          "name" : "id",
-          "type" : 6
+          "flags": 1,
+          "id": "1:18688",
+          "name": "id",
+          "type": 6
         },
         {
-          "id" : "2:19712",
-          "name" : "firstData",
-          "type" : 23
+          "id": "2:19712",
+          "name": "firstData",
+          "type": 23
         },
         {
-          "id" : "3:20736",
-          "name" : "secondData",
-          "type" : 23
+          "id": "3:20736",
+          "name": "secondData",
+          "type": 23
         },
         {
-          "id" : "4:21504",
-          "name" : "maybeThirdData",
-          "type" : 23
+          "id": "4:21504",
+          "name": "maybeThirdData",
+          "type": 23
         },
         {
-          "id" : "5:22528",
-          "name" : "maybeFourthData",
-          "type" : 23
+          "id": "5:22528",
+          "name": "maybeFourthData",
+          "type": 23
         }
       ],
-      "relations" : [
-
-      ]
+      "relations": []
     }
   ],
-  "lastEntityId" : "2:23552",
-  "lastIndexId" : "0:0",
-  "lastRelationId" : "0:0",
-  "lastSequenceId" : "0:0",
-  "modelVersion" : 5,
-  "modelVersionParserMinimum" : 4,
-  "retiredEntityUids" : [
-
-  ],
-  "retiredIndexUids" : [
-
-  ],
-  "retiredPropertyUids" : [
-
-  ],
-  "retiredRelationUids" : [
-
-  ],
-  "version" : 1
+  "lastEntityId": "2:23552",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
 }

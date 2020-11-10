@@ -6,6 +6,11 @@
 echo -n "note: Starting tests at "
 date
 
+if [ -z ${PROJECT_DIR} ]; then
+  echo "PROJECT_DIR unavailable; please run from Xcode"
+  exit 1
+fi
+
 MYDIR="${PROJECT_DIR}/CodeGenTests/" # Xcode copies our script into DerivedData before running it, so hard-code our path.
 
 SOURCERY_APP="${PROJECT_DIR}/../external/objectbox-swift-generator/bin/Sourcery.app"
@@ -24,78 +29,80 @@ test_target_num () {
 
     echo "note: ******************** $2: $1 ********************"
 
-    PREMODELFILE="${EXPECTED_DIR}/model/model${2}.before.json"
-    ORIGINALMODELFILE="${EXPECTED_DIR}/model/model${2}.json"
-    TESTMODELFILE="${BUILT_PRODUCTS_DIR}/model${2}.json"
-    ORIGINALDUMPFILE="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
-    TESTDUMPFILE="${MYOUTPUTDIR}/schemaDump${2}.txt"
-    ORIGINALSOURCEFILE="${EXPECTED_DIR}/entity-info/EntityInfo.generated${2}.swift"
-    TESTSOURCEFILE="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
+    MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
+    MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
+    MODEL_FILE_ACTUAL="${BUILT_PRODUCTS_DIR}/model${2}.json"
+    
+    DUMP_FILE_EXPECTED="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
+    DUMP_FILE_ACTUAL="${MYOUTPUTDIR}/schemaDump${2}.txt"
+    
+    ENTITY_INFO_FILE_EXPECTED="${EXPECTED_DIR}/entity-info/EntityInfo.generated${2}.swift"
+    ENTITY_INFO_FILE_ACTUAL="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
 
-    if [[ -f "$PREMODELFILE" ]]; then
-        cp "$PREMODELFILE" "$TESTMODELFILE"
-    elif [[ -f "$ORIGINALMODELFILE" ]]; then
-        cp "$ORIGINALMODELFILE" "$TESTMODELFILE"
-    elif [[ -f "$TESTMODELFILE" ]]; then
-        rm "$TESTMODELFILE" # Make sure we get a fresh one even after failed tests.
+    if [[ -f "$MODEL_FILE_BEFORE" ]]; then
+        cp "$MODEL_FILE_BEFORE" "$MODEL_FILE_ACTUAL"
+    elif [[ -f "$MODEL_FILE_EXPECTED" ]]; then
+        cp "$MODEL_FILE_EXPECTED" "$MODEL_FILE_ACTUAL"
+    elif [[ -f "$MODEL_FILE_ACTUAL" ]]; then
+        rm "$MODEL_FILE_ACTUAL" # Make sure we get a fresh one even after failed tests.
     fi
 
-    echo "// Ensure there's no leftover code from previous tests." > "$TESTSOURCEFILE"
+    echo "// Ensure there's no leftover code from previous tests." > "$ENTITY_INFO_FILE_ACTUAL"
 
-    echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$TESTMODELFILE\" --debug-parsetree \"$TESTDUMPFILE\" --output \"${TESTSOURCEFILE}\" --disableCache"
-    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$TESTMODELFILE" --debug-parsetree "$TESTDUMPFILE" --output "${TESTSOURCEFILE}" --disableCache
+    echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
+    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache
 
-    if [ -e "$PREMODELFILE" ]; then
-        cmp --silent "$TESTMODELFILE" "$ORIGINALMODELFILE"
+    if [ -f "$MODEL_FILE_EXPECTED" ]; then
+        cmp --silent "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
             echo "note: $2: $1: Model files match."
         else
             echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
-            diff "$TESTMODELFILE" "$ORIGINALMODELFILE"
-#            echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
-#             echo "===== $TESTMODELFILE ====="
-#             cat "$TESTMODELFILE"
-#             echo "===== $ORIGINALMODELFILE ====="
-#             cat "$ORIGINALMODELFILE"
+            diff "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
+            echo "opendiff \"$MODEL_FILE_ACTUAL\" \"$MODEL_FILE_EXPECTED\" -merge \"$MODEL_FILE_EXPECTED\""
+#             echo "===== $MODEL_FILE_ACTUAL ====="
+#             cat "$MODEL_FILE_ACTUAL"
+#             echo "===== $MODEL_FILE_EXPECTED ====="
+#             cat "$MODEL_FILE_EXPECTED"
             echo "====="
             FAIL=1
         fi
     fi
 
-    if [ -e "$ORIGINALSOURCEFILE" ]; then
-        cmp --silent "$TESTSOURCEFILE" "$ORIGINALSOURCEFILE"
+    if [ -e "$ENTITY_INFO_FILE_EXPECTED" ]; then
+        cmp --silent "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
             echo "note: $2: $1: Output files match."
         else
             echo "error: $2: $1: Output files DIFFERENT!"
 
             echo "====="
-            diff "$TESTSOURCEFILE" "$ORIGINALSOURCEFILE"
-#            echo "opendiff \"$TESTSOURCEFILE\" \"$ORIGINALSOURCEFILE\" -merge \"$ORIGINALSOURCEFILE\""
-#             echo "===== $TESTSOURCEFILE ====="
-#             cat "$TESTSOURCEFILE"
-#             echo "===== $ORIGINALSOURCEFILE ====="
-#             cat "$ORIGINALSOURCEFILE"
+            diff "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
+#            echo "opendiff \"$ENTITY_INFO_FILE_ACTUAL\" \"$ENTITY_INFO_FILE_EXPECTED\" -merge \"$ENTITY_INFO_FILE_EXPECTED\""
+#             echo "===== $ENTITY_INFO_FILE_ACTUAL ====="
+#             cat "$ENTITY_INFO_FILE_ACTUAL"
+#             echo "===== $ENTITY_INFO_FILE_EXPECTED ====="
+#             cat "$ENTITY_INFO_FILE_EXPECTED"
             echo "====="
             FAIL=1
         fi
     fi
 
-    if [ -e "$ORIGINALDUMPFILE" ]; then
-        cmp --silent "$TESTDUMPFILE" "$ORIGINALDUMPFILE"
+    if [ -e "$DUMP_FILE_EXPECTED" ]; then
+        cmp --silent "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
             echo "note: $2: $1: Schema dumps match."
         else
             echo "error: $2: $1: Schema dumps DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$TESTDUMPFILE\" \"$ORIGINALDUMPFILE\" -merge \"$ORIGINALDUMPFILE\""
-#             echo "===== $TESTDUMPFILE ====="
-#             cat "$TESTDUMPFILE"
-#             echo "===== $ORIGINALDUMPFILE ====="
-#             cat "$ORIGINALDUMPFILE"
+            echo "opendiff \"$DUMP_FILE_ACTUAL\" \"$DUMP_FILE_EXPECTED\" -merge \"$DUMP_FILE_EXPECTED\""
+#             echo "===== $DUMP_FILE_ACTUAL ====="
+#             cat "$DUMP_FILE_ACTUAL"
+#             echo "===== $DUMP_FILE_EXPECTED ====="
+#             cat "$DUMP_FILE_EXPECTED"
             echo "====="
             FAIL=1
         fi
@@ -135,10 +142,10 @@ test_target_num () {
     fi
 
     if [ $FAIL == 0 ]; then
-        rm -f "$TESTMODELFILE"
-        rm -f "${TESTMODELFILE}.bak"
-        rm -f "$TESTSOURCEFILE"
-        rm -f "$TESTDUMPFILE"
+        rm -f "$MODEL_FILE_ACTUAL"
+        rm -f "${MODEL_FILE_ACTUAL}.bak"
+        rm -f "$ENTITY_INFO_FILE_ACTUAL"
+        rm -f "$DUMP_FILE_ACTUAL"
         
         echo "note: $2: $1: Cleaning up."
     else
@@ -153,29 +160,29 @@ fail_codegen_target_num () {
 
     echo "note: ******************** $2: $1 ********************"
 
-    ORIGINALMODELFILE="${EXPECTED_DIR}/model/model${2}.json"
+    MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
     ORIGINALMESSAGESFILE="${EXPECTED_DIR}/model/messages${2}.log"
-    PREMODELFILE="${EXPECTED_DIR}/model/model${2}.before.json"
-    TESTMODELFILE="${BUILT_PRODUCTS_DIR}/model${2}.json"
+    MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
+    MODEL_FILE_ACTUAL="${BUILT_PRODUCTS_DIR}/model${2}.json"
     TESTMESSAGESFILE="${BUILT_PRODUCTS_DIR}/messages${2}.log"
-    ORIGINALDUMPFILE="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
-    TESTDUMPFILE="${MYOUTPUTDIR}/schemaDump${2}.txt"
-    TESTSOURCEFILE="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
+    DUMP_FILE_EXPECTED="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
+    DUMP_FILE_ACTUAL="${MYOUTPUTDIR}/schemaDump${2}.txt"
+    ENTITY_INFO_FILE_ACTUAL="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
     ORIGINALXCODELOGFILE="${MYDIR}/xcode${2}.log"
     TESTXCODELOGFILE="${BUILT_PRODUCTS_DIR}/xcode${2}.log"
 
-    if [[ -f "$PREMODELFILE" ]]; then
-        cp "$PREMODELFILE" "$TESTMODELFILE"
-    elif [[ -f "$ORIGINALMODELFILE" ]]; then
-        cp "$ORIGINALMODELFILE" "$TESTMODELFILE"
-    elif [[ -f "$TESTMODELFILE" ]]; then
-        rm "$TESTMODELFILE" # Make sure we get a fresh one even after failed tests.
+    if [[ -f "$MODEL_FILE_BEFORE" ]]; then
+        cp "$MODEL_FILE_BEFORE" "$MODEL_FILE_ACTUAL"
+    elif [[ -f "$MODEL_FILE_EXPECTED" ]]; then
+        cp "$MODEL_FILE_EXPECTED" "$MODEL_FILE_ACTUAL"
+    elif [[ -f "$MODEL_FILE_ACTUAL" ]]; then
+        rm "$MODEL_FILE_ACTUAL" # Make sure we get a fresh one even after failed tests.
     fi
 
-    echo "// Ensure there's no leftover code from previous tests." > "$TESTSOURCEFILE"
+    echo "// Ensure there's no leftover code from previous tests." > "$ENTITY_INFO_FILE_ACTUAL"
 
-    echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$TESTMODELFILE\" --debug-parsetree \"$TESTDUMPFILE\" --output \"${TESTSOURCEFILE}\" --disableCache"
-    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$TESTMODELFILE" --debug-parsetree "$TESTDUMPFILE" --output "${TESTSOURCEFILE}" --disableCache > "$TESTMESSAGESFILE" 2>&1
+    echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
+    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache > "$TESTMESSAGESFILE" 2>&1
 
     if [ -e "$ORIGINALMESSAGESFILE" ]; then
         cmp --silent "$TESTMESSAGESFILE" "$ORIGINALMESSAGESFILE"
@@ -195,19 +202,19 @@ fail_codegen_target_num () {
         fi
     fi
 
-    if [[ -f "$PREMODELFILE" ]]; then
-        cmp --silent "$TESTMODELFILE" "$ORIGINALMODELFILE"
+    if [[ -f "$MODEL_FILE_BEFORE" ]]; then
+        cmp --silent "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
             echo "note: $2: $1: Model files match."
         else
             echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$TESTMODELFILE\" \"$ORIGINALMODELFILE\" -merge \"$ORIGINALMODELFILE\""
-#             echo "===== $TESTMODELFILE ====="
-#             cat "$TESTMODELFILE"
-#             echo "===== $ORIGINALMODELFILE ====="
-#             cat "$ORIGINALMODELFILE"
+            echo "opendiff \"$MODEL_FILE_ACTUAL\" \"$MODEL_FILE_EXPECTED\" -merge \"$MODEL_FILE_EXPECTED\""
+#             echo "===== $MODEL_FILE_ACTUAL ====="
+#             cat "$MODEL_FILE_ACTUAL"
+#             echo "===== $MODEL_FILE_EXPECTED ====="
+#             cat "$MODEL_FILE_EXPECTED"
             echo "====="
             FAIL=1
         fi
@@ -246,9 +253,9 @@ fail_codegen_target_num () {
     fi
 
     if [ $FAIL == 0 ]; then
-        rm -f "$TESTMODELFILE"
-        rm -f "$TESTSOURCEFILE"
-        rm -f "$TESTDUMPFILE"
+        rm -f "$MODEL_FILE_ACTUAL"
+        rm -f "$ENTITY_INFO_FILE_ACTUAL"
+        rm -f "$DUMP_FILE_ACTUAL"
         rm -f "$TESTMESSAGESFILE"
         rm -f "$TESTXCODELOGFILE"
         

@@ -6,6 +6,7 @@
 //  Copyright © 2018 Uli Kusterer. All rights reserved.
 //
 
+import Foundation
 import ObjectBox
 
 

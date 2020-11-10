@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 // swiftlint:disable force_try
 
 // Of the form `ToMany<OtherEntity>`. Initialize with `nil` when you define properties.

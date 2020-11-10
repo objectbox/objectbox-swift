@@ -15,3 +15,6 @@ identifier_name:
         - id
         - ok
         - tx
+type_name:
+    excluded:
+        - Id

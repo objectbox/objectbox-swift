@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 internal func observerCallback(_ ptr: UnsafeMutableRawPointer?) {
     let context: Observer = Unmanaged.fromOpaque(ptr!).takeUnretainedValue()
     // Before obx_observer_close() checked for locking failures, we had it freezing sporadically here:

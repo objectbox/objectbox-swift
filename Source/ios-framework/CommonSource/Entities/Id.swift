@@ -14,6 +14,11 @@
 // limitations under the License.
 //
 
+/// ID for objects (entities) stored in ObjectBox. Each entity class/struct must have an ID.
+public typealias Id = UInt64
+
+// TODO get rid of the remaining file
+
 /// Protocol an ObjectBox ID must conform to. Currently, there are two major types that can be used as IDs:
 /// - `EntityId<E>` which is a generic, type-safe ID struct
 /// - Id (or Int64) which is a simpler data type usable for IDs.

@@ -1,6 +1,5 @@
 ObjectBox Swift Sources
 =======================
-
 This folder contains the Swift sources for ObjectBox. This is the API you primarily touch when working with ObjectBox.
 
 These Swift classes internally use [ObjectBox's C API](https://github.com/objectbox/objectbox-c), implemented by the libObjectBoxCore library. 
@@ -9,13 +8,15 @@ Repository Contents
 -------------------
 - `ios-framework/`: The Cocoa Swift framework.
     - `docs/swift_output/`: The generated framework documentation.
-- `external/`: git submodule and pre-built binary container. This contains the ObjectBoxCore static libraries and our code generator.
-- `fetch_dependencies.command`: Script for downloading libObjectBoxCore into `externals`. You must run this script before you can build the framework.
+- `external/`: git submodule and pre-built binary container.
+   This contains the ObjectBoxCore static libraries and our code generator.
+- `fetch_dependencies.command`: Script for downloading libObjectBoxCore into `externals`.
+   You must run this script before you can build the framework.
 - `docs/`: Documentation and discussion of concepts, ideas, and approaches to bring ObjectBox to Swift.
 
 Setup
 -----
-* Install latest Xcode (Swift 5.2+) with command line tools prepared to build from the shell
+* Install latest Xcode (Swift 5.3+) with command line tools prepared to build from the shell
   * Note: After Xcode updates, you may have to reinstall the CLI tools via `xcode-select --install`
 * Ensure you have homebrew (e.g. setup.sh uses it to install [Carthage](https://github.com/Carthage/Carthage))
 * Using homebrew, install basic build tools like cmake and ccache
@@ -42,7 +43,8 @@ Distributing the Framework
 
 Distribution of the framework as closed source works across these channels:
 
-- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets. (The `make-release.command` script takes care of this)
+- **CocoaPods**, by setting the `.podspec`'s `vendored_frameworks` to point to the build products of the macOS and iOS framework targets.
+  (The `make-release.command` script takes care of this)
 - **Carthage**, by uploading a `.zip` of the frameworks as binary attachments to a GitHub's release.
 
 ## Build with Carthage
@@ -51,7 +53,8 @@ The easiest way to build the framework is using the dependency manager [Carthage
 
     $ carthage build --no-skip-current
 
-In addition to building the dependencies (there are none), the `--no-skip-current` flag ensures the current project itself is built. That's what we'll be shipping with both Carthage and CocoaPods.
+In addition to building the dependencies (there are none), the `--no-skip-current` flag ensures the current project itself is built.
+That's what we'll be shipping with both Carthage and CocoaPods.
 
 To generate the Carthage-compatible release:
 
@@ -59,11 +62,9 @@ To generate the Carthage-compatible release:
 
 This will put all build products in a `.zip`. On client machines, Carthage downloads and unzips the contents into their local framework build directory next to other dependencies that may be built from source.
 
-Note that the build products built with Swift 4.2 will not be compatible with Swift 5 onward. So we have to ship updated binaries until Swift reaches ABI stability, lest the releases become useless.
-
 ## Build without Carthage
 
-You need a "fat" framework that works both on the iPhone Simulator on macOS (x86 architecture) and real devices (armv7 and arm64 architectures).
+You need a "fat" framework that works both on the iPhone Simulator on macOS (x64) and real devices (arm64).
 
 The `iOS-Fat-Framework` target compiles for both architectures and merges the results into a single build product: a single framework, and a single dSYM file.
 

@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 // QueryCondition does not wrap a core type directly. Instead, it expects a QueryBuilder during evaluation.
 // The call to the QueryBuilder is specified in concrete conditions below, each calling to the adapter
 // to get a OBQueryCondition from the ObjC core.

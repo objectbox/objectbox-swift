@@ -4,16 +4,15 @@
 
 import Foundation
 
-/// "Point of entry" for sync, e.g. create a sync client using `Sync.makeClient(store, urlString)`.
-/// For general information on ObjectBox Sync, please visit https://objectbox.io/sync.
-/// General sync documentation - including Swift clients - is available at https://sync.objectbox.io/.
+/// [ObjectBox Sync](https://objectbox.io/sync/) makes data available on other devices (check the link for details).
+/// This class is the point of entry for Sync, e.g. create a sync client using `Sync.makeClient(store, urlString)`.
 public class Sync {
 
     /// Checks if this library comes with a sync client.
     /// If you do not have a sync enabled version yet, please visit https://objectbox.io/sync for more details.
     /// - Returns: true if calling makeClient() is possible (without throwing)
     public static func isAvailable() -> Bool {
-        return false // TODO obx_sync_available()
+        return obx_sync_available()
     }
 
     /// Creates a sync client associated with the given store and sync server with the given URL.
@@ -36,7 +35,8 @@ public class Sync {
     ) throws -> SyncClient {
         guard isAvailable() else {
             throw ObjectBoxError.sync(
-                    message: "Cannot create a new sync client: Sync is unavailable (correct library linked?)")
+                    message: "This library does not include ObjectBox Sync. " +
+                            "Please visit https://objectbox.io/sync/ for options.")
         }
         throw ObjectBoxError.sync(
                 message:

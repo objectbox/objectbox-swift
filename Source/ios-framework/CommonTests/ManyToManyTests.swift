@@ -77,8 +77,7 @@ class ManyToManyTests: XCTestCase {
 
     func testManyToMany_applyToDb_newObjects() throws {
         try teacherBox.put(teacher1)
-        teacher1.students.append(student1)
-        teacher1.students.append(student2)
+        teacher1.students.append(contentsOf: [student1, student2])
         teacher1.students.removeFirst()
 
         try teacher1.students.applyToDb()

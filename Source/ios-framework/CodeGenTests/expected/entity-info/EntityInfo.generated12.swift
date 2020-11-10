@@ -3,6 +3,7 @@
 
 // swiftlint:disable all
 import ObjectBox
+import Foundation
 
 // MARK: - Entity metadata
 

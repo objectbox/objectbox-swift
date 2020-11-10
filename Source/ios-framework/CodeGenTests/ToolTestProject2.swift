@@ -8,7 +8,7 @@
 
 import ObjectBox
 
-
+// objectbox: sync
 class BusRoute: Entity {
     var id: EntityId<BusRoute> = 0
     var lineName: String = ""

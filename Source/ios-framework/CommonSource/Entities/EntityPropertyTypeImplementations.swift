@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 // TODO: check if those still make sense like this; e.g. check property queries
 
 /// Marks all supported scalar value types as such.

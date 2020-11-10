@@ -39,8 +39,9 @@ custom_categories:
   - QueryCondition
   - PropertyAlias
   - ".=(_:_:)"
-- name: Other Types
+- name: Sync
   children:
-  - IdBase
-  - EntityInspectable
-  - EntityPropertyTypeConvertible
+  - Sync
+  - SyncClient
+  - SyncCredentials
+

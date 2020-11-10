@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 /// Object property type to indicate a to-one relation to another object.
 ///
 /// Initialize with `nil` in your type declarations.

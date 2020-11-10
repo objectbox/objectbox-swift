@@ -346,7 +346,7 @@ extension Box {
     /// by obx_box_get() stay valid until we've actually copied them.
     func getOne(_ id: Id, binding: EntityType.EntityBindingType,
                 flatBuffer: inout FlatBufferReader) throws -> EntityType? {
-        var ptr: UnsafeMutableRawPointer?
+        var ptr: UnsafeRawPointer?
         var size: Int = 0
         let err = obx_box_get(cBox, id, &ptr, &size)
         if err == OBX_NOT_FOUND { obx_last_error_clear(); return nil }

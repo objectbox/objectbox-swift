@@ -7,6 +7,7 @@
 //
 
 import ObjectBox
+import Foundation
 
 
 class TestEnumConverter {

@@ -7,6 +7,7 @@
 //
 
 import ObjectBox
+import Foundation
 
 
 struct Building: Entity, CustomDebugStringConvertible {

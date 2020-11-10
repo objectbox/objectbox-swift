@@ -39,28 +39,45 @@ public class EntityBuilder<T> {
         self.entityInfo = entityInfo
         self.model = model
     }
+
+    public func flags(_ flags: EntityFlags) throws {
+        let err = obx_model_entity_flags(model, OBXEntityFlags(flags.rawValue))
+        try checkLastError(err)
+    }
+
+    public func flags(_ flags: [EntityFlags]) throws {
+        let err = obx_model_entity_flags(model, OBXEntityFlags(flags.rawValue))
+        try checkLastError(err)
+    }
+
+    /// Add the given property to this entity.
+    /// An overload to accept a single flag.
+    public func addProperty(name: String, type: PropertyType, flags: PropertyFlags, id: UInt32, uid: UInt64,
+                            indexId: UInt32 = 0, indexUid: UInt64 = 0) throws {
+        try addProperty(name: name, type: type, flags: [flags], id: id, uid: uid, indexId: indexId, indexUid: indexUid)
+    }
     
     /// Add the given property to this entity.
-    public func addProperty(name: String, type: PropertyType, flags: PropertyFlags = [], id propertyID: UInt32,
-                            uid UID: UInt64, indexId indexID: UInt32 = 0, indexUid indexUID: UInt64 = 0) throws {
-        let err1 = obx_model_property(model, name, type, propertyID, UID)
+    public func addProperty(name: String, type: PropertyType, flags: [PropertyFlags] = [], id: UInt32, uid: UInt64,
+                            indexId: UInt32 = 0, indexUid: UInt64 = 0) throws {
+        let err1 = obx_model_property(model, name, OBXPropertyType(UInt32(type.rawValue)), id, uid)
         try checkLastError(err1)
-        let err2 = obx_model_property_flags(model, flags)
+        let err2 = obx_model_property_flags(model, OBXPropertyFlags(flags.rawValue))
         try checkLastError(err2)
-        if indexID != 0 && indexUID != 0 {
-            let err3 = obx_model_property_index_id(model, indexID, indexUID)
+        if indexId != 0 && indexUid != 0 {
+            let err3 = obx_model_property_index_id(model, indexId, indexUid)
             try checkLastError(err3)
         }
     }
     
     // swiftlint:disable function_parameter_count
     /// Add a to-one-relation (e.g. a pointer from a parent to its children) to the model.
-    public func addToOneRelation(name: String, targetEntityInfo: EntityInfo, flags: PropertyFlags = [],
+    public func addToOneRelation(name: String, targetEntityInfo: EntityInfo, flags: [PropertyFlags] = [],
                                  id propertyID: UInt32, uid propertyUID: UInt64,
                                  indexId indexID: UInt32, indexUid indexUID: UInt64) throws {
         var finalFlags = flags
-        finalFlags.insert(.indexed)
-        finalFlags.insert(.indexPartialSkipZero)
+        finalFlags.append(.indexed)
+        finalFlags.append(.indexPartialSkipZero)
         
         try addProperty(name: name, type: .relation, flags: finalFlags, id: propertyID, uid: propertyUID,
                         indexId: indexID, indexUid: indexUID)

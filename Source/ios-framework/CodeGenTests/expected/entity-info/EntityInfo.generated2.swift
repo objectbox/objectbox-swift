@@ -3,6 +3,7 @@
 
 // swiftlint:disable all
 import ObjectBox
+import Foundation
 
 // MARK: - Entity metadata
 
@@ -25,6 +26,7 @@ extension BusRoute: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: BusRoute.self, id: 1, uid: 5107964062888457216)
+        try entityBuilder.flags(.syncEnabled)
         try entityBuilder.addProperty(name: "id", type: EntityId<BusRoute>.entityPropertyType, flags: [.id], id: 1, uid: 7895576389419683840)
         try entityBuilder.addProperty(name: "lineName", type: String.entityPropertyType, id: 2, uid: 6687926154759915520)
 

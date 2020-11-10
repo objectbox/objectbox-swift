@@ -14,17 +14,7 @@
 // limitations under the License.
 //
 
-/// A reusable query returning entities or their IDs.
-///
-/// You can hold on to a `Query` once it is set up and re-query it e.g. using `find()`.
-///
-/// Use the block-based query method to state conditions using operator overloads, like:
-///
-///    let query = box.query { Person.age > 21 && Person.name.startsWith("M") }.build()
-///
-/// If you want to return aggregate results or just property values and not whole entities, use `property(_:)` to obtain
-/// a `PropertyQuery`.
-///
+import Foundation
 
 // For use with obx_query_visit
 internal class CDataVisitorContext {
@@ -40,6 +30,17 @@ internal func CDataVisitor(userData: UnsafeMutableRawPointer?, data: UnsafeRawPo
     return context.fun(data, size)
 }
 
+/// A reusable query returning entities or their IDs.
+///
+/// You can hold on to a `Query` once it is set up and re-query it e.g. using `find()`.
+///
+/// Use the block-based query method to state conditions using operator overloads, like:
+///
+///    let query = box.query { Person.age > 21 && Person.name.startsWith("M") }.build()
+///
+/// If you want to return aggregate results or just property values and not whole entities, use `property(_:)` to obtain
+/// a `PropertyQuery`.
+///
 public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
 where E == E.EntityBindingType.EntityType {
     /// The entity type this query is going to target.
@@ -252,7 +253,7 @@ where E == E.EntityBindingType.EntityType {
 
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [Int64]) {
         if property.type == .long {
-            let numParams = Int32(collection.count)
+            let numParams = Int(collection.count)
             collection.withContiguousStorageIfAvailable { ptr -> Void in
                 let err = obx_query_param_int64s(cQuery, EntityType.entityInfo.entitySchemaId,
                                           property.propertyId, ptr.baseAddress, numParams)
@@ -260,7 +261,7 @@ where E == E.EntityBindingType.EntityType {
             }
         } else {
             let i32collection = collection.map { Int32($0) }
-            let numParams = Int32(i32collection.count)
+            let numParams = Int(i32collection.count)
             i32collection.withContiguousStorageIfAvailable { ptr -> Void in
                 let err = obx_query_param_int32s(cQuery, EntityType.entityInfo.entitySchemaId,
                                           property.propertyId, ptr.baseAddress, numParams)
@@ -270,7 +271,7 @@ where E == E.EntityBindingType.EntityType {
     }
 
     internal func setParametersInternal(_ alias: String, to collection: [Int64]) {
-        let numParams = Int32(collection.count)
+        let numParams = Int(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
             let err = obx_query_param_alias_int64s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
@@ -278,7 +279,7 @@ where E == E.EntityBindingType.EntityType {
     }
 
     internal func setParametersInternal(_ alias: String, to collection: [Int32]) {
-        let numParams = Int32(collection.count)
+        let numParams = Int(collection.count)
         collection.withContiguousStorageIfAvailable { ptr -> Void in
             let err = obx_query_param_alias_int32s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
@@ -363,7 +364,7 @@ where E == E.EntityBindingType.EntityType {
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [String]) {
-        let numStrings = Int32(collection.count)
+        let numStrings = Int(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
             let err = obx_query_param_strings(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
@@ -380,7 +381,7 @@ where E == E.EntityBindingType.EntityType {
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
     public func setParameters(_ alias: String, to collection: [String]) {
-        let numStrings = Int32(collection.count)
+        let numStrings = Int(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
             let err = obx_query_param_alias_strings(cQuery, alias, ptr.baseAddress, numStrings)

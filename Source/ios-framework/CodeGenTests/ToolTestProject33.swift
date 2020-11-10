@@ -1,4 +1,5 @@
 import ObjectBox
+import Foundation
 
 
 class DataThing: Entity, CustomDebugStringConvertible {

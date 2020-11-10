@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 extension Array where Element: LongPropertyQueryType {
     fileprivate var int64s: [Int64] { return self.map { $0.int64Value } }
 }

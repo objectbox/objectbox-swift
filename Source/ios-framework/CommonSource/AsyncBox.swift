@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+import Foundation
+
 /// AsyncBox is a class that lets you asynchronously perform basic database write
 /// operations.
 /// Your program can just fire off these operations and forget about them, and they'll be
@@ -60,7 +62,7 @@ where E == E.EntityBindingType.EntityType {
         try binding.collect(fromEntity: entity, id: actualId, propertyCollector: flatBuffer, store: box.store)
         flatBuffer.ensureStarted()
         let data = try flatBuffer.finish()
-        try checkLastError(obx_async_put5(cAsyncBox, actualId, data.data, data.size, mode))
+        try checkLastError(obx_async_put5(cAsyncBox, actualId, data.data, data.size, OBXPutMode(mode.rawValue)))
 
         return actualId
     }
@@ -214,6 +216,8 @@ where E == E.EntityBindingType.EntityType {
 }
 
 extension Store {
+    // MARK: Async helpers
+
     /// Wait until anything that's been submitted so far for asynchronous execution on any
     /// AsyncBox in this store has been processed.
     @discardableResult

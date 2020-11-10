@@ -20,6 +20,8 @@
 /// Call `build()` on a QueryBuilder to create an actual query object that you can request
 /// objects from.
 
+import Foundation
+
 public final class QueryBuilder<E: EntityInspectable & __EntityRelatable>
 where E == E.EntityBindingType.EntityType {
     /// The type of entity this query builder operates on.
@@ -74,10 +76,16 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameter property: The property by which to sort.
     /// - Parameter flags: Additional flags to control sort behaviour, like what to do with NIL values, or to sort
     ///     descending instead of ascending.
-    public func ordered<T>(by property: Property<EntityType, T, Void>, flags: OrderFlags = [])
+    public func ordered<T>(by property: Property<EntityType, T, Void>, flags: [OrderFlags] = [])
                     -> QueryBuilder<EntityType> {
-        obx_qb_order(queryBuilder, property.propertyId, flags)
+                        obx_qb_order(queryBuilder, property.propertyId, OBXOrderFlags(flags.rawValue))
         return self
+    }
+
+    /// Overload of ordered() taking a single flag only.
+    public func ordered<T>(by property: Property<EntityType, T, Void>, flags: OrderFlags)
+                    -> QueryBuilder<EntityType> {
+        return ordered(by: property, flags: [flags])
     }
 
     /// Note: if a condition creator function (obx_qb_*) fails and returns 0 it is fine to proceed:
@@ -105,7 +113,7 @@ extension QueryBuilder {
 extension QueryBuilder {
     internal func and(_ conditions: [QueryBuilderCondition]) -> QueryBuilderCondition {
         var result: obx_qb_cond = 0
-        let numConditions = Int32(conditions.count)
+        let numConditions = Int(conditions.count)
         conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_all(queryBuilder, ptr.baseAddress, numConditions)
         }
@@ -114,7 +122,7 @@ extension QueryBuilder {
     
     internal func or(_ conditions: [QueryBuilderCondition]) -> QueryBuilderCondition {
         var result: obx_qb_cond = 0
-        let numConditions = Int32(conditions.count)
+        let numConditions = Int(conditions.count)
         conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_any(queryBuilder, ptr.baseAddress, numConditions)
         }
@@ -207,7 +215,7 @@ extension QueryBuilder {
                                     notIn: Bool = false)
                     -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
         var result: obx_qb_cond = 0
-        let numNums = Int32(collection.count)
+        let numNums = Int(collection.count)
         let propertyId = queryProperty.propertyId
         let bits = VALUE.zero.bitWidth
 
@@ -354,7 +362,7 @@ extension QueryBuilder {
                 return (str as NSString).utf8String!
             }
             var result: obx_qb_cond = 0
-            let numStrings = Int32(strings.count)
+            let numStrings = Int(strings.count)
             strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
                 result = obx_qb_in_strings(queryBuilder, property.propertyId, ptr.baseAddress, numStrings,
                                            caseSensitive)
@@ -498,7 +506,7 @@ extension QueryBuilder {
         let dates: [Int64] = collection.map { date -> Int64 in
             return date.unixTimestamp
         }
-        let numDates = Int32(dates.count)
+        let numDates = Int(dates.count)
         dates.withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_in_int64s(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()
@@ -512,7 +520,7 @@ extension QueryBuilder {
         let dates: [Int64] = collection.map { date -> Int64 in
             return date.unixTimestamp
         }
-        let numDates = Int32(dates.count)
+        let numDates = Int(dates.count)
         dates.withContiguousStorageIfAvailable { (ptr) -> Void in
             result = obx_qb_not_in_int64s(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()

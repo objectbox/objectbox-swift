@@ -2,6 +2,8 @@
 // Remove it again afterwards.
 
 public extension Store {
+    // MARK: Generated initializer
+
     /// A store with a fully configured model. Created by the code generator with your model's metadata in place.
     ///
     /// - Parameters:
@@ -21,12 +23,13 @@ public extension Store {
     /// - important: This initializer is created by the code generator. If you only see the internal `init(model:...)`
     ///              initializer, trigger code generation by building your project.
     public convenience init(directoryPath: String, maxDbSizeInKByte: UInt64 = 1024 * 1024, fileMode: UInt32 = 0o755,
-                            maxReaders: UInt32 = 0) throws {
+                            maxReaders: UInt32 = 0, readOnly: Bool = false) throws {
         try self.init(
             model: OpaquePointer(bitPattern: 0)!,
             directory: directoryPath,
             maxDbSizeInKByte: maxDbSizeInKByte,
             fileMode: fileMode,
-            maxReaders: maxReaders)
+            maxReaders: maxReaders,
+            readOnly: readOnly)
     }
 }
