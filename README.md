@@ -33,8 +33,6 @@ To install the `ObjectBox` pod, add the following line to your Podfile:
   pod 'ObjectBox'
 ```
 
-*Note:* ObjectBox 1.3 was built using Swift 5.2. ObjectBox 1.2 works with Swift 5.1 but we highly recommend the update.
-  
 Then run this to install the ObjectBox framework:
 
 ```bash
@@ -68,6 +66,18 @@ pod init
 If `pod install` fails, try updating CocoaPods first:
 
     gem update xcodeproj && gem update cocoapods && pod repo update
+
+### Swift versions
+
+Here's a list of ObjectBox releases, and the Swift versions they were compiled with:
+
+| ObjectBox version(s) | Swift version |
+|:--------------------:|:-------------:|
+|        1.4.1         |      5.3      |        
+|      1.3, 1.4.0      |      5.2      |        
+|         1.2          |      5.1      |
+
+This might be relevant, e.g. when using Carthage. For various reasons, we recommend using the latest version.
 
 <a name="example"></a>Example
 -----------------------------
