@@ -35,7 +35,7 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     }
     
     func put(id entityId: Id, data: OBX_bytes, mode: PutMode) throws {
-        try checkLastError(obx_cursor_put4(cCursor, entityId, data.data, data.size, mode))
+        try checkLastError(obx_cursor_put4(cCursor, entityId, data.data, data.size, OBXPutMode(mode.rawValue)))
     }
     
     func remove(_ entity: EntityType) throws -> Bool {
@@ -71,7 +71,7 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     /// Returned pointer is only valid for the duration of the current transaction.
     func get(_ entityId: Id) throws -> OBX_bytes {
         var bytes = OBX_bytes(data: nil, size: 0)
-        var ptr: UnsafeMutableRawPointer?
+        var ptr: UnsafeRawPointer?
         try checkLastError(obx_cursor_first(cCursor, &ptr, &bytes.size))
         bytes.data = UnsafeRawPointer(ptr)
         return bytes
@@ -81,7 +81,7 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     /// - Returns: result.data == nil if there are no more items.
     func first() throws -> OBX_bytes {
         var bytes = OBX_bytes(data: nil, size: 0)
-        var ptr: UnsafeMutableRawPointer?
+        var ptr: UnsafeRawPointer?
         let err = obx_cursor_first(cCursor, &ptr, &bytes.size)
         if err == OBX_NOT_FOUND { obx_last_error_clear(); return bytes }
         try checkLastError(err)
@@ -93,7 +93,7 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     /// - Returns: result.data == nil if there are no more items.
     func next() throws -> OBX_bytes {
         var bytes = OBX_bytes(data: nil, size: 0)
-        var ptr: UnsafeMutableRawPointer?
+        var ptr: UnsafeRawPointer?
         let err = obx_cursor_next(cCursor, &ptr, &bytes.size)
         if err == OBX_NOT_FOUND { obx_last_error_clear(); return bytes }
         try checkLastError(err)

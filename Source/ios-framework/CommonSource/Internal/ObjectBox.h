@@ -13,8 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// TODO can we get rid of this file?
+// This is the "umbrella header"; Xcode seems to require it for some module definition (unextended-module.modulemap)
 
-#import <Foundation/Foundation.h> // we still depend on stuff like
 #import "obx_fbb.h"
-#import "ObjectBoxC.h"
+#import "objectbox-c.h"

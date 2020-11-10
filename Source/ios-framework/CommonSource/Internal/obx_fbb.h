@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include "ObjectBoxC.h"
+#include "objectbox-c.h"
 #include <stdint.h>
 
 #if __cplusplus
