@@ -7,6 +7,7 @@
       "id": "1:5107964062888457216",
       "lastPropertyId": "2:6687926154759915520",
       "name": "BusRoute",
+      "flags": 6,
       "properties": [
         {
           "flags": 1,

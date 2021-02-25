@@ -106,32 +106,49 @@ extension Query {
     /// If you have multiple conditions on the same property, specify a `PropertyAlias` so you can choose which
     /// condition's value to change.
     ///
+    /// Note: While there is some flexibility for the passed type, you must ensure that the actual values are within
+    ///       the valid range. E.g. passing in a integer beyond 32 bit for a 32 bit parameter type is a usage error and
+    ///       will result in a fatal error.
+    ///
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - collection: New collection of values for the condition.
     public func setParameters<T>(_ property: Property<EntityType, T, Void>, to collection: [T])
             where T: FixedWidthInteger {
-        let collection64 = collection.map { Int64(truncatingIfNeeded: $0) }
-        setParametersInternal(property: property.base, to: collection64)
+        setParametersInternal(property: property.base, to: collection)
     }
 
     /// :nodoc:
     public func setParameters<T>(_ property: Property<EntityType, T?, Void>, to collection: [T])
             where T: FixedWidthInteger {
-        let collection64 = collection.map { Int64(truncatingIfNeeded: $0) }
-        setParametersInternal(property: property.base, to: collection64)
+        setParametersInternal(property: property.base, to: collection)
     }
 
     /// Sets a parameter previously specified during query construction to a new collection value.
     ///
     /// This is used to change the value of e.g. `isContained(in:)` and similar operations.
     ///
+    /// Note: While there is some flexibility for the passed type, you must ensure that the actual values are within
+    ///       the valid range. E.g. passing in a integer beyond 32 bit for a 32 bit parameter type is a usage error and
+    ///       will result in a fatal error.
+    ///
     /// - Parameters:
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
     public func setParameters<T>(_ alias: String, to collection: [T]) where T: FixedWidthInteger {
-        let collection64 = collection.map { Int64(truncatingIfNeeded: $0) }
-        setParametersInternal(alias, to: collection64)
+        let typeSize = obx_query_param_alias_get_type_size(cQuery, alias)
+        if typeSize == 8 {
+            setParametersInternal(alias, to: Util.toInt64Array(collection))
+        } else {
+            precondition(typeSize > 0 && typeSize <= 4)
+            let collection32: [Int32]
+            do {
+                collection32 = try Util.toInt32Array(collection)
+            } catch {
+                fatalErrorWithStack("Usage error; ensure to use the proper parameter type (alias: \(alias)): \(error)")
+            }
+            setParametersInternal(alias, to: collection32)
+        }
     }
 }
 
@@ -372,13 +389,13 @@ extension Query {
     ///   - collection: New collection of values for the condition.
     public func setParameters(_ property: Property<EntityType, Date, Void>, to collection: [Date]) {
         let collection64 = collection.map({ $0.unixTimestamp })
-        setParametersInternal(property: property.base, to: collection64)
+        setParametersInternal64(property: property.base, to: collection64)
     }
 
     /// :nodoc:
     public func setParameters(_ property: Property<EntityType, Date?, Void>, to collection: [Date]) {
         let collection64 = collection.map({ $0.unixTimestamp })
-        setParametersInternal(property: property.base, to: collection64)
+        setParametersInternal64(property: property.base, to: collection64)
     }
 
     /// :nodoc:

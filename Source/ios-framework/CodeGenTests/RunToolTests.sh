@@ -8,6 +8,14 @@ date
 
 if [ -z ${PROJECT_DIR} ]; then
   echo "PROJECT_DIR unavailable; please run from Xcode"
+
+  # TODO: In the future we could also setup the vars for derived data etc. to make it work; until then exit...
+
+  # macOS does not have realpath and readlink does not have -f option, so do this instead:
+  script_dir=$( cd "$(dirname "$0")" ; pwd -P )
+
+  PROJECT_DIR="${script_dir}/../"
+
   exit 1
 fi
 

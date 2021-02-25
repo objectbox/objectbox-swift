@@ -73,6 +73,7 @@ Here's a list of ObjectBox releases, and the Swift versions they were compiled w
 
 | ObjectBox version(s) | Swift version |
 |:--------------------:|:-------------:|
+|        1.5.0         |     5.3(.2)   |        
 |        1.4.1         |      5.3      |        
 |      1.3, 1.4.0      |      5.2      |        
 |         1.2          |      5.1      |
@@ -138,7 +139,7 @@ License
 -------
 All files in this repository are under the Apache 2 license:
 
-    Copyright 2018-2020 ObjectBox Ltd. All rights reserved.
+    Copyright 2018-2021 ObjectBox Ltd. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

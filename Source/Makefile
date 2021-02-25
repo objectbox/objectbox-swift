@@ -17,7 +17,7 @@ build_swiftlint:
 build_sourcery:
 	@echo "$(BLUE)Building Sourcery...$(NC)"
 	@echo $(SOURCERY_PATH)
-	(cd "$(SOURCERY_PATH)"; swift build --configuration release)
+	(cd "$(SOURCERY_PATH)"; rake build)
 
 archive_framework:
 	(cd "$(FRAMEWORK_PATH)"; make all)

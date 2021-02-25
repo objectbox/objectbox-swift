@@ -40,7 +40,7 @@ public class Store: CustomDebugStringConvertible {
     internal var supportsLargeArrays = false
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.4.1"
+    public static var version = "1.5.0"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {

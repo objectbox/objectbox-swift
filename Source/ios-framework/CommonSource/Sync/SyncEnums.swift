@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 ObjectBox. All rights reserved.
+// Copyright (c) 2020-2021 ObjectBox. All rights reserved.
 //
 
 import Foundation
@@ -8,7 +8,7 @@ import Foundation
 
 public enum SyncCredentialsType: UInt32 {
     case
-            unchecked = 0,
+            none = 0,
             sharedSecret = 1,
             googleAuth = 2
 }
@@ -44,4 +44,11 @@ public enum SyncCode: UInt32 {
             badVersion = 55,
             clientIdTaken = 61,
             txViolatedUnique = 71
+}
+
+public enum SuccessTimeOut {
+    case
+            success,
+            failure,
+            timeout
 }

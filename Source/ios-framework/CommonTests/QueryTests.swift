@@ -326,7 +326,8 @@ class QueryTests: XCTestCase {
 
         let query = try box.query({ "collectintegers" .= AllTypesEntity.integer.isIn([100, 200, 300]) }).build()
         XCTAssertEqual(try query.count(), 1)
-        query.setParameters("collectintegers", to: [90, 300])
+        let params64: [Int64] = [90, 300]
+        query.setParameters("collectintegers", to: params64)
         XCTAssertEqual(try query.count(), 0)
         query.setParameters("collectintegers", to: [-100, 200])
         let results = try query.find()

@@ -8,11 +8,28 @@ Repository Contents
 -------------------
 - `ios-framework/`: The Cocoa Swift framework.
     - `docs/swift_output/`: The generated framework documentation.
-- `external/`: git submodule and pre-built binary container.
+- `external/`: git submodule and/or pre-built binary container.
    This contains the ObjectBoxCore static libraries and our code generator.
-- `fetch_dependencies.command`: Script for downloading libObjectBoxCore into `externals`.
-   You must run this script before you can build the framework.
 - `docs/`: Documentation and discussion of concepts, ideas, and approaches to bring ObjectBox to Swift.
+
+**Scripts** and how they depend on each other (subject to future simplifications):
+
+- `fetch_dependencies.command`: populates `external/objectbox-static` with libObjectBoxCore.
+  libObjectBoxCore is a crucial requirement build the Swift framework.
+- `create-xcframework.sh`: builds the multi-platform archive containing binaries for multiple platforms and architectures.
+
+Tests
+-----
+ObjectBox comes with a couple of tests of different categories:
+
+* Unit tests: `ios-framework/CommonTests`, based on XCTestCase
+* Integration tests "CodeGen": `ios-framework/CodeGenTests` run via script (for now only via Xcode/xcodebuild);
+  uses a separate Xcode project and an ObjectBox generator executable to generate actual binding classes.
+  [README](ios-framework/CodeGenTests/README.md)
+* Integration tests "IntegrationTests": `ios-framework/IntegrationTests`, currently not maintained, run via script;
+  somewhat similar to CodeGen; subject to a general clean up; see also its [README](ios-framework/IntegrationTests/Readme.md)
+* External integration test project: https://github.com/objectbox/objectbox-swift-integration-test
+  runs "real projects" with "full ObjectBox round-trip" on internal CI and CircleCI
 
 Setup
 -----
@@ -98,9 +115,6 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
 
 Build notes
 -----------
-* Build phases; check Xcode project
-  * "Rename C Header": takes the standard C objectbox.h and augments it with some Swift specifics into ObjectBoxC.h
-    (TODO: Can we do this differently, e.g. use the standard objectbox.h and then have a second .h for Swift specifics?)
 * SwiftLint (macOS build only): calls `swiftlint lint --config .swiftlint-macOS.yml`
   * Edit .swiftlint-macOS.yml file to customize (e.g. "id" is OK despite less than 3 chars)
 
@@ -174,5 +188,4 @@ Note: `xcpretty` cleans up the output so you wan't see all the compiler calls bu
 xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=OS X,arch=x86_64' -only-testing ObjectBoxTests-macOS/StoreTests/test32vs64BitForOs | xcpretty
 xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11' -only-testing ObjectBoxTests-iOS/StoreTests/test32vs64BitForOs | xcpretty
 ```
-
 

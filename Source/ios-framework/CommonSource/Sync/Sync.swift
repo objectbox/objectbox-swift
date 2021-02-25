@@ -12,7 +12,7 @@ public class Sync {
     /// If you do not have a sync enabled version yet, please visit https://objectbox.io/sync for more details.
     /// - Returns: true if calling makeClient() is possible (without throwing)
     public static func isAvailable() -> Bool {
-        return obx_sync_available()
+        return obx_has_feature(OBXFeature_Sync)
     }
 
     /// Creates a sync client associated with the given store and sync server with the given URL.

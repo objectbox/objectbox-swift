@@ -8,8 +8,8 @@
 
 import ObjectBox
 
-
 // objectbox: entity
+// objectbox: sync = { "sharedGlobalIds": true }
 class BusRoute {
     var id: EntityId<BusRoute> = 0
     

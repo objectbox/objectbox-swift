@@ -27,9 +27,47 @@ if [ "$verify_only" = true ]; then
 else
 
 if [ -d "$code_dir" ]; then # Do we have an existing code repo?
-    pushd "$code_dir"  # todo fix this workaround for building into cbuild dir in "our" objectbox-swift dir
-    echo "Have repository, building."
-    "$code_dir/scripts/apple-build-static-libs.sh" "$dest_dir" release
+    pushd "$code_dir"  # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
+    build_params="" # must also part of the cache key
+    commit_id=$(git rev-parse HEAD)
+    cache_dir="$HOME/Library/Caches/ObjectBox"
+    mkdir -p "${cache_dir}"
+    find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +30 # -delete # TODO enable delete once this looks good
+    cache_key="${commit_id}"
+    if [ -n "$build_params" ]; then
+      cache_key="${cache_key}-$(echo "$build_params" | tr -cd '[a-zA-Z0-9]._-')"
+    fi
+    cache_zip="${cache_dir}/objectbox-static-${cache_key}.zip"
+    do_build=true
+    git_clean=false
+    git_status=$(git status --porcelain)
+    # ignore untracked uws submodule (left over when switching from a sync to a non-sync branch)
+    git_status=${git_status#"?? objectbox/src/main/cpp/external/uws-objectbox/"}
+    if [ -z "$git_status" ]; then
+      git_clean=true
+      if [ -f "${cache_zip}" ]; then
+        echo "ObjectBox core is clean and cache ZIP found for ${cache_key}. Extracting..."
+        unzip -o "${cache_zip}" -d "${dest_dir}"
+        do_build=false
+      else
+        echo "ObjectBox core is clean but no cache ZIP found for ${cache_key}. Building..."
+      fi
+    else
+      git status
+      echo "ObjectBox core is not clean, won't use caching. Building..."
+    fi
+    if [ "$do_build" = true ]; then
+      "$code_dir/scripts/apple-build-static-libs.sh" $build_params "$dest_dir" release
+      if [ "$git_clean" = true ] ; then  # clean before?
+        git_status=${git_status#"?? objectbox/src/main/cpp/external/uws-objectbox/"}
+        if [ -z "$git_status" ]; then  # still clean
+          cp "${dest_dir}/objectbox-static.zip" "${cache_zip}"
+          echo "Cache ZIP created: ${cache_zip}"
+        else
+          echo "Git status is not clean anymore; skipped caching the ZIP"
+        fi
+      fi
+    fi
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
@@ -70,7 +108,14 @@ for filename in ./*.a; do
   # Match our version/date pattern like "2.6.1-2020-06-09"
   obx_version=$(strings "$filename" | grep "[0-9]\.[0-9]\.[0-9]-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")
   echo "  >> Version found: $obx_version"
-  obx_symbols=$(nm -gj "$filename" | grep -c obx_  || true)
-  obx_sync_symbols=$(nm -gj "$filename" | grep -c obx_sync_ || true)
-  echo "  >> Symbols found: $obx_symbols obx, $obx_sync_symbols obx_sync"
+  obx_symbols=$(nm -gj "$filename" | grep -c obx_) || true
+  obx_sync_symbols=$(nm -gj "$filename" | grep -c obx_sync_) || true
+  # Also include "external libs" to expose potential build problems
+  obx_lws_symbols=$(nm -gj "$filename" | grep -c lws_) || true
+  obx_mbedtls_symbols=$(nm -gj "$filename" | grep -c mbedtls_) || true
+  echo "  >> Symbols found: $obx_symbols obx, $obx_sync_symbols obx_sync, $obx_lws_symbols lws, $obx_mbedtls_symbols mbedtls"
+  obx_archs=$(lipo -archs "$filename")
+  echo "  >> Architectures: $obx_archs"
+  sha=($(shasum -a 256 "$filename"))
+  echo "  >> SHA256: $sha"
 done

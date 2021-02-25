@@ -6,39 +6,52 @@ VERSION?="1.0.0"
 XCOPTIONS=-derivedDataPath ./DerivedData
 CARTOPTIONS=--derived-data ./DerivedData
 
-all: build_framework archive_framework
+all: build_framework
 
 ci: build_framework
 
 test: unit_tests integration_tests
 	@echo "$(BLUE)Tests done.$(NC)"
 
-unit_tests: download_statics
+unit_tests: fetch_dependencies u_tests
+
+u_tests:
 	@echo "$(BLUE)Running Unit Tests...$(NC)"
-	xcodebuild $(XCOPTIONS) test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=OS X,arch=x86_64'
-	xcodebuild $(XCOPTIONS) build test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11'
+	xcodebuild $(XCOPTIONS) test -project ObjectBox.xcodeproj -scheme ObjectBox-macOS -destination 'platform=macOS,arch=x86_64'
+	# TODO FIXME simulator tests are currently broken; reenable:
+	#xcodebuild $(XCOPTIONS) build test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11'
 
-integration_tests: download_statics
-	@echo "$(BLUE)Integration Tests...$(NC)"
+integration_tests: fetch_dependencies i_tests
+
+i_tests: build_generator i_tests_run
+
+# This may be useful for iterating on the Generator directly from the main project
+i_tests_dirty: build_generator_dirty i_tests_run
+
+build_generator:
+	@echo "$(BLUE)Building generator...$(NC)"
 	../external/objectbox-swift-generator/_build.command
-	xcodebuild $(XCOPTIONS) build -project ObjectBox.xcodeproj -scheme CodeGenTests -destination 'platform=OS X,arch=x86_64'
 
-# Note: If ObjectBox core repo is present, it won't download but build it instead
-download_statics:
+build_generator_dirty:
+	@echo "$(BLUE)Building generator (dirty)...$(NC)"
+	../external/objectbox-swift-generator/_build.command --dirty
+
+i_tests_run:
+	@echo "$(BLUE)Integration Tests...$(NC)"
+	xcodebuild $(XCOPTIONS) build -project ObjectBox.xcodeproj -scheme CodeGenTests -destination 'platform=macOS,arch=x86_64'
+
+# Note: If ObjectBox core repo is present, it will build; otherwise it will download static libs
+fetch_dependencies:
 	@echo "$(BLUE)Building/Downloading static libraries...$(NC)"
 	@../fetch_dependencies.command
 
-build_framework: download_statics
+build_framework: fetch_dependencies
 	@echo "$(BLUE)Building Frameworks with Carthage...$(NC)"
-	@carthage build $(CARTOPTIONS) --no-skip-current --log-path ./xcodelog.txt
+	@carthage build $(CARTOPTIONS) --no-skip-current --use-xcframeworks --log-path ./xcodelog.txt
 
-build_framework_verbose: download_statics
+build_framework_verbose: fetch_dependencies
 	@echo "$(BLUE)Building Frameworks with Carthage...$(NC)"
-	@carthage build $(CARTOPTIONS) --no-skip-current --verbose
-
-archive_framework:
-	@echo "$(BLUE)Archiving Carthage Frameworks...$(NC)"
-	@carthage archive ObjectBox
+	@carthage build $(CARTOPTIONS) --no-skip-current --use-xcframeworks --verbose
 
 # Consider to pass in VERSION as a parameter here instead of in the jazzy configuration.
 # Version used in jazzy for the Dash.app documentation XML feed.

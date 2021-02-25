@@ -109,6 +109,17 @@ internal func checkLastError(_ error: obx_err) throws {
     try throwObxErr(error, message: message)
 }
 
+internal func checkLastErrorSuccessFlag(_ error: obx_err) throws -> Bool {
+    if error == OBX_SUCCESS {
+        return true
+    } else if error == OBX_NO_SUCCESS {
+        return false
+    } else {
+        try checkLastError(error)  // Should always throw at this point
+        return false
+    }
+}
+
 /// E.g. prints error
 func checkLastErrorNoThrow(_ error: obx_err) {
     if error == OBX_SUCCESS { return }
@@ -126,17 +137,22 @@ internal func failFatallyIfError() {
 }
 
 /// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
+internal func fatalErrorWithStack(_ message: String) -> Never {
+    for symbol in Thread.callStackSymbols {
+        // Print the stack trace without the "unexciting" symbols
+        if !symbol.contains("XCTest") && !symbol.contains("xctest") && !symbol.contains("CoreFoundation")
+                   && !symbol.contains("checkFatalError") && !symbol.contains("failFatallyIfError") {
+            print(symbol)
+        }
+    }
+    fatalError(message)
+}
+
+/// Reserved for "wrong usages" by the user that the compiler cannot detect (try/catch otherwise).
 internal func checkFatalError(_ err: obx_err) {
     if err != OBX_SUCCESS {
-        for symbol in Thread.callStackSymbols {
-            // Print the stack trace without the "unexciting" symbols
-            if !symbol.contains("XCTest") && !symbol.contains("xctest") && !symbol.contains("CoreFoundation") 
-                       && !symbol.contains("checkFatalError") && !symbol.contains("failFatallyIfError") {
-                print(symbol)
-            }
-        }
         let message = String(utf8String: obx_last_error_message()) ?? "Unknown"
-        fatalError("\(message) (\(err))")
+        fatalErrorWithStack("\(message) (\(err))")
     }
 }
 
@@ -170,7 +186,7 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
     /// This is NOT an error condition, and thus no last error info is set.
     case OBX_NOT_FOUND:
         throw ObjectBoxError.notFound(message: message)
-    
+
     // General errors
     case OBX_ERROR_ILLEGAL_STATE:
         if message.hasPrefix("Cannot start a write transaction inside a read only transaction") {
@@ -188,7 +204,7 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
         throw ObjectBoxError.general(message: message)
     case OBX_ERROR_UNKNOWN:
         throw ObjectBoxError.unknown(code: OBX_ERROR_UNKNOWN, message: message)
-    
+
     // Storage errors (often have a secondary error code)
     case OBX_ERROR_DB_FULL:
         throw ObjectBoxError.dbFull(message: message)
@@ -200,7 +216,7 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
         #if os(macOS) // Only macOS needs an App Group to do its mutexes, iOS uses a different mutex.
         if message.hasPrefix("Could not open env for DB") { // Error reported from obx_store_open().
             throw ObjectBoxError.storageGeneral(message: message + " - did you perhaps forget to set up an "
-                + "\"App Group\" Capability in your target settings?")
+                    + "\"App Group\" Capability in your target settings?")
         }
         #endif
         throw ObjectBoxError.storageGeneral(message: message)
@@ -240,9 +256,10 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
 
     case 2: // testStorageException receives this code for a Store on a nonexistent file path.
         throw ObjectBoxError.storageGeneral(message: message.isEmpty ? "Storage error \(err)" : message)
-        
+
     default:
         throw ObjectBoxError.unknown(code: err, message: message)
     }
 }
+
 // swiftlint:enable cyclomatic_complexity function_body_length

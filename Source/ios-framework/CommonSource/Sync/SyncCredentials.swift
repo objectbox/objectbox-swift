@@ -16,8 +16,8 @@ public class SyncCredentials {
     }
 
     /// No authentication, insecure. Use only for development and testing purposes.
-    public static func makeUnchecked() -> SyncCredentials {
-        return SyncCredentials(type: SyncCredentialsType.unchecked, data: Data())
+    public static func makeNone() -> SyncCredentials {
+        return SyncCredentials(type: SyncCredentialsType.none, data: Data())
     }
 
     /// Authenticate with a pre-shared secret.

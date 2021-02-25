@@ -18,7 +18,7 @@ class SyncDryTests: XCTestCase {
     func testSyncClientAvailable() throws {
         XCTAssertFalse(Sync.isAvailable())
 
-        let credentials = SyncCredentials.makeUnchecked()
+        let credentials = SyncCredentials.makeNone()
         var client: SyncClient?
         XCTAssertThrowsError(client = try Sync.makeClient(
                 store: store, urlString: "ws://127.0.0.1:9999", credentials: credentials)) { error in

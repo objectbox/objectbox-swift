@@ -244,29 +244,49 @@ where E == E.EntityBindingType.EntityType {
     // Note: using same name fragment ("checkFatalError") to exclude from symbol stack
     internal func checkFatalErrorParam(_ err: obx_err) {
         if err != OBX_SUCCESS {
-            print("Could not set query parameter; this is often an user error.")
+            print("Could not set query parameter; this is typically an user error.")
             print("Please check if the provided parameter types/numbers match the ones in the query definition.")
             print("E.g. a 'between' query condition takes two parameters, so you must not set a single parameter.")
             checkFatalError(err)
         }
     }
 
-    internal func setParametersInternal(property: PropertyDescriptor, to collection: [Int64]) {
-        if property.type == .long {
-            let numParams = Int(collection.count)
-            collection.withContiguousStorageIfAvailable { ptr -> Void in
-                let err = obx_query_param_int64s(cQuery, EntityType.entityInfo.entitySchemaId,
-                                          property.propertyId, ptr.baseAddress, numParams)
-                checkFatalErrorParam(err)
-            }
+    internal func setParametersInternal64(property: PropertyDescriptor, to collection: [Int64]) {
+        let numParams = Int(collection.count)
+        collection.withContiguousStorageIfAvailable { ptr -> Void in
+            let err = obx_query_param_int64s(cQuery, EntityType.entityInfo.entitySchemaId,
+                    property.propertyId, ptr.baseAddress, numParams)
+            checkFatalErrorParam(err)
+        }
+    }
+
+    internal func setParametersInternal32(property: PropertyDescriptor, to collection: [Int32]) {
+        let numParams = Int(collection.count)
+        collection.withContiguousStorageIfAvailable { ptr -> Void in
+            let typeId = EntityType.entityInfo.entitySchemaId
+            let err = obx_query_param_int32s(cQuery, typeId, property.propertyId, ptr.baseAddress, numParams)
+            checkFatalErrorParam(err)
+        }
+    }
+
+    internal func setParametersInternal<T>(property: PropertyDescriptor, to collection: [T])
+            where T: FixedWidthInteger {
+        let typeId = EntityType.entityInfo.entitySchemaId
+        let typeSize = obx_query_param_get_type_size(cQuery, typeId, property.propertyId)
+        if typeSize == 8 {
+            setParametersInternal64(property: property, to: Util.toInt64Array(collection))
         } else {
-            let i32collection = collection.map { Int32($0) }
-            let numParams = Int(i32collection.count)
-            i32collection.withContiguousStorageIfAvailable { ptr -> Void in
-                let err = obx_query_param_int32s(cQuery, EntityType.entityInfo.entitySchemaId,
-                                          property.propertyId, ptr.baseAddress, numParams)
-                checkFatalErrorParam(err)
+            precondition(typeSize > 0 && typeSize <= 4)
+            let collection32: [Int32]
+            do {
+                collection32 = try Util.toInt32Array(collection)
+            } catch {
+                fatalErrorWithStack("""
+                                    Usage error; ensure to use the proper parameter type 
+                                    (type: \(typeId), property:\(property.propertyId)): \(error)
+                                    """)
             }
+            setParametersInternal32(property: property, to: collection32)
         }
     }
 
@@ -298,8 +318,8 @@ where E == E.EntityBindingType.EntityType {
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Int64, _ value2: Int64) {
-        let err = obx_query_param_2ints(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
-                             value1, value2)
+        let typeId = EntityType.entityInfo.entitySchemaId
+        let err = obx_query_param_2ints(cQuery, typeId, property.propertyId, value1, value2)
         checkFatalErrorParam(err)
     }
 
@@ -327,8 +347,8 @@ where E == E.EntityBindingType.EntityType {
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to value1: Double, _ value2: Double) {
-        let err = obx_query_param_2doubles(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
-                                value1, value2)
+        let typeId = EntityType.entityInfo.entitySchemaId
+        let err = obx_query_param_2doubles(cQuery, typeId, property.propertyId, value1, value2)
         checkFatalErrorParam(err)
     }
 
@@ -367,8 +387,8 @@ where E == E.EntityBindingType.EntityType {
         let numStrings = Int(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
         strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
-            let err = obx_query_param_strings(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
-                                       ptr.baseAddress, numStrings)
+            let typeId = EntityType.entityInfo.entitySchemaId
+            let err = obx_query_param_strings(cQuery, typeId, property.propertyId, ptr.baseAddress, numStrings)
             checkFatalErrorParam(err)
         }
     }
