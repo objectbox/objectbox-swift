@@ -78,8 +78,8 @@ if [ -d "$code_dir" ]; then # Do we have an existing code repo?
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.4.1
-        c_version=0.11.0
+        version=1.5.0
+        c_version=0.13.0
         archive_path="${my_dir}/external/objectbox-static.zip"
         OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${c_version}.zip"
 
