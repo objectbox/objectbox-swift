@@ -34,15 +34,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		280E862224F00D63009B734D /* objectbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 280E862124F00D63009B734D /* objectbox.h */; };
 		280E862A24FA37EE009B734D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862924FA37EE009B734D /* AppDelegate.swift */; };
 		280E862C24FA37EE009B734D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862B24FA37EE009B734D /* SceneDelegate.swift */; };
 		280E862E24FA37EE009B734D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862D24FA37EE009B734D /* ContentView.swift */; };
 		280E863024FA37F2009B734D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 280E862F24FA37F2009B734D /* Assets.xcassets */; };
 		280E863324FA37F2009B734D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 280E863224FA37F2009B734D /* Preview Assets.xcassets */; };
 		280E863624FA37F2009B734D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280E863424FA37F2009B734D /* LaunchScreen.storyboard */; };
-		280E864024FA42B1009B734D /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5070A965217F479C002305F8 /* ObjectBox.framework */; };
-		280E864124FA42B1009B734D /* ObjectBox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5070A965217F479C002305F8 /* ObjectBox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		280E864424FA7A8B009B734D /* EntityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864324FA7A8B009B734D /* EntityHelpers.swift */; };
 		280E864624FA920B009B734D /* AppSyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864524FA920B009B734D /* AppSyncTest.swift */; };
 		283C8EC725C0A1F2001ABC37 /* libObjectBoxCore-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 283C8EC625C0A1ED001ABC37 /* libObjectBoxCore-iOS.a */; };
@@ -55,11 +52,13 @@
 		28A6B3DE247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */; };
 		28A6B3E0247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		28A6B3E1247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
+		28B4F2842600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		28B4F2852600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		28B4F2862600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		503962EB216363A1000DFB7E /* ToMany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503962EA216363A1000DFB7E /* ToMany.swift */; };
 		506858CF211B1864003F7D02 /* QueryConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506858CE211B1864003F7D02 /* QueryConditions.swift */; };
 		506B0938215377410016C7AA /* ToOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B0937215377410016C7AA /* ToOne.swift */; };
 		506B093A2153775E0016C7AA /* LazyProxyRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B09392153775E0016C7AA /* LazyProxyRelation.swift */; };
-		5070A96E217F479C002305F8 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5070A965217F479C002305F8 /* ObjectBox.framework */; };
 		5070A998217F4934002305F8 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2A21367D0200CB7871 /* Entity.swift */; };
 		5070A999217F4937002305F8 /* EntityPropertyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2C21367D3500CB7871 /* EntityPropertyType.swift */; };
 		5070A99B217F493B002305F8 /* Id.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089AB2E21367D5A00CB7871 /* Id.swift */; };
@@ -184,6 +183,9 @@
 		55EB4BF522AA69490091CDB1 /* base.h in Headers */ = {isa = PBXBuildFile; fileRef = 55EB4BEF22AA69490091CDB1 /* base.h */; };
 		55EB4BFD22AAA2170091CDB1 /* ThreadSpecific.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EB4BFC22AAA2170091CDB1 /* ThreadSpecific.swift */; };
 		55EB4BFE22AAA2170091CDB1 /* ThreadSpecific.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EB4BFC22AAA2170091CDB1 /* ThreadSpecific.swift */; };
+		7518E49525FBE85C00B73E74 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; };
+		7518E4E025FBEA7700B73E74 /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; };
+		7518E4E125FBEA7700B73E74 /* ObjectBox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7561E8D125CA0CA6003FD439 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = BF8C9BEEBB9C30BFF1ACCB81 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7561E8D225CA0CA6003FD439 /* flatbuffers.h in Headers */ = {isa = PBXBuildFile; fileRef = 55EB4BED22AA69490091CDB1 /* flatbuffers.h */; };
 		7561E8D325CA0CA6003FD439 /* objectbox-c.h in Headers */ = {isa = PBXBuildFile; fileRef = BF8C9EA6E957FA5A04F3F548 /* objectbox-c.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -274,20 +276,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		280E863B24FA3807009B734D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5070A964217F479C002305F8;
-			remoteInfo = "ObjectBox-iOS";
-		};
-		5070A96F217F479C002305F8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5070A964217F479C002305F8;
-			remoteInfo = "ObjectBox-iOS";
-		};
 		5070AB0D21808086002305F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
@@ -309,20 +297,30 @@
 			remoteGlobalIDString = CB3B3F3020AB4B4B00418618;
 			remoteInfo = "ObjectBox-macOS";
 		};
+		7518E47925FBE7B700B73E74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7561E8CE25CA0CA6003FD439;
+			remoteInfo = "ObjectBox-iOS Simulator";
+		};
+		7518E48B25FBE81000B73E74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 280E862624FA37EE009B734D;
+			remoteInfo = ObjectBoxiOSTestApp;
+		};
+		7518E4E225FBEA7700B73E74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7561E8CE25CA0CA6003FD439;
+			remoteInfo = "ObjectBox-iOS Simulator";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		280E864224FA42B2009B734D /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				280E864124FA42B1009B734D /* ObjectBox.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		50D7EF8020EC9E470001872D /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,10 +331,20 @@
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7518E4E425FBEA7700B73E74 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7518E4E125FBEA7700B73E74 /* ObjectBox.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		280E862124F00D63009B734D /* objectbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = objectbox.h; path = "../external/objectbox-static/objectbox.h"; sourceTree = "<group>"; };
 		280E862724FA37EE009B734D /* ObjectBoxiOSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectBoxiOSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		280E862924FA37EE009B734D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		280E862B24FA37EE009B734D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -355,6 +363,7 @@
 		28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-Entities.swift"; sourceTree = "<group>"; };
 		28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-EntityInfo-generated.swift"; sourceTree = "<group>"; };
 		28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyToManyTests.swift; sourceTree = "<group>"; };
+		28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "objectbox-c-sync.h"; sourceTree = "<group>"; };
 		28E90AED25C1DE5E008C55BC /* libObjectBoxCore-iOS-sim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS-sim.a"; path = "../../external/objectbox-static/libObjectBoxCore-iOS-sim.a"; sourceTree = "<group>"; };
 		503962EA216363A1000DFB7E /* ToMany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToMany.swift; sourceTree = "<group>"; };
 		5042FDB220CBE18600EBCA52 /* ObjectBoxTests-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectBoxTests-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -461,7 +470,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				280E864024FA42B1009B734D /* ObjectBox.framework in Frameworks */,
+				7518E4E025FBEA7700B73E74 /* ObjectBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,7 +486,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5070A96E217F479C002305F8 /* ObjectBox.framework in Frameworks */,
+				7518E49525FBE85C00B73E74 /* ObjectBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +571,7 @@
 				55DD1A462268AFC5007F8D30 /* obx_fbb.h */,
 				55DD1A472268AFC5007F8D30 /* obx_fbb.cpp */,
 				BF8C9EA6E957FA5A04F3F548 /* objectbox-c.h */,
+				28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */,
 				BF8C9BEEBB9C30BFF1ACCB81 /* ObjectBox.h */,
 				BF8C9C65B080ECCC315F356B /* Util.swift */,
 			);
@@ -777,7 +787,6 @@
 		CB3B3F2720AB4B4B00418618 = {
 			isa = PBXGroup;
 			children = (
-				280E862124F00D63009B734D /* objectbox.h */,
 				5052614020BD72A500405B13 /* CommonSource */,
 				5070A9C8217F4C3B002305F8 /* CommonTests */,
 				CB3B3F3320AB4B4B00418618 /* ObjectBox-macOS */,
@@ -825,8 +834,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF8C9F2D33F91ED55A38AC5C /* ObjectBox.h in Headers */,
-				55EB4BF122AA69490091CDB1 /* flatbuffers.h in Headers */,
 				BF8C9A612B788BB09237EF11 /* objectbox-c.h in Headers */,
+				55EB4BF122AA69490091CDB1 /* flatbuffers.h in Headers */,
+				28B4F2852600079D00B11EC4 /* objectbox-c-sync.h in Headers */,
 				55EB4BF322AA69490091CDB1 /* stl_emulation.h in Headers */,
 				55DD1A492268AFC5007F8D30 /* obx_fbb.h in Headers */,
 				55EB4BF522AA69490091CDB1 /* base.h in Headers */,
@@ -845,8 +855,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7561E8D125CA0CA6003FD439 /* ObjectBox.h in Headers */,
-				7561E8D225CA0CA6003FD439 /* flatbuffers.h in Headers */,
 				7561E8D325CA0CA6003FD439 /* objectbox-c.h in Headers */,
+				7561E8D225CA0CA6003FD439 /* flatbuffers.h in Headers */,
+				28B4F2862600079D00B11EC4 /* objectbox-c-sync.h in Headers */,
 				7561E8D425CA0CA6003FD439 /* stl_emulation.h in Headers */,
 				7561E8D525CA0CA6003FD439 /* obx_fbb.h in Headers */,
 				7561E8D625CA0CA6003FD439 /* base.h in Headers */,
@@ -858,9 +869,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF8C9CDDA6807485EC526CF4 /* ObjectBox.h in Headers */,
-				55DD1A482268AFC5007F8D30 /* obx_fbb.h in Headers */,
 				BF8C9780DD00BE45553EB151 /* objectbox-c.h in Headers */,
-				280E862224F00D63009B734D /* objectbox.h in Headers */,
+				28B4F2842600079D00B11EC4 /* objectbox-c-sync.h in Headers */,
+				55DD1A482268AFC5007F8D30 /* obx_fbb.h in Headers */,
 				55EB4BF022AA69490091CDB1 /* flatbuffers.h in Headers */,
 				55EB4BF222AA69490091CDB1 /* stl_emulation.h in Headers */,
 				55EB4BF422AA69490091CDB1 /* base.h in Headers */,
@@ -877,12 +888,12 @@
 				280E862324FA37EE009B734D /* Sources */,
 				280E862424FA37EE009B734D /* Frameworks */,
 				280E862524FA37EE009B734D /* Resources */,
-				280E864224FA42B2009B734D /* Embed Frameworks */,
+				7518E4E425FBEA7700B73E74 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				280E863C24FA3807009B734D /* PBXTargetDependency */,
+				7518E4E325FBEA7700B73E74 /* PBXTargetDependency */,
 			);
 			name = ObjectBoxiOSTestApp;
 			productName = ObjectBoxiOSTestApp;
@@ -919,7 +930,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				5070A970217F479C002305F8 /* PBXTargetDependency */,
+				7518E47A25FBE7B700B73E74 /* PBXTargetDependency */,
+				7518E48C25FBE81000B73E74 /* PBXTargetDependency */,
 			);
 			name = "ObjectBoxTests-iOS";
 			productName = "ObjectBox-iOSTests";
@@ -1022,6 +1034,7 @@
 					5070A96C217F479C002305F8 = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1020;
+						TestTargetID = 280E862624FA37EE009B734D;
 					};
 					5070AB072180807E002305F8 = {
 						CreatedOnToolsVersion = 10.0;
@@ -1494,16 +1507,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		280E863C24FA3807009B734D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
-			targetProxy = 280E863B24FA3807009B734D /* PBXContainerItemProxy */;
-		};
-		5070A970217F479C002305F8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
-			targetProxy = 5070A96F217F479C002305F8 /* PBXContainerItemProxy */;
-		};
 		5070AB0E21808086002305F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
@@ -1518,6 +1521,21 @@
 			isa = PBXTargetDependency;
 			target = CB3B3F3020AB4B4B00418618 /* ObjectBox-macOS */;
 			targetProxy = 55C37BD321BFC1770012BC0D /* PBXContainerItemProxy */;
+		};
+		7518E47A25FBE7B700B73E74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7561E8CE25CA0CA6003FD439 /* ObjectBox-iOS Simulator */;
+			targetProxy = 7518E47925FBE7B700B73E74 /* PBXContainerItemProxy */;
+		};
+		7518E48C25FBE81000B73E74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 280E862624FA37EE009B734D /* ObjectBoxiOSTestApp */;
+			targetProxy = 7518E48B25FBE81000B73E74 /* PBXContainerItemProxy */;
+		};
+		7518E4E325FBEA7700B73E74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7561E8CE25CA0CA6003FD439 /* ObjectBox-iOS Simulator */;
+			targetProxy = 7518E4E225FBEA7700B73E74 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1704,6 +1722,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectBoxiOSTestApp.app/ObjectBoxiOSTestApp";
 			};
 			name = Debug;
 		};
@@ -1735,6 +1754,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectBoxiOSTestApp.app/ObjectBoxiOSTestApp";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

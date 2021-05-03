@@ -38,3 +38,9 @@ Carthage/Checkouts
 
 # ObjectBox model backups
 *.json.bak
+
+#DBs
+*.mdb
+
+# E.g. built frameworks
+*.zip

@@ -43,18 +43,25 @@ if [ -d "$code_dir" ]; then # Do we have an existing code repo?
     git_status=$(git status --porcelain)
     # ignore untracked uws submodule (left over when switching from a sync to a non-sync branch)
     git_status=${git_status#"?? objectbox/src/main/cpp/external/uws-objectbox/"}
+     # Note: doing a mini pause so the color state emoji can be perceived before scrolling it off the screen
     if [ -z "$git_status" ]; then
       git_clean=true
       if [ -f "${cache_zip}" ]; then
-        echo "ObjectBox core is clean and cache ZIP found for ${cache_key}. Extracting..."
+        echo "🟢 ObjectBox core is clean and cache ZIP found for ${cache_key}."
+        echo "📦 Extracting..."
+        sleep 0.5
         unzip -o "${cache_zip}" -d "${dest_dir}"
         do_build=false
       else
-        echo "ObjectBox core is clean but no cache ZIP found for ${cache_key}. Building..."
-      fi
+        echo "⚪ ObjectBox core is clean but no cache ZIP found for ${cache_key}."
+        echo "🏗️ Building..."
+        sleep 0.5
+    fi
     else
       git status
-      echo "ObjectBox core is not clean, won't use caching. Building..."
+      echo "🔴 ObjectBox core is not clean, won't use caching. 🏗️ Building..."
+      echo "🏗️ Building..."
+      sleep 0.5
     fi
     if [ "$do_build" = true ]; then
       "$code_dir/scripts/apple-build-static-libs.sh" $build_params "$dest_dir" release
@@ -95,7 +102,10 @@ fi
 fi # verify_only
 
 # Update the header file actually used by our Swift sources
-cp "$dest_dir/objectbox.h" "ios-framework/CommonSource/Internal/objectbox-c.h"
+c_header_dir="ios-framework/CommonSource/Internal"
+cp "$dest_dir/objectbox.h" "${c_header_dir}/objectbox-c.h"
+cp "$dest_dir/objectbox-sync.h" "${c_header_dir}/objectbox-c-sync.h"
+sed -i '' 's/#include "objectbox.h"/#include "objectbox-c.h"/' "${c_header_dir}/objectbox-c-sync.h"
 
 # Print versions for allow verification of built libs (is it the one we expect?)
 echo "============================================================================================"
