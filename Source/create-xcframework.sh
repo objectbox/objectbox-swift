@@ -8,21 +8,27 @@ cd "${myDir}/ios-framework"
 dir_build="${myDir}/build-deploy"
 mkdir -p "$dir_build"
 derived_data_path=$( mktemp -d )
+mkdir -p $derived_data_path
 
 function build() {
   echo "************* Building archive for $1 $2 (${3:-$1}) *************"
-  xcodebuild build \
+  xcrun xcodebuild build \
+    -project ObjectBox.xcodeproj \
     -scheme "$1" \
     -destination "$2" \
     -configuration Release \
+    -skipUnavailableActions \
     -derivedDataPath "${derived_data_path}" \
-    -quiet \
-    SKIP_INSTALL=NO \
-    BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
+    -quiet
 }
 
 build "ObjectBox-macOS" "platform=macOS"
 build "ObjectBox-iOS" "generic/platform=iOS"
+
+# Note: Attempt to build simulator target twice. 
+#       The first time will fail to build obx_fbb with bitcode the second try will succeed.
+#       This is a workaround to an unknown (at time) problem.
+build "ObjectBox-iOS Simulator" "generic/platform=iOS Simulator"
 build "ObjectBox-iOS Simulator" "generic/platform=iOS Simulator"
 
 echo "************* Building XCFramework *************"

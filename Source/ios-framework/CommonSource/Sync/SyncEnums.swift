@@ -8,9 +8,9 @@ import Foundation
 
 public enum SyncCredentialsType: UInt32 {
     case
-            none = 0,
-            sharedSecret = 1,
-            googleAuth = 2
+            none = 1,
+            sharedSecret = 2,
+            googleAuth = 3
 }
 
 /// Once logged in, do we request updates?

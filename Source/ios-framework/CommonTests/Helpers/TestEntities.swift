@@ -127,11 +127,13 @@ public class AllTypesEntity {
 
 /// Create the entity model, which is to be passed to ObjectStore.create(...)
 // swiftlint:disable identifier_name force_try
-public func createTestModel() -> OpaquePointer {
+public func createTestModel(syncEnabled: Bool = false) -> OpaquePointer {
     let modelBuilder = try! ModelBuilder()
     
     let allTypesEntityBuilder = try! modelBuilder.entityBuilder(for: AllTypesEntity.self, id: 1, uid: 1000)
-    try! allTypesEntityBuilder.flags(.syncEnabled)
+    if syncEnabled {
+        try! allTypesEntityBuilder.flags(.syncEnabled)
+    }
     try! allTypesEntityBuilder.addProperty(name: "id", type: .long, flags: .id, id: 1, uid: 1)
     try! allTypesEntityBuilder.addProperty(name: "boolean", type: .bool, id: 2, uid: 2)
     try! allTypesEntityBuilder.addProperty(name: "aLong", type: .long, id: 3, uid: 3)

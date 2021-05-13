@@ -71,7 +71,7 @@ where E == E.EntityBindingType.EntityType {
         var result = true
 
         try store.obx_runInTransaction(writable: false, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for currId in ids {
                 if try !cursor.contains(currId.value) {
@@ -114,7 +114,7 @@ extension Box {
         var writtenId: Id = 0
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
             try binding.postPut(fromEntity: entity, id: writtenId, store: store)
@@ -144,7 +144,7 @@ extension Box {
         var writtenId: Id = 0
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer, mode: mode, cursor: cursor)
             try binding.postPut(fromEntity: entity, id: writtenId, store: store)
@@ -194,7 +194,7 @@ extension Box {
                     let flatBuffer = FlatBufferBuilder.dequeue()
                     defer { FlatBufferBuilder.return(flatBuffer) }
 
-                    let cursor = Cursor<EntityType>(transaction: swiftTx)
+                    let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
                     initializedCount = 0
                     for entity in entities {
@@ -229,7 +229,7 @@ extension Box {
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
 
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
@@ -251,7 +251,7 @@ extension Box {
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
 
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
@@ -273,7 +273,7 @@ extension Box {
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
 
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for entity in entities {
                 let writtenId = try putOne(entity, binding: binding, flatBuffer: flatBuffer,
@@ -302,7 +302,7 @@ extension Box {
             let flatBuffer = FlatBufferBuilder.dequeue()
             defer { FlatBufferBuilder.return(flatBuffer) }
 
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for entityIndex in 0 ..< entities.count {
                 let newEntity = entities[entityIndex]
@@ -566,7 +566,7 @@ extension Box {
     ///                      abort the loop. Exceptions thrown by the closure are re-thrown.
     public func visit(writable: Bool = false, visitor: (EntityType) throws -> Bool) throws {
         try store.obx_runInTransaction(writable: writable, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
             try withoutActuallyEscaping(visitor) { callback in
                 let context: InstanceVisitorBase = InstanceVisitor(type: EntityType.self, store: store,
                         visitor: callback)
@@ -625,7 +625,7 @@ extension Box {
     public func visit<C: Collection>(writable: Bool = false, _ ids: C, in visitor: (EntityType?) throws -> Bool) throws
     where C.Element == EntityType.EntityBindingType.IdType {
         try store.obx_runInTransaction(writable: writable, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
             try withoutActuallyEscaping(visitor) { callback in
                 let context = InstanceVisitor(type: EntityType.self, store: store,
                                                                    visitor: callback)
@@ -697,7 +697,7 @@ extension Box {
             var result: UInt64 = 0
 
             try store.obx_runInTransaction(writable: true, { swiftTx in
-                let cursor = Cursor<EntityType>(transaction: swiftTx)
+                let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
                 for currEntity in entities {
                     if try cursor.remove(currEntity) {
@@ -715,7 +715,7 @@ extension Box {
         var result: UInt64 = 0
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for currEntity in entities {
                 if try cursor.remove(currEntity) {
@@ -733,7 +733,7 @@ extension Box {
         var result: UInt64 = 0
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
             for currEntity in entities {
                 if try cursor.remove(currEntity) {
@@ -763,7 +763,7 @@ extension Box {
     public func remove(_ entityIDs: [Id]) throws -> UInt64 {
         var result: UInt64 = 0
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1
@@ -795,7 +795,7 @@ extension Box {
             var result: UInt64 = 0
 
             try store.obx_runInTransaction(writable: true, { swiftTx in
-                let cursor = Cursor<EntityType>(transaction: swiftTx)
+                let cursor = try Cursor<EntityType>(transaction: swiftTx)
                 for currId in ids {
                     if try cursor.remove(currId.value) {
                         result += 1
@@ -832,7 +832,7 @@ extension Box {
     public func remove(_ entityIDs: [EntityId<EntityType>]) throws -> UInt64 {
         var result: UInt64 = 0
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1
@@ -864,7 +864,7 @@ extension Box {
         var result: UInt64 = 0
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
-            let cursor = Cursor<EntityType>(transaction: swiftTx)
+            let cursor = try Cursor<EntityType>(transaction: swiftTx)
             for currId in entityIDs {
                 if try cursor.remove(currId.value) {
                     result += 1

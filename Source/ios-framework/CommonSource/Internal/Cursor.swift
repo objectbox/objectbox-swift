@@ -22,8 +22,12 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     private(set) var cCursor: OpaquePointer!
     private let entityBinding = EntityType.entityBinding
     
-    init(transaction: Transaction) {
+    init(transaction: Transaction) throws {
         cCursor = obx_cursor(transaction.cTransaction, E.entityInfo.entitySchemaId)
+        if cCursor == nil {
+            try checkLastError()
+            throw ObjectBoxError.illegalState(message: "Cursor creation failed, but no error was set")
+        }
     }
     
     deinit {

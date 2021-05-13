@@ -2,7 +2,7 @@
 
 /// Main API for client sync; create an instance via Sync.makeClient().
 /// The sync client will start trying to connect after start() is called.
-public protocol SyncClient: class {
+public protocol SyncClient: AnyObject {
 
     var callListenersInMainThread: Bool { get set }
 
