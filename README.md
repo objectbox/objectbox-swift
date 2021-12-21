@@ -24,18 +24,19 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 
 High-performance Swift database
 -------------
-* 🏁 High-speed data persistence enabling realtime applications
-* 💻 Cross-platform Database for Linux, Windows, Android, iOS, macOS
-* 🪂 ACID compliant: Atomic, Consistent, Isolated, Durable
-* 🌱 Scalable: grows with your needs, handling millions of objects with ease
-* 🔗 Built-in [Relations (to-one, to-many)](https://swift.objectbox.io/relations)
-* ❓ [Powerful queries](https://swift.objectbox.io/queries): filter data as needed, even across relations
-* 🦮 Statically typed: compile time checks & optimizations
-* 📃 Automatic schema migrations: no update scripts needed
+🏁 **High performance** on restricted devices, like IoT gateways, micro controllers, ECUs etc.\
+🪂 **Resourceful** with minimal CPU, power and Memory usage for maximum flexibility and sustainability\
+🔗 **Relations:** object links / relationships are built-in\
+💻 **Multiplatform:** Linux, Windows, Android, iOS, macOS
 
-**And much more than just data persistence**
-* ✨ **[ObjectBox Sync](https://objectbox.io/sync/)**: keeps data in sync between devices and servers
-* 🕒 [ObjectBox TS](https://objectbox.io/time-series-database/): time series extension for time based data
+🌱 **Scalable:** handling millions of objects resource-efficiently with ease\
+💐 **Queries:** filter data as needed, even across relations\
+🦮 **Statically typed:** compile time checks & optimizations\
+📃 **Automatic schema migrations:** no update scripts needed
+
+**And much more than just data persistence**\
+👥 **[ObjectBox Sync](https://objectbox.io/sync/):** keeps data in sync between devices and servers\
+🕒 **[ObjectBox TS](https://objectbox.io/time-series-database/):** time series extension for time based data
 
 Enjoy ❤️
 
@@ -124,11 +125,11 @@ Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT
 ------------------------
 ObjectBox is a cross-platform database supporting [multiple native languages](https://objectbox.io/dev-get-started/): 
 
-* [ObjectBox Java / Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
+* [ObjectBox Java/Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
 * [Golang Data Persistence](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications. 
 * [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
   also enables porting ObjectBox to other languages.
-* [Flutter Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
+* [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
 
 How I help ObjectBox?
 ---------------------------
