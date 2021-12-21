@@ -22,6 +22,40 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
+High-performance Swift database
+-------------
+🏁 High-speed data persistence enabling realtime applications
+
+💻 Cross-platform Database for Linux, Windows, Android, iOS, macOS
+
+🪂 ACID compliant: Atomic, Consistent, Isolated, Durable
+
+🌱 Scalable: grows with your needs, handling millions of objects with ease
+
+
+
+**Easy to use**
+
+🔗 Built-in [Relations (to-one, to-many)](https://swift.objectbox.io/relations)
+
+❓ [Powerful queries](https://swift.objectbox.io/queries): filter data as needed, even across relations
+
+🦮 Statically typed: compile time checks & optimizations
+
+📃 Automatic schema migrations: no update scripts needed
+
+
+
+**And much more than just data persistence**
+
+✨ **[ObjectBox Sync](https://objectbox.io/sync/)**: keeps data in sync between devices and servers
+
+🕒 [ObjectBox TS](https://objectbox.io/time-series-database/): time series extension for time based data
+
+
+Enjoy ❤️
+
+
 <a name="cocoapods"></a>Adding ObjectBox to your project
 --------------------------------------------------------
 [CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
@@ -93,24 +127,6 @@ To setup the example, use CocoaPods to acquire the framework:
 
 This will generate a `NotesExample.xcworkspace` that you can launch to try out ObjectBox.
 
-How can ObjectBox Help You?
----------------------------
-We're on a mission to bring joy and delight to Mobile app developers.
-We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
-
-To do that, we want your feedback: what do you love? What's amiss? Where do you struggle in everyday app development?
-
-**We're looking forward to receiving your comments and requests:**
-
-- Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) 
-- Upvote issues you find important by hitting the 👍/+1 reaction button
-- Drop us a line via [@ObjectBox_io](https://twitter.com/ObjectBox_io/)
-- ⭐ us, if you like what you see 
-
-Thank you! 🙏
-
-Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox.io/blog)!
-
 Background: code generation
 ---------------------------
 ObjectBox Swift Database generates code at build time for optimal performance at runtime by avoiding reflection etc.
@@ -130,6 +146,24 @@ ObjectBox is a cross-platform database supporting [multiple native languages](ht
 * [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
   also enables porting ObjectBox to other languages.
 * [Flutter Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
+
+How I help ObjectBox?
+---------------------------
+We're on a mission to bring joy and delight to Mobile app developers.
+We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
+
+To do that, we want your feedback: what do you love? What's amiss? Where do you struggle in everyday app development?
+
+**We're looking forward to receiving your comments and requests:**
+
+- Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) 
+- Upvote issues you find important by hitting the 👍/+1 reaction button
+- Drop us a line via [@ObjectBox_io](https://twitter.com/ObjectBox_io/)
+- ⭐ us, if you like what you see 
+
+Thank you! 🙏
+
+Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox.io/blog)!
 
 License
 -------
