@@ -131,7 +131,7 @@ ObjectBox is a cross-platform database supporting [multiple native languages](ht
   also enables porting ObjectBox to other languages.
 * [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
 
-How I help ObjectBox?
+How can I help ObjectBox?
 ---------------------------
 We're on a mission to bring joy and delight to Mobile app developers.
 We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
