@@ -38,7 +38,7 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     echo "Xcode version: $xcode_version"
 
     pushd "$code_dir"  # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
-    build_params="--skip-apple-silicon" # must also part of the cache key
+    build_params="" # must also part of the cache key
     commit_id=$(git rev-parse HEAD)
     cache_dir="$HOME/Library/Caches/ObjectBox"
     mkdir -p "${cache_dir}"

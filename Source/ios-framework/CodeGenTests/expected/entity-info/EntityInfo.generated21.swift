@@ -26,9 +26,9 @@ extension WashingMachine: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: WashingMachine.self, id: 1, uid: 17664)
-        try entityBuilder.addProperty(name: "id", type: EntityId<WashingMachine>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
-        try entityBuilder.addProperty(name: "dryerRack", type: String.entityPropertyType, id: 2, uid: 15616)
-        try entityBuilder.addProperty(name: "destinationName", type: String.entityPropertyType, id: 3, uid: 16640)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "dryerRack", type: PropertyType.string, id: 2, uid: 15616)
+        try entityBuilder.addProperty(name: "destinationName", type: PropertyType.string, id: 3, uid: 16640)
 
         try entityBuilder.lastProperty(id: 3, uid: 16640)
     }

@@ -41,7 +41,7 @@ where E == E.EntityBindingType.EntityType {
         if let builder = builder {
             queryBuilder = builder
         } else {
-            queryBuilder = obx_query_builder(store.cStore, EntityType.entityInfo.entitySchemaId)
+            queryBuilder = obx_query_builder(try store.ensureCStore(), EntityType.entityInfo.entitySchemaId)
         }
         try checkLastError()
     }

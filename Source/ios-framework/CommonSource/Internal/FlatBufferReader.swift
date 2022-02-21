@@ -148,6 +148,15 @@ public struct FlatBufferReader {
         _ = obx_fbr_read_int64(unwrapFBR(), index, &result) // If missing, doesn't set "result".
         return Date(unixTimestamp: result)
     }
+
+    /// - Returns: Jan 1st 1970 if a value is not present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written)
+    public func readNanos(at index: UInt16) -> Date {
+        // Jan 1st 1970 ... People with that birth date are still alive, but Int64.min might confuse some platforms?
+        var result: Int64 = 0
+        _ = obx_fbr_read_int64(unwrapFBR(), index, &result) // If missing, doesn't set "result".
+        return Date(unixTimestampNanos: result)
+    }
     
     /// - Returns: empty string if a value is not present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written)
@@ -303,6 +312,14 @@ public struct FlatBufferReader {
         return Date(unixTimestamp: result)
     }
     
+    /// - Returns: nil if the value isn't present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional)
+    public func readNanos(at index: UInt16) -> Date? {
+        var result: Int64 = 0
+        if !obx_fbr_read_int64(unwrapFBR(), index, &result) { return nil }
+        return Date(unixTimestampNanos: result)
+    }
+
     /// - Returns: nil if the value isn't present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional)
     public func read(at index: UInt16) -> String? {

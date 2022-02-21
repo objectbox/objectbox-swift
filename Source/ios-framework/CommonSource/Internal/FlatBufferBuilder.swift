@@ -139,6 +139,12 @@ public extension FlatBufferBuilder {
         obx_fbb_collect_int64(fbb, date.unixTimestamp, propertyOffset)
     }
     
+    /// Take a value read from the given entity and write it to the given property.
+    func collectNanos(_ date: Date?, at propertyOffset: UInt16) {
+        guard let date = date else { return } // We just don't collect nil values.
+        obx_fbb_collect_int64(fbb, date.unixTimestampNanos, propertyOffset)
+    }
+
     /// - Parameter value: Treated as Int64, effectively ignoring 32bit platforms.
     func collect(_ value: Int, at propertyOffset: UInt16) {
         obx_fbb_collect_int64(fbb, Int64(value), propertyOffset)

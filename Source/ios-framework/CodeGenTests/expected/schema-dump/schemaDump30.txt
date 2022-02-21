@@ -51,15 +51,36 @@ Schema {
 			isStringType = false
 			isRelation = false
 		}
+, SchemaProperty {
+			modelId = Optional(IdUid(4:19712))
+			propertyName = stringId
+			propertyType = String
+			entityName = Building
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = Optional(IdUid(2:123456))
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+			isUniqueIndex = true
+			indexType = hashIndex
+		}
 ]
 		indexes = [SchemaIndex {
 			modelId = IdUid(1:15616)
 			properties = ["buildingName"]
 		}
+, SchemaIndex {
+			modelId = IdUid(2:123456)
+			properties = ["stringId"]
+		}
 ]
 		relations = []
 		toManyRelations = []
-		lastPropertyId = Optional(IdUid(3:17664))
+		lastPropertyId = Optional(IdUid(4:19712))
 		isEntitySubclass = true
 		isValueType = false
 		hasStringProperties = true
@@ -99,5 +120,5 @@ Schema {
 ]
 lastEntityId = IdUid(1:18688)
 	lastRelationId = IdUid(0:0)
-	lastIndexId = IdUid(1:15616)
+	lastIndexId = IdUid(2:123456)
 }

@@ -21,8 +21,17 @@ extension Date {
         self.init(timeIntervalSince1970: TimeInterval(unixTimestamp) / 1000.0)
     }
     
+    init(unixTimestampNanos: Int64) {
+        self.init(timeIntervalSince1970: TimeInterval(unixTimestampNanos) / 1000000000.0)
+    }
+
     var unixTimestamp: Int64 {
         let offset: TimeInterval = (timeIntervalSince1970 > 0) ? 0.5 : -0.5
         return Int64(timeIntervalSince1970 * 1000.0 + offset)
+    }
+
+    var unixTimestampNanos: Int64 {
+        let offset: TimeInterval = (timeIntervalSince1970 > 0) ? 0.5 : -0.5
+        return Int64(timeIntervalSince1970 * 1000000000.0 + offset)
     }
 }

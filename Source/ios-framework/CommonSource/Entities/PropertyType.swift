@@ -40,8 +40,8 @@ public enum PropertyType: UInt16 {
     ///  Relation to another entity
     case relation = 11
     ///  High precision date/time stored as a 64 bit long representing nanoseconds since 1970-01-01 (unix epoch)
-    case datenano = 12
-    case reserved2 = 13
+    case dateNano = 12
+    case flex = 13
     case reserved3 = 14
     case reserved4 = 15
     case reserved5 = 16
@@ -61,7 +61,6 @@ public enum PropertyType: UInt16 {
     case stringVector = 30
     case dateVector = 31
     case dateNanoVector = 32
-    
 
     public static var max: PropertyType { return .dateNanoVector }
     public static var min: PropertyType { return .unknown }
@@ -113,10 +112,12 @@ public enum PropertyFlags: UInt32 {
     ///  For Time Series IDs, a companion property of type Date or DateNano represents the exact timestamp.
     ///  (In the future, ID companion string properties may be added as another supported type).
     case idCompanion = 16384
-    
 
-    public static var max: PropertyFlags { return .idCompanion }
+    /// Unique on-conflict strategy: the object being put replaces any existing conflicting object (deletes it).
+    case uniqueOnConflictReplace = 32768
+
     public static var min: PropertyFlags { return .id }
+    public static var max: PropertyFlags { return .uniqueOnConflictReplace }
 }
 
 

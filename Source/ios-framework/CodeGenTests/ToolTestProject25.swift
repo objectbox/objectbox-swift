@@ -1,9 +1,5 @@
 //
-//  main.swift
-//  ToolTestProject
-//
-//  Created by Uli Kusterer on 13.12.18.
-//  Copyright © 2018 Uli Kusterer. All rights reserved.
+//  Copyright © 2018-2022 ObjectBox. All rights reserved.
 //
 
 import ObjectBox
@@ -13,8 +9,8 @@ enum Error: Swift.Error {
     case NoIdAssignedToNewlyWrittenEntity
     case ValueReadDoesntEqualValueWritten(property: String, written: Any, read: Any)
     case FailedToReadEntity
+    case runtimeError(String)
 }
-
 
 class TypeTest: Entity {
     var id: EntityId<TypeTest> = 0
@@ -41,6 +37,32 @@ class TypeTest: Entity {
     var dateValue: Date = Date(timeIntervalSinceReferenceDate: 900.75)
 
     required init() {}
+}
+
+class AnnotatedType: Entity {
+    var id: Id = 0
+
+    /// objectbox: type = "flex"
+    var flexData: Data = Data(count: 4)
+
+    /// objectbox: type = "flex"
+    var flexDataNullable: Data? = nil
+
+    /// objectbox: flex
+    var flexByteArray: [UInt8] = [0,0,0,0]
+
+    /// objectbox: type = "date-nano"
+    var dateValue: Date = Date(timeIntervalSinceReferenceDate: 666.66666666666666666)
+
+    /// objectbox: date-nano
+    var dateNullable: Date? = nil
+
+    /// objectbox: date-nano
+    // TODO Additionally needs ID adjustments: /// objectbox: id-companion
+    var dateIdCompanion: Date = Date()
+
+    required init() {
+    }
 }
 
 func main(_ args: [String]) throws -> Int32 {
@@ -122,5 +144,30 @@ func main(_ args: [String]) throws -> Int32 {
         throw Error.FailedToReadEntity
     }
 
+    try testAnnotated(store: store)
+
     return 0
+}
+
+func testAnnotated(store: Store) throws {
+    let box = store.box(for: AnnotatedType.self)
+    let original = AnnotatedType()
+    let id = try box.put(original)
+    if (id == 0) { throw Error.runtimeError("ID") }
+
+    guard let read = try box.get(id) else { throw Error.runtimeError("get") }
+
+    if (abs(original.dateValue.timeIntervalSince(read.dateValue)) > 0.00001) {
+        throw Error.ValueReadDoesntEqualValueWritten(property: "dateValue", written: original.dateValue, read: read.dateValue)
+    } else if (abs(original.dateIdCompanion.timeIntervalSince(read.dateIdCompanion)) > 0.00001) {
+        throw Error.ValueReadDoesntEqualValueWritten(property: "dateIdCompanion", written: original.dateValue, read: read.dateValue)
+    } else if (original.dateNullable != read.dateNullable) {
+        throw Error.runtimeError("dateNullable")
+    } else if (original.flexData != read.flexData) {
+        throw Error.runtimeError("flexData")
+    } else if (original.flexDataNullable != read.flexDataNullable) {
+        throw Error.runtimeError("flexDataNullable")
+    } else if (original.flexByteArray != read.flexByteArray) {
+        throw Error.runtimeError("flexByteArray")
+    }
 }

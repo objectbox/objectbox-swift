@@ -26,11 +26,12 @@ extension Building: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Building.self, id: 1, uid: 18688)
-        try entityBuilder.addProperty(name: "id", type: EntityId<Building>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
-        try entityBuilder.addProperty(name: "buildingName", type: String.entityPropertyType, flags: [.unique, .indexHash, .indexed], id: 2, uid: 16640, indexId: 1, indexUid: 15616)
-        try entityBuilder.addProperty(name: "buildingNumber", type: Int.entityPropertyType, id: 3, uid: 17664)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "buildingName", type: PropertyType.string, flags: [.unique, .indexHash, .indexed], id: 2, uid: 16640, indexId: 1, indexUid: 15616)
+        try entityBuilder.addProperty(name: "buildingNumber", type: PropertyType.long, id: 3, uid: 17664)
+        try entityBuilder.addProperty(name: "stringId", type: PropertyType.string, flags: [.unique, .indexHash, .indexed, .uniqueOnConflictReplace], id: 4, uid: 19712, indexId: 2, indexUid: 123456)
 
-        try entityBuilder.lastProperty(id: 3, uid: 17664)
+        try entityBuilder.lastProperty(id: 4, uid: 19712)
     }
 }
 
@@ -53,6 +54,12 @@ extension Building {
     ///
     ///     box.query { Building.buildingNumber > 1234 }
     internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Building.stringId.startsWith("X") }
+    internal static var stringId: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 4, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = EntityId(identifier)
@@ -84,6 +91,14 @@ extension ObjectBox.Property where E == Building {
 
     internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
 
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .stringId.startsWith("X") }
+
+    internal static var stringId: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 4, isPrimaryKey: false) }
+
 }
 
 
@@ -107,10 +122,12 @@ internal class BuildingBinding: ObjectBox.EntityBinding {
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
                                   propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
         let propertyOffset_buildingName = propertyCollector.prepare(string: entity.buildingName)
+        let propertyOffset_stringId = propertyCollector.prepare(string: entity.stringId)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.buildingNumber, at: 2 + 2 * 3)
         propertyCollector.collect(dataOffset: propertyOffset_buildingName, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_stringId, at: 2 + 2 * 4)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
@@ -119,6 +136,7 @@ internal class BuildingBinding: ObjectBox.EntityBinding {
         entity.id = entityReader.read(at: 2 + 2 * 1)
         entity.buildingName = entityReader.read(at: 2 + 2 * 2)
         entity.buildingNumber = entityReader.read(at: 2 + 2 * 3)
+        entity.stringId = entityReader.read(at: 2 + 2 * 4)
 
         return entity
     }
@@ -137,7 +155,7 @@ fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
     try Building.buildEntity(modelBuilder: modelBuilder)
     modelBuilder.lastEntity(id: 1, uid: 18688)
-    modelBuilder.lastIndex(id: 1, uid: 15616)
+    modelBuilder.lastIndex(id: 2, uid: 123456)
     return modelBuilder.finish()
 }
 

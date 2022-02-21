@@ -43,7 +43,6 @@
 		280E864424FA7A8B009B734D /* EntityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864324FA7A8B009B734D /* EntityHelpers.swift */; };
 		280E864624FA920B009B734D /* AppSyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864524FA920B009B734D /* AppSyncTest.swift */; };
 		283C8EC725C0A1F2001ABC37 /* libObjectBoxCore-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 283C8EC625C0A1ED001ABC37 /* libObjectBoxCore-iOS.a */; };
-		287B34C425DD4E70004D312E /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B8F6518B208D1F92956 /* SyncClientImpl.swift */; };
 		287B350025DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
 		287B350125DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
 		287B350225DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
@@ -245,14 +244,12 @@
 		BF8C90563672D4BCEF88AB14 /* OrderFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B5A6915DCD75D4C08B6 /* OrderFlags.swift */; };
 		BF8C91B092CD113129CB87C4 /* SyncDryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */; };
 		BF8C9210B1B7578462991FE9 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9D11BF05507D6023D8A8 /* Box.swift */; };
-		BF8C92B313B6DF0702347B25 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B8F6518B208D1F92956 /* SyncClientImpl.swift */; };
 		BF8C92B77FCBD4583E3B5C82 /* PropertyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C994E21CD7EDBA9FE9488 /* PropertyType.swift */; };
 		BF8C93A2B069B96A9D318581 /* SyncCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C457A5B462183A38CB8 /* SyncCredentials.swift */; };
 		BF8C942D80421ED99E742308 /* ToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */; };
 		BF8C94E237CAA82658D5567E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C65B080ECCC315F356B /* Util.swift */; };
 		BF8C95490B6D2F15D7CF17EF /* PropertyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C994E21CD7EDBA9FE9488 /* PropertyType.swift */; };
 		BF8C956792966164A0FEC0F6 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9D11BF05507D6023D8A8 /* Box.swift */; };
-		BF8C95762F011EF868524ED3 /* SyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */; };
 		BF8C95CE952702EA9A371CB9 /* SyncCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C457A5B462183A38CB8 /* SyncCredentials.swift */; };
 		BF8C96DDB916B7A240B9435D /* ToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */; };
 		BF8C97511346CD595B3FA067 /* ConfigFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C92496E83A61E092E1E5C /* ConfigFlags.swift */; };
@@ -266,11 +263,9 @@
 		BF8C99D4E42BC7921B251860 /* SyncClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9390023DD2CBB57081F4 /* SyncClient.swift */; };
 		BF8C9A612B788BB09237EF11 /* objectbox-c.h in Headers */ = {isa = PBXBuildFile; fileRef = BF8C9EA6E957FA5A04F3F548 /* objectbox-c.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF8C9A84B4ED0DF45E93972F /* SyncListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C94D483FDC6D202550D /* SyncListener.swift */; };
-		BF8C9AE62C27CE3D001A687A /* SyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */; };
 		BF8C9B0C28D633B99C367399 /* OrderFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B5A6915DCD75D4C08B6 /* OrderFlags.swift */; };
 		BF8C9B214F0FC48D35DDCAA1 /* PutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */; };
 		BF8C9B502C827ECD75B2FB53 /* PutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */; };
-		BF8C9C1D0CC422DEE93884DE /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B8F6518B208D1F92956 /* SyncClientImpl.swift */; };
 		BF8C9CDDA6807485EC526CF4 /* ObjectBox.h in Headers */ = {isa = PBXBuildFile; fileRef = BF8C9BEEBB9C30BFF1ACCB81 /* ObjectBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF8C9D0FA0A7F28298D180BE /* ConfigFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C92496E83A61E092E1E5C /* ConfigFlags.swift */; };
 		BF8C9DD8D645AEF77F50C9A5 /* UtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9F2FECFA173905FD4726 /* UtilTests.swift */; };
@@ -454,13 +449,11 @@
 		BF8C92496E83A61E092E1E5C /* ConfigFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigFlags.swift; sourceTree = "<group>"; };
 		BF8C92ADFF3FD72654FA6EAE /* Sync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		BF8C9390023DD2CBB57081F4 /* SyncClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncClient.swift; sourceTree = "<group>"; };
-		BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncTests.swift; sourceTree = "<group>"; };
 		BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncDryTests.swift; sourceTree = "<group>"; };
 		BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToManyTests.swift; sourceTree = "<group>"; };
 		BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PutMode.swift; sourceTree = "<group>"; };
 		BF8C994E21CD7EDBA9FE9488 /* PropertyType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyType.swift; sourceTree = "<group>"; };
 		BF8C9B5A6915DCD75D4C08B6 /* OrderFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderFlags.swift; sourceTree = "<group>"; };
-		BF8C9B8F6518B208D1F92956 /* SyncClientImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncClientImpl.swift; sourceTree = "<group>"; };
 		BF8C9BEEBB9C30BFF1ACCB81 /* ObjectBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectBox.h; sourceTree = "<group>"; };
 		BF8C9C457A5B462183A38CB8 /* SyncCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncCredentials.swift; sourceTree = "<group>"; };
 		BF8C9C65B080ECCC315F356B /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -667,7 +660,6 @@
 				BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */,
 				BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */,
 				BF8C9F2FECFA173905FD4726 /* UtilTests.swift */,
-				BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */,
 			);
 			path = CommonTests;
 			sourceTree = "<group>";
@@ -788,7 +780,6 @@
 				BF8C9C94D483FDC6D202550D /* SyncListener.swift */,
 				BF8C92ADFF3FD72654FA6EAE /* Sync.swift */,
 				BF8C9C457A5B462183A38CB8 /* SyncCredentials.swift */,
-				BF8C9B8F6518B208D1F92956 /* SyncClientImpl.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -1322,7 +1313,6 @@
 				BF8C9DDFE78E36D9BA56B464 /* EntityFlags.swift in Sources */,
 				BF8C95490B6D2F15D7CF17EF /* PropertyType.swift in Sources */,
 				BF8C94E237CAA82658D5567E /* Util.swift in Sources */,
-				BF8C92B313B6DF0702347B25 /* SyncClientImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1357,7 +1347,6 @@
 				BF8C91B092CD113129CB87C4 /* SyncDryTests.swift in Sources */,
 				BF8C942D80421ED99E742308 /* ToManyTests.swift in Sources */,
 				BF8C9DD8D645AEF77F50C9A5 /* UtilTests.swift in Sources */,
-				BF8C9AE62C27CE3D001A687A /* SyncTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1392,7 +1381,6 @@
 				BF8C991CF9374174D6302D71 /* SyncDryTests.swift in Sources */,
 				BF8C96DDB916B7A240B9435D /* ToManyTests.swift in Sources */,
 				BF8C9912D79207225494105D /* UtilTests.swift in Sources */,
-				BF8C95762F011EF868524ED3 /* SyncTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1408,7 +1396,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				287B34C425DD4E70004D312E /* SyncClientImpl.swift in Sources */,
 				7561E8D825CA0CA6003FD439 /* Box+BacklinkIds.swift in Sources */,
 				7561E8D925CA0CA6003FD439 /* EntityBinding.swift in Sources */,
 				7561E8DA25CA0CA6003FD439 /* Box+Query.swift in Sources */,
@@ -1514,7 +1501,6 @@
 				BF8C980FC7498E5BF6C7EF21 /* EntityFlags.swift in Sources */,
 				BF8C92B77FCBD4583E3B5C82 /* PropertyType.swift in Sources */,
 				BF8C9F62AF0B221C0BDE14B2 /* Util.swift in Sources */,
-				BF8C9C1D0CC422DEE93884DE /* SyncClientImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1941,7 +1927,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
-				EXCLUDED_ARCHS = "i386 armv7 arm64";
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1985,7 +1970,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = YES;
-				EXCLUDED_ARCHS = "i386 armv7 arm64";
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2171,7 +2155,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EXCLUDED_ARCHS = "i386 armv7 arm64";
 				FRAMEWORK_VERSION = A;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
@@ -2214,7 +2197,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EXCLUDED_ARCHS = "i386 armv7 arm64";
 				FRAMEWORK_VERSION = A;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;

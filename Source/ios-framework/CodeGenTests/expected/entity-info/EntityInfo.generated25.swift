@@ -8,6 +8,194 @@ import Foundation
 // MARK: - Entity metadata
 
 
+extension AnnotatedType: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = AnnotatedType
+
+    internal var _id: EntityId<AnnotatedType> {
+        return EntityId<AnnotatedType>(self.id.value)
+    }
+}
+
+extension AnnotatedType: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = AnnotatedTypeBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static var entityInfo = ObjectBox.EntityInfo(name: "AnnotatedType", id: 1)
+
+    internal static var entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: AnnotatedType.self, id: 1, uid: 21504)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 14592)
+        try entityBuilder.addProperty(name: "flexData", type: PropertyType.flex, id: 2, uid: 15616)
+        try entityBuilder.addProperty(name: "flexDataNullable", type: PropertyType.flex, id: 3, uid: 16640)
+        try entityBuilder.addProperty(name: "flexByteArray", type: PropertyType.flex, id: 4, uid: 17664)
+        try entityBuilder.addProperty(name: "dateValue", type: PropertyType.dateNano, id: 5, uid: 18688)
+        try entityBuilder.addProperty(name: "dateNullable", type: PropertyType.dateNano, id: 6, uid: 19712)
+        try entityBuilder.addProperty(name: "dateIdCompanion", type: PropertyType.dateNano, id: 7, uid: 20736)
+
+        try entityBuilder.lastProperty(id: 7, uid: 20736)
+    }
+}
+
+extension AnnotatedType {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.id == myId }
+    internal static var id: Property<AnnotatedType, Id, Id> { return Property<AnnotatedType, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.flexData > 1234 }
+    internal static var flexData: Property<AnnotatedType, Data, Void> { return Property<AnnotatedType, Data, Void>(propertyId: 2, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.flexDataNullable > 1234 }
+    internal static var flexDataNullable: Property<AnnotatedType, Data?, Void> { return Property<AnnotatedType, Data?, Void>(propertyId: 3, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.flexByteArray > 1234 }
+    internal static var flexByteArray: Property<AnnotatedType, [UInt8], Void> { return Property<AnnotatedType, [UInt8], Void>(propertyId: 4, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.dateValue > 1234 }
+    internal static var dateValue: Property<AnnotatedType, Date, Void> { return Property<AnnotatedType, Date, Void>(propertyId: 5, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.dateNullable > 1234 }
+    internal static var dateNullable: Property<AnnotatedType, Date?, Void> { return Property<AnnotatedType, Date?, Void>(propertyId: 6, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { AnnotatedType.dateIdCompanion > 1234 }
+    internal static var dateIdCompanion: Property<AnnotatedType, Date, Void> { return Property<AnnotatedType, Date, Void>(propertyId: 7, isPrimaryKey: false) }
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == AnnotatedType {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<AnnotatedType, Id, Id> { return Property<AnnotatedType, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .flexData > 1234 }
+
+    internal static var flexData: Property<AnnotatedType, Data, Void> { return Property<AnnotatedType, Data, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .flexDataNullable > 1234 }
+
+    internal static var flexDataNullable: Property<AnnotatedType, Data?, Void> { return Property<AnnotatedType, Data?, Void>(propertyId: 3, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .flexByteArray > 1234 }
+
+    internal static var flexByteArray: Property<AnnotatedType, [UInt8], Void> { return Property<AnnotatedType, [UInt8], Void>(propertyId: 4, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .dateValue > 1234 }
+
+    internal static var dateValue: Property<AnnotatedType, Date, Void> { return Property<AnnotatedType, Date, Void>(propertyId: 5, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .dateNullable > 1234 }
+
+    internal static var dateNullable: Property<AnnotatedType, Date?, Void> { return Property<AnnotatedType, Date?, Void>(propertyId: 6, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .dateIdCompanion > 1234 }
+
+    internal static var dateIdCompanion: Property<AnnotatedType, Date, Void> { return Property<AnnotatedType, Date, Void>(propertyId: 7, isPrimaryKey: false) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `AnnotatedType.EntityBindingType`.
+internal class AnnotatedTypeBinding: ObjectBox.EntityBinding {
+    internal typealias EntityType = AnnotatedType
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_flexData = propertyCollector.prepare(bytes: entity.flexData)
+        let propertyOffset_flexDataNullable = propertyCollector.prepare(bytes: entity.flexDataNullable)
+        let propertyOffset_flexByteArray = propertyCollector.prepare(bytes: entity.flexByteArray)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        propertyCollector.collectNanos(entity.dateValue, at: 2 + 2 * 5)
+        propertyCollector.collectNanos(entity.dateNullable, at: 2 + 2 * 6)
+        propertyCollector.collectNanos(entity.dateIdCompanion, at: 2 + 2 * 7)
+        propertyCollector.collect(dataOffset: propertyOffset_flexData, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_flexDataNullable, at: 2 + 2 * 3)
+        propertyCollector.collect(dataOffset: propertyOffset_flexByteArray, at: 2 + 2 * 4)
+    }
+
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = AnnotatedType()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.flexData = entityReader.read(at: 2 + 2 * 2)
+        entity.flexDataNullable = entityReader.read(at: 2 + 2 * 3)
+        entity.flexByteArray = entityReader.read(at: 2 + 2 * 4)
+        entity.dateValue = entityReader.readNanos(at: 2 + 2 * 5)
+        entity.dateNullable = entityReader.readNanos(at: 2 + 2 * 6)
+        entity.dateIdCompanion = entityReader.readNanos(at: 2 + 2 * 7)
+
+        return entity
+    }
+}
+
+
+
 extension TypeTest: ObjectBox.__EntityRelatable {
     internal typealias EntityType = TypeTest
 
@@ -20,33 +208,33 @@ extension TypeTest: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = TypeTestBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "TypeTest", id: 1)
+    internal static var entityInfo = ObjectBox.EntityInfo(name: "TypeTest", id: 2)
 
     internal static var entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
-        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 1, uid: 33536)
-        try entityBuilder.addProperty(name: "id", type: EntityId<TypeTest>.entityPropertyType, flags: [.id], id: 1, uid: 14592)
-        try entityBuilder.addProperty(name: "intValue", type: Int.entityPropertyType, id: 2, uid: 15616)
-        try entityBuilder.addProperty(name: "int8Value", type: Int8.entityPropertyType, id: 3, uid: 16640)
-        try entityBuilder.addProperty(name: "int16Value", type: Int16.entityPropertyType, id: 4, uid: 17664)
-        try entityBuilder.addProperty(name: "int32Value", type: Int32.entityPropertyType, id: 5, uid: 18688)
-        try entityBuilder.addProperty(name: "int64Value", type: Int64.entityPropertyType, id: 6, uid: 19712)
-        try entityBuilder.addProperty(name: "uintValue", type: UInt.entityPropertyType, flags: [.unsigned], id: 7, uid: 20736)
-        try entityBuilder.addProperty(name: "uint8Value", type: UInt8.entityPropertyType, flags: [.unsigned], id: 8, uid: 21504)
-        try entityBuilder.addProperty(name: "uint16Value", type: UInt16.entityPropertyType, flags: [.unsigned], id: 9, uid: 22528)
-        try entityBuilder.addProperty(name: "uint32Value", type: UInt32.entityPropertyType, flags: [.unsigned], id: 10, uid: 23552)
-        try entityBuilder.addProperty(name: "uint64Value", type: UInt64.entityPropertyType, flags: [.unsigned], id: 11, uid: 24576)
-        try entityBuilder.addProperty(name: "boolValue", type: Bool.entityPropertyType, id: 12, uid: 25600)
-        try entityBuilder.addProperty(name: "stringValue", type: String.entityPropertyType, id: 13, uid: 26624)
-        try entityBuilder.addProperty(name: "byteValue", type: Byte.entityPropertyType, id: 14, uid: 27648)
-        try entityBuilder.addProperty(name: "bytes", type: Data.entityPropertyType, id: 15, uid: 28672)
-        try entityBuilder.addProperty(name: "byteArray", type: Data.entityPropertyType, id: 16, uid: 29696)
-        try entityBuilder.addProperty(name: "floatValue", type: Float.entityPropertyType, id: 17, uid: 30720)
-        try entityBuilder.addProperty(name: "doubleValue", type: Double.entityPropertyType, id: 18, uid: 31744)
-        try entityBuilder.addProperty(name: "dateValue", type: Date.entityPropertyType, id: 19, uid: 32512)
+        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 41728)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 22528)
+        try entityBuilder.addProperty(name: "intValue", type: PropertyType.long, id: 2, uid: 23552)
+        try entityBuilder.addProperty(name: "int8Value", type: PropertyType.byte, id: 3, uid: 24576)
+        try entityBuilder.addProperty(name: "int16Value", type: PropertyType.short, id: 4, uid: 25600)
+        try entityBuilder.addProperty(name: "int32Value", type: PropertyType.int, id: 5, uid: 26624)
+        try entityBuilder.addProperty(name: "int64Value", type: PropertyType.long, id: 6, uid: 27648)
+        try entityBuilder.addProperty(name: "uintValue", type: PropertyType.long, flags: [.unsigned], id: 7, uid: 28672)
+        try entityBuilder.addProperty(name: "uint8Value", type: PropertyType.byte, flags: [.unsigned], id: 8, uid: 29696)
+        try entityBuilder.addProperty(name: "uint16Value", type: PropertyType.short, flags: [.unsigned], id: 9, uid: 30720)
+        try entityBuilder.addProperty(name: "uint32Value", type: PropertyType.int, flags: [.unsigned], id: 10, uid: 31744)
+        try entityBuilder.addProperty(name: "uint64Value", type: PropertyType.long, flags: [.unsigned], id: 11, uid: 32512)
+        try entityBuilder.addProperty(name: "boolValue", type: PropertyType.bool, id: 12, uid: 33536)
+        try entityBuilder.addProperty(name: "stringValue", type: PropertyType.string, id: 13, uid: 34560)
+        try entityBuilder.addProperty(name: "byteValue", type: Byte.entityPropertyType, id: 14, uid: 35584)
+        try entityBuilder.addProperty(name: "bytes", type: PropertyType.byteVector, id: 15, uid: 36608)
+        try entityBuilder.addProperty(name: "byteArray", type: PropertyType.byteVector, id: 16, uid: 37632)
+        try entityBuilder.addProperty(name: "floatValue", type: PropertyType.float, id: 17, uid: 38656)
+        try entityBuilder.addProperty(name: "doubleValue", type: PropertyType.double, id: 18, uid: 39680)
+        try entityBuilder.addProperty(name: "dateValue", type: PropertyType.date, id: 19, uid: 40704)
 
-        try entityBuilder.lastProperty(id: 19, uid: 32512)
+        try entityBuilder.lastProperty(id: 19, uid: 40704)
     }
 }
 
@@ -409,8 +597,9 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 
 fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
+    try AnnotatedType.buildEntity(modelBuilder: modelBuilder)
     try TypeTest.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 1, uid: 33536)
+    modelBuilder.lastEntity(id: 2, uid: 41728)
     return modelBuilder.finish()
 }
 

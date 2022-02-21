@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:18688",
-      "lastPropertyId": "3:17664",
+      "lastPropertyId": "4:19712",
       "name": "Building",
       "properties": [
         {
@@ -25,13 +25,20 @@
           "id": "3:17664",
           "name": "buildingNumber",
           "type": 6
+        },
+        {
+          "flags": 34856,
+          "id": "4:19712",
+          "indexId": "2:123456",
+          "name": "stringId",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "1:18688",
-  "lastIndexId": "1:15616",
+  "lastIndexId": "2:123456",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

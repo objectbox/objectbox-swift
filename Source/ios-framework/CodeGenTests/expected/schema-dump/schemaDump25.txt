@@ -1,11 +1,165 @@
 Schema {
 	entities = [SchemaEntity {
 		modelId = Optional(1)
-		modelUid = Optional(33536)
-		className = TypeTest
+		modelUid = Optional(21504)
+		className = AnnotatedType
 		dbName = nil
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id
+			entityName = AnnotatedType
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:15616))
+			propertyName = flexData
+			propertyType = Data
+			entityName = AnnotatedType
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:16640))
+			propertyName = flexDataNullable
+			propertyType = Data?
+			entityName = AnnotatedType
+			unwrappedPropertyType = Data
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(4:17664))
+			propertyName = flexByteArray
+			propertyType = [UInt8]
+			entityName = AnnotatedType
+			unwrappedPropertyType = [UInt8]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			isByteVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(5:18688))
+			propertyName = dateValue
+			propertyType = Date
+			entityName = AnnotatedType
+			unwrappedPropertyType = Date
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(6:19712))
+			propertyName = dateNullable
+			propertyType = Date?
+			entityName = AnnotatedType
+			unwrappedPropertyType = Date
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(7:20736))
+			propertyName = dateIdCompanion
+			propertyType = Date
+			entityName = AnnotatedType
+			unwrappedPropertyType = Date
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(7:20736))
+		isEntitySubclass = true
+		isValueType = false
+		hasStringProperties = false
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id
+			entityName = AnnotatedType
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = Id
+			entityName = AnnotatedType
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+, SchemaEntity {
+		modelId = Optional(2)
+		modelUid = Optional(41728)
+		className = TypeTest
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = EntityId<TypeTest>
 			entityName = TypeTest
@@ -20,7 +174,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(2:15616))
+			modelId = Optional(IdUid(2:23552))
 			propertyName = intValue
 			propertyType = Int
 			entityName = TypeTest
@@ -35,7 +189,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(3:16640))
+			modelId = Optional(IdUid(3:24576))
 			propertyName = int8Value
 			propertyType = Int8
 			entityName = TypeTest
@@ -50,7 +204,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(4:17664))
+			modelId = Optional(IdUid(4:25600))
 			propertyName = int16Value
 			propertyType = Int16
 			entityName = TypeTest
@@ -65,7 +219,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(5:18688))
+			modelId = Optional(IdUid(5:26624))
 			propertyName = int32Value
 			propertyType = Int32
 			entityName = TypeTest
@@ -80,7 +234,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(6:19712))
+			modelId = Optional(IdUid(6:27648))
 			propertyName = int64Value
 			propertyType = Int64
 			entityName = TypeTest
@@ -95,7 +249,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(7:20736))
+			modelId = Optional(IdUid(7:28672))
 			propertyName = uintValue
 			propertyType = UInt
 			entityName = TypeTest
@@ -111,7 +265,7 @@ Schema {
 			isUnsignedType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(8:21504))
+			modelId = Optional(IdUid(8:29696))
 			propertyName = uint8Value
 			propertyType = UInt8
 			entityName = TypeTest
@@ -127,7 +281,7 @@ Schema {
 			isUnsignedType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(9:22528))
+			modelId = Optional(IdUid(9:30720))
 			propertyName = uint16Value
 			propertyType = UInt16
 			entityName = TypeTest
@@ -143,7 +297,7 @@ Schema {
 			isUnsignedType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(10:23552))
+			modelId = Optional(IdUid(10:31744))
 			propertyName = uint32Value
 			propertyType = UInt32
 			entityName = TypeTest
@@ -159,7 +313,7 @@ Schema {
 			isUnsignedType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(11:24576))
+			modelId = Optional(IdUid(11:32512))
 			propertyName = uint64Value
 			propertyType = UInt64
 			entityName = TypeTest
@@ -175,7 +329,7 @@ Schema {
 			isUnsignedType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(12:25600))
+			modelId = Optional(IdUid(12:33536))
 			propertyName = boolValue
 			propertyType = Bool
 			entityName = TypeTest
@@ -190,7 +344,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(13:26624))
+			modelId = Optional(IdUid(13:34560))
 			propertyName = stringValue
 			propertyType = String
 			entityName = TypeTest
@@ -205,7 +359,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(14:27648))
+			modelId = Optional(IdUid(14:35584))
 			propertyName = byteValue
 			propertyType = Byte
 			entityName = TypeTest
@@ -220,7 +374,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(15:28672))
+			modelId = Optional(IdUid(15:36608))
 			propertyName = bytes
 			propertyType = Data
 			entityName = TypeTest
@@ -236,7 +390,7 @@ Schema {
 			isByteVectorType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(16:29696))
+			modelId = Optional(IdUid(16:37632))
 			propertyName = byteArray
 			propertyType = Data
 			entityName = TypeTest
@@ -252,7 +406,7 @@ Schema {
 			isByteVectorType = true
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(17:30720))
+			modelId = Optional(IdUid(17:38656))
 			propertyName = floatValue
 			propertyType = Float
 			entityName = TypeTest
@@ -267,7 +421,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(18:31744))
+			modelId = Optional(IdUid(18:39680))
 			propertyName = doubleValue
 			propertyType = Double
 			entityName = TypeTest
@@ -282,7 +436,7 @@ Schema {
 			isRelation = false
 		}
 , SchemaProperty {
-			modelId = Optional(IdUid(19:32512))
+			modelId = Optional(IdUid(19:40704))
 			propertyName = dateValue
 			propertyType = Date
 			entityName = TypeTest
@@ -300,12 +454,12 @@ Schema {
 		indexes = []
 		relations = []
 		toManyRelations = []
-		lastPropertyId = Optional(IdUid(19:32512))
+		lastPropertyId = Optional(IdUid(19:40704))
 		isEntitySubclass = true
 		isValueType = false
 		hasStringProperties = true
 		idProperty = Optional(SchemaProperty {
-			modelId = Optional(IdUid(1:14592))
+			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = EntityId<TypeTest>
 			entityName = TypeTest
@@ -321,7 +475,7 @@ Schema {
 		}
 )
 		idCandidates = [SchemaProperty {
-			modelId = Optional(IdUid(1:14592))
+			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = EntityId<TypeTest>
 			entityName = TypeTest
@@ -338,7 +492,7 @@ Schema {
 ]
 	}
 ]
-lastEntityId = IdUid(1:33536)
+lastEntityId = IdUid(2:41728)
 	lastRelationId = IdUid(0:0)
 	lastIndexId = IdUid(0:0)
 }

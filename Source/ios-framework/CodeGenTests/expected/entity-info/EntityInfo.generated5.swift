@@ -26,8 +26,8 @@ extension BusRoute: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: BusRoute.self, id: 1, uid: 5107964062888457216)
-        try entityBuilder.addProperty(name: "id", type: EntityId<BusRoute>.entityPropertyType, id: 1, uid: 7895576389419683840)
-        try entityBuilder.addProperty(name: "idTwo", type: EntityId<BusRoute>.entityPropertyType, flags: [.id], id: 3, uid: 8757601619550207488)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, id: 1, uid: 7895576389419683840)
+        try entityBuilder.addProperty(name: "idTwo", type: PropertyType.long, flags: [.id], id: 3, uid: 8757601619550207488)
 
         try entityBuilder.lastProperty(id: 3, uid: 8757601619550207488)
     }

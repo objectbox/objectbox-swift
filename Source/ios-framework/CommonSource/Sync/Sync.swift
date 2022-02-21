@@ -38,30 +38,8 @@ public class Sync {
                     message: "This library does not include ObjectBox Sync. " +
                             "Please visit https://objectbox.io/sync/ for options.")
         }
-        guard store.syncClient == nil else {
-            throw ObjectBoxError.sync(
-                    message: "Cannot create a new sync client: the store is already associated with a sync client")
-        }
-        var urlToConnect = url
-        if urlToConnect == nil {
-            if urlString == nil {
-                throw ObjectBoxError.sync(message: "No URL provided")
-            } else {
-                urlToConnect = URL(string: urlString!)
-                if urlToConnect == nil {
-                    throw ObjectBoxError.sync(message: "Illegal URL given:" + urlString!)
-                }
-            }
-        }
-
-        let client = try SyncClientImpl(store: store, server: urlToConnect!)
-
-        // Associate store with the new client: keep the client alive and provide convenient access to it
-        store.syncClient = client  // This is not very atomic...
-
-        if credentials != nil {
-            try client.setCredentials(credentials!)
-        }
-        return client
+        throw ObjectBoxError.sync(
+                message:
+                "Cannot create a new sync client: no Swift implementation available (but linked library supports it)")
     }
 }

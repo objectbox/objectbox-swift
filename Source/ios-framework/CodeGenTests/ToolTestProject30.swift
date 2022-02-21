@@ -1,9 +1,5 @@
 //
-//  main.swift
-//  ToolTestProject
-//
-//  Created by Uli Kusterer on 07.12.18.
-//  Copyright © 2018 Uli Kusterer. All rights reserved.
+//  Copyright © 2018-2022 ObjectBox. All rights reserved.
 //
 
 import Foundation
@@ -15,7 +11,10 @@ class Building: Entity, CustomDebugStringConvertible {
     // objectbox: unique
     var buildingName: String = ""
     var buildingNumber: Int = 0
-    
+
+    // objectbox: unique = { "onConflict": "replace" }
+    var stringId: String = ""
+
     required init() {}
 
     public var debugDescription: String {

@@ -26,11 +26,11 @@ extension DataThing: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: DataThing.self, id: 2, uid: 23552)
-        try entityBuilder.addProperty(name: "id", type: EntityId<DataThing>.entityPropertyType, flags: [.id], id: 1, uid: 18688)
-        try entityBuilder.addProperty(name: "firstData", type: Data.entityPropertyType, id: 2, uid: 19712)
-        try entityBuilder.addProperty(name: "secondData", type: [UInt8].entityPropertyType, id: 3, uid: 20736)
-        try entityBuilder.addProperty(name: "maybeThirdData", type: Data.entityPropertyType, id: 4, uid: 21504)
-        try entityBuilder.addProperty(name: "maybeFourthData", type: [UInt8].entityPropertyType, id: 5, uid: 22528)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 18688)
+        try entityBuilder.addProperty(name: "firstData", type: PropertyType.byteVector, id: 2, uid: 19712)
+        try entityBuilder.addProperty(name: "secondData", type: PropertyType.byteVector, id: 3, uid: 20736)
+        try entityBuilder.addProperty(name: "maybeThirdData", type: PropertyType.byteVector, id: 4, uid: 21504)
+        try entityBuilder.addProperty(name: "maybeFourthData", type: PropertyType.byteVector, id: 5, uid: 22528)
 
         try entityBuilder.lastProperty(id: 5, uid: 22528)
     }

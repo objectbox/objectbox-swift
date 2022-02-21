@@ -26,8 +26,8 @@ extension Autobus: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Autobus.self, id: 3, uid: 25600)
-        try entityBuilder.addProperty(name: "id", type: EntityId<Autobus>.entityPropertyType, flags: [.id], id: 1, uid: 23552)
-        try entityBuilder.addProperty(name: "lineName", type: String.entityPropertyType, id: 2, uid: 24576)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 23552)
+        try entityBuilder.addProperty(name: "lineName", type: PropertyType.string, id: 2, uid: 24576)
 
         try entityBuilder.lastProperty(id: 2, uid: 24576)
     }
@@ -127,9 +127,9 @@ extension Building: ObjectBox.EntityInspectable {
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Building.self, id: 2, uid: 22528)
-        try entityBuilder.addProperty(name: "id", type: EntityId<Building>.entityPropertyType, flags: [.id], id: 1, uid: 19712)
-        try entityBuilder.addProperty(name: "buildingName", type: String.entityPropertyType, id: 2, uid: 20736)
-        try entityBuilder.addProperty(name: "buildingNumber", type: Int.entityPropertyType, id: 3, uid: 21504)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 19712)
+        try entityBuilder.addProperty(name: "buildingName", type: PropertyType.string, id: 2, uid: 20736)
+        try entityBuilder.addProperty(name: "buildingNumber", type: PropertyType.long, id: 3, uid: 21504)
 
         try entityBuilder.lastProperty(id: 3, uid: 21504)
     }
