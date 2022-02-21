@@ -15,22 +15,79 @@ class SyncDryTests: XCTestCase {
         store = StoreHelper.tempStore(model: createTestModel())
     }
 
-    func testSyncClientAvailable() throws {
-        XCTAssertFalse(Sync.isAvailable())
+    private func createClient() throws -> SyncClient {
+        try Sync.makeClient(store: store, url: URL(string: "ws://127.0.0.1:9999")!)
+    }
 
-        let credentials = SyncCredentials.makeNone()
-        var client: SyncClient?
-        XCTAssertThrowsError(client = try Sync.makeClient(
-                store: store, urlString: "ws://127.0.0.1:9999", credentials: credentials)) { error in
+    func testSyncClientAvailable() throws {
+        XCTAssert(Sync.isAvailable())
+    }
+
+    func testSyncClientStartStopClose() throws {
+        let client = try createClient()
+        try client.setCredentials(SyncCredentials.makeNone())
+        XCTAssertEqual(client.getState(), SyncState.created)
+        try client.start()
+        XCTAssertEqual(client.getState(), SyncState.started)
+        XCTAssertThrowsError(try client.start()) { error in
+            XCTAssertNotNil(error as? ObjectBoxError)
+        }
+        try client.stop()
+        XCTAssertEqual(client.getState(), SyncState.stopped)
+        try client.stop()  // Double stop
+        client.close()
+        XCTAssertEqual(client.getState(), SyncState.dead)
+        client.close()  // Double close
+    }
+
+    func testSyncClientStoreAssociation() throws {
+        let client = try createClient()
+        XCTAssert(store.syncClient === client)
+
+        XCTAssertThrowsError(try createClient()) { error in
             XCTAssertNotNil(error as? ObjectBoxError)
         }
 
-        if client != nil { // Never, just ensure some basics compile
-            client?.listener = AllListener()
-            try client!.start()
-            try client!.stop()
-            client!.close()
+        client.close()
+        XCTAssertNil(store.syncClient)  // Not associated anymore
+
+        let client2 = try createClient()  // Allowed after closing client
+        XCTAssert(store.syncClient === client2)
+    }
+
+    func testSyncClientStartWithoutCredentials() throws {
+        XCTAssertThrowsError(try createClient().start()) { error in
+            XCTAssertNotNil(error as? ObjectBoxError)
         }
+    }
+
+    func testMakeSyncClientUrlString() throws {
+        let client = try Sync.makeClient(store: store, urlString: "ws://127.0.0.1:9999")
+        client.close()
+
+        XCTAssertThrowsError(try Sync.makeClient(store: store, urlString: "")) { error in
+            XCTAssertNotNil(error as? ObjectBoxError)
+        }
+    }
+
+    func testSyncClientCredentials() throws {
+        let client = try Sync.makeClient(store: store, urlString: "ws://127.0.0.1:9999",
+                credentials: SyncCredentials.makeNone())
+        try client.setCredentials(SyncCredentials.makeSharedSecret("foo"))
+        try client.start()
+        try client.stop()
+    }
+
+    class ChangeListener: SyncChangeListener {
+    }
+
+    class LoginListener: SyncLoginListener {
+        func loggedIn() {
+        }
+
+        func loginFailed(result: SyncCode) {
+        }
+
     }
 
     class AllListener: SyncListener {
@@ -49,6 +106,19 @@ class SyncDryTests: XCTestCase {
         func disconnected() {
         }
 
+    }
+
+    func testSyncClientListeners() throws {
+        let client = try createClient()
+
+        client.changeListener = ChangeListener()
+        client.changeListener = ChangeListener()
+
+        client.loginListener = LoginListener()
+        client.loginListener = LoginListener()
+
+        client.listener = AllListener()
+        client.listener = AllListener()
     }
 
 }

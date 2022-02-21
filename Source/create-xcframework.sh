@@ -10,6 +10,8 @@ mkdir -p "$dir_build"
 derived_data_path=$( mktemp -d )
 mkdir -p $derived_data_path
 
+xcodebuild -version
+
 function build() {
   echo "************* Building archive for $1 $2 (${3:-$1}) *************"
   xcrun xcodebuild build \

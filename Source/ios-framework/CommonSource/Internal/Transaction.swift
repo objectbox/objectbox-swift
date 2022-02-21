@@ -28,9 +28,9 @@ class Transaction {
     init(store: Store, writable: Bool) throws {
         isWritable = writable
         if isWritable {
-            cTransaction = obx_txn_write(store.cStore)
+            cTransaction = obx_txn_write(try store.ensureCStore())
         } else {
-            cTransaction = obx_txn_read(store.cStore)
+            cTransaction = obx_txn_read(try store.ensureCStore())
         }
         try checkLastError()
     }

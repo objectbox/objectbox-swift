@@ -72,6 +72,10 @@ public enum ObjectBoxError: Swift.Error {
     case filePagesCorrupt(message: String)
     /// Attempted to establish a relation to an entity that hasn't been assigned an ID yet.
     case cannotRelateToUnsavedEntities(message: String)
+
+    /// Typically when there's no open store available at the given directory
+    case cannotAttachToStore(message: String)
+
     /// Unexpected error, should never occur in practice, but for pragmatic reasons, we cover the case.
     /// Used in some cases where ObjectBox e.g. calls a function (which can only say throws and not what it throws)
     /// If you encounter this error in your use of ObjectBox, please report it to us, as it's likely a bug in the

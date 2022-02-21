@@ -30,11 +30,10 @@ class ErrorHelperIntegrationTests: XCTestCase {
                           maxDbSizeInKByte: 10, fileMode: 0o644, maxReaders: 10)
             XCTFail("Expected exception here.")
         } catch ObjectBoxError.storageGeneral(let message) {
-            print("Storage error \(message) caught as expected.")
+            print("Storage error caught as expected. Message: \"\(message)\"")
             XCTAssert(message.contains("Could not prepare directory"))
             XCTAssert(message.contains("/dev/DOESNOTEXIST/really/should/fail"))
-            XCTAssert(message.contains("2"))  // error code
-            XCTAssert(message.contains("No such file or directory"))
+            XCTAssert(message.contains("(2)"))  // error code
         } catch {
             XCTAssertNoThrow(try rethrow(error))
         }

@@ -3,8 +3,7 @@
 #  Run this script from Xcode (target & scheme "CodeGenTests"):
 #  it has a dependency and also relies on variables set by Xcode
 
-echo -n "note: Starting tests at "
-date
+echo -n "note: Starting tests at $(date)"
 
 if [ -z ${PROJECT_DIR} ]; then
   echo "PROJECT_DIR unavailable; please run from Xcode"

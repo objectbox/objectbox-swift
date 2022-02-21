@@ -15,6 +15,13 @@ else
     verify_only=false
 fi
 
+if [ "${1:-}" == "--staging" ]; then
+    staging_repo=true
+    shift
+else
+    staging_repo=false
+fi
+
 # macOS does not have realpath and readlink does not have -f option, so do this instead:
 my_dir=$( cd "$(dirname "$0")" ; pwd -P )
 
@@ -26,14 +33,17 @@ if [ "$verify_only" = true ]; then
   echo "Skipping fetch, only verifying"
 else
 
-if [ -d "$code_dir" ]; then # Do we have an existing code repo?
+if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an existing code repo? Then build it...
+    xcode_version="$(xcodebuild -version | head -n 1 | tr -cd '[a-zA-Z0-9]._-')"
+    echo "Xcode version: $xcode_version"
+
     pushd "$code_dir"  # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
-    build_params="" # must also part of the cache key
+    build_params="--skip-apple-silicon" # must also part of the cache key
     commit_id=$(git rev-parse HEAD)
     cache_dir="$HOME/Library/Caches/ObjectBox"
     mkdir -p "${cache_dir}"
     find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +30 # -delete # TODO enable delete once this looks good
-    cache_key="${commit_id}"
+    cache_key="${commit_id}-$xcode_version"
     if [ -n "$build_params" ]; then
       cache_key="${cache_key}-$(echo "$build_params" | tr -cd '[a-zA-Z0-9]._-')"
     fi
@@ -56,7 +66,7 @@ if [ -d "$code_dir" ]; then # Do we have an existing code repo?
         echo "⚪ ObjectBox core is clean but no cache ZIP found for ${cache_key}."
         echo "🏗️ Building..."
         sleep 0.5
-    fi
+      fi
     else
       git status
       echo "🔴 ObjectBox core is not clean, won't use caching. 🏗️ Building..."
@@ -78,10 +88,15 @@ if [ -d "$code_dir" ]; then # Do we have an existing code repo?
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.5.0
-        c_version=0.13.0
+        version=1.7.0
+        c_version=0.15.2
         archive_path="${my_dir}/external/objectbox-static.zip"
-        OBXLIB_URL_apple_static="https://github.com/objectbox/objectbox-swift/releases/download/v${version}/ObjectBoxCore-static-${c_version}.zip"
+        if [ "$staging_repo" == "true" ]; then
+          release_url_path="https://github.com/objectbox/objectbox-swift-spec-staging/releases/download/v1.x"
+        else
+          release_url_path="https://github.com/objectbox/objectbox-swift/releases/download/v${version}"
+        fi
+        OBXLIB_URL_apple_static="release_url_path/ObjectBoxCore-static-${c_version}.zip"
 
         mkdir -p "${dest_dir}"
 

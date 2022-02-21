@@ -45,11 +45,14 @@ fetch_dependencies:
 	@echo "$(BLUE)Building/Downloading static libraries...$(NC)"
 	@../fetch_dependencies.command
 
-build_framework: fetch_dependencies
+# Carthage by default uses a gibberish name for the log file; but we can adjust it via --log-path
+build_framework_log_file: fetch_dependencies
 	@echo "$(BLUE)Building Frameworks with Carthage...$(NC)"
 	@carthage build $(CARTOPTIONS) --no-skip-current --use-xcframeworks --log-path ./xcodelog.txt
 
-build_framework_verbose: fetch_dependencies
+# Carthage calls it "verbose" to have xcode output go to the log, which is what we want in most cases though...
+# (E.g. compilation errors should be simple to find without involving another file.)
+build_framework: fetch_dependencies
 	@echo "$(BLUE)Building Frameworks with Carthage...$(NC)"
 	@carthage build $(CARTOPTIONS) --no-skip-current --use-xcframeworks --verbose
 

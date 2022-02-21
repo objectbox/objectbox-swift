@@ -16,6 +16,8 @@ Repository Contents
 
 - `fetch_dependencies.command`: populates `external/objectbox-static` with libObjectBoxCore.
   libObjectBoxCore is a crucial requirement build the Swift framework.
+- `ios-framework/Makefile`: combines `fetch_dependencies.command` and a Carthage build to create the Swift framework.
+- `.gitlab-ci.yml` calls make targets of `ios-framework/Makefile`
 - `create-xcframework.sh`: builds the multi-platform archive containing binaries for multiple platforms and architectures.
 
 Tests
@@ -43,7 +45,7 @@ Setup
 To build the project for release:
 
 * Run `cd ios-framework/; make all` to build the frameworks from source with Carthage
-* The `ios-framework/cocoapod/make-release.command` script can be double-clicked to build a release-ready archive and Podspec file.
+* The `ios-framework/cocoapod/make-release.command` script can be double-clicked to build a release-ready archive and Podspec & SPM files.
 
 ### Generate the Documentation
 

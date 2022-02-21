@@ -25,20 +25,20 @@ class StoreTests: XCTestCase {
         case generalError
         case generalError2
     }
-    
+
     var store: Store!
-    
+
     override func setUp() {
         super.setUp()
         store = StoreHelper.tempStore(model: createTestModel())
     }
-    
+
     override func tearDown() {
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
     }
-    
+
     func rethrow(_ error: Error) throws {
         throw error
     }
@@ -48,22 +48,22 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "1.6.0")
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.14.0")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "2.9.2-2021-05-13")
+        XCTAssertGreaterThanOrEqual(Store.version, "1.7.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.15.1")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "3.1.1-2022-01-25")
     }
 
     func test32vs64BitForOs() {
         let isChunked = Store.versionFullInfo.contains("chunk")
         #if os(iOS)
-            print("Hello iOS")
-            XCTAssert(isChunked)
+        print("Hello iOS")
+        XCTAssert(isChunked)
         #else
-            print("Hello macOS")
-            XCTAssert(!isChunked)
+        print("Hello macOS")
+        XCTAssert(!isChunked)
         #endif
     }
-    
+
     func testReusesBoxInstances() {
         let testPersonBox1: Box<TestPerson> = store.box(for: TestPerson.self)
         let testPersonBox2: Box<TestPerson> = store.box(for: TestPerson.self)
@@ -75,15 +75,15 @@ class StoreTests: XCTestCase {
         let allTypesBox4: Box<AllTypesEntity> = store.box(for: AllTypesEntity.self)
         XCTAssert(testPersonBox3 !== allTypesBox4)
     }
-    
+
     func testCursorAccessInTransaction() {
         var identifier: UInt64 = 0
-        
+
         XCTAssertNoThrow(try store.obx_runInTransaction(writable: true, { _ in
             let box: Box<TestPerson> = store.box(for: TestPerson.self)
             identifier = try box.put(TestPerson.irrelevant).value
         }))
-        
+
         XCTAssertNotEqual(identifier, 0)
     }
 
@@ -125,16 +125,16 @@ class StoreTests: XCTestCase {
 //            _ = try cursor.put(TestPerson.irrelevant)
 //        }))
 //    }
-    
+
     @available(iOS 10.0, macOS 10.12, *)
     func testParallelTransactions() {
         var expectations = [XCTestExpectation]()
         let count = 20
-        
-        for i in 0 ..< count {
+
+        for i in 0..<count {
             let expectation = self.expectation(description: "Execution #\(i)")
             expectations.append(expectation)
-            
+
             Thread.detachNewThread {
                 do {
                     try self.store.obx_runInTransaction(writable: true, { _ in
@@ -148,25 +148,25 @@ class StoreTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        
+
         wait(for: expectations, timeout: 5)
     }
-    
+
     func testNestedReadTransactions() {
         let person = TestPerson(name: "Person", age: 20180621084337)
         let entityId = try! store.box(for: TestPerson.self).put(person)
-        
+
         let result = try! store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
             return try store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
                 return try box.get(entityId)
             })
         })
-        
+
         XCTAssertEqual(result?.name, person.name)
         XCTAssertEqual(result?.age, person.age)
     }
-    
+
     func testNestedReadTransactions_ErrorsBubbleUp() {
         do {
             try store.obx_runInTransaction(writable: false, { _ in
@@ -181,22 +181,22 @@ class StoreTests: XCTestCase {
             XCTAssertNoThrow(try rethrow(error))
         }
     }
-    
+
     func testNestedReadTransactionsInsideWriteTransaction() {
         let person = TestPerson(name: "Person", age: 20180621084337)
         let entityId = try! store.box(for: TestPerson.self).put(person)
-        
+
         let result = try! store.obx_runInTransaction(writable: true, { _ -> TestPerson? in
             return try store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
                 return try box.get(entityId)
             })
         })
-        
+
         XCTAssertEqual(result?.name, person.name)
         XCTAssertEqual(result?.age, person.age)
     }
-    
+
     func testNestedWriteTransactions() {
         let result = try! store.obx_runInTransaction(writable: true, { _ -> Id in
             return try store.obx_runInTransaction(writable: true, { _ -> Id in
@@ -204,10 +204,10 @@ class StoreTests: XCTestCase {
                 return try box.put(TestPerson.irrelevant).value
             })
         })
-        
+
         XCTAssertNotEqual(result, 0)
     }
-    
+
     func testNestedWriteTransactions_ErrorsBubbleUp() {
         do {
             try store.obx_runInTransaction(writable: true, { _ in
@@ -222,7 +222,7 @@ class StoreTests: XCTestCase {
             XCTAssertNoThrow(try rethrow(error))
         }
     }
-    
+
     func testNestedWriteTransactionInsideReadTransaction_Throws() {
         do {
             try store.obx_runInTransaction(writable: false, { _ in
@@ -238,7 +238,7 @@ class StoreTests: XCTestCase {
             XCTAssertNoThrow(try rethrow(error))
         }
     }
-    
+
     func testDebugDescription() {
         let debugDescription = "\(store!)"
         XCTAssert(debugDescription.hasPrefix("<ObjectBox.Store"))
@@ -256,5 +256,36 @@ class StoreTests: XCTestCase {
         XCTAssertEqual(personRead.name, "Adelheid")
         XCTAssertThrowsError(try store.runInTransaction({}))
         XCTAssertThrowsError(try store.box(for: TestPerson.self).put(personRead))
+    }
+
+    func testAttachOrClone(clone: Bool) throws {
+        let path = store.directoryPath
+        XCTAssert(try Store.isOpen(directory: path))
+
+        let person = TestPerson(name: "Adelheid")
+        let id = try store.box(for: TestPerson.self).put(person)
+
+        let store2 = clone ? try store.clone() : try Store.attachTo(directory: path)
+        let personRead = try store2.box(for: TestPerson.self).get(id)!
+        XCTAssertEqual(personRead.name, "Adelheid")
+
+        store.close()
+        XCTAssert(try Store.isOpen(directory: path))
+
+        let personRead2 = try store2.box(for: TestPerson.self).get(id)!
+        XCTAssertEqual(personRead2.name, "Adelheid")
+
+        store2.close()
+        XCTAssertFalse(try Store.isOpen(directory: path))
+        XCTAssertThrowsError(try Store.attachTo(directory: path))
+        XCTAssertThrowsError(try store.clone(), "yolo")
+    }
+
+    func testAttachTo() throws {
+        try testAttachOrClone(clone: false)
+    }
+
+    func testClone() throws {
+        try testAttachOrClone(clone: true)
     }
 }

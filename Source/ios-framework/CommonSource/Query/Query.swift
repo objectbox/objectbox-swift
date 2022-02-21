@@ -58,7 +58,7 @@ where E == E.EntityBindingType.EntityType {
         obx_query_close(cQuery)
     }
 
-    private func setOffsetLimit(_ offset: UInt64, _ limit: UInt64) throws {
+    private func setOffsetLimit(_ offset: Int, _ limit: Int) throws {
         try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
     }
 
@@ -72,7 +72,7 @@ where E == E.EntityBindingType.EntityType {
     ///   - offset: How many results to skip. (Useful when paginating results.)
     ///   - limit: Maximum number of objects that may be returned (may give fewer).
     /// - Returns: Collection of objects matching the query conditions.
-    public func find(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityType] {
+    public func find(offset: Int = 0, limit: Int = 0) throws -> [EntityType] {
         return try store.runInReadOnlyTransaction {
             if self.store.supportsLargeArrays {
                 let box = self.store.box(for: EntityType.self)
@@ -107,7 +107,7 @@ where E == E.EntityBindingType.EntityType {
     }
 
     // Variant of find() that is faster due to using ContiguousArray.
-    public func findContiguous(offset: UInt64 = 0, limit: UInt64 = 0) throws -> ContiguousArray<EntityType> {
+    public func findContiguous(offset: Int = 0, limit: Int = 0) throws -> ContiguousArray<EntityType> {
         var result = ContiguousArray<EntityType>()
 
         try store.runInReadOnlyTransaction {
@@ -149,7 +149,7 @@ where E == E.EntityBindingType.EntityType {
     ///   - offset: How many results to skip. (Useful when paginating results.)
     ///   - limit: Maximum number of results that may be returned (may give fewer).
     /// - Returns: Collection of object IDs matching the query conditions.
-    public func findIds(offset: UInt64 = 0, limit: UInt64 = 0) throws -> [EntityId<EntityType>] {
+    public func findIds(offset: Int = 0, limit: Int = 0) throws -> [EntityId<EntityType>] {
         var result = [EntityId<EntityType>]()
 
         try setOffsetLimit(offset, limit)

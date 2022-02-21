@@ -39,8 +39,11 @@ public class Store: CustomDebugStringConvertible {
     internal var attachedObjects = [String: AnyObject]()
     internal var supportsLargeArrays = false
 
+    /// The path to the directory containing our database files as it was passed to this instance when creating it.
+    internal(set) public var directoryPath: String
+
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.6.0"
+    public static var version = "1.7.0"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -62,8 +65,20 @@ public class Store: CustomDebugStringConvertible {
         return String(utf8String: obx_version_core_string()) ?? ""
     }
 
-    /// The path to the directory containing our database files as it was passed to this instance when creating it.
-    internal(set) public var directoryPath: String
+    /// Attaches to a previously opened Store given its directory.
+    public static func attachTo(directory: String) throws -> Store {
+        let cStore: OpaquePointer? = obx_store_attach(directory)
+        if cStore == nil {
+            try checkLastError()  // Does not fire, but could change in the future
+            throw ObjectBoxError.cannotAttachToStore(message: "Cannot attach to given directory")
+        }
+        return try Store(cStore: cStore!, directory: directory)
+    }
+
+    /// Attaches to a previously opened Store given its directory.
+    public static func isOpen(directory: String) throws -> Bool {
+        return obx_store_is_open(directory)
+    }
 
     /// - important: this initializer is only used internally.
     /// Instead of this, use the generated initializer without the model parameter
@@ -80,27 +95,32 @@ public class Store: CustomDebugStringConvertible {
     ///                         server-like scenario), it can make sense to increase the maximum number of readers. The
     ///                         default value 0 (zero) lets ObjectBox choose an internal default (currently around 120).
     ///                         So if you hit this limit, try values around 200-500.
+    /// - Parameter readOnly: Opens the database in read-only mode, i.e. not allowing write transactions.
     public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 1024 * 1024,
                 fileMode: UInt32 = 0o644, maxReaders: UInt32 = 0, readOnly: Bool = false) throws {
         directoryPath = directory
-        supportsLargeArrays = obx_supports_bytes_array()
-        cStore = try directory.withCString { ptr -> OpaquePointer? in
-            var opts = obx_opt()
-            try checkLastError()
-            defer { if let opts = opts { obx_opt_free(opts) } }
-            obx_opt_model(opts, model)
-            try checkLastError()
-            obx_opt_directory(opts, ptr)
-            try checkLastError()
-            obx_opt_max_db_size_in_kb(opts, Int(maxDbSizeInKByte))
-            obx_opt_file_mode(opts, UInt32(fileMode))
-            obx_opt_max_readers(opts, UInt32(maxReaders))
-            obx_opt_read_only(opts, readOnly)
-            let result = obx_store_open(opts)
-            opts = nil // store owns it now, make sure defer doesn't free it.
-            try checkLastError()
-            return result
-        }
+        supportsLargeArrays = obx_has_feature(OBXFeature_ResultArray)
+        var opts = obx_opt()
+        try checkLastError()
+        if opts == nil { throw ObjectBoxError.illegalState(message: "Opts are nil but no error thrown") }
+        defer { obx_opt_free(opts) }
+        obx_opt_model(opts, model)
+        try checkLastError()
+        obx_opt_directory(opts, directory)
+        obx_opt_max_db_size_in_kb(opts, Int(maxDbSizeInKByte))
+        obx_opt_file_mode(opts, UInt32(fileMode))
+        obx_opt_max_readers(opts, UInt32(maxReaders))
+        obx_opt_read_only(opts, readOnly)
+        try checkLastError()  // Opt(ions) need just one check
+        cStore = obx_store_open(opts)
+        opts = nil // store owns it now, make sure defer doesn't free it.
+        try checkLastError()
+    }
+
+    private init(cStore: OpaquePointer, directory: String) throws {
+        directoryPath = directory
+        supportsLargeArrays = obx_has_feature(OBXFeature_ResultArray)
+        self.cStore = cStore
     }
 
     deinit {
@@ -115,6 +135,21 @@ public class Store: CustomDebugStringConvertible {
                 print("Error closing ObjectBox.Store: \(err)")
             }
         }
+    }
+
+    internal func ensureCStore() throws -> OpaquePointer {
+        guard let openCStore = cStore else { throw ObjectBoxError.illegalState(message: "Store is already closed") }
+        return openCStore
+    }
+
+    /// Clone a previously opened store; while a store instance is usable from multiple threads, situations may exist
+    /// in which cloning a store simplifies the overall lifecycle.
+    /// E.g. when a store is used for multiple threads and it may only be fully released once the last thread completes.
+    /// The returned store is a new instance with its own lifetime.
+    public func clone() throws -> Store {
+        let clonedStore = obx_store_clone(try ensureCStore())
+        try checkLastError()
+        return try Store(cStore: clonedStore!, directory: directoryPath)
     }
 
     /// Return a box for reading/writing entities of the given class from/to the database.
@@ -181,6 +216,9 @@ public class Store: CustomDebugStringConvertible {
                let entitlements = signingInfo[kSecCodeInfoEntitlementsDict] as? [NSString: NSObject],
                let applicationGroups = entitlements["com.apple.security.application-groups"] as? [NSString] {
 
+                // Semaphore names in macOS are limited to 31 characters.
+                // Internally, we need up to 11 chars to identify the semaphore,
+                // thus the group ID must be equal or less than 20 (ASCII) charaters.
                 if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 20 }) {
                     obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
                     //print("found appGroupIdentifier \(appGroupIdentifier)")
