@@ -40,6 +40,26 @@ High-performance Swift database
 
 Enjoy ❤️
 
+Already using ObjectBox?
+---------------------------
+Your opinion matters to us! Please fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6).
+
+We're on a mission to bring joy and delight to Mobile app developers. We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
+
+To do that, we want your feedback: what do you love? What's amiss? Where do you struggle in everyday app development?
+
+**We're looking forward to receiving your comments and requests:**
+
+- Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) 
+- Upvote issues you find important by hitting the 👍/+1 reaction button
+- Drop us a line via [@ObjectBox_io](https://twitter.com/ObjectBox_io/)
+- ⭐ us, if you like what you see 
+
+Thank you! 🙏
+
+Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox.io/blog)!
+
+
 <a name="cocoapods"></a>Adding ObjectBox to your project
 --------------------------------------------------------
 [CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
@@ -131,23 +151,6 @@ ObjectBox is a cross-platform database supporting [multiple native languages](ht
   also enables porting ObjectBox to other languages.
 * [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
 
-How can I help ObjectBox?
----------------------------
-We're on a mission to bring joy and delight to Mobile app developers.
-We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
-
-To do that, we want your feedback: what do you love? What's amiss? Where do you struggle in everyday app development?
-
-**We're looking forward to receiving your comments and requests:**
-
-- Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) 
-- Upvote issues you find important by hitting the 👍/+1 reaction button
-- Drop us a line via [@ObjectBox_io](https://twitter.com/ObjectBox_io/)
-- ⭐ us, if you like what you see 
-
-Thank you! 🙏
-
-Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox.io/blog)!
 
 License
 -------
