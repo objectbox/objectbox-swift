@@ -40,6 +40,7 @@ High-performance Swift database
 
 Enjoy ❤️
 
+
 <a name="cocoapods"></a>Adding ObjectBox to your project
 --------------------------------------------------------
 [CocoaPods](https://cocoapods.org) is recommended to set up ObjectBox in your project.
@@ -121,20 +122,11 @@ Source code
 -----------
 Source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md).
 
-Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT
-------------------------
-ObjectBox is a cross-platform database supporting [multiple native languages](https://objectbox.io/dev-get-started/): 
-
-* [ObjectBox Java/Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
-* [Golang Data Persistence](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications. 
-* [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
-  also enables porting ObjectBox to other languages.
-* [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
-
-How can I help ObjectBox?
+Already using ObjectBox?
 ---------------------------
-We're on a mission to bring joy and delight to Mobile app developers.
-We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
+Your opinion matters to us! Please fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6).
+
+We're on a mission to bring joy and delight to Mobile app developers. We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
 
 To do that, we want your feedback: what do you love? What's amiss? Where do you struggle in everyday app development?
 
@@ -148,6 +140,18 @@ To do that, we want your feedback: what do you love? What's amiss? Where do you 
 Thank you! 🙏
 
 Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox.io/blog)!
+
+
+Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT
+------------------------
+ObjectBox is a cross-platform database supporting [multiple native languages](https://objectbox.io/dev-get-started/): 
+
+* [ObjectBox Java/Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
+* [Golang Data Persistence](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications. 
+* [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
+  also enables porting ObjectBox to other languages.
+* [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
+
 
 License
 -------
