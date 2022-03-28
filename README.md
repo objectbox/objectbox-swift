@@ -2,8 +2,12 @@
 
 Swift Database - swiftly persist objects on iOS and macOS
 ===============
+
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](#cocoapods)
 [![Platform](https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat)](#cocoapods)
+
+
+**Your opinion matters to us!** Please fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6).
 
 ObjectBox is a superfast, light-weight Swift database persisting Swift objects fast, easily, and fully ACID-compliant on-device on iOS and macOS.
 On top, it comes with an [out-of-the-box Data Sync](https://objectbox.io/sync/) handling the complexity of occassionally connected devices, networking and conflict resolution code for you. Build apps that reliably sync between devices and any backend, offline on-premise or online with the Cloud.
@@ -124,7 +128,6 @@ Source code for ObjectBox's Swift binding can be found [in the Source folder](So
 
 Already using ObjectBox?
 ---------------------------
-Your opinion matters to us! Please fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6).
 
 We're on a mission to bring joy and delight to Mobile app developers. We want ObjectBox not only to be the fastest Swift database, but also the swiftiest Swift data persistence, making you enjoy coding with ObjectBox.
 
