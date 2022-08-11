@@ -26,6 +26,7 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
+## Table of Contents
 - [Features](#features)
 - [Adding ObjectBox to your project](#adding-objectbox-to-your-project)
     - [New to CocoaPods?](#new-to-cocoapods)
@@ -37,6 +38,7 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 - [Already using ObjectBox?](#already-using-objectbox)
 - [Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT](cross-platform-database-mobile-desktop-browser-embedded-iot)
 - [License](#license)
+<hr/>
 
 Features
 -------------
