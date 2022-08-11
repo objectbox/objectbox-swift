@@ -26,7 +26,16 @@ let oldClauses = query.find()
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
-High-performance Swift database
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Flutter Database Performance Benchmarks](#flutter-database-performance-benchmarks)
+- [Do you 💙 ObjectBox?](#do-you--objectbox)
+- [Contributing](#contributing)
+- [Packages](#packages)
+- [Other languages/bindings](#other-languagesbindings)
+- [License](#license)
+
+##Features
 -------------
 🏁 **High performance** on restricted devices, like IoT gateways, micro controllers, ECUs etc.\
 🪂 **Resourceful** with minimal CPU, power and Memory usage for maximum flexibility and sustainability\
