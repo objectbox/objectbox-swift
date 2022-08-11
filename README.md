@@ -27,15 +27,18 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 **[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
 
 - [Features](#features)
-- [Getting Started](#getting-started)
-- [Flutter Database Performance Benchmarks](#flutter-database-performance-benchmarks)
-- [Do you 💙 ObjectBox?](#do-you--objectbox)
-- [Contributing](#contributing)
-- [Packages](#packages)
-- [Other languages/bindings](#other-languagesbindings)
+- [Adding ObjectBox to your project](#adding-objectbox-to-your-project)
+    - [New to CocoaPods?](#new-to-cocoapods)
+    - [CocoaPods troubleshooting](#cocoapods-troubleshooting)
+    - [Swift Versions](#swift-versions)
+- [Example](#example)
+- [Background: code generation](#background-code-generation)
+- [Source code](#source-code)
+- [Already using ObjectBox?](#already-using-objectbox)
+- [Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT](cross-platform-database-mobile-desktop-browser-embedded-iot)
 - [License](#license)
 
-##Features
+Features
 -------------
 🏁 **High performance** on restricted devices, like IoT gateways, micro controllers, ECUs etc.\
 🪂 **Resourceful** with minimal CPU, power and Memory usage for maximum flexibility and sustainability\
