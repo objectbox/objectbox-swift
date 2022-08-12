@@ -36,7 +36,7 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 - [Background: code generation](#background-code-generation)
 - [Source code](#source-code)
 - [Already using ObjectBox?](#already-using-objectbox)
-- [Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT](cross-platform-database-mobile-desktop-browser-embedded-iot)
+- [Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT](#cross-platform-database-mobile-desktop-browser-embedded-iot)
 - [License](#license)
 <hr/>
 
