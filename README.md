@@ -1,6 +1,6 @@
 <img width="466" src="https://raw.githubusercontent.com/objectbox/objectbox-swift/master/images/logo.png">
 
-Swift Database - swiftly persist objects on iOS and macOS
+Swift Database - swiftly persist objects on iOS & macOS
 ===============
 
 [![Version](https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat)](#cocoapods)
