@@ -1,4 +1,6 @@
 {
+  "1.8.0": "https://github.com/objectbox/objectbox-swift/releases/download/v1.8.0/ObjectBox-1.8.0-Carthage.framework.zip",
+  "1.7.0": "https://github.com/objectbox/objectbox-swift/releases/download/v1.7.0/ObjectBox-1.7.0-Carthage.framework.zip",
   "1.4.1": "https://github.com/objectbox/objectbox-swift/releases/download/v1.4.1/ObjectBox-1.4.1-Carthage.framework.zip",
   "1.4.0": "https://github.com/objectbox/objectbox-swift/releases/download/v1.4.0/ObjectBox-1.4.0-Carthage.framework.zip",
   "1.3.1": "https://github.com/objectbox/objectbox-swift/releases/download/v1.3.1/ObjectBox-1.3.1-Carthage.framework.zip",
