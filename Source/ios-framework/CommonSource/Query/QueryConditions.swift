@@ -106,8 +106,8 @@ where E == E.EntityBindingType.EntityType {
     }
 }
 
-/// Work-around that makes the given property with an optional VALUE "non-optional" by creating a new Property.
 // Not sure if that is the best approach; maybe we should not carry optional values in Property in the first place?
+/// Work-around that makes the given property with an optional VALUE "non-optional" by creating a new Property.
 internal func nonOptional<E, VALUE>(_ property: Property<E, VALUE?, Void>) -> Property<E, VALUE, Void> {
     return Property<E, VALUE, Void>(propertyId: property.propertyId, isPrimaryKey: property.isPrimaryKey)
 }

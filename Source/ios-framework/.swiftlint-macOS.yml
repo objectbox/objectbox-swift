@@ -18,3 +18,4 @@ identifier_name:
 type_name:
     excluded:
         - Id
+        - __EntityRelatable # TODO check this one; can we remove it altogether?

@@ -84,9 +84,9 @@ where Target == Target.EntityBindingType.EntityType {
             if entity._id.needsIdGeneration {
                 self = .unstored(entity: entity)
             } else {
-                //swiftlint:disable force_cast
+                // swiftlint:disable force_cast
                 self = .stored(id: entity._id as! EntityId<Target>, entity: entity)
-                //swiftlint:enable force_cast
+                // swiftlint:enable force_cast
             }
         }
 

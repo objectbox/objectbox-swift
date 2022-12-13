@@ -458,8 +458,8 @@ extension ToMany: RangeReplaceableCollection {
     // https://github.com/apple/swift/blob/923b1fbedf46022fc1dc0cccf889db88e2e13465 - URL continues in next line -
     // /stdlib/public/core/RangeReplaceableCollection.swift#L644
 
-    /// - Parameter keepCapacity: ignored in this implementation,
     // To do: can we officially `override` without compiler complaining?
+    /// - Parameter keepCapacity: ignored in this implementation,
     public func removeAll(keepingCapacity keepCapacity: Bool = false) {
         replaceSubrange(startIndex..<endIndex, with: EmptyCollection())
     }

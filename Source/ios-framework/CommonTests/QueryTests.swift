@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2022 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,32 @@ class QueryTests: XCTestCase {
 
         XCTAssertEqual(2, Int(try box.removeAll()))
         XCTAssertEqual(try box.count(), 0)
+    }
+
+    func testFind_visitor() throws {
+        let useVisitorValues = [true, false]
+        for useVisitorValue in useVisitorValues {
+            let box = store.box(for: AllTypesEntity.self)
+            try box.removeAll()
+
+            let entity1 = AllTypesEntity.create(long: 100)
+            let entity2 = AllTypesEntity.create(long: 200)
+            try box.put([entity1, entity2])
+
+            let query = try box.query().build()
+            if useVisitorValue {
+                query.useVisitor()
+            }
+            let results = try query.find()
+            XCTAssertEqual(results.count, 2)
+            XCTAssertEqual(results[0].aLong, 100)
+            XCTAssertEqual(results[1].aLong, 200)
+            
+            let resultsContiguous = try query.findContiguous()
+            XCTAssertEqual(resultsContiguous.count, 2)
+            XCTAssertEqual(resultsContiguous[0].aLong, 100)
+            XCTAssertEqual(resultsContiguous[1].aLong, 200)
+        }
     }
 
     func testSetParameter_Long_SingleParameter() throws {
@@ -540,9 +566,10 @@ class QueryTests: XCTestCase {
         try box.put([entity1, entity2])
 
         let query = try box.query({
-            "firstLetter" .= AllTypesEntity.string.startsWith("M")
-                && "minAge" .= AllTypesEntity.integer > 300
-        }).build()
+                    "firstLetter" .= AllTypesEntity.string.startsWith("M")
+                            && "minAge" .= AllTypesEntity.integer > 300
+                })
+                .build()
         XCTAssertEqual(try query.count(), 0)
         query.setParameter("firstLetter", to: "Z")
         XCTAssertEqual(try query.count(), 1)

@@ -21,8 +21,9 @@ import Foundation
 /// Helper base class to allow us to pass a generic type through a C function callback.
 /// Can't be a subtype of Box or Query as that would make it generic again.
 internal class InstanceVisitorBase {
-    var userError: Swift.Error? ///< Set by subclasses in visit() if an error occurs that needs to be thrown.
-    
+    /// Set by subclasses in visit() if an error occurs that needs to be thrown.
+    var userError: Swift.Error?
+
     /// Called by for(_:, in:) and forEach to request creation of the given entity from raw data and to call back its
     /// caller with the new object in a type-safe manner. Return false or set userError to abort the loop.
     func visit(ptr: UnsafeRawPointer?, size: Int) -> Bool { return false }

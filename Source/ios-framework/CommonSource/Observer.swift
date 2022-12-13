@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2022 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ internal func observerCallback(_ ptr: UnsafeMutableRawPointer?) {
 /// You obtain an Observer from one of a `Box`'s or `Query`'s `subscribe()` methods.
 public class Observer {
     private var cObserver: OpaquePointer?
-    internal var changeHandler: (() -> Void)
+    internal var changeHandler: () -> Void
     internal var dispatchQueue: DispatchQueue
     
     /// Flags to pass to the various `subscribe` calls on `Box` and `Query`.
@@ -54,7 +54,7 @@ public class Observer {
     }
     
     internal init(store: Store, entityId: obx_schema_id, dispatchQueue: DispatchQueue,
-                  changeHandler: @escaping (() -> Void)) {
+                  changeHandler: @escaping () -> Void) {
         self.dispatchQueue = dispatchQueue
         self.changeHandler = changeHandler
         cObserver = obx_observe_single_type(store.cStore, entityId, observerCallback,

@@ -30,7 +30,7 @@ where E == E.EntityBindingType.EntityType {
 
     internal init(store: Store) {
         self.store = store
-        self.cBox = obx_box(store.cStore, EntityType.entityInfo.entitySchemaId)
+        cBox = obx_box(store.cStore, EntityType.entityInfo.entitySchemaId)
     }
 
     // MARK: Box Introspection
@@ -489,7 +489,7 @@ extension Box {
         if self.store.supportsLargeArrays {
             return try store.runInReadOnlyTransaction {
                 guard let bytesArray = obx_box_get_all(cBox) else {
-                    try checkLastError(); // should always throw
+                    try checkLastError() // should always throw
                     return ContiguousArray<EntityType>()
                 }
                 defer {

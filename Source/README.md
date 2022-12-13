@@ -19,6 +19,12 @@ Repository Contents
 - `ios-framework/Makefile`: combines `fetch_dependencies.command` and a Carthage build to create the Swift framework.
 - `.gitlab-ci.yml` calls make targets of `ios-framework/Makefile`
 - `create-xcframework.sh`: builds the multi-platform archive containing binaries for multiple platforms and architectures.
+- `ios-framework/cocoapod/make-release.command`: prepares a Cocoapods deployment.
+  - Builds ObjectBox Generator (based on Sourcery)
+  - Builds the Swift framework using `ios-framework/Makefile`
+  - Creates deployable zips
+  - Creates ObjectBox.podspec & Package.swift
+  - Optionally pushes the pod to the Cocoapods repo (staging or trunk)
 
 Tests
 -----
@@ -59,6 +65,7 @@ You need to have [jazzy](https://github.com/realm/jazzy) installed to generate d
 
 Distributing the Framework
 --------------------------
+See also the [how-to release document](docs/how-to-release-objectbox-swift.md).
 
 Distribution of the framework as closed source works across these channels:
 

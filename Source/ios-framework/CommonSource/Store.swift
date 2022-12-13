@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2020 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2022 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.7.0"
+    public static var version = "1.8.0"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -107,7 +107,7 @@ public class Store: CustomDebugStringConvertible {
         obx_opt_model(opts, model)
         try checkLastError()
         obx_opt_directory(opts, directory)
-        obx_opt_max_db_size_in_kb(opts, Int(maxDbSizeInKByte))
+        obx_opt_max_db_size_in_kb(opts, maxDbSizeInKByte)
         obx_opt_file_mode(opts, UInt32(fileMode))
         obx_opt_max_readers(opts, UInt32(maxReaders))
         obx_opt_read_only(opts, readOnly)
@@ -221,7 +221,7 @@ public class Store: CustomDebugStringConvertible {
                 // thus the group ID must be equal or less than 20 (ASCII) charaters.
                 if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 20 }) {
                     obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
-                    //print("found appGroupIdentifier \(appGroupIdentifier)")
+                    // print("found appGroupIdentifier \(appGroupIdentifier)")
                 } else {
                     print("Could not find an application group identifier of 20 characters or fewer.")
                 }

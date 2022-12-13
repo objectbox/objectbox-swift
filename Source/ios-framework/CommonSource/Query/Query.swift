@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2022 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-// For use with obx_query_visit
+/// Some wrapper used with/for CDataVisitor - not sure if we actually need it...
 internal class CDataVisitorContext {
     var fun: (UnsafeRawPointer?, Int) -> Bool
 
@@ -25,7 +25,7 @@ internal class CDataVisitorContext {
     }
 }
 
-internal func CDataVisitor(userData: UnsafeMutableRawPointer?, data: UnsafeRawPointer?, size: Int) -> CBool {
+internal func CDataVisitor(data: UnsafeRawPointer?, size: Int, userData: UnsafeMutableRawPointer?) -> CBool {
     let context: CDataVisitorContext = Unmanaged.fromOpaque(userData!).takeUnretainedValue()
     return context.fun(data, size)
 }
@@ -42,20 +42,29 @@ internal func CDataVisitor(userData: UnsafeMutableRawPointer?, data: UnsafeRawPo
 /// a `PropertyQuery`.
 ///
 public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringConvertible
-where E == E.EntityBindingType.EntityType {
+        where E == E.EntityBindingType.EntityType {
     /// The entity type this query is going to target.
     public typealias EntityType = E
 
     internal var cQuery: OpaquePointer /*OBX_query*/
     internal var store: Store
+    internal var useBytesArray: Bool
 
     internal init(query: OpaquePointer /*OBX_query*/, store: Store) {
-        self.cQuery = query
+        cQuery = query
         self.store = store
+        useBytesArray = store.supportsLargeArrays
     }
 
     deinit {
         obx_query_close(cQuery)
+    }
+
+    /// Semi-internal; tells the query to use a visitor approach which may be not as fast but uses a bit less memory
+    /// with larger result sets.
+    @discardableResult func useVisitor() -> Query<E> {
+        useBytesArray = false
+        return self // allow chaining
     }
 
     private func setOffsetLimit(_ offset: Int, _ limit: Int) throws {
@@ -74,8 +83,8 @@ where E == E.EntityBindingType.EntityType {
     /// - Returns: Collection of objects matching the query conditions.
     public func find(offset: Int = 0, limit: Int = 0) throws -> [EntityType] {
         return try store.runInReadOnlyTransaction {
-            if self.store.supportsLargeArrays {
-                let box = self.store.box(for: EntityType.self)
+            if useBytesArray {
+                let box = store.box(for: EntityType.self)
                 try setOffsetLimit(offset, limit)
                 guard let bytesArray = obx_query_find(cQuery) else {
                     try throwObxErr(obx_last_error_code())
@@ -111,8 +120,8 @@ where E == E.EntityBindingType.EntityType {
         var result = ContiguousArray<EntityType>()
 
         try store.runInReadOnlyTransaction {
-            if self.store.supportsLargeArrays {
-                let box = self.store.box(for: EntityType.self)
+            if useBytesArray {
+                let box = store.box(for: EntityType.self)
                 try setOffsetLimit(offset, limit)
                 guard let bytesArray = obx_query_find(cQuery) else {
                     try throwObxErr(obx_last_error_code())
@@ -219,7 +228,7 @@ where E == E.EntityBindingType.EntityType {
     /// - Parameter property: Object property to modify the query for.
     /// - Returns: New `PropertyQuery` to configure.
     public func property<T>(_ property: Property<EntityType, T, Void>) -> PropertyQuery<EntityType, T>
-        where T: EntityPropertyTypeConvertible {
+            where T: EntityPropertyTypeConvertible {
         return PropertyQuery(query: self, propertyId: property.base.propertyId)
     }
 
