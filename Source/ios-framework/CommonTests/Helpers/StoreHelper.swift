@@ -19,12 +19,12 @@ import Foundation
 /// :nodoc:
 public class StoreHelper {
     /// :nodoc:
-    public class func tempStore(model: OpaquePointer /*OBX_model*/) -> Store {
+    public class func tempStore(model: OpaquePointer /*OBX_model*/, maxDbSizeInKByte: UInt64 = 500) -> Store {
         let directoryPath = StoreHelper.newTemporaryDirectory().path
         var store: Store! = nil
         do {
-            store = try Store(model: model, directory: directoryPath, maxDbSizeInKByte: 500, fileMode: 0o644,
-                    maxReaders: 10)
+            store = try Store(model: model, directory: directoryPath, maxDbSizeInKByte: maxDbSizeInKByte,
+                    fileMode: 0o644, maxReaders: 10)
         } catch {
             NSException(name: NSExceptionName.genericException, reason: "tempStore failed with error: \(error)",
                     userInfo: [NSUnderlyingErrorKey: error]).raise()

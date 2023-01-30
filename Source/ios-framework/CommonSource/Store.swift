@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2022 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2023 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.8.0"
+    public static var version = "1.8.1"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -191,7 +191,9 @@ public class Store: CustomDebugStringConvertible {
     public func closeAndDeleteAllFiles() throws {
         self.close()
         obx_remove_db_files(directoryPath)
-        try FileManager.default.removeItem(at: URL(fileURLWithPath: directoryPath))
+        if FileManager.default.fileExists(atPath: directoryPath) {
+            try FileManager.default.removeItem(atPath: directoryPath)
+        }
     }
 
     internal let setUpMutexIdentifier: Bool = {

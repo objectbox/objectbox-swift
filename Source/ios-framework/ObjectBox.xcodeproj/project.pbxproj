@@ -46,15 +46,53 @@
 		287B350025DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
 		287B350125DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
 		287B350225DE9D60004D312E /* SyncEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287B34FF25DE9D60004D312E /* SyncEnums.swift */; };
-		28A6B3DB247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */; };
-		28A6B3DC247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */; };
-		28A6B3DD247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */; };
-		28A6B3DE247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */; };
+		28A6B3DB247EEB1600C163B4 /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* Entities.swift */; };
+		28A6B3DC247EEB1600C163B4 /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* Entities.swift */; };
+		28A6B3DD247EEB1600C163B4 /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* EntityInfo.generated.swift */; };
+		28A6B3DE247EEB1600C163B4 /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* EntityInfo.generated.swift */; };
 		28A6B3E0247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		28A6B3E1247EEB8700C163B4 /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
 		28B4F2842600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28B4F2852600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28B4F2862600079D00B11EC4 /* objectbox-c-sync.h in Headers */ = {isa = PBXBuildFile; fileRef = 28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		28DAD51F29784B76005EEF5D /* AppSyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864524FA920B009B734D /* AppSyncTest.swift */; };
+		28DAD52029784B76005EEF5D /* EntityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E864324FA7A8B009B734D /* EntityHelpers.swift */; };
+		28DAD52129784B76005EEF5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862924FA37EE009B734D /* AppDelegate.swift */; };
+		28DAD52229784B76005EEF5D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862B24FA37EE009B734D /* SceneDelegate.swift */; };
+		28DAD52329784B76005EEF5D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280E862D24FA37EE009B734D /* ContentView.swift */; };
+		28DAD52529784B76005EEF5D /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; };
+		28DAD52729784B76005EEF5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280E863424FA37F2009B734D /* LaunchScreen.storyboard */; };
+		28DAD52829784B76005EEF5D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 280E863224FA37F2009B734D /* Preview Assets.xcassets */; };
+		28DAD52929784B76005EEF5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 280E862F24FA37F2009B734D /* Assets.xcassets */; };
+		28DAD52B29784B76005EEF5D /* ObjectBox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		28DAD53929784C20005EEF5D /* NullablePropertyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9CF217F4C3B002305F8 /* NullablePropertyEntity.swift */; };
+		28DAD53A29784C20005EEF5D /* EntityInfo.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DA247EEB1600C163B4 /* EntityInfo.generated.swift */; };
+		28DAD53B29784C20005EEF5D /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3D9247EEB1600C163B4 /* Entities.swift */; };
+		28DAD53C29784C20005EEF5D /* TestExceptionProducer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9DF217F4C3B002305F8 /* TestExceptionProducer.mm */; };
+		28DAD53D29784C20005EEF5D /* TestEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D19CA82280601B00BEAD37 /* TestEntities.swift */; };
+		28DAD53E29784C20005EEF5D /* RelatedEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9CD217F4C3B002305F8 /* RelatedEntities.swift */; };
+		28DAD53F29784C20005EEF5D /* AsyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C14CEB2307103D00F10D7D /* AsyncTest.swift */; };
+		28DAD54029784C20005EEF5D /* QueryOperatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9CA217F4C3B002305F8 /* QueryOperatorTests.swift */; };
+		28DAD54129784C20005EEF5D /* BoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5541762B2278584200B3A225 /* BoxTests.swift */; };
+		28DAD54229784C20005EEF5D /* ExceptionHelpers+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9DD217F4C3B002305F8 /* ExceptionHelpers+Swift.swift */; };
+		28DAD54329784C20005EEF5D /* ErrorHelperIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5541762E2278726300B3A225 /* ErrorHelperIntegrationTests.swift */; };
+		28DAD54429784C20005EEF5D /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D4217F4C3B002305F8 /* QueryTests.swift */; };
+		28DAD54529784C20005EEF5D /* TransactionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554176252277575700B3A225 /* TransactionTests.swift */; };
+		28DAD54629784C20005EEF5D /* PropertyQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D6217F4C3B002305F8 /* PropertyQueryTests.swift */; };
+		28DAD54729784C20005EEF5D /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554176282278445700B3A225 /* StoreTests.swift */; };
+		28DAD54829784C20005EEF5D /* CombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBE6C6230C4D2A00F41F88 /* CombineTests.swift */; };
+		28DAD54929784C20005EEF5D /* QueryBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554176182272101500B3A225 /* QueryBuilderTests.swift */; };
+		28DAD54A29784C20005EEF5D /* SwiftRefinedAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9C9217F4C3B002305F8 /* SwiftRefinedAPITests.swift */; };
+		28DAD54B29784C20005EEF5D /* Entity+NullablePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D5217F4C3B002305F8 /* Entity+NullablePropertyTests.swift */; };
+		28DAD54C29784C20005EEF5D /* ExceptionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9DC217F4C3B002305F8 /* ExceptionHelpers.m */; };
+		28DAD54D29784C20005EEF5D /* StructEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558A78FF2281B65A00BAE9C9 /* StructEntity.swift */; };
+		28DAD54E29784C20005EEF5D /* PureSwiftEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D2217F4C3B002305F8 /* PureSwiftEntity.swift */; };
+		28DAD54F29784C20005EEF5D /* ManyToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */; };
+		28DAD55029784C20005EEF5D /* ToOneRelationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5070A9D9217F4C3B002305F8 /* ToOneRelationTests.swift */; };
+		28DAD55129784C20005EEF5D /* SyncDryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */; };
+		28DAD55229784C20005EEF5D /* ToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */; };
+		28DAD55329784C20005EEF5D /* UtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9F2FECFA173905FD4726 /* UtilTests.swift */; };
+		28DAD55629784C20005EEF5D /* ObjectBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7561E91125CA0CA6003FD439 /* ObjectBox.framework */; };
 		503962EB216363A1000DFB7E /* ToMany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503962EA216363A1000DFB7E /* ToMany.swift */; };
 		506858CF211B1864003F7D02 /* QueryConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506858CE211B1864003F7D02 /* QueryConditions.swift */; };
 		506B0938215377410016C7AA /* ToOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506B0937215377410016C7AA /* ToOne.swift */; };
@@ -276,6 +314,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		28DAD53129784B97005EEF5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5070A964217F479C002305F8;
+			remoteInfo = "ObjectBox-iOS";
+		};
+		28DAD53529784C20005EEF5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7561E8CE25CA0CA6003FD439;
+			remoteInfo = "ObjectBox-iOS Simulator";
+		};
+		28DAD53729784C20005EEF5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 280E862624FA37EE009B734D;
+			remoteInfo = ObjectBoxiOSTestApp;
+		};
+		28DAD55D29784C50005EEF5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5070A964217F479C002305F8;
+			remoteInfo = "ObjectBox-iOS";
+		};
+		28DAD55F29784C55005EEF5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28DAD51B29784B76005EEF5D;
+			remoteInfo = ObjectBoxiOSTestApp;
+		};
 		5070AB0D21808086002305F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
@@ -297,20 +370,6 @@
 			remoteGlobalIDString = CB3B3F3020AB4B4B00418618;
 			remoteInfo = "ObjectBox-macOS";
 		};
-		7518E47925FBE7B700B73E74 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7561E8CE25CA0CA6003FD439;
-			remoteInfo = "ObjectBox-iOS Simulator";
-		};
-		7518E48B25FBE81000B73E74 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 280E862624FA37EE009B734D;
-			remoteInfo = ObjectBoxiOSTestApp;
-		};
 		7518E4E225FBEA7700B73E74 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB3B3F2820AB4B4B00418618 /* Project object */;
@@ -321,6 +380,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		28DAD52A29784B76005EEF5D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				28DAD52B29784B76005EEF5D /* ObjectBox.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		50D7EF8020EC9E470001872D /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -345,7 +415,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		280E862724FA37EE009B734D /* ObjectBoxiOSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectBoxiOSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		280E862724FA37EE009B734D /* ObjectBoxiOSTestApp Simulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectBoxiOSTestApp Simulator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		280E862924FA37EE009B734D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		280E862B24FA37EE009B734D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		280E862D24FA37EE009B734D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -360,10 +430,14 @@
 		283C8EC625C0A1ED001ABC37 /* libObjectBoxCore-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS.a"; path = "../external/objectbox-static/libObjectBoxCore-iOS.a"; sourceTree = "<group>"; };
 		283C8ED025C0A2B3001ABC37 /* libObjectBoxCore-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS.a"; path = "../../external/objectbox-static/libObjectBoxCore-iOS.a"; sourceTree = "<group>"; };
 		287B34FF25DE9D60004D312E /* SyncEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncEnums.swift; sourceTree = "<group>"; };
-		28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-Entities.swift"; sourceTree = "<group>"; };
-		28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IntTestiOSRegular-EntityInfo-generated.swift"; sourceTree = "<group>"; };
+		28A6B3D9247EEB1600C163B4 /* Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entities.swift; sourceTree = "<group>"; };
+		28A6B3DA247EEB1600C163B4 /* EntityInfo.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityInfo.generated.swift; sourceTree = "<group>"; };
 		28A6B3DF247EEB8700C163B4 /* ManyToManyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyToManyTests.swift; sourceTree = "<group>"; };
 		28B4F2832600079D00B11EC4 /* objectbox-c-sync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "objectbox-c-sync.h"; sourceTree = "<group>"; };
+		28DAD52F29784B76005EEF5D /* ObjectBoxiOSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectBoxiOSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28DAD53029784B78005EEF5D /* ObjectBoxiOSTestApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bak; name = "ObjectBoxiOSTestApp copy-Info.plist"; path = "/Users/markus/dev/objectbox-swift/ios-framework/ObjectBoxiOSTestApp copy-Info.plist"; sourceTree = "<absolute>"; };
+		28DAD55B29784C20005EEF5D /* ObjectBoxTests-iOS Simulator.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ObjectBoxTests-iOS Simulator.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28DAD55C29784C22005EEF5D /* ObjectBoxTests-iOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bak; name = "ObjectBoxTests-iOS copy-Info.plist"; path = "/Users/markus/dev/objectbox-swift/ios-framework/ObjectBoxTests-iOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		28E90AED25C1DE5E008C55BC /* libObjectBoxCore-iOS-sim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS-sim.a"; path = "../../external/objectbox-static/libObjectBoxCore-iOS-sim.a"; sourceTree = "<group>"; };
 		503962EA216363A1000DFB7E /* ToMany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToMany.swift; sourceTree = "<group>"; };
 		5042FDB220CBE18600EBCA52 /* ObjectBoxTests-macOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjectBoxTests-macOS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -471,6 +545,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				7518E4E025FBEA7700B73E74 /* ObjectBox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28DAD52429784B76005EEF5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DAD52529784B76005EEF5D /* ObjectBox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28DAD55529784C20005EEF5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DAD55629784C20005EEF5D /* ObjectBox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,8 +757,8 @@
 		5070A9CC217F4C3B002305F8 /* Test Entities */ = {
 			isa = PBXGroup;
 			children = (
-				28A6B3D9247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift */,
-				28A6B3DA247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift */,
+				28A6B3D9247EEB1600C163B4 /* Entities.swift */,
+				28A6B3DA247EEB1600C163B4 /* EntityInfo.generated.swift */,
 				5070A9CF217F4C3B002305F8 /* NullablePropertyEntity.swift */,
 				5070A9D2217F4C3B002305F8 /* PureSwiftEntity.swift */,
 				5070A9CD217F4C3B002305F8 /* RelatedEntities.swift */,
@@ -800,6 +890,8 @@
 				5042FDC620CEA3C500EBCA52 /* Frameworks */,
 				CB3B3F3220AB4B4B00418618 /* Products */,
 				287B34BC25DD2369004D312E /* Recovered References */,
+				28DAD53029784B78005EEF5D /* ObjectBoxiOSTestApp copy-Info.plist */,
+				28DAD55C29784C22005EEF5D /* ObjectBoxTests-iOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -811,8 +903,10 @@
 				5070A965217F479C002305F8 /* ObjectBox.framework */,
 				5070A96D217F479C002305F8 /* ObjectBoxTests-iOS.xctest */,
 				55D3E5B52375AB3B002F286D /* OBXCodeGen.framework */,
-				280E862724FA37EE009B734D /* ObjectBoxiOSTestApp.app */,
+				280E862724FA37EE009B734D /* ObjectBoxiOSTestApp Simulator.app */,
 				7561E91125CA0CA6003FD439 /* ObjectBox.framework */,
+				28DAD52F29784B76005EEF5D /* ObjectBoxiOSTestApp.app */,
+				28DAD55B29784C20005EEF5D /* ObjectBoxTests-iOS Simulator.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -881,9 +975,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		280E862624FA37EE009B734D /* ObjectBoxiOSTestApp */ = {
+		280E862624FA37EE009B734D /* ObjectBoxiOSTestApp Simulator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 280E863A24FA37F2009B734D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp" */;
+			buildConfigurationList = 280E863A24FA37F2009B734D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp Simulator" */;
 			buildPhases = (
 				280E862324FA37EE009B734D /* Sources */,
 				280E862424FA37EE009B734D /* Frameworks */,
@@ -895,10 +989,48 @@
 			dependencies = (
 				7518E4E325FBEA7700B73E74 /* PBXTargetDependency */,
 			);
+			name = "ObjectBoxiOSTestApp Simulator";
+			productName = ObjectBoxiOSTestApp;
+			productReference = 280E862724FA37EE009B734D /* ObjectBoxiOSTestApp Simulator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		28DAD51B29784B76005EEF5D /* ObjectBoxiOSTestApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28DAD52C29784B76005EEF5D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp" */;
+			buildPhases = (
+				28DAD51E29784B76005EEF5D /* Sources */,
+				28DAD52429784B76005EEF5D /* Frameworks */,
+				28DAD52629784B76005EEF5D /* Resources */,
+				28DAD52A29784B76005EEF5D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				28DAD53229784B97005EEF5D /* PBXTargetDependency */,
+			);
 			name = ObjectBoxiOSTestApp;
 			productName = ObjectBoxiOSTestApp;
-			productReference = 280E862724FA37EE009B734D /* ObjectBoxiOSTestApp.app */;
+			productReference = 28DAD52F29784B76005EEF5D /* ObjectBoxiOSTestApp.app */;
 			productType = "com.apple.product-type.application";
+		};
+		28DAD53329784C20005EEF5D /* ObjectBoxTests-iOS Simulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28DAD55829784C20005EEF5D /* Build configuration list for PBXNativeTarget "ObjectBoxTests-iOS Simulator" */;
+			buildPhases = (
+				28DAD53829784C20005EEF5D /* Sources */,
+				28DAD55529784C20005EEF5D /* Frameworks */,
+				28DAD55729784C20005EEF5D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				28DAD53429784C20005EEF5D /* PBXTargetDependency */,
+				28DAD53629784C20005EEF5D /* PBXTargetDependency */,
+			);
+			name = "ObjectBoxTests-iOS Simulator";
+			productName = "ObjectBox-iOSTests";
+			productReference = 28DAD55B29784C20005EEF5D /* ObjectBoxTests-iOS Simulator.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		5070A964217F479C002305F8 /* ObjectBox-iOS */ = {
 			isa = PBXNativeTarget;
@@ -930,8 +1062,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				7518E47A25FBE7B700B73E74 /* PBXTargetDependency */,
-				7518E48C25FBE81000B73E74 /* PBXTargetDependency */,
+				28DAD55E29784C50005EEF5D /* PBXTargetDependency */,
+				28DAD56029784C55005EEF5D /* PBXTargetDependency */,
 			);
 			name = "ObjectBoxTests-iOS";
 			productName = "ObjectBox-iOSTests";
@@ -1070,14 +1202,16 @@
 			projectRoot = "";
 			targets = (
 				CB3B3F3020AB4B4B00418618 /* ObjectBox-macOS */,
-				50C365AB20BE8FC200F77FA3 /* ObjectBoxTests-macOS */,
 				5070A964217F479C002305F8 /* ObjectBox-iOS */,
 				7561E8CE25CA0CA6003FD439 /* ObjectBox-iOS Simulator */,
+				50C365AB20BE8FC200F77FA3 /* ObjectBoxTests-macOS */,
 				5070A96C217F479C002305F8 /* ObjectBoxTests-iOS */,
+				28DAD53329784C20005EEF5D /* ObjectBoxTests-iOS Simulator */,
 				5070AB072180807E002305F8 /* iOS-Fat-Framework */,
 				55C37BCD21BFC1610012BC0D /* CodeGenTests */,
 				55D3E5B42375AB3B002F286D /* OBXCodeGen */,
-				280E862624FA37EE009B734D /* ObjectBoxiOSTestApp */,
+				28DAD51B29784B76005EEF5D /* ObjectBoxiOSTestApp */,
+				280E862624FA37EE009B734D /* ObjectBoxiOSTestApp Simulator */,
 			);
 		};
 /* End PBXProject section */
@@ -1090,6 +1224,23 @@
 				280E863624FA37F2009B734D /* LaunchScreen.storyboard in Resources */,
 				280E863324FA37F2009B734D /* Preview Assets.xcassets in Resources */,
 				280E863024FA37F2009B734D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28DAD52629784B76005EEF5D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DAD52729784B76005EEF5D /* LaunchScreen.storyboard in Resources */,
+				28DAD52829784B76005EEF5D /* Preview Assets.xcassets in Resources */,
+				28DAD52929784B76005EEF5D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28DAD55729784C20005EEF5D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1262,6 +1413,52 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28DAD51E29784B76005EEF5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DAD51F29784B76005EEF5D /* AppSyncTest.swift in Sources */,
+				28DAD52029784B76005EEF5D /* EntityHelpers.swift in Sources */,
+				28DAD52129784B76005EEF5D /* AppDelegate.swift in Sources */,
+				28DAD52229784B76005EEF5D /* SceneDelegate.swift in Sources */,
+				28DAD52329784B76005EEF5D /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28DAD53829784C20005EEF5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DAD53929784C20005EEF5D /* NullablePropertyEntity.swift in Sources */,
+				28DAD53A29784C20005EEF5D /* EntityInfo.generated.swift in Sources */,
+				28DAD53B29784C20005EEF5D /* Entities.swift in Sources */,
+				28DAD53C29784C20005EEF5D /* TestExceptionProducer.mm in Sources */,
+				28DAD53D29784C20005EEF5D /* TestEntities.swift in Sources */,
+				28DAD53E29784C20005EEF5D /* RelatedEntities.swift in Sources */,
+				28DAD53F29784C20005EEF5D /* AsyncTest.swift in Sources */,
+				28DAD54029784C20005EEF5D /* QueryOperatorTests.swift in Sources */,
+				28DAD54129784C20005EEF5D /* BoxTests.swift in Sources */,
+				28DAD54229784C20005EEF5D /* ExceptionHelpers+Swift.swift in Sources */,
+				28DAD54329784C20005EEF5D /* ErrorHelperIntegrationTests.swift in Sources */,
+				28DAD54429784C20005EEF5D /* QueryTests.swift in Sources */,
+				28DAD54529784C20005EEF5D /* TransactionTests.swift in Sources */,
+				28DAD54629784C20005EEF5D /* PropertyQueryTests.swift in Sources */,
+				28DAD54729784C20005EEF5D /* StoreTests.swift in Sources */,
+				28DAD54829784C20005EEF5D /* CombineTests.swift in Sources */,
+				28DAD54929784C20005EEF5D /* QueryBuilderTests.swift in Sources */,
+				28DAD54A29784C20005EEF5D /* SwiftRefinedAPITests.swift in Sources */,
+				28DAD54B29784C20005EEF5D /* Entity+NullablePropertyTests.swift in Sources */,
+				28DAD54C29784C20005EEF5D /* ExceptionHelpers.m in Sources */,
+				28DAD54D29784C20005EEF5D /* StructEntity.swift in Sources */,
+				28DAD54E29784C20005EEF5D /* PureSwiftEntity.swift in Sources */,
+				28DAD54F29784C20005EEF5D /* ManyToManyTests.swift in Sources */,
+				28DAD55029784C20005EEF5D /* ToOneRelationTests.swift in Sources */,
+				28DAD55129784C20005EEF5D /* SyncDryTests.swift in Sources */,
+				28DAD55229784C20005EEF5D /* ToManyTests.swift in Sources */,
+				28DAD55329784C20005EEF5D /* UtilTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5070A961217F479C002305F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1323,8 +1520,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5070AA00217F4CF7002305F8 /* NullablePropertyEntity.swift in Sources */,
-				28A6B3DE247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */,
-				28A6B3DC247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */,
+				28A6B3DE247EEB1600C163B4 /* EntityInfo.generated.swift in Sources */,
+				28A6B3DC247EEB1600C163B4 /* Entities.swift in Sources */,
 				5070A9FA217F4CA8002305F8 /* TestExceptionProducer.mm in Sources */,
 				55D19CAC2280632E00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA02217F4CF7002305F8 /* RelatedEntities.swift in Sources */,
@@ -1357,8 +1554,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5070AA0E217F4EC7002305F8 /* NullablePropertyEntity.swift in Sources */,
-				28A6B3DD247EEB1600C163B4 /* IntTestiOSRegular-EntityInfo-generated.swift in Sources */,
-				28A6B3DB247EEB1600C163B4 /* IntTestiOSRegular-Entities.swift in Sources */,
+				28A6B3DD247EEB1600C163B4 /* EntityInfo.generated.swift in Sources */,
+				28A6B3DB247EEB1600C163B4 /* Entities.swift in Sources */,
 				5070AA0A217F4EC4002305F8 /* QueryOperatorTests.swift in Sources */,
 				55D19CAB2280632D00BEAD37 /* TestEntities.swift in Sources */,
 				5070AA0D217F4EC4002305F8 /* ToOneRelationTests.swift in Sources */,
@@ -1509,6 +1706,31 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		28DAD53229784B97005EEF5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
+			targetProxy = 28DAD53129784B97005EEF5D /* PBXContainerItemProxy */;
+		};
+		28DAD53429784C20005EEF5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7561E8CE25CA0CA6003FD439 /* ObjectBox-iOS Simulator */;
+			targetProxy = 28DAD53529784C20005EEF5D /* PBXContainerItemProxy */;
+		};
+		28DAD53629784C20005EEF5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 280E862624FA37EE009B734D /* ObjectBoxiOSTestApp Simulator */;
+			targetProxy = 28DAD53729784C20005EEF5D /* PBXContainerItemProxy */;
+		};
+		28DAD55E29784C50005EEF5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
+			targetProxy = 28DAD55D29784C50005EEF5D /* PBXContainerItemProxy */;
+		};
+		28DAD56029784C55005EEF5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28DAD51B29784B76005EEF5D /* ObjectBoxiOSTestApp */;
+			targetProxy = 28DAD55F29784C55005EEF5D /* PBXContainerItemProxy */;
+		};
 		5070AB0E21808086002305F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5070A964217F479C002305F8 /* ObjectBox-iOS */;
@@ -1523,16 +1745,6 @@
 			isa = PBXTargetDependency;
 			target = CB3B3F3020AB4B4B00418618 /* ObjectBox-macOS */;
 			targetProxy = 55C37BD321BFC1770012BC0D /* PBXContainerItemProxy */;
-		};
-		7518E47A25FBE7B700B73E74 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7561E8CE25CA0CA6003FD439 /* ObjectBox-iOS Simulator */;
-			targetProxy = 7518E47925FBE7B700B73E74 /* PBXContainerItemProxy */;
-		};
-		7518E48C25FBE81000B73E74 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 280E862624FA37EE009B734D /* ObjectBoxiOSTestApp */;
-			targetProxy = 7518E48B25FBE81000B73E74 /* PBXContainerItemProxy */;
 		};
 		7518E4E325FBEA7700B73E74 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1561,7 +1773,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 4JF56U4GJ2;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1590,7 +1802,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
 				DEVELOPMENT_TEAM = 4JF56U4GJ2;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1605,6 +1817,129 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		28DAD52D29784B76005EEF5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "ObjectBoxiOSTestApp copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = io.objectbox.ObjectBoxiOSTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		28DAD52E29784B76005EEF5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				ENABLE_BITCODE = NO;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "ObjectBoxiOSTestApp copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = io.objectbox.ObjectBoxiOSTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		28DAD55929784C20005EEF5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				INFOPLIST_FILE = "ObjectBoxTests-iOS copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.ObjectBoxTests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjectBoxTests-iOS/ObjectBoxTests-iOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectBoxiOSTestApp.app/ObjectBoxiOSTestApp";
+			};
+			name = Debug;
+		};
+		28DAD55A29784C20005EEF5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				INFOPLIST_FILE = "ObjectBoxTests-iOS copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.ObjectBoxTests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "ObjectBoxTests-iOS/ObjectBoxTests-iOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectBoxiOSTestApp.app/ObjectBoxiOSTestApp";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1701,7 +2036,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
 				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1735,7 +2070,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4JF56U4GJ2;
 				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2230,11 +2565,29 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		280E863A24FA37F2009B734D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp" */ = {
+		280E863A24FA37F2009B734D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp Simulator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				280E863824FA37F2009B734D /* Debug */,
 				280E863924FA37F2009B734D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28DAD52C29784B76005EEF5D /* Build configuration list for PBXNativeTarget "ObjectBoxiOSTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28DAD52D29784B76005EEF5D /* Debug */,
+				28DAD52E29784B76005EEF5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28DAD55829784C20005EEF5D /* Build configuration list for PBXNativeTarget "ObjectBoxTests-iOS Simulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28DAD55929784C20005EEF5D /* Debug */,
+				28DAD55A29784C20005EEF5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
