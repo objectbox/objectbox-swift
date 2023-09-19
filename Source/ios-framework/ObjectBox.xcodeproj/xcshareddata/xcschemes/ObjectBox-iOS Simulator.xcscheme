@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CB3B3F3020AB4B4B00418618"
+               BlueprintIdentifier = "7561E8CE25CA0CA6003FD439"
                BuildableName = "ObjectBox.framework"
-               BlueprintName = "ObjectBox-macOS"
+               BlueprintName = "ObjectBox-iOS Simulator"
+               ReferencedContainer = "container:ObjectBox.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5070A96C217F479C002305F8"
+               BuildableName = "ObjectBoxTests-iOS.xctest"
+               BlueprintName = "ObjectBoxTests-iOS"
                ReferencedContainer = "container:ObjectBox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,23 +41,14 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CB3B3F3020AB4B4B00418618"
-            BuildableName = "ObjectBox.framework"
-            BlueprintName = "ObjectBox-macOS"
-            ReferencedContainer = "container:ObjectBox.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "50C365AB20BE8FC200F77FA3"
-               BuildableName = "ObjectBoxTests-macOS.xctest"
-               BlueprintName = "ObjectBoxTests-macOS"
+               BlueprintIdentifier = "5070A96C217F479C002305F8"
+               BuildableName = "ObjectBoxTests-iOS.xctest"
+               BlueprintName = "ObjectBoxTests-iOS"
                ReferencedContainer = "container:ObjectBox.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -59,15 +64,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CB3B3F3020AB4B4B00418618"
-            BuildableName = "ObjectBox.framework"
-            BlueprintName = "ObjectBox-macOS"
-            ReferencedContainer = "container:ObjectBox.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -78,9 +74,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CB3B3F3020AB4B4B00418618"
+            BlueprintIdentifier = "7561E8CE25CA0CA6003FD439"
             BuildableName = "ObjectBox.framework"
-            BlueprintName = "ObjectBox-macOS"
+            BlueprintName = "ObjectBox-iOS Simulator"
             ReferencedContainer = "container:ObjectBox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

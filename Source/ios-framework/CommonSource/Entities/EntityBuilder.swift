@@ -41,12 +41,12 @@ public class EntityBuilder<T> {
     }
 
     public func flags(_ flags: EntityFlags) throws {
-        let err = obx_model_entity_flags(model, OBXEntityFlags(flags.rawValue))
+        let err = obx_model_entity_flags(model, flags.rawValue)
         try checkLastError(err)
     }
 
     public func flags(_ flags: [EntityFlags]) throws {
-        let err = obx_model_entity_flags(model, OBXEntityFlags(flags.rawValue))
+        let err = obx_model_entity_flags(model, flags.rawValue)
         try checkLastError(err)
     }
 
@@ -62,7 +62,7 @@ public class EntityBuilder<T> {
                             indexId: UInt32 = 0, indexUid: UInt64 = 0) throws {
         let err1 = obx_model_property(model, name, OBXPropertyType(UInt32(type.rawValue)), id, uid)
         try checkLastError(err1)
-        let err2 = obx_model_property_flags(model, OBXPropertyFlags(flags.rawValue))
+        let err2 = obx_model_property_flags(model, flags.rawValue)
         try checkLastError(err2)
         if indexId != 0 && indexUid != 0 {
             let err3 = obx_model_property_index_id(model, indexId, indexUid)

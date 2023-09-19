@@ -78,7 +78,7 @@ where E == E.EntityBindingType.EntityType {
     ///     descending instead of ascending.
     public func ordered<T>(by property: Property<EntityType, T, Void>, flags: [OrderFlags] = [])
                     -> QueryBuilder<EntityType> {
-                        obx_qb_order(queryBuilder, property.propertyId, OBXOrderFlags(flags.rawValue))
+                        obx_qb_order(queryBuilder, property.propertyId, flags.rawValue)
         return self
     }
 
