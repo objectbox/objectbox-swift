@@ -96,7 +96,7 @@ else # Download static public release and unzip into $dest
         else
           release_url_path="https://github.com/objectbox/objectbox-swift/releases/download/v${version}"
         fi
-        OBXLIB_URL_apple_static="release_url_path/ObjectBoxCore-static-${c_version}.zip"
+        OBXLIB_URL_apple_static="${release_url_path}/ObjectBoxCore-static-${c_version}.zip"
 
         mkdir -p "${dest_dir}"
 
