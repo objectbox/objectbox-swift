@@ -1,46 +1,99 @@
 ---
 name: Bug report
-about: Something is broken in ObjectBox? Help us to fix it.
+about: You found a bug in ObjectBox causing an application to crash or throw an exception, or something does not work right.
 title: ''
 labels: 'bug'
 assignees: ''
 
 ---
 
-:rotating_light: First, please check:
- - existing issues,
- - Docs https://swift.objectbox.io/
- - FAQ page https://swift.objectbox.io/faq
+<!--
 
-**Describe the bug**
-A clear and concise description in English of what the bug is.
+If you are looking for support, please check out our documentation:
+- https://swift.objectbox.io/
+- https://swift.objectbox.io/faq
 
-**Basic info (please complete the following information):**
- - ObjectBox version (are you using the latest version?): [e.g. 1.3.1]
- - Reproducibility: [e.g. occurred once only | occasionally without visible pattern | always]
- - Device: [e.g. iPhone 11]
- - OS: [e.g. iOS 13]
+-->
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Put '...'
-2. Make changes to '....'
-3. See error
+### Is there an existing issue?
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+- [ ] I have searched [existing issues](https://github.com/objectbox/objectbox-swift/issues)
 
-**Code**
-If applicable, add code to help explain your problem.
+### Build info
+
+- ObjectBox version: [e.g. 1.9.0]
+- OS: [e.g. iOS 17 | macOS 10.14 ]
+- Device/chipset: [e.g. iPhone 15 | Apple M2 ]
+
+### Steps to reproduce
+
+_TODO Tell us exactly how to reproduce the problem._
+
+1. ...
+2. ...
+3. ...
+
+### Expected behavior
+
+_TODO Tell us what you expect to happen._
+
+### Actual behavior
+
+_TODO Tell us what actually happens._
+
+### Code
+
+_TODO Add a code example to help us reproduce your problem._
+
  - Include affected entity classes.
  - Please remove any unnecessary or confidential parts.
  - At best, link to or attach a project with a failing test.
 
-**Logs, stack traces**
-If applicable, add relevant logs, or a stack trace.
+<!--
 
-**Additional context**
-Add any other context about the problem here.
- - Is there anything special about your code?
- - May transactions or multi-threading play a role?
- - Did you find any workarounds to prevent the issue?
+Please provide a minimal code example.
+
+Things you maybe should also include:
+- the entity class
+- the Podfile
+
+You can also create a public GitHub repository and link to it below.
+
+Please do not upload screenshots of text, use code blocks like below instead.
+
+Add any other context about the problem:
+- Is there anything special about your app?
+- May transactions or multi-threading play a role?
+- Did you find any workarounds to prevent the issue?
+
+-->
+
+<details><summary>Code</summary>
+
+```swift
+[Paste your code here]
+```
+
+</details>
+
+### Logs, stack traces
+
+_TODO Add relevant logs, a stack trace or crash report._
+
+<!-- 
+
+- For Swift exceptions include the full stack trace.
+- If an iOS device crashes, attach the device crash log: https://help.apple.com/xcode/mac/current/#/dev0f3181c2c
+- If an iOS simulator crashes, attach the crash log from `~/Library/Logs/DiagnosticReports`.
+- If a macOS device crashes, attach the crash report from Console: https://support.apple.com/guide/console/reports-cnsl664be99a/mac
+- Also check logs before the error. ObjectBox logs are tagged with e.g. Box.
+
+-->
+
+<details><summary>Logs</summary>
+
+```console
+[Paste your logs here]
+```
+
+</details>

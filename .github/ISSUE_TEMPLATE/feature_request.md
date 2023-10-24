@@ -7,19 +7,30 @@ assignees: ''
 
 ---
 
-:rotating_light: First, please check:
- - existing issues,
- - Docs https://swift.objectbox.io/
- - FAQ page https://swift.objectbox.io/faq
+<!--
 
-Start with a clear and concise description of what problem you are trying to solve.
-Often there is already a solution! 
+If you are looking for support, please check out our documentation:
+- https://swift.objectbox.io/
+- https://swift.objectbox.io/faq
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+-->
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+### Is there an existing issue?
 
-**Additional context**
-Add any other context (e.g. platform or language) about the feature request here.
+- [ ] I have searched [existing issues](https://github.com/objectbox/objectbox-swift/issues)
+
+### Use case
+
+_TODO Describe what problem you are trying to solve._
+
+### Proposed solution
+
+_TODO Describe what you want to be able to do with ObjectBox._
+
+### Alternatives
+
+_TODO Describe any alternative solutions or features you've considered._
+
+### Additional context
+
+_TODO Add any other context (e.g. platform or language) about the feature request here._
