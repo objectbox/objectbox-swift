@@ -45,10 +45,6 @@ _TODO Tell us what actually happens._
 
 _TODO Add a code example to help us reproduce your problem._
 
- - Include affected entity classes.
- - Please remove any unnecessary or confidential parts.
- - At best, link to or attach a project with a failing test.
-
 <!--
 
 Please provide a minimal code example.
