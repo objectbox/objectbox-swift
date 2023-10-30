@@ -1,6 +1,7 @@
 //  Copyright © 2018 ObjectBox. All rights reserved.
 
 import ObjectBox
+import Foundation
 
 class Note: Entity {
     var id: Id = 0 // An ID is required by ObjectBox
