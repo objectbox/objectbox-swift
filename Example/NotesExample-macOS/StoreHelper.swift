@@ -1,6 +1,7 @@
 //  Copyright © 2018 ObjectBox. All rights reserved.
 
 import ObjectBox
+import Foundation
 
 extension Store {
     /// Creates a new ObjectBox.Store in a temporary directory.

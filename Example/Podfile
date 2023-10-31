@@ -9,6 +9,6 @@ target 'NotesExample-iOS' do
 end
 
 target 'NotesExample-macOS' do
-  platform :osx, :deployment_target => '10.10'
+  platform :osx, :deployment_target => '10.13'
   pod 'ObjectBox'
 end

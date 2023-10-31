@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -30,12 +30,9 @@
 		50DC4EA22189A7B200DF7253 /* AuthorsOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA12189A7B200DF7253 /* AuthorsOverviewViewController.swift */; };
 		50DC4EA42189AB9200DF7253 /* AuthorEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */; };
 		50DC4EA82189B92400DF7253 /* AuthorCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DC4EA72189B92400DF7253 /* AuthorCreationViewController.swift */; };
-		CB92D5BA675B8E1D824A3EFC /* Pods_NotesExample_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */; };
-		FCB054DFF31FB988F198A270 /* Pods_NotesExample_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9D2181DA350095204F /* NotesExample-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9F2181DA350095204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5039ECA12181DA350095204F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -64,7 +61,6 @@
 		50DC4EA32189AB9200DF7253 /* AuthorEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorEditingViewController.swift; sourceTree = "<group>"; };
 		50DC4EA72189B92400DF7253 /* AuthorCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorCreationViewController.swift; sourceTree = "<group>"; };
 		5571FBE121A5729000B2073D /* NotesExample-macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "NotesExample-macOS.entitlements"; sourceTree = "<group>"; };
-		9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NotesExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCB054DFF31FB988F198A270 /* Pods_NotesExample_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB92D5BA675B8E1D824A3EFC /* Pods_NotesExample_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,8 +84,6 @@
 		3DABC3C80306D2BD07D4938C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				022B2A063F61ABB1BA3A05B2 /* Pods_NotesExample_iOS.framework */,
-				9F9163496740AA74B1B9F500 /* Pods_NotesExample_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -170,11 +162,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5039ECAA2181DA360095204F /* Build configuration list for PBXNativeTarget "NotesExample-macOS" */;
 			buildPhases = (
-				31490094811CB81E2781E223 /* [CP] Check Pods Manifest.lock */,
 				5039EC992181DA350095204F /* Sources */,
 				5039EC9A2181DA350095204F /* Frameworks */,
 				5039EC9B2181DA350095204F /* Resources */,
-				76FA826EA52D0B00B391844E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -189,11 +179,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5070AB00218066C1002305F8 /* Build configuration list for PBXNativeTarget "NotesExample-iOS" */;
 			buildPhases = (
-				9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */,
 				5070AAE8218066C0002305F8 /* Sources */,
 				5070AAE9218066C0002305F8 /* Frameworks */,
 				5070AAEA218066C0002305F8 /* Resources */,
-				458D4D90FE540C2DE14D34D0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -268,97 +256,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		31490094811CB81E2781E223 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NotesExample-macOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		458D4D90FE540C2DE14D34D0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh",
-				"${PODS_ROOT}/ObjectBox/Carthage/Build/iOS/ObjectBox.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-iOS/Pods-NotesExample-iOS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		76FA826EA52D0B00B391844E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh",
-				"${PODS_ROOT}/ObjectBox/Carthage/Build/Mac/ObjectBox.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectBox.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NotesExample-macOS/Pods-NotesExample-macOS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9BA7975165E82DD07F3F0ACE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NotesExample-iOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5039EC992181DA350095204F /* Sources */ = {
@@ -435,7 +332,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.NotesExample-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -455,7 +352,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objectbox.NotesExample-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
