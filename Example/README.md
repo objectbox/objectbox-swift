@@ -5,16 +5,10 @@ The example comes with two apps: one for iOS and one for macOS. The iOS example 
 
 Example setup
 -------------
-Just like in any other project, you need te setup CocoaPods and ObjectBox.
-Simply run `./setup.sh` inside this directory, or copy paste this into a terminal:
+Just like in any other project, you need to set up CocoaPods and ObjectBox.
+Simply run `./setup.sh` inside this directory, or run these commands in a terminal:
 
-    pod install # if that fails, update CocoaPods (see Installation)
+    pod install --repo-update # if that fails, update CocoaPods (see Installation)
     Pods/ObjectBox/setup.rb
 
 This will generate a `NotesExample.xcworkspace` that you can launch to try out ObjectBox.
-
-Updating to newer ObjectBox versions
-------------------------------------
-    pod repo update
-    pod update
-    Pods/ObjectBox/setup.rb
