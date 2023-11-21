@@ -259,8 +259,9 @@ app_targets.each do |target|
   ## Add Sourcery script generation phase before code compilation
   ##
 
-  # Compose the shell script we want to run at the start of this target in the project:
-  obx_shell_script = "\"#{OBJECTBOX_REL_GEN_SCRIPT_PATH}\" -- --output \"#{generated_code_rel_path}\" --model-json \"#{model_json_rel_path}\""
+  # Compose the shell script we want to run at the start of this target in the project.
+  # Note: Xcode adds a new line at the end, so do this too to avoid is modified warning below.
+  obx_shell_script = "\"#{OBJECTBOX_REL_GEN_SCRIPT_PATH}\" -- --output \"#{generated_code_rel_path}\" --model-json \"#{model_json_rel_path}\"\n"
   if !target.launchable_target_type? # probably a framework. Add a common use case reminder.
       obx_shell_script << " # add this parameter to make entities exportable: --visibility public"
   end
@@ -272,6 +273,10 @@ app_targets.each do |target|
 
     puts "  🔹 Adding code generation phase ..."
     codegen_phase.shell_script = obx_shell_script
+    # Silence warning about this script running for each build.
+    # It does not know which source code files contain entities, so can't specify input files.
+    # (But could specify output file: codegen_phase.output_paths = ["#{generated_code_rel_path}"])
+    codegen_phase.always_out_of_date = '1'
 
     # Move code gen phase to the top, before compilation
     compile_phase_index = target.build_phases.index { |p| p.is_a?(Xcodeproj::Project::Object::PBXSourcesBuildPhase) } || 0

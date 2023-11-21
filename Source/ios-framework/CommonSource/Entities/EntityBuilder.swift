@@ -74,12 +74,8 @@ public class EntityBuilder<T> {
     /// Add a to-one-relation (e.g. a pointer from a parent to its children) to the model.
     public func addToOneRelation(name: String, targetEntityInfo: EntityInfo, flags: [PropertyFlags] = [],
                                  id propertyID: UInt32, uid propertyUID: UInt64,
-                                 indexId indexID: UInt32, indexUid indexUID: UInt64) throws {
-        var finalFlags = flags
-        finalFlags.append(.indexed)
-        finalFlags.append(.indexPartialSkipZero)
-        
-        try addProperty(name: name, type: .relation, flags: finalFlags, id: propertyID, uid: propertyUID,
+                                 indexId indexID: UInt32, indexUid indexUID: UInt64) throws {        
+        try addProperty(name: name, type: .relation, flags: flags, id: propertyID, uid: propertyUID,
                         indexId: indexID, indexUid: indexUID)
         
         let err1 = obx_model_property_relation(model, targetEntityInfo.entityName, indexID, indexUID)

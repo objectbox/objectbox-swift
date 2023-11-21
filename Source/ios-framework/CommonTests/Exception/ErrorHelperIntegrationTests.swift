@@ -33,7 +33,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
             print("Storage error caught as expected. Message: \"\(message)\"")
             XCTAssert(message.contains("Could not prepare directory"))
             XCTAssert(message.contains("/dev/DOESNOTEXIST/really/should/fail"))
-            XCTAssert(message.contains("(2)"))  // error code
+            XCTAssert(message.contains("(2: No such file or directory)"))  // error code
         } catch {
             XCTAssertNoThrow(try rethrow(error))
         }

@@ -156,7 +156,7 @@ extension Book: ObjectBox.EntityInspectable {
         let entityBuilder = try modelBuilder.entityBuilder(for: Book.self, id: 2, uid: 21504)
         try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 17664)
         try entityBuilder.addProperty(name: "name", type: PropertyType.string, id: 2, uid: 18688)
-        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, id: 3, uid: 20736, indexId: 1, indexUid: 19712)
+        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, flags: [.indexed, .indexPartialSkipZero], id: 3, uid: 20736, indexId: 1, indexUid: 19712)
 
         try entityBuilder.lastProperty(id: 3, uid: 20736)
     }

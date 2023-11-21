@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "ObjectBox",
     platforms: [
-        .iOS(.v11)
+        .macOS(.v10_15), .iOS(.v12)
     ],
     products: [
         .library(
@@ -16,8 +16,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "ObjectBox",
-            url: "https://github.com/objectbox/objectbox-swift/releases/download/v1.9.0/ObjectBox-xcframework-1.9.0.zip",
-            checksum: "039889a100789aaf1b0ae0de4a881f281f4e2c423d890a660eb06b3538c49111"
+            url: "https://github.com/objectbox/objectbox-swift/releases/download/v1.9.1/ObjectBox-xcframework-1.9.1.zip",
+            checksum: "e79910ffaac143b84427fa58748a33ce4f5afbad5e6bb2e1f025a239c8fcafd2"
         )
     ]
 )

@@ -4,18 +4,18 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:16640",
-      "lastPropertyId": "2:15616",
-      "name": "Author",
+      "id": "1:3108946752808668672",
+      "lastPropertyId": "2:4753378302570674176",
+      "name": "Customer",
       "properties": [
         {
           "flags": 1,
-          "id": "1:14592",
+          "id": "1:4599907934352290304",
           "name": "id",
           "type": 6
         },
         {
-          "id": "2:15616",
+          "id": "2:4753378302570674176",
           "name": "name",
           "type": 9
         }
@@ -23,35 +23,40 @@
       "relations": []
     },
     {
-      "id": "2:21504",
-      "lastPropertyId": "3:20736",
-      "name": "Book",
+      "id": "2:4696988777145786880",
+      "lastPropertyId": "4:8814640457730390784",
+      "name": "Order",
       "properties": [
         {
           "flags": 1,
-          "id": "1:17664",
+          "id": "1:7043323637153822208",
           "name": "id",
           "type": 6
         },
         {
-          "id": "2:18688",
-          "name": "name",
-          "type": 9
+          "id": "2:1093928144598205440",
+          "name": "date",
+          "type": 10
         },
         {
           "flags": 520,
-          "id": "3:20736",
-          "indexId": "1:19712",
-          "name": "author",
-          "relationTarget": "Author",
+          "id": "3:2829338735976216064",
+          "indexId": "1:6572619879603300096",
+          "name": "customer",
+          "relationTarget": "Customer",
           "type": 11
+        },
+        {
+          "id": "4:8814640457730390784",
+          "name": "name",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:21504",
-  "lastIndexId": "1:19712",
+  "lastEntityId": "2:4696988777145786880",
+  "lastIndexId": "1:6572619879603300096",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

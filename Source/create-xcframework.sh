@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -e
 
-# macOS does not have realpath and readlink does not have -f option, so do this instead:
-myDir=$( cd "$(dirname "$0")" ; pwd -P )
-
+myDir=$( readlink -f "$(dirname "$0")" )
 cd "${myDir}/ios-framework"
 dir_build="${myDir}/build-deploy"
 mkdir -p "$dir_build"
-derived_data_path=$( mktemp -d )
+
+# Since Xcode 15 xcodebuild expects canonical paths. 
+# mktemp creates in /var which is actually /private/var on macOS.
+derived_data_path=$( readlink -f $( mktemp -d ) )
 mkdir -p $derived_data_path
+
+echo "dir_build=$dir_build"
+echo "derived_data_path=$derived_data_path"
 
 xcodebuild -version
 
@@ -26,11 +30,6 @@ function build() {
 
 build "ObjectBox-macOS" "platform=macOS"
 build "ObjectBox-iOS" "generic/platform=iOS"
-
-# Note: Attempt to build simulator target twice. 
-#       The first time will fail to build obx_fbb with bitcode the second try will succeed.
-#       This is a workaround to an unknown (at time) problem.
-build "ObjectBox-iOS Simulator" "generic/platform=iOS Simulator"
 build "ObjectBox-iOS Simulator" "generic/platform=iOS Simulator"
 
 echo "************* Building XCFramework *************"

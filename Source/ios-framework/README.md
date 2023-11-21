@@ -9,7 +9,7 @@
 This is the ObjectBox Swift **API reference**.
 Also check the **[guides](https://swift.objectbox.io/)** for general documentation including [setup](https://swift.objectbox.io/install) and [getting started](https://swift.objectbox.io/getting-started).
 
-Current version: 1.9.0
+Current version: 1.9.1
 
 ## Most Important Types
 

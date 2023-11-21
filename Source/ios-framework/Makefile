@@ -31,6 +31,8 @@ i_tests_dirty: build_generator_dirty i_tests_run
 build_generator:
 	@echo "$(BLUE)Building generator...$(NC)"
 	../external/objectbox-swift-generator/_build.command
+	@echo "$(BLUE)Generator version:$(NC)"
+	../external/objectbox-swift-generator/bin/sourcery --version
 
 build_generator_dirty:
 	@echo "$(BLUE)Building generator (dirty)...$(NC)"

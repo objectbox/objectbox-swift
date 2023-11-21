@@ -371,7 +371,7 @@ extension Note: ObjectBox.EntityInspectable {
         try entityBuilder.addProperty(name: "modificationDate", type: PropertyType.date, id: 5, uid: 6233774800911586048)
         try entityBuilder.addProperty(name: "done", type: PropertyType.bool, id: 7, uid: 3390351202128481792)
         try entityBuilder.addProperty(name: "upvotes", type: PropertyType.int, flags: [.unsigned], id: 8, uid: 5856576790296241408)
-        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, id: 6, uid: 6448513910062322432, indexId: 1, indexUid: 1458654215934992896)
+        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, flags: [.indexed, .indexPartialSkipZero], id: 6, uid: 6448513910062322432, indexId: 1, indexUid: 1458654215934992896)
 
         try entityBuilder.lastProperty(id: 8, uid: 5856576790296241408)
     }
@@ -576,7 +576,7 @@ extension NoteStruct: ObjectBox.EntityInspectable {
         try entityBuilder.addProperty(name: "text", type: PropertyType.string, id: 3, uid: 7011109989572489472)
         try entityBuilder.addProperty(name: "creationDate", type: PropertyType.date, id: 4, uid: 778896539487013376)
         try entityBuilder.addProperty(name: "modificationDate", type: PropertyType.date, id: 5, uid: 7303324335582009600)
-        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, id: 6, uid: 2469372667932281088, indexId: 2, indexUid: 6342353045634752256)
+        try entityBuilder.addToOneRelation(name: "author", targetEntityInfo: ToOne<Author>.Target.entityInfo, flags: [.indexed, .indexPartialSkipZero], id: 6, uid: 2469372667932281088, indexId: 2, indexUid: 6342353045634752256)
 
         try entityBuilder.lastProperty(id: 6, uid: 2469372667932281088)
     }

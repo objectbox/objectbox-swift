@@ -22,6 +22,12 @@ else
     staging_repo=false
 fi
 
+clean_build=true
+if [ "${1:-}" == "--dirty" ]; then
+  clean_build=false
+  shift
+fi
+
 # macOS does not have realpath and readlink does not have -f option, so do this instead:
 my_dir=$( cd "$(dirname "$0")" ; pwd -P )
 
@@ -74,6 +80,11 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
       sleep 0.5
     fi
     if [ "$do_build" = true ]; then
+      if [ "$clean_build" == "true" ]; then
+        # By default, we clean: after an update, we had issues with standard C includes not found and cleaning helped
+        echo "Cleaning $code_dir/cbuild/ ..."
+        rm -Rf $code_dir/cbuild/
+      fi
       "$code_dir/scripts/apple-build-static-libs.sh" $build_params "$dest_dir" release
       if [ "$git_clean" = true ] ; then  # clean before?
         git_status=${git_status#"?? objectbox/src/main/cpp/external/uws-objectbox/"}
@@ -88,7 +99,7 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.9.0
+        version=1.9.1
         c_version=0.19.0
         archive_path="${my_dir}/external/objectbox-static.zip"
         if [ "$staging_repo" == "true" ]; then

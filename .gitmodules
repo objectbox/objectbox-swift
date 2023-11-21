@@ -3,4 +3,4 @@
 	url = https://github.com/realm/SwiftLint.git
 [submodule "Source/external/objectbox-swift-generator"]
 	path = Source/external/objectbox-swift-generator
-url=https://github.com/objectbox/objectbox-swift-generator.git
+	url=https://github.com/objectbox/objectbox-swift-generator.git
