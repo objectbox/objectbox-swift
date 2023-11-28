@@ -214,7 +214,7 @@
 					};
 					5070AAEB218066C0002305F8 = {
 						CreatedOnToolsVersion = 10.0;
-						LastSwiftMigration = "";
+						LastSwiftMigration = 1500;
 					};
 				};
 			};
