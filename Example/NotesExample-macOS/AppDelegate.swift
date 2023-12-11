@@ -56,13 +56,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.append("❌ ERROR: \(error)")
         }
 
+        print(logger.string)
+    }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
         let viewController = NSApp.mainWindow?.contentViewController
         if viewController != nil {
             logger.display(viewController: viewController!)
         } else {
-            logger.append("No ViewController!?")  // fix this
+            logger.append("No ViewController!?")
         }
-        print(logger.string)
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
