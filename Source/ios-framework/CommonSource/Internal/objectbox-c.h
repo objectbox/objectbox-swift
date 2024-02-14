@@ -52,7 +52,7 @@ extern "C" {
 /// When using ObjectBox as a dynamic library, you should verify that a compatible version was linked using
 /// obx_version() or obx_version_is_at_least().
 #define OBX_VERSION_MAJOR 0
-#define OBX_VERSION_MINOR 19
+#define OBX_VERSION_MINOR 21
 #define OBX_VERSION_PATCH 0  // values >= 100 are reserved for dev releases leading to the next minor/major increase
 
 //----------------------------------------------
@@ -146,6 +146,9 @@ typedef enum {
 
     /// The default database "provider"; writes data persistently to disk (ACID).
     OBXFeature_Lmdb = 13,
+
+    /// Vector search functionality; enables indexing for nearest neighbor search.
+    OBXFeature_VectorSearch = 14,
 
 } OBXFeature;
 
@@ -2417,7 +2420,7 @@ OBX_C_API obx_err obx_admin_opt_store_path(OBX_admin_options* opt, const char* d
 
 /// Set the address and port on which the underlying http-server should server the admin web UI.
 /// Defaults to "http://127.0.0.1:8081"
-/// @note: you can use for e.g. "http://127.0.0.1:0" for automatic free port assignment - see obx_admin_bound_port().
+/// @note: you can use for e.g. "http://127.0.0.1:0" for automatic free port assignment - see obx_admin_port().
 OBX_C_API obx_err obx_admin_opt_bind(OBX_admin_options* opt, const char* uri);
 
 /// Configure the server to use SSL, with the given certificate.

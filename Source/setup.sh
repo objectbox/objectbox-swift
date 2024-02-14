@@ -16,22 +16,16 @@ brew bundle
 myDir=$( cd "$(dirname "$0")" ; pwd -P )
 cd "${myDir}"
 
+# Note: this also works on the public repo (the objectbox submodule does not exist, GitHub repos are used as url in .gitmodule)
+echo "Updating git submodules..."
+git submodule update --init --recursive
+
+# For the internal repo only: read version from objectbox submodule.
 core_dir="external/objectbox"
-
-if [ ! -d "../objectbox.git" ]; then
-  if [ -d "${core_dir}" ]; then
-    rm -d "${core_dir}"
-  fi
-  
-  echo "Updating git submodules..."
-  git submodule update --init --recursive external/SwiftLint external/objectbox-swift-generator
-else
-  echo "Updating git submodules..."
-  git submodule update --init --recursive
-
+if [ -d "$core_dir" ]; then
   echo "Core submodule status and version string from ObjectStore.cpp:"
   git submodule status "$core_dir"
-  grep 'ObjectStore_VERSION = ' "$core_dir/objectbox/src/main/cpp/ObjectStore.cpp"
+  grep 'ObjectStore::VERSION_PLAIN = ' "$core_dir/objectbox/src/main/cpp/ObjectStore.cpp"
 fi
 
 # Install Xcode command line tools (installed by default with newer versions)
@@ -43,7 +37,8 @@ if [[ $xcode_cli_tools != *"already installed"* ]]; then
 fi
 
 # Build SwiftLint from source into its `external/SwiftLint/.build` directory.
-make build_swiftlint
+# FIXME Need to update to a newer version: -static-stdlib is no longer supported for Apple platforms
+# make build_swiftlint
 
 # Build the code generator binary (including Sourcery)
 cd ios-framework

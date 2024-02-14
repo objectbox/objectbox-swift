@@ -99,8 +99,8 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.9.1
-        c_version=0.19.0
+        version=1.9.2
+        c_version=0.21.0
         archive_path="${my_dir}/external/objectbox-static.zip"
         if [ "$staging_repo" == "true" ]; then
           release_url_path="https://github.com/objectbox/objectbox-swift-spec-staging/releases/download/v1.x"
