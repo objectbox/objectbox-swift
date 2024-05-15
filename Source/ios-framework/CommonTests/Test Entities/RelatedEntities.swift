@@ -18,7 +18,7 @@ import ObjectBox
 
 // swiftlint:disable all
 class Customer: Entity {
-    var id: EntityId<Customer>
+    var id: Id
     var name: String
 
     // objectbox: backlink = "customer"
@@ -38,7 +38,7 @@ class Customer: Entity {
 }
 
 class Order: Entity {
-    var id: EntityId<Order>
+    var id: Id
     var date: Date
     var customer: ToOne<Customer>
     var name: String
@@ -114,7 +114,7 @@ extension Customer {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Customer.id == myId }
-    internal static var id: Property<Customer, EntityId<Customer>, EntityId<Customer>> { return Property<Customer, EntityId<Customer>, EntityId<Customer>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Customer, Id, Id> { return Property<Customer, Id, Id>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
@@ -128,7 +128,7 @@ extension Customer {
 
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
-        self.id = EntityId(identifier)
+        self.id = Id(identifier)
     }
 }
 
@@ -139,7 +139,7 @@ extension ObjectBox.Property where E == Customer {
     ///
     ///     box.query { .id == myId }
 
-    internal static var id: Property<Customer, EntityId<Customer>, EntityId<Customer>> { return Property<Customer, EntityId<Customer>, EntityId<Customer>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Customer, Id, Id> { return Property<Customer, Id, Id>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -160,7 +160,7 @@ extension ObjectBox.Property where E == Customer {
 /// Generated service type to handle persisting and reading entity data. Exposed through `Customer.EntityBindingType`.
 internal class CustomerBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Customer
-    internal typealias IdType = EntityId<Customer>
+    internal typealias IdType = Id
 
     internal required init() {}
 
@@ -244,7 +244,7 @@ extension Order {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Order.id == myId }
-    internal static var id: Property<Order, EntityId<Order>, EntityId<Order>> { return Property<Order, EntityId<Order>, EntityId<Order>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Order, Id, Id> { return Property<Order, Id, Id>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
@@ -261,7 +261,7 @@ extension Order {
 
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
-        self.id = EntityId(identifier)
+        self.id = Id(identifier)
     }
 }
 
@@ -272,7 +272,7 @@ extension ObjectBox.Property where E == Order {
     ///
     ///     box.query { .id == myId }
 
-    internal static var id: Property<Order, EntityId<Order>, EntityId<Order>> { return Property<Order, EntityId<Order>, EntityId<Order>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Order, Id, Id> { return Property<Order, Id, Id>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -298,7 +298,7 @@ extension ObjectBox.Property where E == Order {
 /// Generated service type to handle persisting and reading entity data. Exposed through `Order.EntityBindingType`.
 internal class OrderBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Order
-    internal typealias IdType = EntityId<Order>
+    internal typealias IdType = Id
 
     internal required init() {}
 

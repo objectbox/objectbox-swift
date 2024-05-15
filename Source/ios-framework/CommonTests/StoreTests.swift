@@ -48,9 +48,9 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "1.9.2")
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "0.21.0")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "3.8.0-2024-02-13")
+        XCTAssertGreaterThanOrEqual(Store.version, "2.0.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "4.0.0")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "4.0.0-2024-05-14")
     }
 
     func testCloseTwice() {
@@ -266,6 +266,17 @@ class StoreTests: XCTestCase {
         XCTAssertEqual(personRead.name, "Adelheid")
         XCTAssertThrowsError(try store.runInTransaction({}))
         XCTAssertThrowsError(try store.box(for: TestPerson.self).put(personRead))
+    }
+    
+    func testInMemoryStoreDoesNotCrateFiles() throws {
+        let inMemoryStore = try Store(model: createTestModel(), directory: "memory:in-memory-test")
+        addTeardownBlock {
+            inMemoryStore.close()
+        }
+        
+        XCTAssertFalse(FileManager.default.fileExists(atPath: "in-memory-test"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: "memory"))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: "memory:in-memory-test"))
     }
 
     func testAttachOrClone(clone: Bool) throws {

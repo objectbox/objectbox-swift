@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 
-# Script that is used by CI to build the static libs, or by external users to download a build from
-# Github. Will do nothing if there already is a copy of the static libs in external.
+# Script that is used to build the static libs, or by external users to download a build from
+# Github. Builds are cached in the Library/Caches/ObjectBox directory.
 #
-# Adjust the 'version' variable as needed to get the right version for the current code.
-#
+# Adjust 'version', 'c_version' and 'build_params' as needed and set the OBX_FEATURES environment
+# variable to get the right version for the current code.
 
 set -e
 
+# objectbox-swift release version on GitHub:
+# https://github.com/objectbox/objectbox-swift/releases/download/v${version}
+version=2.0.0
+
+# C library version attached to the GitHub release:
+# ObjectBoxCore-static-${c_version}.zip
+c_version=4.0.0
+
+# Params supported by apple-build-static-libs.sh
+build_params=""
+
+# Skips building/fetching, only copy header files and print details
 if [ "${1:-}" == "--verify-only" ]; then
     verify_only=true
     shift
@@ -15,6 +27,7 @@ else
     verify_only=false
 fi
 
+# Never builds and downloads release from objectbox-swift-spec-staging GitHub repo instead
 if [ "${1:-}" == "--staging" ]; then
     staging_repo=true
     shift
@@ -22,6 +35,7 @@ else
     staging_repo=false
 fi
 
+# Clean by default: after an update, there were issues with standard C includes not found and cleaning helped
 clean_build=true
 if [ "${1:-}" == "--dirty" ]; then
   clean_build=false
@@ -40,20 +54,35 @@ if [ "$verify_only" = true ]; then
 else
 
 if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an existing code repo? Then build it...
+    pushd "$code_dir" # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir  
+    
+    echo "-----------------------------------------"
     xcode_version="$(xcodebuild -version | head -n 1 | tr -cd '[a-zA-Z0-9]._-')"
     echo "Xcode version: $xcode_version"
 
-    pushd "$code_dir"  # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
-    build_params="" # must also part of the cache key
+    # Build cache key: includes commit, XCode version, extra features, build command parameters
     commit_id=$(git rev-parse HEAD)
-    cache_dir="$HOME/Library/Caches/ObjectBox"
-    mkdir -p "${cache_dir}"
-    find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +30 # -delete # TODO enable delete once this looks good
     cache_key="${commit_id}-$xcode_version"
+    features=${OBX_FEATURES:-}
+    if [[ -n "${features}" ]]; then
+      echo "Info: environment variable OBX_FEATURES is set to \"${features}\""
+      # replace semicolon with dash, convert to lower case
+      # like "feature1-feature2"
+      conf=$(echo "${features//\;/-}" | tr '[:upper:]' '[:lower:]')
+      cache_key="${cache_key}-${conf}"
+    fi
     if [ -n "$build_params" ]; then
       cache_key="${cache_key}-$(echo "$build_params" | tr -cd '[a-zA-Z0-9]._-')"
     fi
+
+    cache_dir="$HOME/Library/Caches/ObjectBox"
+    mkdir -p "${cache_dir}"
+    echo "-----------------------------------------"
+    echo "Existing cache files:"
+    find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +30 # -delete # TODO enable delete once this looks good
+    echo "-----------------------------------------"
     cache_zip="${cache_dir}/objectbox-static-${cache_key}.zip"
+
     do_build=true
     git_clean=false
     git_status=$(git status --porcelain)
@@ -63,13 +92,13 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     if [ -z "$git_status" ]; then
       git_clean=true
       if [ -f "${cache_zip}" ]; then
-        echo "🟢 ObjectBox core is clean and cache ZIP found for ${cache_key}."
+        echo "🟢 ObjectBox core is clean and cache ZIP found for key '${cache_key}'."
         echo "📦 Extracting..."
         sleep 0.5
         unzip -o "${cache_zip}" -d "${dest_dir}"
         do_build=false
       else
-        echo "⚪ ObjectBox core is clean but no cache ZIP found for ${cache_key}."
+        echo "⚪ ObjectBox core is clean but no cache ZIP found for key '${cache_key}'."
         echo "🏗️ Building..."
         sleep 0.5
       fi
@@ -81,11 +110,13 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     fi
     if [ "$do_build" = true ]; then
       if [ "$clean_build" == "true" ]; then
-        # By default, we clean: after an update, we had issues with standard C includes not found and cleaning helped
         echo "Cleaning $code_dir/cbuild/ ..."
         rm -Rf $code_dir/cbuild/
       fi
+
+      # Build
       "$code_dir/scripts/apple-build-static-libs.sh" $build_params "$dest_dir" release
+
       if [ "$git_clean" = true ] ; then  # clean before?
         git_status=${git_status#"?? objectbox/src/main/cpp/external/uws-objectbox/"}
         if [ -z "$git_status" ]; then  # still clean
@@ -99,8 +130,6 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     popd
 else # Download static public release and unzip into $dest
     if [ ! -d "${dest_dir}" ] || [ ! -e "${dest_dir}/libObjectBoxCore-iOS.a" ]; then
-        version=1.9.2
-        c_version=0.21.0
         archive_path="${my_dir}/external/objectbox-static.zip"
         if [ "$staging_repo" == "true" ]; then
           release_url_path="https://github.com/objectbox/objectbox-swift-spec-staging/releases/download/v1.x"

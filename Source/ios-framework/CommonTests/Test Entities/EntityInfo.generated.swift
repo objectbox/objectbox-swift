@@ -47,7 +47,7 @@ extension Author {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { Author.id == myId }
-    internal static var id: Property<Author, EntityId<Author>, EntityId<Author>> { return Property<Author, EntityId<Author>, EntityId<Author>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Author, Id, Id> { return Property<Author, Id, Id>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
@@ -72,7 +72,7 @@ extension Author {
 
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
-        self.id = EntityId(identifier)
+        self.id = Id(identifier)
     }
 }
 
@@ -83,7 +83,7 @@ extension ObjectBox.Property where E == Author {
     ///
     ///     box.query { .id == myId }
 
-    internal static var id: Property<Author, EntityId<Author>, EntityId<Author>> { return Property<Author, EntityId<Author>, EntityId<Author>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<Author, Id, Id> { return Property<Author, Id, Id>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -117,7 +117,7 @@ extension ObjectBox.Property where E == Author {
 /// Generated service type to handle persisting and reading entity data. Exposed through `Author.EntityBindingType`.
 internal class AuthorBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = Author
-    internal typealias IdType = EntityId<Author>
+    internal typealias IdType = Id
 
     internal required init() {}
 
@@ -216,7 +216,7 @@ extension AuthorStruct {
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { AuthorStruct.id == myId }
-    internal static var id: Property<AuthorStruct, EntityId<AuthorStruct>, EntityId<AuthorStruct>> { return Property<AuthorStruct, EntityId<AuthorStruct>, EntityId<AuthorStruct>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<AuthorStruct, Id, Id> { return Property<AuthorStruct, Id, Id>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
@@ -230,7 +230,7 @@ extension AuthorStruct {
 
 
     fileprivate mutating func __setId(identifier: ObjectBox.Id) {
-        self.id = EntityId(identifier)
+        self.id = Id(identifier)
     }
 }
 
@@ -241,7 +241,7 @@ extension ObjectBox.Property where E == AuthorStruct {
     ///
     ///     box.query { .id == myId }
 
-    internal static var id: Property<AuthorStruct, EntityId<AuthorStruct>, EntityId<AuthorStruct>> { return Property<AuthorStruct, EntityId<AuthorStruct>, EntityId<AuthorStruct>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<AuthorStruct, Id, Id> { return Property<AuthorStruct, Id, Id>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
@@ -262,7 +262,7 @@ extension ObjectBox.Property where E == AuthorStruct {
 /// Generated service type to handle persisting and reading entity data. Exposed through `AuthorStruct.EntityBindingType`.
 internal class AuthorStructBinding: ObjectBox.EntityBinding {
     internal typealias EntityType = AuthorStruct
-    internal typealias IdType = EntityId<AuthorStruct>
+    internal typealias IdType = Id
 
     internal required init() {}
 
@@ -285,7 +285,7 @@ internal class AuthorStructBinding: ObjectBox.EntityBinding {
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
-        let entityId: EntityId<AuthorStruct> = entityReader.read(at: 2 + 2 * 1)
+        let entityId: Id = entityReader.read(at: 2 + 2 * 1)
         let entity = AuthorStruct(
             id: entityId, 
             name: entityReader.read(at: 2 + 2 * 2), 
@@ -2255,8 +2255,16 @@ fileprivate func cModel() throws -> OpaquePointer {
 extension ObjectBox.Store {
     /// A store with a fully configured model. Created by the code generator with your model's metadata in place.
     ///
+    /// # In-memory database
+    /// To use a file-less in-memory database, instead of a directory path pass `memory:` 
+    /// together with an identifier string:
+    /// ```swift
+    /// let inMemoryStore = try Store(directoryPath: "memory:test-db")
+    /// ```
+    ///
     /// - Parameters:
-    ///   - directoryPath: The directory path in which ObjectBox places its database files for this store.
+    ///   - directoryPath: The directory path in which ObjectBox places its database files for this store,
+    ///     or to use an in-memory database `memory:<identifier>`.
     ///   - maxDbSizeInKByte: Limit of on-disk space for the database files. Default is `1024 * 1024` (1 GiB).
     ///   - fileMode: UNIX-style bit mask used for the database files; default is `0o644`.
     ///     Note: directories become searchable if the "read" or "write" permission is set (e.g. 0640 becomes 0750).
@@ -2267,8 +2275,9 @@ extension ObjectBox.Store {
     ///     threading. For each thread, ObjectBox uses multiple readers. Their number (per thread) depends
     ///     on number of types, relations, and usage patterns. Thus, if you are working with many threads
     ///     (e.g. in a server-like scenario), it can make sense to increase the maximum number of readers.
-    ///     Note: The internal default is currently around 120.
-    ///           So when hitting this limit, try values around 200-500.
+    ///     Note: The internal default is currently around 120. So when hitting this limit, try values around 200-500.
+    ///   - readOnly: Opens the database in read-only mode, i.e. not allowing write transactions.
+    ///
     /// - important: This initializer is created by the code generator. If you only see the internal `init(model:...)`
     ///              initializer, trigger code generation by building your project.
     internal convenience init(directoryPath: String, maxDbSizeInKByte: UInt64 = 1024 * 1024,

@@ -20,7 +20,12 @@ import Foundation
 public class StoreHelper {
     /// :nodoc:
     public class func tempStore(model: OpaquePointer /*OBX_model*/, maxDbSizeInKByte: UInt64 = 500) -> Store {
-        let directoryPath = StoreHelper.newTemporaryDirectory().path
+        let inMemoryEnv = ProcessInfo.processInfo.environment["OBX_IN_MEMORY"]
+        let inMemory = inMemoryEnv != nil && inMemoryEnv == "true"
+        if (inMemory) {
+            print("Using in-memory database for testing")
+        }
+        let directoryPath = inMemory ? "memory:testdata" : StoreHelper.newTemporaryDirectory().path
         var store: Store! = nil
         do {
             store = try Store(model: model, directory: directoryPath, maxDbSizeInKByte: maxDbSizeInKByte,

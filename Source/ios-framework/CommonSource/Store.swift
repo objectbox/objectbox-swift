@@ -43,7 +43,11 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "1.9.2"
+    public static var version = "2.0.0"
+
+    /// Pass this together with a String identifier as the directory path to use
+    /// a file-less in-memory database.
+    public static let inMemoryPrefix = "memory:"
 
     /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
     public static var versionAll: String {
@@ -75,27 +79,42 @@ public class Store: CustomDebugStringConvertible {
         return try Store(cStore: cStore!, directory: directory)
     }
 
-    /// Attaches to a previously opened Store given its directory.
+    /// Returns if an open store (i.e. opened before and not yet closed) was found
+    /// for the given `directory`.
     public static func isOpen(directory: String) throws -> Bool {
         return obx_store_is_open(directory)
     }
 
-    /// - important: this initializer is only used internally.
-    /// Instead of this, use the generated initializer without the model parameter
-    /// (trigger code generation if you don't see it yet).
-    /// - Parameter model: A model description generated using a `ModelBuilder`
-    /// - Parameter directory: The path to the directory in which ObjectBox should store database files.
-    /// - Parameter maxDbSizeInKByte: Maximum size the database may take up on disk (default: 500 MB).
-    /// - Parameter fileMode: The unix permissions (like 0o755) to use for creating the database files.
-    /// - Parameter maxReaders: "readers" are a finite resource for which you need to define a maximum upfront. The
-    ///                         default value is enough for most apps and usually you can ignore it completely. However,
-    ///                         if you get the "maxReadersExceeded" error, you should verify your threading. For each
-    ///                         thread, ObjectBox uses multiple readers. Their number (per thread) depends on number of
-    ///                         types, relations, and usage patterns. Thus, if you are working with many threads (e.g.
-    ///                         server-like scenario), it can make sense to increase the maximum number of readers. The
-    ///                         default value 0 (zero) lets ObjectBox choose an internal default (currently around 120).
-    ///                         So if you hit this limit, try values around 200-500.
-    /// - Parameter readOnly: Opens the database in read-only mode, i.e. not allowing write transactions.
+    /// Creates a store using the given model definition. In most cases, you would want
+    /// to use the initializer without the model argument created by the code generator instead.
+    /// 
+    /// # In-memory database
+    /// To use a file-less in-memory database, instead of a directory path pass `memory:` 
+    /// together with an identifier string:
+    /// ```swift
+    /// let inMemoryStore = try Store(directoryPath: "memory:test-db")
+    /// ```
+    /// 
+    /// - important: This initializer should only be used internally.
+    ///   Instead, use the generated initializer without the model parameter
+    ///   (trigger code generation if you don't see it yet).
+    /// 
+    /// - Parameters:
+    ///   - model: A model description generated using a `ModelBuilder`.
+    ///   - directoryPath: The directory path in which ObjectBox places its database files for this store,
+    ///     or to use an in-memory database `memory:<identifier>`.
+    ///   - maxDbSizeInKByte: Limit of on-disk space for the database files. Default is `1024 * 1024` (1 GiB).
+    ///   - fileMode: UNIX-style bit mask used for the database files; default is `0o644`.
+    ///     Note: directories become searchable if the "read" or "write" permission is set (e.g. 0640 becomes 0750).
+    ///   - maxReaders: The maximum number of readers.
+    ///     "Readers" are a finite resource for which we need to define a maximum number upfront.
+    ///     The default value is enough for most apps and usually you can ignore it completely.
+    ///     However, if you get the maxReadersExceeded error, you should verify your
+    ///     threading. For each thread, ObjectBox uses multiple readers. Their number (per thread) depends
+    ///     on number of types, relations, and usage patterns. Thus, if you are working with many threads
+    ///     (e.g. in a server-like scenario), it can make sense to increase the maximum number of readers.
+    ///     Note: The internal default is currently around 120. So when hitting this limit, try values around 200-500.
+    ///   - readOnly: Opens the database in read-only mode, i.e. not allowing write transactions.
     public init(model: OpaquePointer, directory: String = "objectbox", maxDbSizeInKByte: UInt64 = 1024 * 1024,
                 fileMode: UInt32 = 0o644, maxReaders: UInt32 = 0, readOnly: Bool = false) throws {
         directoryPath = directory
@@ -187,13 +206,17 @@ public class Store: CustomDebugStringConvertible {
         return box
     }
 
-    /// Delete the database files on disk. This Store object will not be usable after calling this.
+    /// Delete the database files on disk, including the database directory. This Store object will not be usable after calling this.
+    ///
+    /// For an in-memory database, this will just clean up the in-memory database.
     public func closeAndDeleteAllFiles() throws {
         self.close()
         obx_remove_db_files(directoryPath)
-        if FileManager.default.fileExists(atPath: directoryPath) {
-            try FileManager.default.removeItem(atPath: directoryPath)
-        }
+        if !directoryPath.hasPrefix(Store.inMemoryPrefix) {
+            if FileManager.default.fileExists(atPath: directoryPath) {
+                try FileManager.default.removeItem(atPath: directoryPath)
+            }
+        }        
     }
 
     internal let setUpMutexIdentifier: Bool = {

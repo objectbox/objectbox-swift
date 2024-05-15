@@ -1313,7 +1313,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\nset -e\n\nif which swiftlint > /dev/null; then\n  cd $SRCROOT\n  # Disabled for now:\n  # swiftlint lint --config .swiftlint-macOS.yml\nelse\n  echo \"warning: SwiftLint not installed, install via 'brew install swiftlint' or download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "#!/bin/bash\n\nset -e\n\nif which swiftlint > /dev/null; then\n  cd $SRCROOT\n  # Disabled for now:\n  # swiftlint lint --config .swiftlint-macOS.yml\n  echo \"warning: SwiftLint temporarily disabled\"\nelse\n  echo \"warning: SwiftLint not installed, install via 'brew install swiftlint' or download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		5547123C228D630E00DB4136 /* Rename C Header */ = {
 			isa = PBXShellScriptBuildPhase;
