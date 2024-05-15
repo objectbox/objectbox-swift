@@ -331,11 +331,6 @@ extension PropertyQuery where T: FixedWidthInteger {
         throw ObjectBoxError.illegalArgument(message: "Unsupported int type with \(bits) bits")
     }
 
-    @available(*, deprecated, renamed: "find")
-    public func findIntegers() throws -> [T] {
-        return try find()
-    }
-
     /// Find a unique value for the given property.
     ///
     /// - Returns: A value of the objects matching the query, `nil` if no value was found.

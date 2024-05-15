@@ -10,9 +10,15 @@ class SyncDryTests: XCTestCase {
 
     var store: Store!
 
-    override func setUpWithError() throws {
+    override func setUp() {
         super.setUp()
         store = StoreHelper.tempStore(model: createTestModel())
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        try! store?.closeAndDeleteAllFiles()
+        store = nil
     }
 
     func testSyncClientAvailable() throws {

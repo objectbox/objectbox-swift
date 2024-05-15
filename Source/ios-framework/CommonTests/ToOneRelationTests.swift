@@ -42,7 +42,7 @@ class OneToManyTestCase: XCTestCase {
 class ToOneRelationTests: OneToManyTestCase {
 
     func testEmptyRelation() throws {
-        let orderId: EntityId<Order> = try {
+        let orderId = try {
             let order = Order()
             XCTAssertNil(order.customer.target)
             return try orderBox.put(order)
@@ -56,7 +56,7 @@ class ToOneRelationTests: OneToManyTestCase {
         let existingCustomer = Customer(name: "Existing beforehand")
         try customerBox.put(existingCustomer)
 
-        let orderId: EntityId<Order> = try {
+        let orderId = try {
             let order = Order()
             return try orderBox.put(order)
         }()
@@ -100,7 +100,7 @@ class ToOneRelationTests: OneToManyTestCase {
     }
 
     func testChangingRelationToNewObjectAfterInitialPut() throws {
-        let orderId: EntityId<Order> = try {
+        let orderId = try {
             let order = Order()
             return try orderBox.put(order)
         }()

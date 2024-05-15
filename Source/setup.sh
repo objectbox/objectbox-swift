@@ -8,7 +8,7 @@ if [ "${1:-}" == "brew" ]; then
   shift
 fi
 
-# Install dependencies via homebrew, including carthage (see Brewfile)
+# Install dependencies via homebrew, including carthage and swiftlint (see Brewfile)
 brew bundle
 
 # Initialize git submodules
@@ -35,10 +35,6 @@ if [[ $xcode_cli_tools != *"already installed"* ]]; then
   echo "$xcode_cli_tools"
   exit 1
 fi
-
-# Build SwiftLint from source into its `external/SwiftLint/.build` directory.
-# FIXME Need to update to a newer version: -static-stdlib is no longer supported for Apple platforms
-# make build_swiftlint
 
 # Build the code generator binary (including Sourcery)
 cd ios-framework

@@ -59,7 +59,7 @@ struct NoteStruct {
 
 // objectbox:Entity
 class Author {
-    var id: EntityId<Author> = 0
+    var id: Id = 0
     var name: String
 
     var notesStandalone: ToMany<Note>
@@ -85,7 +85,7 @@ class Author {
 
 // objectbox:Entity
 struct AuthorStruct {
-    var id: EntityId<AuthorStruct> = 0
+    var id: Id = 0
     var name: String
     var notes: ToMany<NoteStruct>
 }

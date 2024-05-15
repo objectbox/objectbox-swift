@@ -292,13 +292,6 @@ extension Property where Property.ValueType: FixedWidthInteger {
             return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
     }
     
-    /// Equivalent to the <= operator in query blocks.
-    @available(*, deprecated, message: "Do not use this yet if you want to set parameters! It will change!")
-    func isLessThanEqual(_ value: ValueType)
-        -> PropertyQueryCondition<EntityType, ValueType> {
-            return PropertyQueryCondition(expression: { $0.where(self, isBetween: ValueType.min, and: value) })
-    }
-    
     /// Matches all property values between `lowerBound` and `upperBound`,
     /// including the bounds themselves. The order of the bounds does not matter.
     ///

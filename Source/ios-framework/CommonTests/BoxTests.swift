@@ -537,42 +537,63 @@ class BoxTests: XCTestCase {
         XCTAssert(debugDescription.hasPrefix("<ObjectBox.Box"))
         XCTAssert(debugDescription.contains("TestPerson"))
     }
+    
+    /// The internal changeHandler of an Observer that queries the box is executed async on a dispatch queue.
+    /// This helps to wait for the queue to complete. If not done a following box operation might have modified
+    /// the box contents already leading to unexpected results.
+    class SubscriptionHelper<T> {
+        internal var results = [[T]]()
+        lazy var resultHandler: ([T], ObjectBoxError?) -> Void = { items,_ in
+            print("Called back.")
+            self.results.append(items)
+            self.group.leave()
+        }
+        
+        let group = DispatchGroup()
+        let queue = DispatchQueue(label: "io.objectbox.BoxSubscriptionQueue")
+        
+        func waitForQueue<R>(operation: () -> R) -> R {
+            group.enter()
+            let result = operation()
+            XCTAssertEqual(group.wait(timeout: .now() + .seconds(5)), .success)
+            return result
+        }
+        
+        func waitForQueue(operation: () throws -> Void) throws {
+            group.enter()
+            try operation()
+            XCTAssertEqual(group.wait(timeout: .now() + .seconds(5)), .success)
+        }
+    }
 
     func testBoxSubscription() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
 
         var subscription: Observer
 
-        let group = DispatchGroup()
-        group.enter()
-        let queue = DispatchQueue(label: "io.objectbox.BoxSubscriptionQueue")
-        var results = [[TestPerson]]()
-        subscription = box.subscribe(dispatchQueue: queue) { items, _ in
-            print("Called back.")
-            results.append(items)
+        let subHelper = SubscriptionHelper<TestPerson>()
+        subscription = subHelper.waitForQueue {
+            box.subscribe(dispatchQueue: subHelper.queue, resultHandler: subHelper.resultHandler)
         }
 
         let person1 = TestPerson(name: "Søren🙈", age: 42)
-        try box.put(person1)
-
+        try subHelper.waitForQueue {
+            try box.put(person1)
+        }
+        
         let person2 = TestPerson(name: "κόσμε", age: 40)
-        try box.put(person2)
+        try subHelper.waitForQueue {
+            try box.put(person2)
+        }
+
+        print("Checking")
+        XCTAssertEqual(subHelper.results.count, 3)
 
         print("Adding sequence point")
         let allPersons = [person1, person2]
-
-        queue.async {
-            group.leave()
-        }
-
-        print("Waiting")
-        group.wait()
-
-        print("Checking")
-        XCTAssertEqual(results.count, 3)
-
+        
         for i in 0...2 {
-            let persons = (i < results.count) ? results[i] : []
+            let persons = (i < subHelper.results.count) ? subHelper.results[i] : []
             XCTAssertEqual(persons.count, i)
             let expectedPersons = (i > 0) ? Array(allPersons[..<i]) : []
             XCTAssert(persons == expectedPersons)
@@ -588,26 +609,24 @@ class BoxTests: XCTestCase {
 
         let person1 = TestPerson(name: "Søren🙈", age: 42)
         try box.put(person1)
-
-        let group = DispatchGroup()
-        group.enter()
-        let queue = DispatchQueue(label: "io.objectbox.BoxSubscriptionQueue")
-        var results = [[TestPerson]]()
-        subscription = box.subscribe(dispatchQueue: queue, flags: [.sendInitial, .dontSubscribe]) { items, _ in
-            results.append(items)
+        
+        let subHelper = SubscriptionHelper<TestPerson>()
+        subscription = subHelper.waitForQueue {
+            box.subscribe(dispatchQueue: subHelper.queue, flags: [.sendInitial, .dontSubscribe], resultHandler: subHelper.resultHandler)
         }
 
         let person2 = TestPerson(name: "κόσμε", age: 40)
+        subHelper.group.enter()
         try box.put(person2)
-
-        queue.async {
-            group.leave()
-        }
+        // No results should be received
+        let waitResult = subHelper.group.wait(timeout: .now() + .seconds(5))
+        XCTAssertEqual(waitResult, .timedOut)
+        subHelper.group.leave() // Manually leave
 
         print("Checking")
-        XCTAssertEqual(results.count, 1)
+        XCTAssertEqual(subHelper.results.count, 1)
 
-        let persons = results[0]
+        let persons = subHelper.results[0]
         XCTAssertEqual(persons.count, 1)
         XCTAssert(persons == [person1])
 
@@ -618,36 +637,33 @@ class BoxTests: XCTestCase {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
 
         var subscription: Observer
-
-        let group = DispatchGroup()
-        group.enter()
-        let queue = DispatchQueue(label: "io.objectbox.BoxSubscriptionQueue")
-        var results = [[TestPerson]]()
-        subscription = box.subscribe(dispatchQueue: queue, flags: []) { items, _ in
-            results.append(items)
+        
+        let subHelper = SubscriptionHelper<TestPerson>()
+        subHelper.group.enter()
+        subscription = box.subscribe(dispatchQueue: subHelper.queue, flags: [], resultHandler: subHelper.resultHandler)
+        // No results should be received
+        let waitResult = subHelper.group.wait(timeout: .now() + .seconds(5))
+        XCTAssertEqual(waitResult, .timedOut)
+        subHelper.group.leave() // Manually leave
+        
+        let person1 = TestPerson(name: "Søren🙈", age: 42)
+        try subHelper.waitForQueue {
+            try box.put(person1)
         }
 
-        let person1 = TestPerson(name: "Søren🙈", age: 42)
-        try box.put(person1)
-
         let person2 = TestPerson(name: "κόσμε", age: 40)
-        try box.put(person2)
+        try subHelper.waitForQueue {
+            try box.put(person2)
+        }
 
         print("Adding sequence point")
         let allPersons = [person1, person2]
 
-        queue.async {
-            group.leave()
-        }
-
-        print("Waiting")
-        group.wait()
-
         print("Checking")
-        XCTAssertEqual(results.count, 2)
+        XCTAssertEqual(subHelper.results.count, 2)
 
         for i in 1...2 {
-            let persons = (i <= results.count) ? results[i - 1] : []
+            let persons = (i <= subHelper.results.count) ? subHelper.results[i - 1] : []
             XCTAssertEqual(persons.count, i)
             let expectedPersons = (i > 0) ? Array(allPersons[..<i]) : []
             XCTAssert(persons == expectedPersons)

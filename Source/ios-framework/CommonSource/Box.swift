@@ -507,12 +507,6 @@ extension Box {
         }
     }
 
-    /// :nodoc:
-    @available(*, deprecated, renamed: "all")
-    public func find() throws -> [EntityType] {
-        return try all()
-    }
-
     internal func readAllContiguous(_ bytesArray: OBX_bytes_array) throws -> ContiguousArray<EntityType> {
         var result = ContiguousArray<EntityType>()
         result.reserveCapacity(bytesArray.count)
