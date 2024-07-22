@@ -24,7 +24,7 @@
   </a>
 </p>
 
-Swift Database - swiftly persist objects on iOS & macOS
+Swift Database - swiftly persist objects and on-device vector database for iOS & macOS
 ===============
 
 Powerful & superfast database for Swift that's also easy to use. Persist Swift objects quickly and reliably on-device on iOS and macOS.
@@ -49,9 +49,8 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 
 Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up, fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? Check out the [installation section below](#adding-objectbox-to-your-project). You can also star this repository for later 🌟
 
-On top, ObjectBox comes with an [out-of-the-box Data Sync](https://objectbox.io/sync/) handling the complexity of occassionally connected devices, networking and conflict resolution code for you. Build apps that reliably sync between devices and any backend, offline on-premise or online with the Cloud.
-
 ### Features
+🧠 **Artificial Intelligence** - superfast [on-device vector search](https://docs.objectbox.io/on-device-ann-vector-search).\
 🏁 **High performance** on restricted devices, like IoT gateways, micro controllers, ECUs etc.\
 💚 **Resourceful** with minimal CPU, power and Memory usage for maximum flexibility and sustainability\
 🔗 **Relations:** object links / relationships are built-in\
