@@ -213,7 +213,7 @@ extension TypeTest: ObjectBox.EntityInspectable {
     internal static var entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
-        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 41728)
+        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 42496)
         try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 22528)
         try entityBuilder.addProperty(name: "intValue", type: PropertyType.long, id: 2, uid: 23552)
         try entityBuilder.addProperty(name: "int8Value", type: PropertyType.byte, id: 3, uid: 24576)
@@ -233,8 +233,9 @@ extension TypeTest: ObjectBox.EntityInspectable {
         try entityBuilder.addProperty(name: "floatValue", type: PropertyType.float, id: 17, uid: 38656)
         try entityBuilder.addProperty(name: "doubleValue", type: PropertyType.double, id: 18, uid: 39680)
         try entityBuilder.addProperty(name: "dateValue", type: PropertyType.date, id: 19, uid: 40704)
+        try entityBuilder.addProperty(name: "floatArray", type: PropertyType.floatVector, id: 20, uid: 41728)
 
-        try entityBuilder.lastProperty(id: 19, uid: 40704)
+        try entityBuilder.lastProperty(id: 20, uid: 41728)
     }
 }
 
@@ -353,6 +354,12 @@ extension TypeTest {
     ///
     ///     box.query { TypeTest.dateValue > 1234 }
     internal static var dateValue: Property<TypeTest, Date, Void> { return Property<TypeTest, Date, Void>(propertyId: 19, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { TypeTest.floatArray.isNotNil() }
+    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = EntityId(identifier)
@@ -512,6 +519,14 @@ extension ObjectBox.Property where E == TypeTest {
 
     internal static var dateValue: Property<TypeTest, Date, Void> { return Property<TypeTest, Date, Void>(propertyId: 19, isPrimaryKey: false) }
 
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .floatArray.isNotNil() }
+
+    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
+
 }
 
 
@@ -537,6 +552,7 @@ internal class TypeTestBinding: ObjectBox.EntityBinding {
         let propertyOffset_stringValue = propertyCollector.prepare(string: entity.stringValue)
         let propertyOffset_bytes = propertyCollector.prepare(bytes: entity.bytes)
         let propertyOffset_byteArray = propertyCollector.prepare(bytes: entity.byteArray)
+        let propertyOffset_floatArray = propertyCollector.prepare(values: entity.floatArray)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.intValue, at: 2 + 2 * 2)
@@ -557,6 +573,7 @@ internal class TypeTestBinding: ObjectBox.EntityBinding {
         propertyCollector.collect(dataOffset: propertyOffset_stringValue, at: 2 + 2 * 13)
         propertyCollector.collect(dataOffset: propertyOffset_bytes, at: 2 + 2 * 15)
         propertyCollector.collect(dataOffset: propertyOffset_byteArray, at: 2 + 2 * 16)
+        propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 20)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
@@ -581,6 +598,7 @@ internal class TypeTestBinding: ObjectBox.EntityBinding {
         entity.floatValue = entityReader.read(at: 2 + 2 * 17)
         entity.doubleValue = entityReader.read(at: 2 + 2 * 18)
         entity.dateValue = entityReader.read(at: 2 + 2 * 19)
+        entity.floatArray = entityReader.read(at: 2 + 2 * 20)
 
         return entity
     }
@@ -599,7 +617,7 @@ fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
     try AnnotatedType.buildEntity(modelBuilder: modelBuilder)
     try TypeTest.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 2, uid: 41728)
+    modelBuilder.lastEntity(id: 2, uid: 42496)
     return modelBuilder.finish()
 }
 

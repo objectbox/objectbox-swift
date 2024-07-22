@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable force_try
-
 enum SwiftRefinedTestError: Error {
     case generalError
 }
@@ -33,6 +31,7 @@ class BoxSwiftRefinedAPITests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -83,7 +82,7 @@ class BoxSwiftRefinedAPITests: XCTestCase {
 
         XCTAssertEqual(try box.count(), 7)
 
-        let removedCount = try! box.remove(entities)
+        let removedCount = try box.remove(entities)
         XCTAssertEqual(removedCount, 7)
         XCTAssertEqual(try box.count(), 0)
     }
@@ -219,4 +218,3 @@ class BoxSwiftRefinedAPITests: XCTestCase {
         XCTAssert(try box.isEmpty())
     }
 }
-// swiftlint:enable identifier_name

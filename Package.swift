@@ -16,8 +16,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "ObjectBox",
-            url: "https://github.com/objectbox/objectbox-swift/releases/download/v2.0.0/ObjectBox-xcframework-2.0.0.zip",
-            checksum: "20766ccf880bd66c4246f55536fbd3f33f1e8bb7adf55101a3dd06a8ee043116"
+            url: "https://github.com/objectbox/objectbox-swift/releases/download/v4.0.0/ObjectBox-xcframework-4.0.0.zip",
+            checksum: "2bed7b8b87dd46dda64fa1f5e7a0b1df87908a783690fda09c6dc943a01a32e5"
         )
     ]
 )

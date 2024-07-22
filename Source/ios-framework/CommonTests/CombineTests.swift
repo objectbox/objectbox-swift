@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,11 +18,9 @@ import XCTest
 import ObjectBox
 import Combine
 
-// swiftlint:disable identifier_name force_try
-
 /// A  `Subscriber` that collects until `numResultsExpected` are received
 /// that can wait on each result with `waitForResult`.
-/// 
+///
 /// Once expected number of results are received, also asserts there was no error.
 ///
 /// Use like:
@@ -63,7 +61,7 @@ class TestSubscriber<T: __EntityRelatable & EntityInspectable>: Subscriber {
     func receive(_ input: Input) -> Subscribers.Demand {
         print("Data Received \(input).")
         results.append(input)
-        if (enteredGroup) {
+        if enteredGroup {
             group.leave()
             enteredGroup = false
         }
@@ -78,7 +76,7 @@ class TestSubscriber<T: __EntityRelatable & EntityInspectable>: Subscriber {
         print("Subscription completed.")
         XCTAssertNil(error, "No error occurred in subscription")
     }
-
+    
     func wait(seconds: Int = 5) -> Bool {
         return group.wait(timeout: .now() + .seconds(seconds)) == .success
     }
@@ -86,13 +84,13 @@ class TestSubscriber<T: __EntityRelatable & EntityInspectable>: Subscriber {
     func waitForResult(operation: () -> Void) {
         enter()
         operation()
-        XCTAssert(wait())
+        XCTAssert(wait(), "Timed out waiting for result")
     }
     
     func waitForResult(operation: () throws -> Void) throws {
         enter()
         try operation()
-        XCTAssert(wait())
+        XCTAssert(wait(), "Timed out waiting for result")
     }
     
     func assertNumResultsExpected() {
@@ -111,6 +109,7 @@ class CombineTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -172,13 +171,13 @@ class CombineTests: XCTestCase {
             }
             
             print("Checking")
-            testSubscriber.assertNumResultsExpected()            
+            testSubscriber.assertNumResultsExpected()
             XCTAssert(testSubscriber.results[0] == [])
             XCTAssert(testSubscriber.results[1] == [originalPerson])
             XCTAssert(testSubscriber.results[2] == [changedPerson])
         }
     }
-
+    
     func testBoxSubscriptionRemove() throws {
         if #available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
             let queue = DispatchQueue(label: "io.objectbox.tests.BoxSubscriptionQueue")
@@ -322,7 +321,7 @@ class CombineTests: XCTestCase {
             XCTAssert(persons3.sorted(by: cmp) == [person1, person3].sorted(by: cmp))
         }
     }
-
+    
     func testQuerySubscriptionRemove() throws {
         if #available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
             let queue = DispatchQueue(label: "io.objectbox.tests.QuerySubscriptionQueue")

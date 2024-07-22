@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -209,6 +209,21 @@ extern "C" OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, co
     return result;
 }
 
+extern "C" OBXDataOffset obx_fbb_prepare_floats(struct OBX_fbb* _Nonnull self, const void* _Nonnull floats, size_t size) {
+    GUARD_IS_COLLECTING;
+    assert(!obx_is_started_fast(self)); // Must be collected before scalars.
+    
+    OBXDataOffset result = 0;
+    try {
+        flatbuffers::Offset<flatbuffers::Vector<float>> vectorOffset = self->fbb.CreateVector((float *)floats, size);
+        result = vectorOffset.o;
+    } catch(std::bad_alloc& err) {
+        fprintf(stderr, "Unexpected bad_alloc error collecting float vector.");
+        result = 0;
+    }
+    return result;
+}
+
 #pragma mark - Reading
 
 extern "C" const struct OBX_fbr* obx_fbr_get_root(const void* _Nonnull bytes) {
@@ -324,6 +339,18 @@ extern "C" const char * _Nullable obx_fbr_read_string(const struct OBX_fbr* _Non
 
 extern "C" bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* outBytes) {
     const flatbuffers::Vector<uint8_t> *vector = self->GetPointer<const flatbuffers::Vector<uint8_t> *>(propertyOffset);
+    if (!vector) {
+        return false;
+    }
+    
+    outBytes->data = vector->data();
+    outBytes->size = vector->size();
+    
+    return true;
+}
+
+extern "C" bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* outBytes) {
+    const flatbuffers::Vector<float> *vector = self->GetPointer<const flatbuffers::Vector<float> *>(propertyOffset);
     if (!vector) {
         return false;
     }

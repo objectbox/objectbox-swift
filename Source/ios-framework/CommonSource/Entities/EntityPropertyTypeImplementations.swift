@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -87,6 +87,16 @@ extension Optional: DataPropertyType where Wrapped == Data {}
 extension Array: EntityPropertyTypeConvertible where Element == UInt8 {
     public static var entityPropertyType: PropertyType { return .byteVector }
 }
+
+// MARK: Scalar vectors
+
+public class FloatArrayPropertyType: EntityPropertyTypeConvertible {
+    public static var entityPropertyType: PropertyType { return .floatVector }
+}
+
+// MARK: HNSW index property
+
+public class HnswIndexPropertyType: FloatArrayPropertyType {}
 
 // MARK: - Entity Property Types
 

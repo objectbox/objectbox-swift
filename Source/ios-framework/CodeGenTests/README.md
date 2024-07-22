@@ -18,12 +18,35 @@ These tests require a copy of ObjectBox Swift Code Generator in a known location
 
 Adding a test case requires the following steps:
 
-1. Add a new command line tool target
-2. Name it ToolTestProject`N` (where `N` is the next number)
-3. Go to the bottom of `RunToolTests.sh` and add `test_target_num "Test Name" N || FAIL=1` where "Test Name" is the name you want to have used in the log messages for this test, and `N` is again, the number of the test target.
-4. Add `-framework ObjectBox` to the "Other Linker Flags"
-5. Add `@executable_path/../../../` and `$(TOOLCHAIN_DIR)/usr/lib/swift/macosx` to the "Runpath Search Paths"
-6. Add a `ToolTestProjectN.swift` source file (`N` again is the number of the target) containing a `main(_ args: [String]) -> Int32` that does the actual test and returns 0 on success, something else > 0 on failure.
-7. Add the `main.swift` file to your target, it calls the main() function for you.
+1. Open `ToolTestProject.xcodeproj` in Xcode.
+2. Duplicate one of the `ToolTestProjectN` command line tool targets and increase to next highest number `N`.
+3. In `RunToolTests.sh` at the bottom add a command to run the test (replace `<N>` with the chosen number):
+   ```bash
+   # If the code generator should succeed
+   test_target_num "Test Name" <N> || ((FAIL++))
+   # If the code generator should fail
+   fail_codegen_target_num "Test Name" <N> || ((FAIL++))
+   ```
+4. Add a `ToolTestProjectN.swift` source file (replace `N` again) to the command line tool target. It should look like:
+    ```swift
+    import ObjectBox
 
-The `RunToolTests.sh` script will run the code generator and pass you the "Test Name" as your first parameter. It will also check the code generator output against a file named `Entity.generatedN.swift`, the model file against a `modelN.json` and such.
+    // TODO Add entity classes
+
+    func main(_ args: [String]) throws -> Int32 {
+        // TODO Add test code, may print on error or throw
+
+        return 0 // on success
+        return 1 // or any value > 0 on failure (make sure to print error details)
+    }
+    ```
+5. If the code generator should succeed, add the generated `EntityInfo.generatedN.swift` to the `ToolTestProjectN` 
+  command line tool target as well (so it's verified it compiles).
+
+The `RunToolTests.sh` script will run the code generator and pass the "Test Name" as the first parameter. It will also check the code generator output against a file named `Entity.generatedN.swift`, the model file against a `modelN.json` and such.
+
+### Command line tool target settings
+For reference, all of the command line targets have these settings:
+- Add `-framework ObjectBox` to the "Other Linker Flags"
+- Add `@executable_path/../../../` and `$(TOOLCHAIN_DIR)/usr/lib/swift/macosx` to the "Runpath Search Paths"
+- Add the `main.swift` file to the Compile sources build phase, it calls the main() function of the `ToolTestProjectN.swift` file.

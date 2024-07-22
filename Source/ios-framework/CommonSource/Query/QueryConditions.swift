@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -612,7 +612,6 @@ public func >= <E>(lhs: Property<E, Data, Void>, rhs: Data)
     where E: Entity {
         return lhs.isGreaterThanEqual(rhs)
 }
-// swiftlint:enable identifier_name
 
 /// :nodoc:
 public func == <E>(lhs: Property<E, Data?, Void>, rhs: Data)
@@ -634,7 +633,6 @@ public func > <E>(lhs: Property<E, Data?, Void>, rhs: Data)
     where E: Entity {
         return lhs.isGreaterThan(rhs)
 }
-// swiftlint:enable identifier_name
 
 extension Property where Property.ValueType: DataPropertyType {
     /// Equivalent to the == operator in query blocks.
@@ -841,6 +839,30 @@ public func ∉ <E>(lhs: Property<E, Date?, Void>, rhs: [Date]) -> PropertyQuery
     return lhs.isNotIn(rhs)
 }
 // swiftlint:enable identifier_name
+
+extension Property where Property.ValueType == HnswIndexPropertyType {
+    
+    /// Performs an approximate nearest neighbor (ANN) search to find objects near to the given `queryVector`.
+    ///
+    /// This requires the vector property to have an HNSW index.
+    ///
+    /// The dimensions of the query vector should be at least the dimensions of this vector property.
+    ///
+    /// Use `maxCount` to set the maximum number of objects to return by the ANN condition.
+    /// Hint: it can also be used as the "ef" HNSW parameter to increase the search quality in combination with a
+    /// query limit.
+    /// For example, use maxResultCount of 100 with a query limit of 10 to have 10 results that are of potentially 
+    /// better quality than just passing in 10 for maxResultCount (quality/performance tradeoff).
+    ///
+    /// To change the given parameters after building the query, use `Query.setParameter(_:to:)` with 
+    /// either a `[Float]` or `[Int]` or their alias equivalent.
+    public func nearestNeighbors(queryVector: [Float], maxCount: Int)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.nearestNeighbors(self, queryVector: queryVector, maxResultCount: maxCount)
+        })
+    }
+}
 
 extension Property where Property.ValueType == Date? {
     public func isEqual(to date: Date)

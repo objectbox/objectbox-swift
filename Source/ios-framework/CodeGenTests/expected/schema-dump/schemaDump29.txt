@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
-			propertyType = EntityId<Autobus>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Autobus>
 			entityName = Autobus
 			unwrappedPropertyType = EntityId<Autobus>
 			dbName = nil
@@ -22,7 +24,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:24576))
 			propertyName = lineName
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = Autobus
 			unwrappedPropertyType = String
 			dbName = nil
@@ -45,7 +49,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
-			propertyType = EntityId<Autobus>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Autobus>
 			entityName = Autobus
 			unwrappedPropertyType = EntityId<Autobus>
 			dbName = nil
@@ -61,7 +67,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
-			propertyType = EntityId<Autobus>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Autobus>
 			entityName = Autobus
 			unwrappedPropertyType = EntityId<Autobus>
 			dbName = nil
@@ -83,7 +91,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
-			propertyType = EntityId<Building>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
 			dbName = nil
@@ -98,7 +108,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:20736))
 			propertyName = buildingName
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = Building
 			unwrappedPropertyType = String
 			dbName = nil
@@ -113,7 +125,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:21504))
 			propertyName = buildingNumber
-			propertyType = Int
+			propertyType = long
+			propertyFlags = []
+			propertySwiftType = Int
 			entityName = Building
 			unwrappedPropertyType = Int
 			dbName = nil
@@ -136,7 +150,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
-			propertyType = EntityId<Building>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
 			dbName = nil
@@ -152,7 +168,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
-			propertyType = EntityId<Building>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
 			dbName = nil

@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ where Target == Target.EntityBindingType.EntityType {
             switch self {
             case .none:
                 return nil
-            case .unstored(entity: _):
+            case .unstored:
 //                fatalError()
                 return nil
             case .lazy(id: let entityId),
@@ -204,4 +204,3 @@ extension LazyProxyRelation: CustomDebugStringConvertible {
         }
     }
 }
-// swiftlint:enable identifier_name

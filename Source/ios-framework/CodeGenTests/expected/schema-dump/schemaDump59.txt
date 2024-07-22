@@ -1,0 +1,204 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(17664)
+		className = CityAllProperties
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityAllProperties
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:16640))
+			propertyName = coordinates
+			propertyType = floatVector
+			propertyFlags = [Sourcery.PropertyFlags.indexed]
+			propertySwiftType = HnswIndexPropertyType
+			entityName = CityAllProperties
+			unwrappedPropertyType = [Float]
+			dbName = nil
+			modelIndexId = Optional(IdUid(1:15616))
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			indexType = valueIndex
+			isScalarVectorType = true
+			hnswParams = SchemaHnswParams {
+				dimensions = 2
+				neighborsPerNode = Optional(30)
+				indexingSearchCount = Optional(100)
+				flags = Optional("[HnswFlags.debugLogs, HnswFlags.debugLogsDetailed, HnswFlags.reparationLimitCandidates, HnswFlags.vectorCacheSimdPaddingOff]")
+				distanceType = Optional("HnswDistanceType.euclidean")
+				reparationBacklinkProbability = Optional(0.95)
+				vectorCacheHintSizeKB = Optional(2097152)
+			}
+		}
+]
+		indexes = [SchemaIndex {
+			modelId = IdUid(1:15616)
+			properties = ["coordinates"]
+		}
+]
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(2:16640))
+		isEntitySubclass = false
+		isValueType = false
+		hasStringProperties = false
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityAllProperties
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityAllProperties
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+, SchemaEntity {
+		modelId = Optional(2)
+		modelUid = Optional(21504)
+		className = CityDefaults
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityDefaults
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:20736))
+			propertyName = coordinatesDefaults
+			propertyType = floatVector
+			propertyFlags = [Sourcery.PropertyFlags.indexed]
+			propertySwiftType = HnswIndexPropertyType
+			entityName = CityDefaults
+			unwrappedPropertyType = [Float]
+			dbName = nil
+			modelIndexId = Optional(IdUid(2:19712))
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			indexType = valueIndex
+			isScalarVectorType = true
+			hnswParams = SchemaHnswParams {
+				dimensions = 2
+				neighborsPerNode = nil
+				indexingSearchCount = nil
+				flags = nil
+				distanceType = nil
+				reparationBacklinkProbability = nil
+				vectorCacheHintSizeKB = nil
+			}
+		}
+]
+		indexes = [SchemaIndex {
+			modelId = IdUid(2:19712)
+			properties = ["coordinatesDefaults"]
+		}
+]
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(2:20736))
+		isEntitySubclass = false
+		isValueType = false
+		hasStringProperties = false
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityDefaults
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:18688))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = CityDefaults
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(2:21504)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(2:19712)
+}

@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
 //
 
 import Foundation
-
-// swiftlint:disable force_try
 
 // Of the form `ToMany<OtherEntity>`. Initialize with `nil` when you define properties.
 // The codegen uses the `relation()` and `backlink()` static factory methods to create instances.
@@ -76,6 +74,7 @@ where S == S.EntityBindingType.EntityType {
     var collection: [ReferencedType] {
         var col = collectionResolved
         while col == nil {
+            // swiftlint:disable:next force_try
             try! resolveFromDb()
             col = collectionResolved
         }
@@ -416,6 +415,7 @@ extension ToMany: RangeReplaceableCollection {
         where C: Collection, R: RangeExpression, ReferencedType == C.Element, Index == R.Bound {
         relationCacheLock.wait()
         defer { relationCacheLock.signal() }
+        // swiftlint:disable:next force_try
         let collection = try! ensureCollectionResolved()
         if collection.isEmpty && newElements.isEmpty { return }
 

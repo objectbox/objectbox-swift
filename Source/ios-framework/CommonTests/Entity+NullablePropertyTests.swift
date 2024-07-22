@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable type_body_length force_try
 class EntityNullablePropertyTests: XCTestCase {
 
     var store: Store!
@@ -26,7 +25,9 @@ class EntityNullablePropertyTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let model: OpaquePointer = {
+            // swiftlint:disable:next force_try
             let modelBuilder = try! ModelBuilder()
+            // swiftlint:disable:next force_try
             try! NullablePropertyEntity.buildEntity(modelBuilder: modelBuilder)
             return modelBuilder.finish()
         }()
@@ -35,6 +36,7 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -396,7 +398,7 @@ class EntityNullablePropertyTests: XCTestCase {
         }
 
         // Non-nil change
-        let stringData = "Lorem ipsum data".data(using: .utf8)
+        let stringData = Data("Lorem ipsum data".utf8)
         originalEntity.maybeByteVector = stringData
         try box.put(originalEntity)
 
@@ -418,4 +420,3 @@ class EntityNullablePropertyTests: XCTestCase {
     }
 
 }
-// swiftlint:enable type_body_length

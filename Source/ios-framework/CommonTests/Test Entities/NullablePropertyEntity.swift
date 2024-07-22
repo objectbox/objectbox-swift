@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -262,4 +262,4 @@ class NullablePropertyEntityBinding: EntityBinding {
     }
 }
 
-// swiftlint:enable identifier_name force_cast line_length
+// swiftlint:enable identifier_name line_length

@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = UInt64
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = UInt64
 			entityName = Building
 			unwrappedPropertyType = UInt64
 			dbName = nil
@@ -23,7 +25,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:15616))
 			propertyName = buildingName
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = Building
 			unwrappedPropertyType = String
 			dbName = nil
@@ -38,7 +42,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:16640))
 			propertyName = buildingNumber
-			propertyType = Int
+			propertyType = long
+			propertyFlags = []
+			propertySwiftType = Int
 			entityName = Building
 			unwrappedPropertyType = Int
 			dbName = nil
@@ -61,7 +67,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = UInt64
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = UInt64
 			entityName = Building
 			unwrappedPropertyType = UInt64
 			dbName = nil

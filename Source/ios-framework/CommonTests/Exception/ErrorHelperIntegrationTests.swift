@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-// swiftlint:disable force_try
 
 import XCTest
 @testable import ObjectBox
@@ -108,7 +106,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
         
         Thread.detachNewThread {
             do {
-                try store.runInReadOnlyTransaction { () throws -> Void in
+                try store.runInReadOnlyTransaction { () throws in
                     if num > 1 {
                         self.createReadersThrow(store: store, maxReaders: num - 1,
                                            iWasClosedExpectation: iWasClosedExpectation)
@@ -134,6 +132,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
         //  maxreaders, so on my Mac, I get 126 even when I request 1. There is also no API to query what it was set to
         //  in ObjectBox yet. So we just create a large number of reader threads and hope things eventually blow up.
         
+        // swiftlint:disable:next force_try
         let store = try! Store(model: createTestModel(),
                                directory: StoreHelper.newTemporaryDirectory().path,
                                maxDbSizeInKByte: 100,
@@ -147,6 +146,7 @@ class ErrorHelperIntegrationTests: XCTestCase {
         self.createReadersThrow(store: store, maxReaders: count, iWasClosedExpectation: outerBlockClosedExpectation)
         self.wait(for: [outerBlockClosedExpectation], timeout: ErrorHelperIntegrationTests.testTimeout)
         
+        // swiftlint:disable:next force_try
         try! store.closeAndDeleteAllFiles()
         
         if let error = errorThrownOnThread, case ObjectBoxError.maxReadersExceeded(let message) = error {

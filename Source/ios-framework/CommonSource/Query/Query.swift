@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2022 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,19 @@ internal class CDataVisitorContext {
 internal func CDataVisitor(data: UnsafeRawPointer?, size: Int, userData: UnsafeMutableRawPointer?) -> CBool {
     let context: CDataVisitorContext = Unmanaged.fromOpaque(userData!).takeUnretainedValue()
     return context.fun(data, size)
+}
+
+internal class CDataScoreVisitorContext {
+    var fun: (UnsafePointer<OBX_bytes_score>?) -> Bool
+
+    init(_ fun: @escaping (UnsafePointer<OBX_bytes_score>?) -> Bool) {
+        self.fun = fun
+    }
+}
+
+internal func CDataScoreVisitor(data: UnsafePointer<OBX_bytes_score>?, userData: UnsafeMutableRawPointer?) -> CBool {
+    let context: CDataScoreVisitorContext = Unmanaged.fromOpaque(userData!).takeUnretainedValue()
+    return context.fun(data)
 }
 
 /// A reusable query returning entities or their IDs.
@@ -179,6 +192,77 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
 
         return result
     }
+    
+    /// Finds objects matching the query associated to their query score (e. g. distance in NN search).
+    ///
+    /// This only works on objects with a property with an HNSW index.
+    ///
+    /// - Returns: A list of ``ObjectWithScore`` that wraps matching objects and their score, 
+    /// sorted by score in ascending order.
+    public func findWithScores(offset: Int = 0, limit: Int = 0) throws -> [ObjectWithScore<EntityType>] {
+        if useBytesArray {
+            // Read results all at once
+            return try store.runInReadOnlyTransaction {
+                let box = store.box(for: EntityType.self)
+                try setOffsetLimit(offset, limit)
+                guard let bytesScoresArray = obx_query_find_with_scores(cQuery) else {
+                    try throwObxErr(obx_last_error_code())
+                }
+                defer {
+                    obx_bytes_score_array_free(bytesScoresArray)
+                }
+                return try box.readAll(bytesScoresArray.pointee)
+            }
+        } else {
+            // Use visit API to read results one by one (in chunks)
+            var flatBuffer = FlatBufferReader()
+            let binding = EntityType.entityBinding
+            var result = [ObjectWithScore<EntityType>]()
+
+            let context = CDataScoreVisitorContext { (data: UnsafePointer<OBX_bytes_score>?) -> Bool in
+                guard let bytesScore = data else { return false }
+                
+                flatBuffer.setCurrentlyReadTableBytes(bytesScore.pointee.data)
+                let object = binding.createEntity(entityReader: flatBuffer, store: self.store)
+                
+                let score = bytesScore.pointee.score
+                result.append(ObjectWithScore(object: object, score: score))
+                return true
+            }
+
+            try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
+            let error = obx_query_visit_with_score(cQuery, CDataScoreVisitor, Unmanaged.passUnretained(context).toOpaque())
+            try check(error: error)
+            return result
+        }
+    }
+    
+    /// Finds IDs of objects matching the query associated to their query score (e. g. distance in NN search).
+    ///
+    /// This only works on objects with a property with an HNSW index.
+    ///
+    /// - Returns: A list of ``IdWithScore`` that wraps IDs of matching objects and their score, 
+    /// sorted by score in ascending order.
+    public func findIdsWithScores(offset: Int = 0, limit: Int = 0) throws -> [IdWithScore] {
+        try setOffsetLimit(offset, limit)
+        guard let idWithScoresArray = obx_query_find_ids_with_scores(cQuery) else {
+            try throwObxErr(obx_last_error_code())
+        }
+        defer { obx_id_score_array_free(idWithScoresArray) }
+        
+        let count = idWithScoresArray.pointee.count
+        let result = [IdWithScore](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            for itemIndex in 0 ..< count {
+                let item = idWithScoresArray.pointee.ids_scores[itemIndex]
+                let id = item.id
+                let score = item.score
+                buffer[itemIndex] = IdWithScore(id: id, score: score)
+            }
+            initializedCount = count
+        }
+
+        return result
+    }
 
     /// Delete all objects matching the query.
     ///
@@ -262,7 +346,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
 
     internal func setParametersInternal64(property: PropertyDescriptor, to collection: [Int64]) {
         let numParams = Int(collection.count)
-        collection.withContiguousStorageIfAvailable { ptr -> Void in
+        collection.withContiguousStorageIfAvailable { ptr in
             let err = obx_query_param_int64s(cQuery, EntityType.entityInfo.entitySchemaId,
                     property.propertyId, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
@@ -271,7 +355,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
 
     internal func setParametersInternal32(property: PropertyDescriptor, to collection: [Int32]) {
         let numParams = Int(collection.count)
-        collection.withContiguousStorageIfAvailable { ptr -> Void in
+        collection.withContiguousStorageIfAvailable { ptr in
             let typeId = EntityType.entityInfo.entitySchemaId
             let err = obx_query_param_int32s(cQuery, typeId, property.propertyId, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
@@ -301,7 +385,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
 
     internal func setParametersInternal(_ alias: String, to collection: [Int64]) {
         let numParams = Int(collection.count)
-        collection.withContiguousStorageIfAvailable { ptr -> Void in
+        collection.withContiguousStorageIfAvailable { ptr in
             let err = obx_query_param_alias_int64s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
         }
@@ -309,7 +393,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
 
     internal func setParametersInternal(_ alias: String, to collection: [Int32]) {
         let numParams = Int(collection.count)
-        collection.withContiguousStorageIfAvailable { ptr -> Void in
+        collection.withContiguousStorageIfAvailable { ptr in
             let err = obx_query_param_alias_int32s(cQuery, alias, ptr.baseAddress, numParams)
             checkFatalErrorParam(err)
         }
@@ -374,6 +458,21 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
         let err = obx_query_param_alias_2doubles(cQuery, alias, value1, value2)
         checkFatalErrorParam(err)
     }
+    
+    internal func setParameterInternal(property: PropertyDescriptor, to collection: [Float]) {
+        collection.withContiguousStorageIfAvailable { ptr in
+            let err = obx_query_param_vector_float32(cQuery, EntityType.entityInfo.entitySchemaId,
+                                                     property.propertyId, ptr.baseAddress, collection.count)
+            checkFatalErrorParam(err)
+        }
+    }
+    
+    internal func setParameterInternal(_ alias: String, to collection: [Float]) {
+        collection.withContiguousStorageIfAvailable { ptr in
+            let err = obx_query_param_alias_vector_float32(cQuery, alias, ptr.baseAddress, collection.count)
+            checkFatalErrorParam(err)
+        }
+    }
 
     internal func setParameterInternal(property: PropertyDescriptor, to value: String) {
         let err = obx_query_param_string(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId, value)
@@ -395,7 +494,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [String]) {
         let numStrings = Int(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
-        strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
+        strings.withContiguousMutableStorageIfAvailable { ptr in
             let typeId = EntityType.entityInfo.entitySchemaId
             let err = obx_query_param_strings(cQuery, typeId, property.propertyId, ptr.baseAddress, numStrings)
             checkFatalErrorParam(err)
@@ -412,7 +511,7 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
     public func setParameters(_ alias: String, to collection: [String]) {
         let numStrings = Int(collection.count)
         var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
-        strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
+        strings.withContiguousMutableStorageIfAvailable { ptr in
             let err = obx_query_param_alias_strings(cQuery, alias, ptr.baseAddress, numStrings)
             checkFatalErrorParam(err)
         }

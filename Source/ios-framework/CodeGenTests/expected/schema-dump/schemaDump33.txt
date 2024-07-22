@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = EntityId<DataThing>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<DataThing>
 			entityName = DataThing
 			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil
@@ -22,7 +24,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:19712))
 			propertyName = firstData
-			propertyType = Data
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = Data
 			entityName = DataThing
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -38,7 +42,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:20736))
 			propertyName = secondData
-			propertyType = [UInt8]
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = [UInt8]
 			entityName = DataThing
 			unwrappedPropertyType = [UInt8]
 			dbName = nil
@@ -54,7 +60,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(4:21504))
 			propertyName = maybeThirdData
-			propertyType = Data?
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = Data?
 			entityName = DataThing
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -70,7 +78,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(5:22528))
 			propertyName = maybeFourthData
-			propertyType = [UInt8]?
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = [UInt8]?
 			entityName = DataThing
 			unwrappedPropertyType = [UInt8]
 			dbName = nil
@@ -94,7 +104,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = EntityId<DataThing>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<DataThing>
 			entityName = DataThing
 			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil
@@ -110,7 +122,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
-			propertyType = EntityId<DataThing>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<DataThing>
 			entityName = DataThing
 			unwrappedPropertyType = EntityId<DataThing>
 			dbName = nil

@@ -8,10 +8,13 @@ import Foundation
 
 extension Author: ObjectBox.Entity {}
 extension AuthorStruct: ObjectBox.Entity {}
+extension HnswObject: ObjectBox.Entity {}
 extension NoteStruct: ObjectBox.Entity {}
+extension RelatedNamedEntity: ObjectBox.Entity {}
 extension Student: ObjectBox.Entity {}
 extension Teacher: ObjectBox.Entity {}
 extension UniqueEntity: ObjectBox.Entity {}
+extension VectorTestEntity: ObjectBox.Entity {}
 
 extension Author: ObjectBox.__EntityRelatable {
     internal typealias EntityType = Author
@@ -344,6 +347,146 @@ extension ObjectBox.Box where E == AuthorStruct {
         return newEntities
     }
 }
+
+
+extension HnswObject: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = HnswObject
+
+    internal var _id: EntityId<HnswObject> {
+        return EntityId<HnswObject>(self.id.value)
+    }
+}
+
+extension HnswObject: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = HnswObjectBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static var entityInfo = ObjectBox.EntityInfo(name: "HnswObject", id: 9)
+
+    internal static var entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: HnswObject.self, id: 9, uid: 5734988009570158080)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 4629567735796666112)
+        try entityBuilder.addProperty(name: "name", type: PropertyType.string, id: 2, uid: 5467400913620315904)
+        try entityBuilder.addProperty(name: "floatVector", type: PropertyType.floatVector, flags: [.indexed], id: 3, uid: 8547040095155761920, indexId: 5, indexUid: 8428673278937057024)
+            .hnswParams(dimensions: 2, neighborsPerNode: nil, indexingSearchCount: nil, flags: nil, distanceType: nil, reparationBacklinkProbability: nil, vectorCacheHintSizeKB: nil)
+        try entityBuilder.addToOneRelation(name: "rel", targetEntityInfo: ToOne<RelatedNamedEntity>.Target.entityInfo, flags: [.indexed, .indexPartialSkipZero], id: 4, uid: 8455771020134565632, indexId: 4, indexUid: 1470917669672942080)
+
+        try entityBuilder.lastProperty(id: 4, uid: 8455771020134565632)
+    }
+}
+
+extension HnswObject {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { HnswObject.id == myId }
+    internal static var id: Property<HnswObject, Id, Id> { return Property<HnswObject, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { HnswObject.name.startsWith("X") }
+    internal static var name: Property<HnswObject, String?, Void> { return Property<HnswObject, String?, Void>(propertyId: 2, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { HnswObject.floatVector.isNotNil() }
+    internal static var floatVector: Property<HnswObject, HnswIndexPropertyType, Void> { return Property<HnswObject, HnswIndexPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
+    internal static var rel: Property<HnswObject, EntityId<ToOne<RelatedNamedEntity>.Target>, ToOne<RelatedNamedEntity>.Target> { return Property(propertyId: 4) }
+
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == HnswObject {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<HnswObject, Id, Id> { return Property<HnswObject, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .name.startsWith("X") }
+
+    internal static var name: Property<HnswObject, String?, Void> { return Property<HnswObject, String?, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .floatVector.isNotNil() }
+
+    internal static var floatVector: Property<HnswObject, HnswIndexPropertyType, Void> { return Property<HnswObject, HnswIndexPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
+
+    internal static var rel: Property<HnswObject, ToOne<RelatedNamedEntity>.Target.EntityBindingType.IdType, ToOne<RelatedNamedEntity>.Target> { return Property<HnswObject, ToOne<RelatedNamedEntity>.Target.EntityBindingType.IdType, ToOne<RelatedNamedEntity>.Target>(propertyId: 4) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `HnswObject.EntityBindingType`.
+internal class HnswObjectBinding: ObjectBox.EntityBinding {
+    internal typealias EntityType = HnswObject
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
+        let propertyOffset_floatVector = propertyCollector.prepare(values: entity.floatVector)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        try propertyCollector.collect(entity.rel, at: 2 + 2 * 4, store: store)
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_floatVector, at: 2 + 2 * 3)
+    }
+
+    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
+        if entityId(of: entity) == 0 {  // New object was put? Attach relations now that we have an ID.
+            entity.rel.attach(to: store.box(for: RelatedNamedEntity.self))
+        }
+    }
+    internal func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: ObjectBox.Id?) {
+        switch propertyId {
+            case 4:
+                entity.rel.targetId = (entityId != nil) ? EntityId<RelatedNamedEntity>(entityId!) : nil
+            default:
+                fatalError("Attempt to change nonexistent ToOne relation with ID \(propertyId)")
+        }
+    }
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = HnswObject()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.name = entityReader.read(at: 2 + 2 * 2)
+        entity.floatVector = entityReader.read(at: 2 + 2 * 3)
+
+        entity.rel = entityReader.read(at: 2 + 2 * 4, store: store)
+        return entity
+    }
+}
+
 
 
 extension Note: ObjectBox.__EntityRelatable {
@@ -771,6 +914,107 @@ extension ObjectBox.Box where E == NoteStruct {
         return newEntities
     }
 }
+
+
+extension RelatedNamedEntity: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = RelatedNamedEntity
+
+    internal var _id: EntityId<RelatedNamedEntity> {
+        return EntityId<RelatedNamedEntity>(self.id.value)
+    }
+}
+
+extension RelatedNamedEntity: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = RelatedNamedEntityBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static var entityInfo = ObjectBox.EntityInfo(name: "RelatedNamedEntity", id: 10)
+
+    internal static var entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: RelatedNamedEntity.self, id: 10, uid: 8024588008899966976)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 1397779065653875712)
+        try entityBuilder.addProperty(name: "name", type: PropertyType.string, id: 2, uid: 2662932053839759616)
+
+        try entityBuilder.lastProperty(id: 2, uid: 2662932053839759616)
+    }
+}
+
+extension RelatedNamedEntity {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { RelatedNamedEntity.id == myId }
+    internal static var id: Property<RelatedNamedEntity, Id, Id> { return Property<RelatedNamedEntity, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { RelatedNamedEntity.name.startsWith("X") }
+    internal static var name: Property<RelatedNamedEntity, String?, Void> { return Property<RelatedNamedEntity, String?, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == RelatedNamedEntity {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<RelatedNamedEntity, Id, Id> { return Property<RelatedNamedEntity, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .name.startsWith("X") }
+
+    internal static var name: Property<RelatedNamedEntity, String?, Void> { return Property<RelatedNamedEntity, String?, Void>(propertyId: 2, isPrimaryKey: false) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `RelatedNamedEntity.EntityBindingType`.
+internal class RelatedNamedEntityBinding: ObjectBox.EntityBinding {
+    internal typealias EntityType = RelatedNamedEntity
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
+    }
+
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = RelatedNamedEntity()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.name = entityReader.read(at: 2 + 2 * 2)
+
+        return entity
+    }
+}
+
 
 
 extension Student: ObjectBox.__EntityRelatable {
@@ -2229,6 +2473,125 @@ internal class UniqueEntityBinding: ObjectBox.EntityBinding {
 }
 
 
+
+extension VectorTestEntity: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = VectorTestEntity
+
+    internal var _id: EntityId<VectorTestEntity> {
+        return EntityId<VectorTestEntity>(self.id.value)
+    }
+}
+
+extension VectorTestEntity: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = VectorTestEntityBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static var entityInfo = ObjectBox.EntityInfo(name: "VectorTestEntity", id: 8)
+
+    internal static var entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: VectorTestEntity.self, id: 8, uid: 7256288410204653312)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 94097545351615488)
+        try entityBuilder.addProperty(name: "floatArray", type: PropertyType.floatVector, id: 2, uid: 652568643967173888)
+        try entityBuilder.addProperty(name: "floatArrayNull", type: PropertyType.floatVector, id: 3, uid: 3229707254718114048)
+
+        try entityBuilder.lastProperty(id: 3, uid: 3229707254718114048)
+    }
+}
+
+extension VectorTestEntity {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.id == myId }
+    internal static var id: Property<VectorTestEntity, Id, Id> { return Property<VectorTestEntity, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.floatArray.isNotNil() }
+    internal static var floatArray: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 2, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.floatArrayNull.isNotNil() }
+    internal static var floatArrayNull: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == VectorTestEntity {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<VectorTestEntity, Id, Id> { return Property<VectorTestEntity, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .floatArray.isNotNil() }
+
+    internal static var floatArray: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .floatArrayNull.isNotNil() }
+
+    internal static var floatArrayNull: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `VectorTestEntity.EntityBindingType`.
+internal class VectorTestEntityBinding: ObjectBox.EntityBinding {
+    internal typealias EntityType = VectorTestEntity
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_floatArray = propertyCollector.prepare(values: entity.floatArray)
+        let propertyOffset_floatArrayNull = propertyCollector.prepare(values: entity.floatArrayNull)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 2)
+        propertyCollector.collect(dataOffset: propertyOffset_floatArrayNull, at: 2 + 2 * 3)
+    }
+
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = VectorTestEntity()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.floatArray = entityReader.read(at: 2 + 2 * 2)
+        entity.floatArrayNull = entityReader.read(at: 2 + 2 * 3)
+
+        return entity
+    }
+}
+
+
 /// Helper function that allows calling Enum(rawValue: value) with a nil value, which will return nil.
 fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.RawValue?) -> T? {
     guard let rawValue = rawValue else { return nil }
@@ -2241,13 +2604,16 @@ fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
     try Author.buildEntity(modelBuilder: modelBuilder)
     try AuthorStruct.buildEntity(modelBuilder: modelBuilder)
+    try HnswObject.buildEntity(modelBuilder: modelBuilder)
     try Note.buildEntity(modelBuilder: modelBuilder)
     try NoteStruct.buildEntity(modelBuilder: modelBuilder)
+    try RelatedNamedEntity.buildEntity(modelBuilder: modelBuilder)
     try Student.buildEntity(modelBuilder: modelBuilder)
     try Teacher.buildEntity(modelBuilder: modelBuilder)
     try UniqueEntity.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 7, uid: 6258744021471265280)
-    modelBuilder.lastIndex(id: 3, uid: 4943227758701996288)
+    try VectorTestEntity.buildEntity(modelBuilder: modelBuilder)
+    modelBuilder.lastEntity(id: 10, uid: 8024588008899966976)
+    modelBuilder.lastIndex(id: 5, uid: 8428673278937057024)
     modelBuilder.lastRelation(id: 3, uid: 417604695477796352)
     return modelBuilder.finish()
 }
@@ -2293,3 +2659,10 @@ extension ObjectBox.Store {
 }
 
 // swiftlint:enable all
+
+// MARK: - Custom code for testing, re-add this after re-generating this file with generate.rb
+extension ObjectBox.Store {
+    static func testEntities() throws -> Store {
+        return StoreHelper.tempStore(model: try cModel())
+    }
+}

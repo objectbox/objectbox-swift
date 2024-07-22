@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2023 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "2.0.0"
+    public static var version = "4.0.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.
@@ -206,7 +206,9 @@ public class Store: CustomDebugStringConvertible {
         return box
     }
 
-    /// Delete the database files on disk, including the database directory. This Store object will not be usable after calling this.
+    /// Delete the database files on disk, including the database directory.
+    ///
+    /// This Store object will not be usable after calling this.
     ///
     /// For an in-memory database, this will just clean up the in-memory database.
     public func closeAndDeleteAllFiles() throws {

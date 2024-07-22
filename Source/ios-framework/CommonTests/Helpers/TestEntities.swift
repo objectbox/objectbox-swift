@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 import Foundation
 import ObjectBox
-
-// swiftlint:disable identifier_name
 
 enum AllTypesOffset: UInt16 {
     case ID = 4
@@ -125,8 +123,8 @@ public class AllTypesEntity {
     }
 }
 
+// swiftlint:disable line_length force_try function_body_length
 /// Create the entity model, which is to be passed to ObjectStore.create(...)
-// swiftlint:disable identifier_name force_try
 public func createTestModel(syncEnabled: Bool = false) -> OpaquePointer {
     let modelBuilder = try! ModelBuilder()
 
@@ -229,6 +227,7 @@ public func createTestModel(syncEnabled: Bool = false) -> OpaquePointer {
 
     return modelBuilder.finish()
 }
+// swiftlint:enable line_length force_try function_body_length
 
 // MARK: Generated code.
 

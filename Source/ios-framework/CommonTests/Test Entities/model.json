@@ -522,10 +522,87 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "8:7256288410204653312",
+      "lastPropertyId": "3:3229707254718114048",
+      "name": "VectorTestEntity",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:94097545351615488",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:652568643967173888",
+          "name": "floatArray",
+          "type": 28
+        },
+        {
+          "id": "3:3229707254718114048",
+          "name": "floatArrayNull",
+          "type": 28
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:5734988009570158080",
+      "lastPropertyId": "4:8455771020134565632",
+      "name": "HnswObject",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:4629567735796666112",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:5467400913620315904",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "flags": 8,
+          "id": "3:8547040095155761920",
+          "indexId": "5:8428673278937057024",
+          "name": "floatVector",
+          "type": 28
+        },
+        {
+          "flags": 520,
+          "id": "4:8455771020134565632",
+          "indexId": "4:1470917669672942080",
+          "name": "rel",
+          "relationTarget": "RelatedNamedEntity",
+          "type": 11
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:8024588008899966976",
+      "lastPropertyId": "2:2662932053839759616",
+      "name": "RelatedNamedEntity",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:1397779065653875712",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "2:2662932053839759616",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "7:6258744021471265280",
-  "lastIndexId": "3:4943227758701996288",
+  "lastEntityId": "10:8024588008899966976",
+  "lastIndexId": "5:8428673278937057024",
   "lastRelationId": "3:417604695477796352",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 ObjectBox. All rights reserved.
+// Copyright (c) 2020-2024 ObjectBox. All rights reserved.
 //
 
 import Foundation
@@ -17,6 +17,7 @@ class SyncDryTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
     }
