@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 @testable import ObjectBox
 
-// swiftlint:disable identifier_name line_length
+// swiftlint:disable line_length
 class PureSwiftEntity: Entity, EntityInspectable, __EntityRelatable {
     public typealias EntityBindingType = PureSwiftEntityBinding
     
@@ -88,4 +88,4 @@ class PureSwiftEntityBinding: EntityBinding {
     }
 }
 
-// swiftlint:enable identifier_name force_cast line_length
+// swiftlint:enable line_length

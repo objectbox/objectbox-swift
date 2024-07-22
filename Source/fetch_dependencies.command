@@ -10,11 +10,11 @@ set -e
 
 # objectbox-swift release version on GitHub:
 # https://github.com/objectbox/objectbox-swift/releases/download/v${version}
-version=2.0.0
+version=4.0.0
 
 # C library version attached to the GitHub release:
 # ObjectBoxCore-static-${c_version}.zip
-c_version=4.0.0
+c_version=4.0.1
 
 # Params supported by apple-build-static-libs.sh
 build_params=""
@@ -115,6 +115,10 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
       fi
 
       # Build
+      # Temporary: ld warns that static library is not built for 10.15 (but macOS.cmake sets CMAKE_OSX_DEPLOYMENT_TARGET),
+      # to resolve set MACOSX_DEPLOYMENT_TARGET here until core build scripts are updated.
+      # Internal issue: objectbox/objectbox-swift#274
+      export MACOSX_DEPLOYMENT_TARGET="10.15"
       "$code_dir/scripts/apple-build-static-libs.sh" $build_params "$dest_dir" release
 
       if [ "$git_clean" = true ] ; then  # clean before?

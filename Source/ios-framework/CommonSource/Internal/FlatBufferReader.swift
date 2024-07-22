@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -184,6 +184,17 @@ public struct FlatBufferReader {
         return [UInt8](bufferPointer)
     }
     
+    /// - Returns: zero-length array if a value is not present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written).
+    public func read(at index: UInt16) -> [Float] {
+        var result = OBX_bytes()
+        guard obx_fbr_read_floats(unwrapFBR(), index, &result), let data = result.data else { return [] }
+        
+        let unsafePointer = data.bindMemory(to: Float.self, capacity: result.size)
+        let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
+        return [Float](bufferPointer)
+    }
+    
     /// - Returns: The ID read, if present, or the invalid ID of 0 if no ID was present.
     public func read<E>(at index: UInt16) -> EntityId<E> where E: EntityInspectable, E: __EntityRelatable,
         E == E.EntityBindingType.EntityType {
@@ -344,5 +355,16 @@ public struct FlatBufferReader {
         let unsafePointer = data.bindMemory(to: UInt8.self, capacity: result.size)
         let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
         return [UInt8](bufferPointer)
+    }
+    
+    /// - Returns: nil if the value isn't present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional).
+    public func read(at index: UInt16) -> [Float]? {
+        var result = OBX_bytes()
+        guard obx_fbr_read_floats(unwrapFBR(), index, &result), let data = result.data else { return nil }
+        
+        let unsafePointer = data.bindMemory(to: Float.self, capacity: result.size)
+        let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
+        return [Float](bufferPointer)
     }
 }

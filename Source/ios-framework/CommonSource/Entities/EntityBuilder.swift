@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,22 +52,27 @@ public class EntityBuilder<T> {
 
     /// Add the given property to this entity.
     /// An overload to accept a single flag.
-    public func addProperty(name: String, type: PropertyType, flags: PropertyFlags, id: UInt32, uid: UInt64,
-                            indexId: UInt32 = 0, indexUid: UInt64 = 0) throws {
-        try addProperty(name: name, type: type, flags: [flags], id: id, uid: uid, indexId: indexId, indexUid: indexUid)
+    @discardableResult public func addProperty(name: String, type: PropertyType, flags: PropertyFlags,
+                                               id: UInt32, uid: UInt64, indexId: UInt32 = 0, indexUid: UInt64 = 0)
+    throws -> PropertyBuilder {
+        return try addProperty(name: name, type: type, flags: [flags], id: id, uid: uid,
+                               indexId: indexId, indexUid: indexUid)
     }
     
     /// Add the given property to this entity.
-    public func addProperty(name: String, type: PropertyType, flags: [PropertyFlags] = [], id: UInt32, uid: UInt64,
-                            indexId: UInt32 = 0, indexUid: UInt64 = 0) throws {
+    @discardableResult public func addProperty(name: String, type: PropertyType, flags: [PropertyFlags] = [],
+                                               id: UInt32, uid: UInt64, indexId: UInt32 = 0, indexUid: UInt64 = 0)
+    throws -> PropertyBuilder {
         let err1 = obx_model_property(model, name, OBXPropertyType(UInt32(type.rawValue)), id, uid)
         try checkLastError(err1)
         let err2 = obx_model_property_flags(model, flags.rawValue)
         try checkLastError(err2)
+        // Index
         if indexId != 0 && indexUid != 0 {
             let err3 = obx_model_property_index_id(model, indexId, indexUid)
             try checkLastError(err3)
         }
+        return PropertyBuilder(model)
     }
     
     // swiftlint:disable function_parameter_count

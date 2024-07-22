@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable type_body_length force_try
-
 class QueryOperatorTests: XCTestCase {
 
     var store: Store!
@@ -29,6 +27,7 @@ class QueryOperatorTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -600,4 +599,3 @@ class QueryOperatorTests: XCTestCase {
         }).build().find().count, 3)
     }
 }
-// swiftlint:enable line_length type_body_length

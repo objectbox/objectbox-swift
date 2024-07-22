@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ extension Query {
     /// - Parameters:
     ///   - property: Entity property specification.
     ///   - value: New value for the condition.
-    public func setParameter<T>(_ property: Property<EntityType, T, Void>, to value: T) where T: FixedWidthInteger {
+    public func setParameter<T, V>(_ property: Property<EntityType, V, Void>, to value: T) where T: FixedWidthInteger {
         setParameterInternal(property: property.base, to: Int64(truncatingIfNeeded: value))
     }
 
     /// :nodoc:
-    public func setParameter<T>(_ property: Property<EntityType, T?, Void>, to value: T) where T: FixedWidthInteger {
+    public func setParameter<T, V>(_ property: Property<EntityType, V?, Void>, to value: T) where T: FixedWidthInteger {
         setParameterInternal(property: property.base, to: Int64(truncatingIfNeeded: value))
     }
 
@@ -291,6 +291,23 @@ extension Query {
     }
 }
 
+// MARK: - Float array
+
+extension Query {
+    
+    /// Changes the parameter of the query condition for the given property to a new value.
+    public func setParameter<V>(_ property: Property<EntityType, V, Void>, to: [Float]) 
+    where V: FloatArrayPropertyType {
+        setParameterInternal(property: property.base, to: to)
+    }
+    
+    /// Changes the parameter of the query condition with the matching alias to a new value.
+    public func setParameter(_ alias: String, to: [Float]) {
+        setParameterInternal(alias, to: to)
+    }
+
+}
+
 // MARK: - String
 
 extension Query {
@@ -438,7 +455,7 @@ extension Query {
 extension Query {
     internal func setParameterInternal(_ property: PropertyDescriptor, to value: Data) {
         let bufferLength = value.count
-        value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> Void in
+        value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) in
             let err = obx_query_param_bytes(cQuery, EntityType.entityInfo.entitySchemaId, property.propertyId,
                     buffer.baseAddress, bufferLength)
             checkFatalErrorParam(err)
@@ -473,7 +490,7 @@ extension Query {
     ///   - value: New value for the condition.
     public func setParameter(_ alias: String, to value: Data) {
         let bufferLength = value.count
-        value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) -> Void in
+        value.withUnsafeBytes({ (buffer: UnsafeRawBufferPointer) in
             let err = obx_query_param_alias_bytes(cQuery, alias, buffer.baseAddress, bufferLength)
             checkFatalErrorParam(err)
         })

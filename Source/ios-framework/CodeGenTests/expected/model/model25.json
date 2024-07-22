@@ -48,8 +48,8 @@
       "relations": []
     },
     {
-      "id": "2:41728",
-      "lastPropertyId": "19:40704",
+      "id": "2:42496",
+      "lastPropertyId": "20:41728",
       "name": "TypeTest",
       "properties": [
         {
@@ -151,12 +151,17 @@
           "id": "19:40704",
           "name": "dateValue",
           "type": 10
+        },
+        {
+          "id": "20:41728",
+          "name": "floatArray",
+          "type": 28
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:41728",
+  "lastEntityId": "2:42496",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

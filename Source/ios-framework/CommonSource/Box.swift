@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2023 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,11 +73,9 @@ where E == E.EntityBindingType.EntityType {
         try store.obx_runInTransaction(writable: false, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
-            for currId in ids {
-                if try !cursor.contains(currId.value) {
-                    result = false
-                    return
-                }
+            for currId in ids where try !cursor.contains(currId.value) {
+                result = false
+                return
             }
         })
 
@@ -532,7 +530,7 @@ extension Box {
         let binding = EntityType.entityBinding
         var flatBuffer = FlatBufferReader()
 
-        // Crashes when I use the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
+        // Crashes when using the unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
         // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
         // empty user-defined entities may be expensive to create.
         try store.obx_runInTransaction(writable: false, { _ in
@@ -540,6 +538,28 @@ extension Box {
                 flatBuffer.setCurrentlyReadTableBytes(bytesArray.bytes[dataIndex].data)
                 let entity = binding.createEntity(entityReader: flatBuffer, store: store)
                 result.append(entity)
+            }
+        })
+        return result
+    }
+    
+    internal func readAll(_ bytesScoreArray: OBX_bytes_score_array) throws -> [ObjectWithScore<EntityType>] {
+        var result = [ObjectWithScore<EntityType>]()
+        let count = bytesScoreArray.count
+        result.reserveCapacity(count)
+        let binding = EntityType.entityBinding
+        var flatBuffer = FlatBufferReader()
+
+        // Crashes when using unsafeUninitializedCapacity initializer below instead of reserveCapacity above.
+        // Seems it tries to deinit the uninitialized memory on assignment. Can't use init(repeating:) either as
+        // empty user-defined entities may be expensive to create.
+        try store.obx_runInTransaction(writable: false, { _ in
+            for dataIndex in 0 ..< count {
+                let item = bytesScoreArray.bytes_scores[dataIndex]
+                let score = item.score
+                flatBuffer.setCurrentlyReadTableBytes(item.data)
+                let object = binding.createEntity(entityReader: flatBuffer, store: store)
+                result.append(ObjectWithScore(object: object, score: score))
             }
         })
         return result
@@ -693,10 +713,8 @@ extension Box {
             try store.obx_runInTransaction(writable: true, { swiftTx in
                 let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
-                for currEntity in entities {
-                    if try cursor.remove(currEntity) {
-                        result += 1
-                    }
+                for currEntity in entities where try cursor.remove(currEntity) {
+                    result += 1
                 }
             })
 
@@ -711,10 +729,8 @@ extension Box {
         try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
-            for currEntity in entities {
-                if try cursor.remove(currEntity) {
-                    result += 1
-                }
+            for currEntity in entities where try cursor.remove(currEntity) {
+                result += 1
             }
         })
 
@@ -729,10 +745,8 @@ extension Box {
         try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
 
-            for currEntity in entities {
-                if try cursor.remove(currEntity) {
-                    result += 1
-                }
+            for currEntity in entities where try cursor.remove(currEntity) {
+                result += 1
             }
         })
 
@@ -758,10 +772,8 @@ extension Box {
         var result: UInt64 = 0
         try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
-            for currId in entityIDs {
-                if try cursor.remove(currId.value) {
-                    result += 1
-                }
+            for currId in entityIDs where try cursor.remove(currId.value) {
+                result += 1
             }
         })
         return result
@@ -790,10 +802,8 @@ extension Box {
 
             try store.obx_runInTransaction(writable: true, { swiftTx in
                 let cursor = try Cursor<EntityType>(transaction: swiftTx)
-                for currId in ids {
-                    if try cursor.remove(currId.value) {
-                        result += 1
-                    }
+                for currId in ids where try cursor.remove(currId.value) {
+                    result += 1
                 }
             })
 
@@ -827,10 +837,8 @@ extension Box {
         var result: UInt64 = 0
         try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
-            for currId in entityIDs {
-                if try cursor.remove(currId.value) {
-                    result += 1
-                }
+            for currId in entityIDs where try cursor.remove(currId.value) {
+                result += 1
             }
         })
         return result
@@ -859,10 +867,8 @@ extension Box {
 
         try store.obx_runInTransaction(writable: true, { swiftTx in
             let cursor = try Cursor<EntityType>(transaction: swiftTx)
-            for currId in entityIDs {
-                if try cursor.remove(currId.value) {
-                    result += 1
-                }
+            for currId in entityIDs where try cursor.remove(currId.value) {
+                result += 1
             }
         })
 

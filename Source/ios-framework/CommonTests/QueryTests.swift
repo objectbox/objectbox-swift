@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2022 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import XCTest
 // TODO can we have something like XCTAssertThrowsError but for fatal errors?
 //      E.g. https://marcosantadev.com/test-swift-fatalerror
 
-// swiftlint:disable type_body_length force_try
 class QueryTests: XCTestCase {
     var store: Store!
 
@@ -30,6 +29,7 @@ class QueryTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()

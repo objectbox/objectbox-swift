@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -81,6 +81,8 @@ void obx_fbb_collect_data_offset(struct OBX_fbb* _Nonnull self, OBXDataOffset da
 OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string);
 OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size);
 
+OBXDataOffset obx_fbb_prepare_floats(struct OBX_fbb* _Nonnull self, const void* _Nonnull floats, size_t size);
+
 #pragma mark - Reading
 
 /// Obtains a Flatbuffer root pointer for use with the other obx_fbr calls.
@@ -156,6 +158,12 @@ const char * _Nullable obx_fbr_read_string(const struct OBX_fbr* _Nonnull self, 
 /// @param outBytes This struct is set to the pointer and size of an internal buffer holding the bytes read. Do not free the buffer, copy it to keep it around.
 /// @return false on NULL value, true if result was set to a value.
 bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* _Nonnull outBytes);
+
+/// @param self the OBX_fbr from which you want to read.
+/// @param propertyOffset the offset of the offset to the actual data.
+/// @param outBytes This struct is set to the pointer and size of an internal buffer holding the bytes read. Do not free the buffer, copy it to keep it around.
+/// @return false on NULL value, true if result was set to a value.
+bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* _Nonnull outBytes);
 
 #if __cplusplus
 }

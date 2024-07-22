@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable force_try
-
 func rethrow(_ error: Error) throws {
     throw error
 }
@@ -33,6 +31,7 @@ class QueryBuilderTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -247,6 +246,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -402,6 +402,7 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -596,6 +597,7 @@ class QueryBuilderRangeTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -781,6 +783,7 @@ class QueryBuilderCollectionTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -1052,6 +1055,7 @@ class QueryBuilderOrderTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -1205,6 +1209,7 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
     }
     
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()

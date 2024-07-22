@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ public class StoreHelper {
     public class func tempStore(model: OpaquePointer /*OBX_model*/, maxDbSizeInKByte: UInt64 = 500) -> Store {
         let inMemoryEnv = ProcessInfo.processInfo.environment["OBX_IN_MEMORY"]
         let inMemory = inMemoryEnv != nil && inMemoryEnv == "true"
-        if (inMemory) {
+        if inMemory {
             print("Using in-memory database for testing")
         }
         let directoryPath = inMemory ? "memory:testdata" : StoreHelper.newTemporaryDirectory().path

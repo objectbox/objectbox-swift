@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2020 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -114,7 +114,7 @@ extension QueryBuilder {
     internal func and(_ conditions: [QueryBuilderCondition]) -> QueryBuilderCondition {
         var result: obx_qb_cond = 0
         let numConditions = Int(conditions.count)
-        conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
+        conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) in
             result = obx_qb_all(queryBuilder, ptr.baseAddress, numConditions)
         }
         return wrap(result)
@@ -123,7 +123,7 @@ extension QueryBuilder {
     internal func or(_ conditions: [QueryBuilderCondition]) -> QueryBuilderCondition {
         var result: obx_qb_cond = 0
         let numConditions = Int(conditions.count)
-        conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) -> Void in
+        conditions.map({ $0.cCondition }).withContiguousStorageIfAvailable { (ptr) in
             result = obx_qb_any(queryBuilder, ptr.baseAddress, numConditions)
         }
         return wrap(result)
@@ -220,19 +220,19 @@ extension QueryBuilder {
         let bits = VALUE.zero.bitWidth
 
         if bits == 64 {
-            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) -> Void in
+            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) in
                 let dataPtr = UnsafePointer<Int64>(OpaquePointer(ptr.baseAddress))
                 result = notIn ? obx_qb_not_in_int64s(queryBuilder, propertyId, dataPtr, numNums) :
                         obx_qb_in_int64s(queryBuilder, propertyId, dataPtr, numNums)
             }
         } else if bits == 32 {
-            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) -> Void in
+            collection.withContiguousStorageIfAvailable { (ptr: UnsafeBufferPointer<VALUE>) in
                 let dataPtr = UnsafePointer<Int32>(OpaquePointer(ptr.baseAddress))
                 result = notIn ? obx_qb_not_in_int32s(queryBuilder, propertyId, dataPtr, numNums) :
                         obx_qb_in_int32s(queryBuilder, propertyId, dataPtr, numNums)
             }
         } else if false && bits < 32 { // C API does currently not support smaller types
-            collection.map({ Int32(truncatingIfNeeded: $0) }).withContiguousStorageIfAvailable { (ptr) -> Void in
+            collection.map({ Int32(truncatingIfNeeded: $0) }).withContiguousStorageIfAvailable { (ptr) in
                 result = notIn ? obx_qb_not_in_int32s(queryBuilder, propertyId, ptr.baseAddress, numNums) :
                         obx_qb_in_int32s(queryBuilder, propertyId, ptr.baseAddress, numNums)
             }
@@ -323,6 +323,17 @@ extension QueryBuilder {
     }
 }
 
+// MARK: - HNSW index property
+
+extension QueryBuilder {
+    internal func nearestNeighbors<V, R>(_ queryProperty: Property<EntityType, V, R>, queryVector: [Float],
+                                         maxResultCount: Int)
+    -> PropertyQueryBuilderCondition where V: HnswIndexPropertyType {
+        return wrap(obx_qb_nearest_neighbors_f32(queryBuilder, queryProperty.propertyId, queryVector, maxResultCount))
+    }
+}
+
+
 // MARK: - String and Optional<String>
 
 extension QueryBuilder {
@@ -363,7 +374,7 @@ extension QueryBuilder {
             }
             var result: obx_qb_cond = 0
             let numStrings = Int(strings.count)
-            strings.withContiguousMutableStorageIfAvailable { ptr -> Void in
+            strings.withContiguousMutableStorageIfAvailable { ptr in
                 result = obx_qb_in_strings(queryBuilder, property.propertyId, ptr.baseAddress, numStrings,
                                            caseSensitive)
             }
@@ -507,7 +518,7 @@ extension QueryBuilder {
             return date.unixTimestamp
         }
         let numDates = Int(dates.count)
-        dates.withContiguousStorageIfAvailable { (ptr) -> Void in
+        dates.withContiguousStorageIfAvailable { (ptr) in
             result = obx_qb_in_int64s(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()
         }
@@ -521,7 +532,7 @@ extension QueryBuilder {
             return date.unixTimestamp
         }
         let numDates = Int(dates.count)
-        dates.withContiguousStorageIfAvailable { (ptr) -> Void in
+        dates.withContiguousStorageIfAvailable { (ptr) in
             result = obx_qb_not_in_int64s(queryBuilder, queryProperty.propertyId, ptr.baseAddress, numDates)
             failFatallyIfError()
         }

@@ -1,5 +1,6 @@
 Scanning sources...
 Found 3 types.
+Mapping not found:  Optional(ToMany<Book, Author>) ToMany<Book, Author> ToMany<Book, Author> nil
 warning: Found an // objectbox: backlink annotation on ToOne relation "author". Did you mean to put // objectbox: backlink = "author"  on the ToMany relation "books" in "Author"?
 note: ObjectBox ID Model file created: model41.json.
 Loading templates...

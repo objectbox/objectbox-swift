@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -182,6 +182,14 @@ public extension FlatBufferBuilder {
         let size = bytes.count
         return bytes.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
             return obx_fbb_prepare_bytes(fbb, bytes.baseAddress!, size)
+        }
+    }
+    
+    func prepare(values: [Float]?) -> OBXDataOffset {
+        guard let values = values else { return 0 } // Don't collect nil values.
+        let size = values.count
+        return values.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
+            return obx_fbb_prepare_floats(fbb, bytes.baseAddress!, size)
         }
     }
 }

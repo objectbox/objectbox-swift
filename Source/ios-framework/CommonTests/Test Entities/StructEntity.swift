@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import Foundation
 import ObjectBox
 
-// swiftlint:disable identifier_name line_length
+// swiftlint:disable line_length
 
 struct StructEntity {
     var id: EntityId<StructEntity>
@@ -188,3 +188,5 @@ extension Box where E == StructEntity {
         return newEntities
     }
 }
+
+// swiftlint:enable line_length

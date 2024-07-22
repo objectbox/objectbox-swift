@@ -1,5 +1,17 @@
 //
-//  Copyright © 2019-2023 ObjectBox. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 // Note: Use the script generate.rb to manually update EntityInfo.generated.swift
@@ -202,5 +214,52 @@ class UniqueEntity {
         self.name = name
         self.content = content
         self.content2 = content2
+    }
+}
+
+// objectbox: entity
+class VectorTestEntity {
+    var id: Id = 0
+    var floatArray: [Float] = []
+    var floatArrayNull: [Float]?
+}
+
+// objectbox: entity
+class HnswObject {
+    var id: Id = 0
+    var name: String?
+
+    // objectbox:hnswIndex: dimensions=2
+    var floatVector: [Float]?
+    
+    var rel: ToOne<RelatedNamedEntity> = nil
+    
+    // For ObjectBox
+    init() {
+    }
+    
+    init(name: String, floatVector: [Float]) {
+        self.name = name
+        self.floatVector = floatVector
+    }
+    
+    init(name: String, floatVector: [Float], target: RelatedNamedEntity) {
+        self.name = name
+        self.floatVector = floatVector
+        self.rel.target = target
+    }
+}
+
+// objectbox: entity
+class RelatedNamedEntity {
+    var id: Id = 0
+    var name: String?
+    
+    // For ObjectBox
+    init() {
+    }
+    
+    init(_ name: String) {
+        self.name = name
     }
 }

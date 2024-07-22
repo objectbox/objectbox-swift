@@ -9,7 +9,7 @@
 This is the ObjectBox Swift **API reference**.
 Also check the **[guides](https://swift.objectbox.io/)** for general documentation including [setup](https://swift.objectbox.io/install) and [getting started](https://swift.objectbox.io/getting-started).
 
-Current version: 2.0.0
+Current version: 4.0.0
 
 ## Most Important Types
 
@@ -29,7 +29,7 @@ Where do you struggle in everyday app development?
 We're looking forward to receiving your comments and requests:
 
 - Take this [short questionaire](https://docs.google.com/forms/d/e/1FAIpQLSd0neiviD0Yal0Tn7921w-XWI2d0ONpLm7TfVKp7OvwW2Tu2A/viewform?usp=sf_link) (takes only 1 or 2 minutes)
-- Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues) and 
+- Add [GitHub issues](https://github.com/objectbox/objectbox-swift/issues) and 
 - Upvote issues you find important by hitting the 👍/+1 reaction button!
 
 Thank you!

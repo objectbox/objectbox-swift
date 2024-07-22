@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable type_body_length force_try
 class PropertyQueryTests: XCTestCase {
 
     var store: Store!
@@ -26,7 +25,9 @@ class PropertyQueryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let model: OpaquePointer = {
+            // swiftlint:disable:next force_try
             let modelBuilder = try! ModelBuilder()
+            // swiftlint:disable:next force_try
             try! NullablePropertyEntity.buildEntity(modelBuilder: modelBuilder)
             return modelBuilder.finish()
         }()
@@ -35,6 +36,7 @@ class PropertyQueryTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -462,9 +464,9 @@ class PropertyQueryTests: XCTestCase {
     // MARK: - ByteVector
 
     func testByteVectorQueries() throws {
-        let firstBytes = "CAROLSHAW".data(using: .utf8)!
-        let secondBytes = "EVELYNBOYDGRANVILLE".data(using: .utf8)!
-        let thirdBytes = "MARYKENNETHKELLER".data(using: .utf8)!
+        let firstBytes = Data("CAROLSHAW".utf8)
+        let secondBytes = Data("EVELYNBOYDGRANVILLE".utf8)
+        let thirdBytes = Data("MARYKENNETHKELLER".utf8)
         let entity1 = NullablePropertyEntity(byteVector: firstBytes)
         let entity2 = NullablePropertyEntity(maybeByteVector: firstBytes, byteVector: secondBytes)
         let entity3 = NullablePropertyEntity(maybeByteVector: secondBytes, byteVector: thirdBytes)
@@ -505,4 +507,3 @@ class PropertyQueryTests: XCTestCase {
     }
     
 }
-// swiftlint:enable type_body_length

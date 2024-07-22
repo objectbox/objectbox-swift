@@ -1,4 +1,27 @@
-identifier_name:
-  excluded: # Object IDs are splendid!
-    - id
-
+included:
+    - CommonSource
+    - CommonTests
+    - ObjectBox-macOS/ObjectBox
+    - ObjectBox-macOS/ObjectBoxTests
+excluded:
+    # Exclude some generated code
+    - CommonSource/ConfigFlags.swift
+    - CommonSource/Entities/EntityFlags.swift
+    - CommonSource/Entities/PropertyType.swift
+    - CommonSource/Entities/HnswParams.swift
+    - CommonSource/Query/OrderFlags.swift
+    - CommonTests/Test Entities/RelatedEntities.swift
+line_length: 120
+reporter: "xcode"
+disabled_rules:
+    - comment_spacing # Devs are good at this, sometimes no space if not a comment
+    - file_length
+    - identifier_name # Allow anything that Swift allows
+    - trailing_whitespace
+    - todo
+    - type_body_length # Best practice, do not enforce
+    - vertical_whitespace
+type_name:
+    excluded:
+        - Id
+        - __EntityRelatable # TODO check this one; can we remove it altogether?

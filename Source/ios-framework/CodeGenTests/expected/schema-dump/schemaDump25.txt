@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
 			dbName = nil
@@ -22,7 +24,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:15616))
 			propertyName = flexData
-			propertyType = Data
+			propertyType = flex
+			propertyFlags = []
+			propertySwiftType = Data
 			entityName = AnnotatedType
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -38,7 +42,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:16640))
 			propertyName = flexDataNullable
-			propertyType = Data?
+			propertyType = flex
+			propertyFlags = []
+			propertySwiftType = Data?
 			entityName = AnnotatedType
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -54,7 +60,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(4:17664))
 			propertyName = flexByteArray
-			propertyType = [UInt8]
+			propertyType = flex
+			propertyFlags = []
+			propertySwiftType = [UInt8]
 			entityName = AnnotatedType
 			unwrappedPropertyType = [UInt8]
 			dbName = nil
@@ -70,7 +78,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(5:18688))
 			propertyName = dateValue
-			propertyType = Date
+			propertyType = dateNano
+			propertyFlags = []
+			propertySwiftType = Date
 			entityName = AnnotatedType
 			unwrappedPropertyType = Date
 			dbName = nil
@@ -85,7 +95,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(6:19712))
 			propertyName = dateNullable
-			propertyType = Date?
+			propertyType = dateNano
+			propertyFlags = []
+			propertySwiftType = Date?
 			entityName = AnnotatedType
 			unwrappedPropertyType = Date
 			dbName = nil
@@ -100,7 +112,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(7:20736))
 			propertyName = dateIdCompanion
-			propertyType = Date
+			propertyType = dateNano
+			propertyFlags = []
+			propertySwiftType = Date
 			entityName = AnnotatedType
 			unwrappedPropertyType = Date
 			dbName = nil
@@ -123,7 +137,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
 			dbName = nil
@@ -139,7 +155,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = Id
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
 			dbName = nil
@@ -155,13 +173,15 @@ Schema {
 	}
 , SchemaEntity {
 		modelId = Optional(2)
-		modelUid = Optional(41728)
+		modelUid = Optional(42496)
 		className = TypeTest
 		dbName = nil
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
-			propertyType = EntityId<TypeTest>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>
 			dbName = nil
@@ -176,7 +196,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:23552))
 			propertyName = intValue
-			propertyType = Int
+			propertyType = long
+			propertyFlags = []
+			propertySwiftType = Int
 			entityName = TypeTest
 			unwrappedPropertyType = Int
 			dbName = nil
@@ -191,7 +213,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:24576))
 			propertyName = int8Value
-			propertyType = Int8
+			propertyType = byte
+			propertyFlags = []
+			propertySwiftType = Int8
 			entityName = TypeTest
 			unwrappedPropertyType = Int8
 			dbName = nil
@@ -206,7 +230,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(4:25600))
 			propertyName = int16Value
-			propertyType = Int16
+			propertyType = short
+			propertyFlags = []
+			propertySwiftType = Int16
 			entityName = TypeTest
 			unwrappedPropertyType = Int16
 			dbName = nil
@@ -221,7 +247,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(5:26624))
 			propertyName = int32Value
-			propertyType = Int32
+			propertyType = int
+			propertyFlags = []
+			propertySwiftType = Int32
 			entityName = TypeTest
 			unwrappedPropertyType = Int32
 			dbName = nil
@@ -236,7 +264,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(6:27648))
 			propertyName = int64Value
-			propertyType = Int64
+			propertyType = long
+			propertyFlags = []
+			propertySwiftType = Int64
 			entityName = TypeTest
 			unwrappedPropertyType = Int64
 			dbName = nil
@@ -251,7 +281,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(7:28672))
 			propertyName = uintValue
-			propertyType = UInt
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertySwiftType = UInt
 			entityName = TypeTest
 			unwrappedPropertyType = UInt
 			dbName = nil
@@ -267,7 +299,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(8:29696))
 			propertyName = uint8Value
-			propertyType = UInt8
+			propertyType = byte
+			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertySwiftType = UInt8
 			entityName = TypeTest
 			unwrappedPropertyType = UInt8
 			dbName = nil
@@ -283,7 +317,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(9:30720))
 			propertyName = uint16Value
-			propertyType = UInt16
+			propertyType = short
+			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertySwiftType = UInt16
 			entityName = TypeTest
 			unwrappedPropertyType = UInt16
 			dbName = nil
@@ -299,7 +335,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(10:31744))
 			propertyName = uint32Value
-			propertyType = UInt32
+			propertyType = int
+			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertySwiftType = UInt32
 			entityName = TypeTest
 			unwrappedPropertyType = UInt32
 			dbName = nil
@@ -315,7 +353,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(11:32512))
 			propertyName = uint64Value
-			propertyType = UInt64
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertySwiftType = UInt64
 			entityName = TypeTest
 			unwrappedPropertyType = UInt64
 			dbName = nil
@@ -331,7 +371,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(12:33536))
 			propertyName = boolValue
-			propertyType = Bool
+			propertyType = bool
+			propertyFlags = []
+			propertySwiftType = Bool
 			entityName = TypeTest
 			unwrappedPropertyType = Bool
 			dbName = nil
@@ -346,7 +388,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(13:34560))
 			propertyName = stringValue
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = TypeTest
 			unwrappedPropertyType = String
 			dbName = nil
@@ -361,7 +405,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(14:35584))
 			propertyName = byteValue
-			propertyType = Byte
+			propertyType = unknown
+			propertyFlags = []
+			propertySwiftType = Byte
 			entityName = TypeTest
 			unwrappedPropertyType = Byte
 			dbName = nil
@@ -376,7 +422,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(15:36608))
 			propertyName = bytes
-			propertyType = Data
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = Data
 			entityName = TypeTest
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -392,7 +440,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(16:37632))
 			propertyName = byteArray
-			propertyType = Data
+			propertyType = byteVector
+			propertyFlags = []
+			propertySwiftType = Data
 			entityName = TypeTest
 			unwrappedPropertyType = Data
 			dbName = nil
@@ -408,7 +458,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(17:38656))
 			propertyName = floatValue
-			propertyType = Float
+			propertyType = float
+			propertyFlags = []
+			propertySwiftType = Float
 			entityName = TypeTest
 			unwrappedPropertyType = Float
 			dbName = nil
@@ -423,7 +475,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(18:39680))
 			propertyName = doubleValue
-			propertyType = Double
+			propertyType = double
+			propertyFlags = []
+			propertySwiftType = Double
 			entityName = TypeTest
 			unwrappedPropertyType = Double
 			dbName = nil
@@ -438,7 +492,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(19:40704))
 			propertyName = dateValue
-			propertyType = Date
+			propertyType = date
+			propertyFlags = []
+			propertySwiftType = Date
 			entityName = TypeTest
 			unwrappedPropertyType = Date
 			dbName = nil
@@ -450,18 +506,38 @@ Schema {
 			isStringType = false
 			isRelation = false
 		}
+, SchemaProperty {
+			modelId = Optional(IdUid(20:41728))
+			propertyName = floatArray
+			propertyType = floatVector
+			propertyFlags = []
+			propertySwiftType = FloatArrayPropertyType
+			entityName = TypeTest
+			unwrappedPropertyType = [Float]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			isScalarVectorType = true
+		}
 ]
 		indexes = []
 		relations = []
 		toManyRelations = []
-		lastPropertyId = Optional(IdUid(19:40704))
+		lastPropertyId = Optional(IdUid(20:41728))
 		isEntitySubclass = true
 		isValueType = false
 		hasStringProperties = true
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
-			propertyType = EntityId<TypeTest>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>
 			dbName = nil
@@ -477,7 +553,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
-			propertyType = EntityId<TypeTest>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>
 			dbName = nil
@@ -492,7 +570,7 @@ Schema {
 ]
 	}
 ]
-lastEntityId = IdUid(2:41728)
+lastEntityId = IdUid(2:42496)
 	lastRelationId = IdUid(0:0)
 	lastIndexId = IdUid(0:0)
 }

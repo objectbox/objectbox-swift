@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import XCTest
 @testable import ObjectBox
 
-// swiftlint:disable force_try
-
 enum TransactionTestError: Error {
     case exceptionToAbortCommit
 }
@@ -32,6 +30,7 @@ class TransactionTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -41,6 +40,7 @@ class TransactionTests: XCTestCase {
         throw error
     }
 
+    // swiftlint:disable force_try
     func testWritability() {
         let writeTx = try! ObjectBox.Transaction(store: store, writable: true)
         let readTx = try! ObjectBox.Transaction(store: store, writable: false)
@@ -51,6 +51,7 @@ class TransactionTests: XCTestCase {
         try! writeTx.close()
         try! readTx.close()
     }
+    // swiftlint:enable force_try
     
     func testFlatBufferReusesObject() {
         let flatBuffer1 = FlatBufferBuilder.dequeue()

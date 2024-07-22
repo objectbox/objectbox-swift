@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2023 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import XCTest
 @testable import ObjectBox // Give us access to internal methods like box(for: EntityInfo)
 
-// swiftlint:disable identifier_name type_body_length force_try
-
 enum BoxTestError: Error {
     case generalError
     case generalError2
@@ -34,6 +32,7 @@ class BoxTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -543,7 +542,7 @@ class BoxTests: XCTestCase {
     /// the box contents already leading to unexpected results.
     class SubscriptionHelper<T> {
         internal var results = [[T]]()
-        lazy var resultHandler: ([T], ObjectBoxError?) -> Void = { items,_ in
+        lazy var resultHandler: ([T], ObjectBoxError?) -> Void = { items, _ in
             print("Called back.")
             self.results.append(items)
             self.group.leave()
@@ -612,7 +611,14 @@ class BoxTests: XCTestCase {
         
         let subHelper = SubscriptionHelper<TestPerson>()
         subscription = subHelper.waitForQueue {
-            box.subscribe(dispatchQueue: subHelper.queue, flags: [.sendInitial, .dontSubscribe], resultHandler: subHelper.resultHandler)
+            box.subscribe(
+                dispatchQueue: subHelper.queue,
+                flags: [
+                    .sendInitial,
+                    .dontSubscribe
+                ],
+                resultHandler: subHelper.resultHandler
+            )
         }
 
         let person2 = TestPerson(name: "κόσμε", age: 40)

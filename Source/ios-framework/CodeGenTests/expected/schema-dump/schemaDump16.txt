@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
@@ -22,7 +24,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:16640))
 			propertyName = lineName
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = BusRoute
 			unwrappedPropertyType = String
 			dbName = nil
@@ -37,7 +41,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:15616))
 			propertyName = destinationName
-			propertyType = String
+			propertyType = string
+			propertyFlags = [Sourcery.PropertyFlags.indexed, Sourcery.PropertyFlags.indexHash]
+			propertySwiftType = String
 			entityName = BusRoute
 			unwrappedPropertyType = String
 			dbName = nil
@@ -69,7 +75,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
@@ -85,7 +93,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil

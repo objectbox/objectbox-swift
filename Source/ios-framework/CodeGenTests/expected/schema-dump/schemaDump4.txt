@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
@@ -30,7 +32,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil
@@ -46,7 +50,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
-			propertyType = EntityId<BusRoute>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
 			dbName = nil

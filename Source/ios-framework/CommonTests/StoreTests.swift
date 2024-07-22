@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2021 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-// swiftlint:disable identifier_name force_try
 
 import XCTest
 @testable import ObjectBox
@@ -34,6 +32,7 @@ class StoreTests: XCTestCase {
     }
 
     override func tearDown() {
+        // swiftlint:disable:next force_try
         try! store?.closeAndDeleteAllFiles()
         store = nil
         super.tearDown()
@@ -48,9 +47,9 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "2.0.0")
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "4.0.0")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "4.0.0-2024-05-14")
+        XCTAssertGreaterThanOrEqual(Store.version, "4.0.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "4.0.1")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "4.0.1-2024-07-17")
     }
 
     func testCloseTwice() {
@@ -164,8 +163,10 @@ class StoreTests: XCTestCase {
 
     func testNestedReadTransactions() {
         let person = TestPerson(name: "Person", age: 20180621084337)
+        // swiftlint:disable:next force_try
         let entityId = try! store.box(for: TestPerson.self).put(person)
 
+        // swiftlint:disable:next force_try
         let result = try! store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
             return try store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
@@ -194,8 +195,10 @@ class StoreTests: XCTestCase {
 
     func testNestedReadTransactionsInsideWriteTransaction() {
         let person = TestPerson(name: "Person", age: 20180621084337)
+        // swiftlint:disable:next force_try
         let entityId = try! store.box(for: TestPerson.self).put(person)
 
+        // swiftlint:disable:next force_try
         let result = try! store.obx_runInTransaction(writable: true, { _ -> TestPerson? in
             return try store.obx_runInTransaction(writable: false, { _ -> TestPerson? in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)
@@ -208,6 +211,7 @@ class StoreTests: XCTestCase {
     }
 
     func testNestedWriteTransactions() {
+        // swiftlint:disable:next force_try
         let result = try! store.obx_runInTransaction(writable: true, { _ -> Id in
             return try store.obx_runInTransaction(writable: true, { _ -> Id in
                 let box: Box<TestPerson> = store.box(for: TestPerson.self)

@@ -7,7 +7,9 @@ Schema {
 		properties = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<WashingMachine>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<WashingMachine>
 			entityName = WashingMachine
 			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil
@@ -22,7 +24,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(2:15616))
 			propertyName = dryerRack
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = WashingMachine
 			unwrappedPropertyType = String
 			dbName = nil
@@ -37,7 +41,9 @@ Schema {
 , SchemaProperty {
 			modelId = Optional(IdUid(3:16640))
 			propertyName = destinationName
-			propertyType = String
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String
 			entityName = WashingMachine
 			unwrappedPropertyType = String
 			dbName = nil
@@ -60,7 +66,9 @@ Schema {
 		idProperty = Optional(SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<WashingMachine>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<WashingMachine>
 			entityName = WashingMachine
 			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil
@@ -76,7 +84,9 @@ Schema {
 		idCandidates = [SchemaProperty {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
-			propertyType = EntityId<WashingMachine>
+			propertyType = long
+			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertySwiftType = EntityId<WashingMachine>
 			entityName = WashingMachine
 			unwrappedPropertyType = EntityId<WashingMachine>
 			dbName = nil

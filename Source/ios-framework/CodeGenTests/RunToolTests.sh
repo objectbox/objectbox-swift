@@ -18,7 +18,7 @@ if [ -z ${PROJECT_DIR} ]; then
   exit 1
 fi
 
-MYDIR="${PROJECT_DIR}/CodeGenTests/" # Xcode copies our script into DerivedData before running it, so hard-code our path.
+MYDIR="${PROJECT_DIR}/CodeGenTests" # Xcode copies our script into DerivedData before running it, so hard-code our path.
 
 SOURCERY_APP="${PROJECT_DIR}/../external/objectbox-swift-generator/bin/Sourcery.app"
 SOURCERY="${SOURCERY_APP}/Contents/MacOS/Sourcery"
@@ -28,6 +28,11 @@ TESTPROJECT="${MYDIR}/ToolTestProject.xcodeproj"
 MYOUTPUTDIR="${MYDIR}/generated/"
 
 mkdir -p $MYOUTPUTDIR
+
+echo ""
+echo "====="
+echo "Test projects are written to: $MYOUTPUTDIR"
+echo "====="
 
 cd ${BUILT_PRODUCTS_DIR}
 
@@ -168,7 +173,7 @@ fail_codegen_target_num () {
     echo "note: ******************** $2: $1 ********************"
 
     MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
-    ORIGINALMESSAGESFILE="${EXPECTED_DIR}/model/messages${2}.log"
+    ORIGINALMESSAGESFILE="${EXPECTED_DIR}/messages/messages${2}.log"
     MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
     MODEL_FILE_ACTUAL="${BUILT_PRODUCTS_DIR}/model${2}.json"
     TESTMESSAGESFILE="${BUILT_PRODUCTS_DIR}/messages${2}.log"
@@ -338,6 +343,9 @@ test_target_num "ToMany ensure applyToDb is needed" 54 || ((FAIL++))
 test_target_num "ToMany Backlink ensure applyToDb is needed" 55 || ((FAIL++))
 test_target_num "Swift Property Wrappers are treated as wrapped type" 56 || ((FAIL++))
 test_target_num "Optional Template Syntax recognized as optional" 57 || ((FAIL++))
+
+fail_codegen_target_num "HNSW index not on float array" 58 || ((FAIL++))
+test_target_num "HNSW index" 59 || ((FAIL++))
 
 echo "note: Finished tests with $FAIL failures"
 
