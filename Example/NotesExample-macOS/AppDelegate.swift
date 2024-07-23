@@ -14,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         do {
+            logger.append(Store.versionFullInfo)
             logger.append("Setting up store ...")
             self.store = try Store.createStoreInTemporaryDirectory()
             logger.append("Store path: \(store.directoryPath)")
