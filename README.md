@@ -5,22 +5,19 @@
 <p align="center">
   <a href="https://swift.objectbox.io/getting-started">Getting Started</a> •
   <a href="https://swift.objectbox.io">Documentation</a> •
-  <a href="https://github.com/objectbox/objectbox-dart/tree/main/objectbox/example">Example Apps</a> •
-  <a href="https://github.com/objectbox/objectbox-dart/issues">Issues</a>
+  <a href="https://github.com/objectbox/objectbox-swift/tree/main/Example">Example Apps</a> •
+  <a href="https://github.com/objectbox/objectbox-swift/issues">Issues</a>
 </p>
 
 <p align="center">
   <a href="#cocoapods">
-    <img src="https://img.shields.io/cocoapods/v/ObjectBox.svg?style=flat-square" alt="Version">
+    <img src="https://img.shields.io/cocoapods/v/ObjectBox.svg" alt="Version">
   </a>
   <a href="#cocoapods">
-    <img src="https://img.shields.io/cocoapods/p/ObjectBox.svg?style=flat-square&color=17A6A6" alt="Platform">
-  </a>
-  <a href="https://github.com/objectbox/objectbox-swift/blob/main/LICENSE.txt">
-    <img src="https://img.shields.io/github/license/objectbox/objectbox-swift?logo=apache&style=flat-square" alt="Apache 2.0 license">
+    <img src="https://img.shields.io/cocoapods/p/ObjectBox.svg?color=17A6A6" alt="Platform">
   </a>
   <a href="https://twitter.com/ObjectBox_io">
-    <img src="https://img.shields.io/twitter/follow/objectbox_io?color=%20%2300aced&logo=twitter&style=flat-square" alt="Follow @ObjectBox_io">
+    <img src="https://img.shields.io/twitter/follow/objectbox_io?color=%20%2300aced" alt="Follow @ObjectBox_io">
   </a>
 </p>
 
@@ -117,6 +114,7 @@ Here's a list of ObjectBox releases, and the Swift versions they were compiled w
 
 | ObjectBox version(s) | Swift version |
 |:--------------------:|:-------------:|
+|        4.0.0         |      5.9      |
 |        2.0.0         |      5.9      |
 |        1.9.2         |      5.9      |
 |        1.9.1         |      5.9      |
@@ -163,17 +161,17 @@ Cross-platform database: Mobile, Desktop, Browser, Embedded, IoT
 ------------------------
 ObjectBox is a cross-platform database supporting sustainable app development in [multiple native languages](https://objectbox.io/dev-get-started/): 
 
+* [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart): persist Dart objects & build cross-platform apps using Flutter.
+* [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
 * [Java/Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
 * [Golang Database](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications. 
-* [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
   also enables porting ObjectBox to other languages.
-* [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart/): persist Dart objects & build cross-platform apps using Flutter.
 
 
 License
 -------
 
-    Copyright 2018-2023 ObjectBox Ltd. All rights reserved.
+    Copyright 2018-2024 ObjectBox Ltd. All rights reserved.
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
