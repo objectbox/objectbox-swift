@@ -29,14 +29,39 @@ Powerful & superfast database for Swift that's also easy to use. Persist Swift o
 ## Demo code
 
 ```swift
-let santa = Person(firstName: "Santa", lastName: "Claus")
-try personBox.put(santa)
+// objectbox: entity
+class Person {
+    var id: Id = 0
+    var firstName: String = ""
+    var lastName: String = ""
+    
+    init() {}
+    
+    init(id: Id = 0, firstName: String, lastName: String) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+    }
+}
 
-let query: Query<Person> = personBox.query {
-    return (Person.firstName.contains("Santa") || Person.age > 100)
-           && Person.lastName.isEqual(to: "Claus") 
+let store = try Store(directoryPath: "person-db")
+let box = store.box(for: Person.self)
+
+var person = Person(firstName: "Joe", lastName: "Green")
+let id = try box.put(person) // Create
+
+person = try box.get(id)!    // Read
+
+person.lastName = "Black"
+try box.put(person)          // Update
+
+try box.remove(person.id)    // Delete
+
+let query = try box.query {  // Query
+    Person.firstName == "Joe"
+    && Person.lastName.startsWith("B")
 }.build()
-let oldClauses = query.find()
+let people: [Person] = try query.find()
 ```
 
 Want details? **[Read the guides](https://swift.objectbox.io/)** or
