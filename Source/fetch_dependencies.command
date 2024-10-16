@@ -10,11 +10,11 @@ set -e
 
 # objectbox-swift release version on GitHub:
 # https://github.com/objectbox/objectbox-swift/releases/download/v${version}
-version=4.0.0
+version=4.0.1
 
 # C library version attached to the GitHub release:
 # ObjectBoxCore-static-${c_version}.zip
-c_version=4.0.1
+c_version=4.0.2
 
 # Params supported by apple-build-static-libs.sh
 build_params=""

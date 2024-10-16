@@ -4,6 +4,19 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## 4.0.1 - 2024-10-16
+
+- Built with Xcode 15.0.1 and Swift 5.9.
+- Make closing the Store more robust. In addition to transactions, it also waits for ongoing queries. This is just an
+  additional safety net. Your apps should still make sure to finish all Store operations, like queries, before closing it.
+- Generator: no longer print a `Mapping not found` warning when an entity class uses `ToMany`.
+- Some minor vector search performance improvements.
+- Update to [ObjectBox C 4.0.2](https://github.com/objectbox/objectbox-c/releases/tag/v4.0.2).
+
+### Sync
+
+- **Fix a serious regression, please update as soon as possible.**
+
 ## 4.0.0 - 2024-07-22
 
 **ObjectBox now supports [Vector Search](https://docs.objectbox.io/ann-vector-search)** to enable efficient similarity searches.

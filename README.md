@@ -144,6 +144,7 @@ Here's a list of ObjectBox releases, and the Swift versions they were compiled w
 
 | ObjectBox version(s) | Swift version |
 |:--------------------:|:-------------:|
+|        4.0.1         |      5.9      |
 |        4.0.0         |      5.9      |
 |        2.0.0         |      5.9      |
 |        1.9.2         |      5.9      |

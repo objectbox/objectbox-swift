@@ -37,7 +37,6 @@ Schema {
 			isBuiltInType = false
 			isStringType = false
 			isRelation = false
-			indexType = valueIndex
 			isScalarVectorType = true
 			hnswParams = SchemaHnswParams {
 				dimensions = 2
@@ -136,7 +135,6 @@ Schema {
 			isBuiltInType = false
 			isStringType = false
 			isRelation = false
-			indexType = valueIndex
 			isScalarVectorType = true
 			hnswParams = SchemaHnswParams {
 				dimensions = 2

@@ -54,7 +54,6 @@ Schema {
 			isBuiltInType = false
 			isStringType = true
 			isRelation = false
-			indexType = hashIndex
 		}
 ]
 		indexes = [SchemaIndex {
