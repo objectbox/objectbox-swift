@@ -39,7 +39,10 @@ Carthage/Checkouts
 # ObjectBox model backups
 *.json.bak
 
-#DBs
+# ObjectBox static library download
+Source/external/objectbox-static/
+
+# ObjectBox database files
 *.mdb
 
 # E.g. built frameworks
