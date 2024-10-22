@@ -37,8 +37,6 @@ Schema {
 			isBuiltInType = false
 			isStringType = true
 			isRelation = false
-			isUniqueIndex = true
-			indexType = hashIndex
 		}
 , SchemaProperty {
 			modelId = Optional(IdUid(3:17664))
@@ -73,8 +71,6 @@ Schema {
 			isBuiltInType = false
 			isStringType = true
 			isRelation = false
-			isUniqueIndex = true
-			indexType = hashIndex
 		}
 ]
 		indexes = [SchemaIndex {

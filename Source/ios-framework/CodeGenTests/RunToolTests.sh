@@ -193,6 +193,8 @@ fail_codegen_target_num () {
 
     echo "// Ensure there's no leftover code from previous tests." > "$ENTITY_INFO_FILE_ACTUAL"
 
+    # Setting --debug-parsetree for the generator also makes it generate non-random UIDs,
+    # see objectbox-swift-generator/Sourcery/main.swift runCLI().
     echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
     $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache > "$TESTMESSAGESFILE" 2>&1
 

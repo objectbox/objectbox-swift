@@ -6,6 +6,10 @@ This project is used to test code generation in ObjectBox's Sourcery-descended c
 It will run the codegen over a given target in the project, then build and run the product. You can do
 whatever testing you need to do in the actual Swift code.
 
+**Important note**: by passing the `--debug-parsetree` option to the generator in `RunToolTests.sh`
+it generates **non-random, stable UIDs**. See `runCLI()` of `objectbox-swift-generator/Sourcery/main.swift`.
+These are unlike (notably shorter) UIDs than are generated for a user project.
+
 ## Running these tests
 
 These tests require a copy of ObjectBox Swift Code Generator in a known location. To get that all set up, do the following:

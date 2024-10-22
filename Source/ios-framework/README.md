@@ -4,12 +4,12 @@
   <a href="https://objectbox.io/"><img id="objectboxlogo" src="img/logo.png" alt="ObjectBox Logo" title="" /></a>
 </div>
 
-[ObjectBox](https://objectbox.io/) Swift is a superfast, light-weight object persistence framework for iOS and macOS.
+[ObjectBox Swift](https://github.com/objectbox/objectbox-swift) is a superfast, light-weight object persistence framework for iOS and macOS.
 
 This is the ObjectBox Swift **API reference**.
-Also check the **[guides](https://swift.objectbox.io/)** for general documentation including [setup](https://swift.objectbox.io/install) and [getting started](https://swift.objectbox.io/getting-started).
+Check **[the documentation](https://swift.objectbox.io/)** on how to install and use ObjectBox Swift.
 
-Current version: 4.0.0
+This documents API version: 4.0.1
 
 ## Most Important Types
 
