@@ -160,6 +160,10 @@ Here's a list of ObjectBox releases, and the Swift versions they were compiled w
 
 This might be relevant, e.g. when using Carthage. For various reasons, we recommend using the latest version.
 
+## Changelog
+
+For notable and important changes in new releases, read the [changelog](CHANGELOG.md).
+
 ## Development
 
 The source code for ObjectBox's Swift binding can be found [in the Source folder](Source/README.md) of this repository.
