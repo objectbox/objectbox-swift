@@ -1,6 +1,5 @@
 stages:
   - build
-  - archive
 
 build_project:
   stage: build
