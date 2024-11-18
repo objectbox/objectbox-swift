@@ -68,7 +68,7 @@ Want details? **[Read the guides](https://swift.objectbox.io/)** or
 
 ## Why use ObjectBox for Swift data persistence?
 
-Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up, fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? Check out the [installation section below](#adding-objectbox-to-your-project). You can also star this repository for later 🌟
+Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up, fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? Check out the [installation section below](#add-objectbox-to-your-project). You can also star this repository for later 🌟
 
 ### Features
 
@@ -87,51 +87,14 @@ Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an int
 👥 **[ObjectBox Sync](https://objectbox.io/sync/):** keeps data in sync between devices and servers\
 🕒 **[ObjectBox TS](https://objectbox.io/time-series-database/):** time series extension for time based data
 
-<a name="cocoapods"></a>
+## Add ObjectBox to your project
 
-## Adding ObjectBox to your project
+ObjectBox is available as a
 
-ObjectBox is available as a [CocoaPods](https://cocoapods.org) pod. [See the docs](https://swift.objectbox.io/install) for details and alternative setup options.
+- [CocoaPods](https://swift.objectbox.io/install#cocoapods) pod
+- [Swift Package](https://swift.objectbox.io/install#swift-package)
 
-If you are new to CocoaPods, [check out their website](https://cocoapods.org) for an introduction and installation instructions.
-
-To add the ObjectBox Swift dependency, add the following line to your `Podfile`:
-
-```ruby
-  pod 'ObjectBox'
-```
-
-Then run these commands in your project directory to install the ObjectBox framework:
-
-```bash
-pod install --repo-update
-Pods/ObjectBox/setup.rb
-```
-
-Then open your Xcode workspace (.xcworkspace) instead of the Xcode project (.xcodeproj).
-
-Now, you are all set to define your first ObjectBox entities;
-e.g. check the [getting started guide](https://swift.objectbox.io/getting-started) or the [example](#example) described below.
-
-### CocoaPods troubleshooting
-
-If `pod install` fails, try updating CocoaPods first:
-
-```bash
-gem update xcodeproj && gem update cocoapods && pod repo update
-```
-
-## Updating to newer ObjectBox versions
-
-Update the ObjectBox pod and re-run the setup script:
-
-```shell
-pod repo update
-pod update ObjectBox
-Pods/ObjectBox/setup.rb
-```
-
-<a name="example"></a>
+See [Install ObjectBox Swift](https://swift.objectbox.io/install) for details and alternative setup options.
 
 ## Example
 
@@ -171,9 +134,9 @@ The source code for ObjectBox's Swift binding can be found [in the Source folder
 
 ## Background: code generation
 
-ObjectBox Swift Database generates code at build time for optimal performance at runtime by avoiding reflection etc.
-This is automatically done for you and should be transparent.
-Internally, we use [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
+ObjectBox Swift Database uses generated code for optimal performance at runtime by avoiding reflection etc.
+
+It uses [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-generator) for this.
 
 ## Already using ObjectBox?
 
