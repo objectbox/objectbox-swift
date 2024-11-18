@@ -21,7 +21,7 @@
   </a>
 </p>
 
-# Swift Database - swiftly persist objects and on-device vector database for iOS & macOS
+# ObjectBox Swift Database - swiftly persist objects and on-device vector database for iOS & macOS
 
 Powerful & superfast database for Swift that's also easy to use. Persist Swift objects quickly and reliably on-device on iOS and macOS.
 
