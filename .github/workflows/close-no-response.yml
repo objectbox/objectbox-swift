@@ -1,0 +1,28 @@
+# https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
+
+name: Close inactive issues
+on:
+  schedule:
+    - cron: "19 1 * * *" # “At 01:19.”
+  workflow_dispatch: # To support running manually.
+
+# Minimal access by default
+permissions:
+  contents: read
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      # https://github.com/marketplace/actions/close-stale-issues
+      - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # v9.0.0
+        with:
+          days-before-stale: -1 # Add the stale label manually.
+          days-before-close: 21
+          only-labels: "more info required"
+          stale-issue-label: "more info required"
+          close-issue-message: "Without additional information, we are unfortunately not sure how to resolve this issue. Therefore this issue has been automatically closed. Feel free to comment with additional details and we can re-open this issue."
+          close-pr-message: "Without additional information, we are unfortunately not sure how to address this pull request. Therefore this pull request has been automatically closed. Feel free to comment with additional details or submit a new pull request."
