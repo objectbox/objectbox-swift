@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "4.0.1"
+    public static var version = "4.1.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.

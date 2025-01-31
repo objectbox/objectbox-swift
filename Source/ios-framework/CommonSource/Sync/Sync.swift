@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 ObjectBox. All rights reserved.
+// Copyright (c) 2020-2025 ObjectBox. All rights reserved.
 //
 
 import Foundation
@@ -32,6 +32,32 @@ public class Sync {
             url: URL? = nil,
             urlString: String? = nil,
             credentials: SyncCredentials? = nil
+    ) throws -> SyncClient {
+        let client = try makeClient(store: store, url: url, urlString: urlString)
+
+        if credentials != nil {
+            try client.setCredentials(credentials!)
+        }
+
+        return client
+    }
+
+    /// Like ``makeClient(store:url:urlString:credentials:)-6rikk``, but accepts multiple credentials.
+    public static func makeClient(
+            store: Store,
+            url: URL,
+            urlString: String,
+            credentials: [SyncCredentials]
+    ) throws -> SyncClient {
+        let client = try makeClient(store: store, url: url, urlString: urlString)
+        try client.setCredentials(credentials)
+        return client
+    }
+
+    private static func makeClient(
+            store: Store,
+            url: URL? = nil,
+            urlString: String? = nil
     ) throws -> SyncClient {
         guard isAvailable() else {
             throw ObjectBoxError.sync(

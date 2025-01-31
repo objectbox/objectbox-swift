@@ -231,7 +231,8 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
             }
 
             try checkCResult(obx_query_offset_limit(cQuery, offset, limit))
-            let error = obx_query_visit_with_score(cQuery, CDataScoreVisitor, Unmanaged.passUnretained(context).toOpaque())
+            let error = obx_query_visit_with_score(cQuery, CDataScoreVisitor,
+                                                   Unmanaged.passUnretained(context).toOpaque())
             try check(error: error)
             return result
         }

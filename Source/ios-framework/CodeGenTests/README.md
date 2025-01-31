@@ -1,4 +1,4 @@
-#  Tool Test Project
+# ObjectBox Swift Code generator tests (CodeGenTests)
 
 ## What is it?
 

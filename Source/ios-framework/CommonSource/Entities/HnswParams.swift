@@ -37,6 +37,12 @@ public enum HnswDistanceType: UInt16 {
   ///  Because of this, the dot product is often preferred as it performs better.
   ///  Value range (normalized vectors): 0.0 - 2.0 (0.0: same direction, 1.0: orthogonal, 2.0: opposite direction)
   case dotProduct = 3
+
+  /// For geospatial coordinates aka latitude/longitude pairs.
+  /// Note, that the vector dimension must be 2, with the latitude being the first element and longitude the second.
+  /// Internally, this uses haversine distance.
+  case geo = 6
+
   ///  A custom dot product similarity measure that does not require the vectors to be normalized.
   ///  Note: this is no replacement for cosine similarity (like DotProduct for normalized vectors is).
   ///  The non-linear conversion provides a high precision over the entire float range (for the raw dot product).

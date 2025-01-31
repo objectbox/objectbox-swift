@@ -6,18 +6,25 @@
 # Adjust 'version', 'c_version' and 'build_params' as needed and set the OBX_FEATURES environment
 # variable to get the right version for the current code.
 
+# To skip the tests of the ObjectBox C library, set the environment variable OBX_SKIP_STATIC_C_TESTS to any value.
+# This can be useful when working on that script, and tests are not needed because nothing changed.
+
 set -e
 
 # objectbox-swift release version on GitHub:
 # https://github.com/objectbox/objectbox-swift/releases/download/v${version}
-version=4.0.1
+version=4.1.0
 
 # C library version attached to the GitHub release:
 # ObjectBoxCore-static-${c_version}.zip
-c_version=4.0.2
+c_version=4.1.0
 
 # Params supported by apple-build-static-libs.sh
-build_params=""
+if [ -n "$OBX_SKIP_STATIC_C_TESTS" ]; then
+  build_params="--skip-tests"
+else
+  build_params=""
+fi
 
 # Skips building/fetching, only copy header files and print details
 if [ "${1:-}" == "--verify-only" ]; then
@@ -54,8 +61,8 @@ if [ "$verify_only" = true ]; then
 else
 
 if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an existing code repo? Then build it...
-    pushd "$code_dir" # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir  
-    
+    pushd "$code_dir" # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
+
     echo "-----------------------------------------"
     xcode_version="$(xcodebuild -version | head -n 1 | tr -cd '[a-zA-Z0-9]._-')"
     echo "Xcode version: $xcode_version"
@@ -79,7 +86,9 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     mkdir -p "${cache_dir}"
     echo "-----------------------------------------"
     echo "Existing cache files:"
-    find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +30 # -delete # TODO enable delete once this looks good
+    find "${cache_dir}" -name "objectbox-static-*.zip" -type f
+    # Delete old files; set 'mtime +90' to find files last modified 90 days ago or before
+    find "${cache_dir}" -name "objectbox-static-*.zip" -type f -mtime +90 -delete
     echo "-----------------------------------------"
     cache_zip="${cache_dir}/objectbox-static-${cache_key}.zip"
 

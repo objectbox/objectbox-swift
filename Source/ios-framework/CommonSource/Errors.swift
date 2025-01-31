@@ -32,6 +32,8 @@ public enum ObjectBoxError: Swift.Error {
     case illegalArgument(message: String)
     /// Thrown when a resource could not be allocated.
     case allocation(message: String)
+    /// This build of the ObjectBox library does not contain the requested feature
+    case featureNotAvailable(message: String)
     /// An unexpected error.
     case noErrorInfo(message: String)
     /// An unexpected error.
@@ -202,6 +204,8 @@ internal func throwObxErr(_ err: obx_err, message: String = "") throws -> Never 
         throw ObjectBoxError.illegalArgument(message: message)
     case OBX_ERROR_ALLOCATION:
         throw ObjectBoxError.allocation(message: message)
+    case OBX_ERROR_FEATURE_NOT_AVAILABLE:
+        throw ObjectBoxError.featureNotAvailable(message: message)
     case OBX_ERROR_NO_ERROR_INFO:
         throw ObjectBoxError.noErrorInfo(message: message)
     case OBX_ERROR_GENERAL:

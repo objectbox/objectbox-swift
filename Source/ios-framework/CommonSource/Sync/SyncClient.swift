@@ -1,4 +1,4 @@
-//  Copyright © 2020-2021 ObjectBox. All rights reserved.
+//  Copyright © 2020-2025 ObjectBox. All rights reserved.
 
 /// Main API for client sync; create an instance via Sync.makeClient().
 /// The sync client will start trying to connect after start() is called.
@@ -51,6 +51,10 @@ public protocol SyncClient: AnyObject {
     /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
     func setCredentials(_ credentials: SyncCredentials) throws
 
+    /// Sets multiple credentials to authenticate the client with the server.
+    /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
+    func setCredentials(_ credentials: [SyncCredentials]) throws
+  
     /// Once the sync client is configured, you can "start" it to initiate synchronization.
     /// This method triggers communication in the background and will return immediately.
     /// If the synchronization destination is reachable, this background thread will connect to the server,
