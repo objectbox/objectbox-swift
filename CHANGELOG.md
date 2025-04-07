@@ -4,6 +4,11 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## Next release
+
+- Vector Search: add new `geo` distance type to perform vector searches on geographical coordinates.
+  This is particularly useful for location-based applications.
+
 ## 4.0.1 - 2024-10-16
 
 - Built with Xcode 15.0.1 and Swift 5.9.
