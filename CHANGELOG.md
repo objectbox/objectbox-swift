@@ -8,6 +8,8 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 
 - Vector Search: add new `geo` distance type to perform vector searches on geographical coordinates.
   This is particularly useful for location-based applications.
+- Make `Store.close()` public. This function may be useful for when the deinitializer of `Store` is called too late
+  (which closes the Store as well), or for unit tests.
 
 ## 4.0.1 - 2024-10-16
 
