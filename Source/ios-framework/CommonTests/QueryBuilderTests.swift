@@ -1019,9 +1019,10 @@ class QueryBuilderCollectionTests: XCTestCase {
         
         let person1 = TestPerson(name: "iSSaac", age: 98)
         let person2 = TestPerson(name: "Bass", age: 56)
-        let person3 = TestPerson(name: "manuel", age: 12)
+        let person3 = TestPerson(name: "Note that Îñţérñåţîöñåļîžåţîờñ is key", age: 12)
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
+        // case-sensitive (which is the default)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("SS")
         }).build().find().count, 1)
@@ -1029,16 +1030,26 @@ class QueryBuilderCollectionTests: XCTestCase {
             TestPerson.name.contains("ss")
         }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
+            TestPerson.name.contains("SS", caseSensitive: true)
+        }).build().find().count, 1)
+        XCTAssertEqual(try personBox.query({
+            TestPerson.name.contains("ss", caseSensitive: true)
+        }).build().find().count, 1)
+      
+        // case-insensitive
+        XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("SS", caseSensitive: false)
         }).build().find().count, 2)
         XCTAssertEqual(try personBox.query({
             TestPerson.name.contains("ss", caseSensitive: false)
         }).build().find().count, 2)
+      
+        // Verify case-sensitive setting has no side effects for non-ASCII characters
         XCTAssertEqual(try personBox.query({
-            TestPerson.name.contains("SS", caseSensitive: true)
+            TestPerson.name.contains("Îñţérñåţîöñåļîžåţîờñ", caseSensitive: true)
         }).build().find().count, 1)
         XCTAssertEqual(try personBox.query({
-            TestPerson.name.contains("ss", caseSensitive: true)
+            TestPerson.name.contains("Îñţérñåţîöñåļîžåţîờñ", caseSensitive: false)
         }).build().find().count, 1)
     }
 }

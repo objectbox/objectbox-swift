@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// Returns the version of ObjectBox Swift.
-    public static var version = "4.1.0"
+    public static var version = "4.2.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.
@@ -146,7 +146,13 @@ public class Store: CustomDebugStringConvertible {
         close()
     }
 
-    internal func close() {
+    /// Closes the native store.
+    ///
+    /// This Store object will not be usable after calling this.
+    ///
+    /// Note that this is also called by the deinitializer of this. So calling this is typically only useful for unit
+    /// tests.
+    public func close() {
         if let cStore = cStore {
             self.cStore = nil
             let err = obx_store_close(cStore)
@@ -206,11 +212,9 @@ public class Store: CustomDebugStringConvertible {
         return box
     }
 
-    /// Delete the database files on disk, including the database directory.
+    /// Like ``Store/close()``, but also deletes the database files on disk, including the database directory.
     ///
-    /// This Store object will not be usable after calling this.
-    ///
-    /// For an in-memory database, this will just clean up the in-memory database.
+    /// Note that for an in-memory database, this will just clean up the in-memory database.
     public func closeAndDeleteAllFiles() throws {
         self.close()
         obx_remove_db_files(directoryPath)

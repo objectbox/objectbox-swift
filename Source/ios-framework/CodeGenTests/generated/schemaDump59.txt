@@ -43,7 +43,7 @@ Schema {
 				neighborsPerNode = Optional(30)
 				indexingSearchCount = Optional(100)
 				flags = Optional("[HnswFlags.debugLogs, HnswFlags.debugLogsDetailed, HnswFlags.reparationLimitCandidates, HnswFlags.vectorCacheSimdPaddingOff]")
-				distanceType = Optional("HnswDistanceType.geo")
+				distanceType = Optional("HnswDistanceType.euclidean")
 				reparationBacklinkProbability = Optional(0.95)
 				vectorCacheHintSizeKB = Optional(2097152)
 			}

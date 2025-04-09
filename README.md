@@ -107,6 +107,8 @@ Here's a list of ObjectBox releases, and the Swift versions they were compiled w
 
 | ObjectBox version(s) | Swift version |
 |:--------------------:|:-------------:|
+|        4.2.0         |      5.10     |
+|        4.1.0         |      6.0      |
 |        4.0.1         |      5.9      |
 |        4.0.0         |      5.9      |
 |        2.0.0         |      5.9      |
@@ -166,7 +168,7 @@ ObjectBox is a cross-platform database supporting sustainable app development in
 ## License
 
 ```text
-Copyright 2018-2024 ObjectBox Ltd. All rights reserved.
+Copyright 2018-2025 ObjectBox Ltd. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

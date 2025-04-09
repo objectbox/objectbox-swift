@@ -4,12 +4,13 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
-## Next release
+## 4.2.0 - 2025-04-09
 
 - Vector Search: add new `geo` distance type to perform vector searches on geographical coordinates.
   This is particularly useful for location-based applications.
 - Make `Store.close()` public. This function may be useful for when the deinitializer of `Store` is called too late
   (which closes the Store as well), or for unit tests.
+- Update ObjectBox database to [4.2.0](https://github.com/objectbox/objectbox-c/releases/tag/v4.2.0).
 
 ## 4.0.1 - 2024-10-16
 

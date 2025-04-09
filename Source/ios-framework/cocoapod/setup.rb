@@ -94,7 +94,7 @@ puts ""
 
 if args.size > 0
   PROJECT_FILE_NAME = args[0]
-  if File.exists?(PROJECT_FILE_NAME)
+  if File.exist?(PROJECT_FILE_NAME)
     project_path = PROJECT_FILE_NAME
     # Use realpath otherwise Xcode interprets any "." in the path and the working dir is different.
     PROJECT_ROOT = File.realpath(File.dirname(PROJECT_FILE_NAME))
@@ -103,7 +103,7 @@ if args.size > 0
     PROJECT_ROOT = File.realpath(File.expand_path(File.join(File.dirname(__FILE__), "..", "..")))
     project_path = File.join(PROJECT_ROOT, PROJECT_FILE_NAME)
   end
-  if !File.exists?(project_path)
+  if !File.exist?(project_path)
     puts "🛑 Could not find Xcode project at \"#{project_path}\""
     puts ""
     exit 1
@@ -163,7 +163,7 @@ else
     puts "🔸 Trying to find project named like parent folder \"#{PROJECT_BASENAME}\"."
     
     project_path = File.join(PROJECT_ROOT, "#{PROJECT_BASENAME}.xcodeproj")
-    if !File.exists?(project_path)
+    if !File.exist?(project_path)
       puts "🛑 Multiple projects found. Please specify which project you want as an argument to this script."
       exit 1
     end
@@ -220,10 +220,6 @@ if generated_groupref.nil?
     puts "🔹 Adding a new group for generated files at `./#{GENERATED_DIR_NAME}/`..."
 
     generated_groupref = project.new_group("generated", GENERATED_DIR_NAME)
-
-    # Move group from the end to before the build Products
-    products_group_index = project.main_group.children.index { |g| g.name == "Products" } || 2
-    project.main_group.children.insert(products_group_index, project.main_group.children.delete(generated_groupref))
 end
 
 app_targets.each do |target|

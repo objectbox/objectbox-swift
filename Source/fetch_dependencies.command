@@ -13,11 +13,11 @@ set -e
 
 # objectbox-swift release version on GitHub:
 # https://github.com/objectbox/objectbox-swift/releases/download/v${version}
-version=4.1.0
+version=4.2.0
 
 # C library version attached to the GitHub release:
 # ObjectBoxCore-static-${c_version}.zip
-c_version=4.1.0
+c_version=4.2.0
 
 # Params supported by apple-build-static-libs.sh
 if [ -n "$OBX_SKIP_STATIC_C_TESTS" ]; then
@@ -66,6 +66,9 @@ if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an exi
     echo "-----------------------------------------"
     xcode_version="$(xcodebuild -version | head -n 1 | tr -cd '[a-zA-Z0-9]._-')"
     echo "Xcode version: $xcode_version"
+
+    # Enable the Vector Search feature objectbox/objectbox#1038
+    export OBX_FEATURES="VectorSearch"
 
     # Build cache key: includes commit, XCode version, extra features, build command parameters
     commit_id=$(git rev-parse HEAD)

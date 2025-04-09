@@ -30,7 +30,7 @@ extension CityAllProperties: ObjectBox.EntityInspectable {
         let entityBuilder = try modelBuilder.entityBuilder(for: CityAllProperties.self, id: 1, uid: 17664)
         try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 14592)
         try entityBuilder.addProperty(name: "coordinates", type: PropertyType.floatVector, flags: [.indexed], id: 2, uid: 16640, indexId: 1, indexUid: 15616)
-            .hnswParams(dimensions: 2, neighborsPerNode: 30, indexingSearchCount: 100, flags: [HnswFlags.debugLogs, HnswFlags.debugLogsDetailed, HnswFlags.reparationLimitCandidates, HnswFlags.vectorCacheSimdPaddingOff], distanceType: HnswDistanceType.geo, reparationBacklinkProbability: 0.95, vectorCacheHintSizeKB: 2097152)
+            .hnswParams(dimensions: 2, neighborsPerNode: 30, indexingSearchCount: 100, flags: [HnswFlags.debugLogs, HnswFlags.debugLogsDetailed, HnswFlags.reparationLimitCandidates, HnswFlags.vectorCacheSimdPaddingOff], distanceType: HnswDistanceType.euclidean, reparationBacklinkProbability: 0.95, vectorCacheHintSizeKB: 2097152)
 
         try entityBuilder.lastProperty(id: 2, uid: 16640)
     }
