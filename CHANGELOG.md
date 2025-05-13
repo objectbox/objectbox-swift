@@ -4,6 +4,10 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## Next release
+
+- The generator supports Xcode 16 projects with buildable folders. [#94](https://github.com/objectbox/objectbox-swift/issues/94)
+
 ## 4.2.0 - 2025-04-09
 
 - Vector Search: add new `geo` distance type to perform vector searches on geographical coordinates.
