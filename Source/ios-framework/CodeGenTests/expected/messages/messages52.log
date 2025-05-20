@@ -1,3 +1,1 @@
-Scanning sources...
-Found 1 types.
 error: The ID 3 of property finalStop in entity BusRoute is already in use for another property.

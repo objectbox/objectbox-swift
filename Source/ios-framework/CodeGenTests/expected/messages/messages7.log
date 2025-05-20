@@ -1,3 +1,1 @@
-Scanning sources...
-Found 1 types.
 error: Entity BusRoute has several properties of type EntityId<BusRoute>, but no entity ID. Please designate one as this entity's ID using an '// objectbox: id' annotation. Candidates are: someId, anotherId

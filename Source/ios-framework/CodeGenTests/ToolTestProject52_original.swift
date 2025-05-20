@@ -3,8 +3,10 @@
 //  ToolTestProject
 //
 //  Created by Uli Kusterer on 07.12.18.
-//  Copyright © 2018 Uli Kusterer. All rights reserved.
+//  Copyright 2018-2025 ObjectBox. All rights reserved.
 //
+
+/// See `ToolTestProject52.swift` on how this is used.
 
 import ObjectBox
 

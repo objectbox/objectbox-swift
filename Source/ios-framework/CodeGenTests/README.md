@@ -25,13 +25,16 @@ Adding a test case requires the following steps:
 1. Open `ToolTestProject.xcodeproj` in Xcode.
 2. Duplicate one of the `ToolTestProjectN` command line tool targets and increase to next highest number `N`.
 3. In `RunToolTests.sh` at the bottom add a command to run the test (replace `<N>` with the chosen number):
+
    ```bash
    # If the code generator should succeed
    test_target_num "Test Name" <N> || ((FAIL++))
    # If the code generator should fail
    fail_codegen_target_num "Test Name" <N> || ((FAIL++))
    ```
+
 4. Add a `ToolTestProjectN.swift` source file (replace `N` again) to the command line tool target. It should look like:
+
     ```swift
     import ObjectBox
 
@@ -47,7 +50,16 @@ Adding a test case requires the following steps:
 5. If the code generator should succeed, add the generated `EntityInfo.generatedN.swift` to the `ToolTestProjectN` 
   command line tool target as well (so it's verified it compiles).
 
-The `RunToolTests.sh` script will run the code generator and pass the "Test Name" as the first parameter. It will also check the code generator output against a file named `Entity.generatedN.swift`, the model file against a `modelN.json` and such.
+The `RunToolTests.sh` script will run the code generator and pass the "Test Name" as the first parameter. It will also 
+check the code generator output against files in the `expected` folder:
+
+- (only if expected to fail) that generator output messages contain messages in a file named like `messages/messagesN.log`,
+- the model file against a file named like `model/modelN.json`,
+- the generated code against a file named like `entity-info/Entity.generatedN.swift`, 
+- a dump of the generator schema against a file named like `schema-dump/schemaDumpN.txt`
+                                
+Note: by default a test will copy the expected model file before running the generator (to avoid UIDs from changing).
+To start with a different model file, add a file like `model/modelN.before.json`.
 
 ### Command line tool target settings
 For reference, all of the command line targets have these settings:

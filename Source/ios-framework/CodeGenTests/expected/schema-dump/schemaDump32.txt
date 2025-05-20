@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = UInt64
 			entityName = Building
 			unwrappedPropertyType = UInt64
@@ -68,7 +68,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = UInt64
 			entityName = Building
 			unwrappedPropertyType = UInt64

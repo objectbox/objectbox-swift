@@ -1,5 +1,3 @@
-Scanning sources...
-Found 1 types.
 note: ObjectBox ID Model file changed: model19.json, creating backup file (.bak).
 error: No UID given for entity BusRoute. You can do the following:
 	[Rename] Apply the current UID using // objectbox: uid = 17664

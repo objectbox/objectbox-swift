@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
@@ -138,7 +138,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
@@ -156,7 +156,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = AnnotatedType
 			unwrappedPropertyType = Id
@@ -180,7 +180,7 @@ Schema {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>
@@ -282,7 +282,7 @@ Schema {
 			modelId = Optional(IdUid(7:28672))
 			propertyName = uintValue
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertyFlags = [SourceryLib.PropertyFlags.unsigned]
 			propertySwiftType = UInt
 			entityName = TypeTest
 			unwrappedPropertyType = UInt
@@ -300,7 +300,7 @@ Schema {
 			modelId = Optional(IdUid(8:29696))
 			propertyName = uint8Value
 			propertyType = byte
-			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertyFlags = [SourceryLib.PropertyFlags.unsigned]
 			propertySwiftType = UInt8
 			entityName = TypeTest
 			unwrappedPropertyType = UInt8
@@ -318,7 +318,7 @@ Schema {
 			modelId = Optional(IdUid(9:30720))
 			propertyName = uint16Value
 			propertyType = short
-			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertyFlags = [SourceryLib.PropertyFlags.unsigned]
 			propertySwiftType = UInt16
 			entityName = TypeTest
 			unwrappedPropertyType = UInt16
@@ -336,7 +336,7 @@ Schema {
 			modelId = Optional(IdUid(10:31744))
 			propertyName = uint32Value
 			propertyType = int
-			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertyFlags = [SourceryLib.PropertyFlags.unsigned]
 			propertySwiftType = UInt32
 			entityName = TypeTest
 			unwrappedPropertyType = UInt32
@@ -354,7 +354,7 @@ Schema {
 			modelId = Optional(IdUid(11:32512))
 			propertyName = uint64Value
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.unsigned]
+			propertyFlags = [SourceryLib.PropertyFlags.unsigned]
 			propertySwiftType = UInt64
 			entityName = TypeTest
 			unwrappedPropertyType = UInt64
@@ -536,7 +536,7 @@ Schema {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>
@@ -554,7 +554,7 @@ Schema {
 			modelId = Optional(IdUid(1:22528))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<TypeTest>
 			entityName = TypeTest
 			unwrappedPropertyType = EntityId<TypeTest>

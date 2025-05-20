@@ -1,7 +1,8 @@
 #!/bin/bash
 
-#  Run this script from Xcode (target & scheme "CodeGenTests"):
-#  it has a dependency and also relies on variables set by Xcode
+#  This script is run from Xcode (target & scheme "CodeGenTests"):
+#  it has a dependency and also relies on variables set by Xcode.
+#  See README for details.
 
 echo -n "note: Starting tests at $(date)"
 
@@ -19,8 +20,8 @@ if [ -z ${PROJECT_DIR} ]; then
 fi
 
 MYDIR="${PROJECT_DIR}/CodeGenTests" # Xcode copies our script into DerivedData before running it, so hard-code our path.
-
-SOURCERY_APP="${PROJECT_DIR}/../external/objectbox-swift-generator/bin/Sourcery.app"
+PARENT_DIR="$(dirname "$PROJECT_DIR")"
+SOURCERY_APP="${PARENT_DIR}/external/objectbox-swift-generator/bin/Sourcery.app"
 SOURCERY="${SOURCERY_APP}/Contents/MacOS/Sourcery"
 
 EXPECTED_DIR="${MYDIR}/expected"
@@ -173,11 +174,10 @@ fail_codegen_target_num () {
     echo "note: ******************** $2: $1 ********************"
 
     MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
-    ORIGINALMESSAGESFILE="${EXPECTED_DIR}/messages/messages${2}.log"
     MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
     MODEL_FILE_ACTUAL="${BUILT_PRODUCTS_DIR}/model${2}.json"
-    TESTMESSAGESFILE="${BUILT_PRODUCTS_DIR}/messages${2}.log"
-    DUMP_FILE_EXPECTED="${EXPECTED_DIR}/schema-dump/schemaDump${2}.txt"
+    EXPECTED_MESSAGES_FILE="${EXPECTED_DIR}/messages/messages${2}.log"
+    GENERATOR_LOG_FILE="${BUILT_PRODUCTS_DIR}/generator${2}.log"
     DUMP_FILE_ACTUAL="${MYOUTPUTDIR}/schemaDump${2}.txt"
     ENTITY_INFO_FILE_ACTUAL="${MYOUTPUTDIR}/EntityInfo.generated${2}.swift"
     ORIGINALXCODELOGFILE="${MYDIR}/xcode${2}.log"
@@ -196,21 +196,23 @@ fail_codegen_target_num () {
     # Setting --debug-parsetree for the generator also makes it generate non-random UIDs,
     # see objectbox-swift-generator/Sourcery/main.swift runCLI().
     echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
-    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache > "$TESTMESSAGESFILE" 2>&1
+    $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache > "$GENERATOR_LOG_FILE" 2>&1
 
-    if [ -e "$ORIGINALMESSAGESFILE" ]; then
-        cmp --silent "$TESTMESSAGESFILE" "$ORIGINALMESSAGESFILE"
-        if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Output as expected."
+    if [ -e "$EXPECTED_MESSAGES_FILE" ]; then
+        # Check if the generator output contains the expected messages.
+        # Note: as grep can not handle new lines, remove them before searching.
+        EXPECTED_MESSAGES=$(tr -d '\n' < "$EXPECTED_MESSAGES_FILE")
+        FULL_OUTPUT=$(tr -d '\n' < "$GENERATOR_LOG_FILE")
+        # Use grep --fixed-strings to avoid interpreting the expected string as a regex.
+        # Use --quiet to only return an exit code (0 if there is a match, 1 or greater otherwise).
+        if echo "$FULL_OUTPUT" | grep --quiet --fixed-strings "$EXPECTED_MESSAGES"; then
+            echo "note: $2: $1: Generator logs contain the expected messages."
         else
-            echo "error: $2: $1: Output DIFFERENT!"
-
-            echo "====="
-            echo "opendiff \"$TESTMESSAGESFILE\" \"$ORIGINALMESSAGESFILE\" -merge \"$ORIGINALMESSAGESFILE\""
-#             echo "===== $TESTMESSAGESFILE ====="
-#             cat "$TESTMESSAGESFILE"
-#             echo "===== $ORIGINALMESSAGESFILE ====="
-#             cat "$ORIGINALMESSAGESFILE"
+            echo "error: $2: $1: Generator logs do NOT contain the expected messages!"
+            echo "===== Generator logs $GENERATOR_LOG_FILE ====="
+            cat "$GENERATOR_LOG_FILE"
+            echo "===== Expected to contain $EXPECTED_MESSAGES_FILE ====="
+            cat "$EXPECTED_MESSAGES_FILE"
             echo "====="
             FAIL=1
         fi
@@ -270,7 +272,7 @@ fail_codegen_target_num () {
         rm -f "$MODEL_FILE_ACTUAL"
         rm -f "$ENTITY_INFO_FILE_ACTUAL"
         rm -f "$DUMP_FILE_ACTUAL"
-        rm -f "$TESTMESSAGESFILE"
+        rm -f "$GENERATOR_LOG_FILE"
         rm -f "$TESTXCODELOGFILE"
         
         echo "note: $2: $1: Cleaning up."
@@ -339,7 +341,7 @@ test_target_num "Untyped IDs and queries 1" 49 || ((FAIL++))
 test_target_num "Untyped IDs and queries 2" 50 || ((FAIL++))
 #fail_codegen_target_num "Typed IDs still enforce type?" 51 || ((FAIL++))
 
-fail_codegen_target_num "Ensure we don't write JSON before ID errors" 52 || ((FAIL++))
+fail_codegen_target_num "Model JSON is not written on ID errors" 52 || ((FAIL++))
 test_target_num "ToOne Backlink ensure applyToDb is needed" 53 || ((FAIL++))
 test_target_num "ToMany ensure applyToDb is needed" 54 || ((FAIL++))
 test_target_num "ToMany Backlink ensure applyToDb is needed" 55 || ((FAIL++))
@@ -348,6 +350,7 @@ test_target_num "Optional Template Syntax recognized as optional" 57 || ((FAIL++
 
 fail_codegen_target_num "HNSW index not on float array" 58 || ((FAIL++))
 test_target_num "HNSW index" 59 || ((FAIL++))
+test_target_num "ExternalType and ExternalName annotations" 60 || ((FAIL++))
 
 echo "note: Finished tests with $FAIL failures"
 

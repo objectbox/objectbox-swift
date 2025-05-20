@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
@@ -50,7 +50,7 @@ Schema {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
@@ -68,7 +68,7 @@ Schema {
 			modelId = Optional(IdUid(1:7895576389419683840))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>

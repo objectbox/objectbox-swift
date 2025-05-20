@@ -1,0 +1,54 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:18688",
+      "lastPropertyId": "5:19712",
+      "name": "Example",
+      "externalName": "my-example-entity",
+      "properties": [
+        {
+          "flags": 1,
+          "id": "1:14592",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "4:17664",
+          "name": "myMongoId",
+          "type": 6,
+          "externalType": 123
+        },
+        {
+          "id": "5:19712",
+          "name": "myJson",
+          "type": 9,
+          "externalType": 109,
+          "externalName": "my-json"
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:17664",
+          "name": "otherExamples",
+          "targetId": "1:18688",
+          "externalType": 102,
+          "externalName": "my-other-entities"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "1:18688",
+  "lastIndexId": "0:0",
+  "lastRelationId": "1:17664",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

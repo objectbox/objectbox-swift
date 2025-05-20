@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
@@ -25,7 +25,7 @@ Schema {
 			modelId = Optional(IdUid(2:16640))
 			propertyName = buildingName
 			propertyType = string
-			propertyFlags = [Sourcery.PropertyFlags.unique, Sourcery.PropertyFlags.indexed, Sourcery.PropertyFlags.indexHash]
+			propertyFlags = [SourceryLib.PropertyFlags.unique, SourceryLib.PropertyFlags.indexed, SourceryLib.PropertyFlags.indexHash]
 			propertySwiftType = String
 			entityName = Building
 			unwrappedPropertyType = String
@@ -59,7 +59,7 @@ Schema {
 			modelId = Optional(IdUid(4:19712))
 			propertyName = stringId
 			propertyType = string
-			propertyFlags = [Sourcery.PropertyFlags.unique, Sourcery.PropertyFlags.uniqueOnConflictReplace, Sourcery.PropertyFlags.indexed, Sourcery.PropertyFlags.indexHash]
+			propertyFlags = [SourceryLib.PropertyFlags.unique, SourceryLib.PropertyFlags.uniqueOnConflictReplace, SourceryLib.PropertyFlags.indexed, SourceryLib.PropertyFlags.indexHash]
 			propertySwiftType = String
 			entityName = Building
 			unwrappedPropertyType = String
@@ -92,7 +92,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
@@ -110,7 +110,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>

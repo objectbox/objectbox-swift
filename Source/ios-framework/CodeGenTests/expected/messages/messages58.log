@@ -1,5 +1,2 @@
-Scanning sources...
-Found 1 types.
-Mapping not found:  Optional([Double]?) [Double]? [Double]? Optional([Double]?)
 Mapping not found:  Optional([Double]?) [Double]? [Double]? nil
 error: BadPropertyAnnotation(property: "coordinates: [Double]?", message: "hnswIndex is only supported for float vector properties.")

@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityAllProperties
 			unwrappedPropertyType = Id
@@ -25,7 +25,7 @@ Schema {
 			modelId = Optional(IdUid(2:16640))
 			propertyName = coordinates
 			propertyType = floatVector
-			propertyFlags = [Sourcery.PropertyFlags.indexed]
+			propertyFlags = [SourceryLib.PropertyFlags.indexed]
 			propertySwiftType = HnswIndexPropertyType
 			entityName = CityAllProperties
 			unwrappedPropertyType = [Float]
@@ -64,7 +64,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityAllProperties
 			unwrappedPropertyType = Id
@@ -82,7 +82,7 @@ Schema {
 			modelId = Optional(IdUid(1:14592))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityAllProperties
 			unwrappedPropertyType = Id
@@ -106,7 +106,7 @@ Schema {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityDefaults
 			unwrappedPropertyType = Id
@@ -123,7 +123,7 @@ Schema {
 			modelId = Optional(IdUid(2:20736))
 			propertyName = coordinatesDefaults
 			propertyType = floatVector
-			propertyFlags = [Sourcery.PropertyFlags.indexed]
+			propertyFlags = [SourceryLib.PropertyFlags.indexed]
 			propertySwiftType = HnswIndexPropertyType
 			entityName = CityDefaults
 			unwrappedPropertyType = [Float]
@@ -162,7 +162,7 @@ Schema {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityDefaults
 			unwrappedPropertyType = Id
@@ -180,7 +180,7 @@ Schema {
 			modelId = Optional(IdUid(1:18688))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = Id
 			entityName = CityDefaults
 			unwrappedPropertyType = Id

@@ -4,9 +4,17 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
-## Next release
+## 4.3.0 - 2025-05-21
 
 - The generator supports Xcode 16 projects with buildable folders. [#94](https://github.com/objectbox/objectbox-swift/issues/94)
+- External property types and names (via [MongoDB connector Data Mapping](https://sync.objectbox.io/mongodb-sync-connector/mongodb-data-mapping))
+
+### Sync
+
+- Add "Log Events" for important server events, which can be viewed on a new Admin page.
+- Detect and ignore changes for objects that were put but were unchanged.
+- The limit for message size was raised to 32 MB.
+- Transactions above the message size limit now already fail on the client (to better enforce the limit).
 
 ## 4.2.0 - 2025-04-09
 

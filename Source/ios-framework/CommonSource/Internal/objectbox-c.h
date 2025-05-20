@@ -52,7 +52,7 @@ extern "C" {
 /// When using ObjectBox as a dynamic library, you should verify that a compatible version was linked using
 /// obx_version() or obx_version_is_at_least().
 #define OBX_VERSION_MAJOR 4
-#define OBX_VERSION_MINOR 2
+#define OBX_VERSION_MINOR 3
 #define OBX_VERSION_PATCH 0  // values >= 100 are reserved for dev releases leading to the next minor/major increase
 
 //----------------------------------------------
@@ -175,6 +175,10 @@ typedef enum {
 
     /// Enables additional authentication/authorization methods for sync login, e.g. JWT based methods.
     OBXFeature_Auth = 17,
+
+    /// This is a free trial version; only applies to server builds (no trial builds for database and Sync clients).
+    OBXFeature_Trial = 18,
+
 
 } OBXFeature;
 
@@ -669,7 +673,12 @@ typedef enum {
     /// JavaScript source code
     /// Representing type: String
     OBXExternalPropertyType_JavaScript = 111,
-    // OBXExternalPropertyType_Reserved5 = 112,
+    /// A JSON string that is converted to a native representation in the external system.
+    /// For example, a JSON object on the ObjectBox side (string) would be converted to an embedded document in MongoDB.
+    /// It depends on the external system what kind of JSON structures is supported.
+    /// For MongoDB, this is very flexible and allows (nested) objects, arrays, primitives, etc.
+    /// Representing type: String
+    OBXExternalPropertyType_JsonToNative = 112,
     // OBXExternalPropertyType_Reserved6 = 113,
     // OBXExternalPropertyType_Reserved7 = 114,
     // OBXExternalPropertyType_Reserved8 = 115,

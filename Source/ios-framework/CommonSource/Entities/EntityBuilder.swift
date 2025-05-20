@@ -50,6 +50,11 @@ public class EntityBuilder<T> {
         try checkLastError(err)
     }
 
+    public func externalName(_ name: String) throws {
+        let err = obx_model_entity_external_name(model, name)
+        try checkLastError(err)
+    }
+
     /// Add the given property to this entity.
     /// An overload to accept a single flag.
     @discardableResult public func addProperty(name: String, type: PropertyType, flags: PropertyFlags,
@@ -93,6 +98,17 @@ public class EntityBuilder<T> {
                                   targetId: obx_schema_id, targetUid: obx_uid) throws {
         let err1 = obx_model_relation(model, relationId, relationUid, targetId, targetUid)
         try checkLastError(err1)
+    }
+
+    public func relationExternalName(_ externalName: String) throws {
+        let err = obx_model_relation_external_name(model, externalName)
+        try checkLastError(err)
+    }
+
+    public func relationExternalType(_ externalType: UInt32) throws {
+        let err = obx_model_relation_external_type(
+            model, OBXExternalPropertyType(rawValue: externalType))
+        try checkLastError(err)
     }
     
     /// Register the highest property ID used for this entity.

@@ -8,7 +8,7 @@ Schema {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
@@ -67,7 +67,7 @@ Schema {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
@@ -85,7 +85,7 @@ Schema {
 			modelId = Optional(IdUid(1:19712))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<Building>
 			entityName = Building
 			unwrappedPropertyType = EntityId<Building>
@@ -109,7 +109,7 @@ Schema {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
@@ -151,7 +151,7 @@ Schema {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>
@@ -169,7 +169,7 @@ Schema {
 			modelId = Optional(IdUid(1:23552))
 			propertyName = id
 			propertyType = long
-			propertyFlags = [Sourcery.PropertyFlags.id]
+			propertyFlags = [SourceryLib.PropertyFlags.id]
 			propertySwiftType = EntityId<BusRoute>
 			entityName = BusRoute
 			unwrappedPropertyType = EntityId<BusRoute>

@@ -1,0 +1,122 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(1)
+		modelUid = Optional(18688)
+		className = Example
+		dbName = nil
+		externalName = my-example-entity
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = Example
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(4:17664))
+			propertyName = myMongoId
+			propertyType = long
+			propertyFlags = []
+			propertySwiftType = Int?
+			entityName = Example
+			unwrappedPropertyType = Int
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+			externalType = 123
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(5:19712))
+			propertyName = myJson
+			propertyType = string
+			propertyFlags = []
+			propertySwiftType = String?
+			entityName = Example
+			unwrappedPropertyType = String
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = true
+			isRelation = false
+			externalType = 109
+			externalName = my-json
+		}
+, SchemaProperty {
+			modelId = nil
+			propertyName = otherExamples
+			propertyType = unknown
+			propertyFlags = []
+			propertySwiftType = ToMany<Example>
+			entityName = Example
+			unwrappedPropertyType = ToMany<Example>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			externalType = 102
+			externalName = my-other-entities
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = [SchemaToManyRelation {
+			modelId = Optional(IdUid(1:17664))
+			relationName = otherExamples
+			relationType = ToMany<Example>
+			relationTargetType = Example
+			dbName = nil
+			relationOwnerType = Example
+			backlinkProperty = nil
+		}
+]
+		lastPropertyId = Optional(IdUid(5:19712))
+		isEntitySubclass = false
+		isValueType = false
+		hasStringProperties = true
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:14592))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.id]
+			propertySwiftType = Id
+			entityName = Example
+			unwrappedPropertyType = Id
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = []
+	}
+]
+lastEntityId = IdUid(1:18688)
+	lastRelationId = IdUid(1:17664)
+	lastIndexId = IdUid(0:0)
+}

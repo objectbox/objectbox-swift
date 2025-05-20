@@ -23,13 +23,13 @@ public class PropertyBuilder {
     }
     
     // swiftlint:disable function_parameter_count
-    public func hnswParams(dimensions: Int,
-                           neighborsPerNode: UInt32?,
-                           indexingSearchCount: UInt32?,
-                           flags: [HnswFlags]?,
-                           distanceType: HnswDistanceType?,
-                           reparationBacklinkProbability: Float?, 
-                           vectorCacheHintSizeKB: Int?) throws {
+    @discardableResult public func hnswParams(dimensions: Int,
+                                              neighborsPerNode: UInt32?,
+                                              indexingSearchCount: UInt32?,
+                                              flags: [HnswFlags]?,
+                                              distanceType: HnswDistanceType?,
+                                              reparationBacklinkProbability: Float?,
+                                              vectorCacheHintSizeKB: Int?) throws -> PropertyBuilder {
         try checkLastError(obx_model_property_index_hnsw_dimensions(model, dimensions))
         if neighborsPerNode != nil {
             try checkLastError(obx_model_property_index_hnsw_neighbors_per_node(model, neighborsPerNode!))
@@ -51,6 +51,18 @@ public class PropertyBuilder {
         if vectorCacheHintSizeKB != nil {
             try checkLastError(obx_model_property_index_hnsw_vector_cache_hint_size_kb(model, vectorCacheHintSizeKB!))
         }
+        return self
+    }
+    
+    @discardableResult public func externalName(_ name: String) throws -> PropertyBuilder {
+        try checkLastError(obx_model_property_external_name(model, name))
+        return self
+    }
+    
+    @discardableResult public func externalType(_ type: UInt32) throws -> PropertyBuilder {
+        try checkLastError(obx_model_property_external_type(
+            model, OBXExternalPropertyType(rawValue: type)))
+        return self
     }
     // swiftlint:enable function_parameter_count
 }
