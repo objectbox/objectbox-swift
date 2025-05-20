@@ -10,20 +10,18 @@
 </p>
 
 <p align="center">
-  <a href="#cocoapods">
+  <a href="#add-objectbox-to-your-project">
     <img src="https://img.shields.io/cocoapods/v/ObjectBox.svg" alt="Version">
   </a>
-  <a href="#cocoapods">
+  <a href="#add-objectbox-to-your-project">
     <img src="https://img.shields.io/cocoapods/p/ObjectBox.svg?color=17A6A6" alt="Platform">
-  </a>
-  <a href="https://twitter.com/ObjectBox_io">
-    <img src="https://img.shields.io/twitter/follow/objectbox_io?color=%20%2300aced" alt="Follow @ObjectBox_io">
   </a>
 </p>
 
 # ObjectBox Swift Database - swiftly persist objects and on-device vector database for iOS & macOS
 
-Powerful & superfast database for Swift that's also easy to use. Persist Swift objects quickly and reliably on-device on iOS and macOS.
+Powerful & superfast database for Swift that's also easy to use. Persist Swift objects quickly and reliably on-device on
+iOS and macOS.
 
 ## Demo code
 
@@ -63,12 +61,15 @@ let query = try box.query {  // Query
 let people: [Person] = try query.find()
 ```
 
-Want details? **[Read the guides](https://swift.objectbox.io/)** or
-**[check out the API docs](https://objectbox.io/docfiles/swift/current/)**.
+Want details? **[Read the guide](https://swift.objectbox.io/)** or
+**[check out the API reference](https://objectbox.io/docfiles/swift/current/)**.
 
 ## Why use ObjectBox for Swift data persistence?
 
-Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up, fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? Check out the [installation section below](#add-objectbox-to-your-project). You can also star this repository for later 🌟
+Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up,
+fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, 
+battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? 
+Check out the [installation section below](#add-objectbox-to-your-project). You can also star this repository for later 🌟
 
 ### Features
 
@@ -98,33 +99,9 @@ See [Install ObjectBox Swift](https://swift.objectbox.io/install) for details an
 
 ## Example
 
-In the [Example](Example/) directory, you'll find a "Notes" example app demonstrating ObjectBox's Swift API.
-The example comes with two apps: one for iOS and one for macOS. The iOS example is a full GUI application, whereas the macOS example runs a few operations and then exits.
-
-## Swift versions
-
-Here's a list of ObjectBox releases, and the Swift versions they were compiled with:
-
-| ObjectBox version(s) | Swift version |
-|:--------------------:|:-------------:|
-|        4.2.0         |      5.10     |
-|        4.1.0         |      6.0      |
-|        4.0.1         |      5.9      |
-|        4.0.0         |      5.9      |
-|        2.0.0         |      5.9      |
-|        1.9.2         |      5.9      |
-|        1.9.1         |      5.9      |
-|        1.9.0         |     5.8.1     |
-|        1.8.1         |     5.7.2     |
-|        1.8.0         |     5.7.1     |
-|        1.7.0         |      5.5      |
-|        1.6.0         |      5.4      |
-|        1.5.0         |    5.3(.2)    |
-|        1.4.1         |      5.3      |
-|      1.3, 1.4.0      |      5.2      |
-|         1.2          |      5.1      |
-
-This might be relevant, e.g. when using Carthage. For various reasons, we recommend using the latest version.
+In the [Example](Example) directory, you'll find a "Notes" example app demonstrating ObjectBox's Swift API.
+The example comes with two apps: one for iOS and one for macOS. The iOS example is a full GUI application, whereas the 
+macOS example runs a few operations and then exits.
 
 ## Changelog
 
@@ -142,14 +119,15 @@ It uses [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-genera
 
 ## Already using ObjectBox?
 
-We're on a mission to bring joy, delight and sustainability to app developers. **To do this, we need your help:** Please fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6). Let us know what you love and what is amiss, so we can improve.
+We're on a mission to bring joy, delight and sustainability to app developers. **To do this, we need your help:** Please
+fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6). Let us know what you love and what is amiss, so we can improve.
 
 **We're looking forward to receiving your comments and requests:**
 
 - Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues)
-- Upvote issues you find important by hitting the 👍/+1 reaction button
-- Drop us a line via [@ObjectBox_io](https://twitter.com/ObjectBox_io/)
-- ⭐ us, if you like what you see
+- Upvote issues you find important by hitting the 👍 reaction button
+- Drop us a line via contact📧objectbox.io
+- ⭐ this repository, if you like what you see
 
 Thank you! 🙏
 
@@ -159,10 +137,10 @@ Keep in touch: For general news on ObjectBox, [check our blog](https://objectbox
 
 ObjectBox is a cross-platform database supporting sustainable app development in [multiple native languages](https://objectbox.io/dev-get-started/):
 
-- [Flutter/Dart Database](https://github.com/objectbox/objectbox-dart): persist Dart objects & build cross-platform apps using Flutter.
-- [C and C++ Database](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
-- [Java/Kotlin Database](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
-- [Golang Database](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications.
+- [ObjectBox C and C++ SDK](https://github.com/objectbox/objectbox-c): native speed with zero copy access to objects on embedded devices
+- [ObjectBox Java and Kotlin SDK](https://github.com/objectbox/objectbox-java): runs on Android, desktop, and servers.
+- [ObjectBox Dart and Flutter SDK](https://github.com/objectbox/objectbox-dart): persist Dart objects & build cross-platform apps using Flutter.
+- [ObjectBox Go SDK](https://github.com/objectbox/objectbox-go): great for IoT, data-driven tools, and server applications.
   also enables porting ObjectBox to other languages.
 
 ## License
