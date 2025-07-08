@@ -4,6 +4,14 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## Next release
+
+- **Breaking API change: when using the Swift Package, make sure to run the generator again.**
+  For Xcode projects, right-click your project in the Project navigator and click ObjectBoxGeneratorCommand.
+  For Swift Package projects, run `swift package plugin --allow-writing-to-package-directory objectbox-generator`.  
+  When using ObjectBox through CocoaPods the generated code is updated when next building your project.
+- Change generated code to support Swift 6 language mode [#91](https://github.com/objectbox/objectbox-swift/issues/91)
+
 ## 4.3.0 - 2025-05-21
 
 - The generator supports Xcode 16 projects with buildable folders. [#94](https://github.com/objectbox/objectbox-swift/issues/94)
