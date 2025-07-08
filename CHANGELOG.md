@@ -11,6 +11,7 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
   For Swift Package projects, run `swift package plugin --allow-writing-to-package-directory objectbox-generator`.  
   When using ObjectBox through CocoaPods the generated code is updated when next building your project.
 - Change generated code to support Swift 6 language mode [#91](https://github.com/objectbox/objectbox-swift/issues/91)
+- When using ObjectBox through CocoaPods, support Xcode 16 projects that use groups as well as buildable folders
 
 ## 4.3.0 - 2025-05-21
 
