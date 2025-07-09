@@ -20,9 +20,9 @@ extension AnnotatedType: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = AnnotatedTypeBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "AnnotatedType", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "AnnotatedType", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: AnnotatedType.self, id: 1, uid: 21504)
@@ -148,7 +148,7 @@ extension ObjectBox.Property where E == AnnotatedType {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `AnnotatedType.EntityBindingType`.
-internal class AnnotatedTypeBinding: ObjectBox.EntityBinding {
+internal final class AnnotatedTypeBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = AnnotatedType
     internal typealias IdType = Id
 
@@ -208,9 +208,9 @@ extension TypeTest: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = TypeTestBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "TypeTest", id: 2)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "TypeTest", id: 2)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 42496)
@@ -531,7 +531,7 @@ extension ObjectBox.Property where E == TypeTest {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `TypeTest.EntityBindingType`.
-internal class TypeTestBinding: ObjectBox.EntityBinding {
+internal final class TypeTestBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = TypeTest
     internal typealias IdType = EntityId<TypeTest>
 

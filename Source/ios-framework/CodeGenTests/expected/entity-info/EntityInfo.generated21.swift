@@ -20,9 +20,9 @@ extension WashingMachine: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = WashingMachineBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "WashingMachine", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "WashingMachine", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: WashingMachine.self, id: 1, uid: 17664)
@@ -88,7 +88,7 @@ extension ObjectBox.Property where E == WashingMachine {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `WashingMachine.EntityBindingType`.
-internal class WashingMachineBinding: ObjectBox.EntityBinding {
+internal final class WashingMachineBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = WashingMachine
     internal typealias IdType = EntityId<WashingMachine>
 

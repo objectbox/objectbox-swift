@@ -42,14 +42,14 @@ public class Store: CustomDebugStringConvertible {
     /// The path to the directory containing our database files as it was passed to this instance when creating it.
     internal(set) public var directoryPath: String
 
-    /// Returns the version of ObjectBox Swift.
-    public static var version = "4.3.0"
+    /// The version of this ObjectBox Swift SDK.
+    public static var version = "4.4.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.
     public static let inMemoryPrefix = "memory:"
 
-    /// Returns the versions of ObjectBox Swift, the ObjectBox lib, and ObjectBox core.
+    /// The versions of this ObjectBox Swift SDK, the C API and database library.
     public static var versionAll: String {
         return version + " (lib: " + versionLib + ", core: " + versionCore + ")"
     }
@@ -59,12 +59,12 @@ public class Store: CustomDebugStringConvertible {
         return "ObjectBox Swift " + versionAll
     }
 
-    /// Returns the version of ObjectBox lib (C API).
+    /// The version of the ObjectBox C API.
     public static var versionLib: String {
         return String(utf8String: obx_version_string()) ?? ""
     }
 
-    /// Returns the version of ObjectBox core ("internal" version).
+    /// The version of the ObjectBox database library.
     public static var versionCore: String {
         return String(utf8String: obx_version_core_string()) ?? ""
     }

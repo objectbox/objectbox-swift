@@ -22,9 +22,9 @@ extension CityAllProperties: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = CityAllPropertiesBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "CityAllProperties", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "CityAllProperties", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: CityAllProperties.self, id: 1, uid: 17664)
@@ -76,7 +76,7 @@ extension ObjectBox.Property where E == CityAllProperties {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `CityAllProperties.EntityBindingType`.
-internal class CityAllPropertiesBinding: ObjectBox.EntityBinding {
+internal final class CityAllPropertiesBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = CityAllProperties
     internal typealias IdType = Id
 
@@ -124,9 +124,9 @@ extension CityDefaults: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = CityDefaultsBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "CityDefaults", id: 2)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "CityDefaults", id: 2)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: CityDefaults.self, id: 2, uid: 21504)
@@ -178,7 +178,7 @@ extension ObjectBox.Property where E == CityDefaults {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `CityDefaults.EntityBindingType`.
-internal class CityDefaultsBinding: ObjectBox.EntityBinding {
+internal final class CityDefaultsBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = CityDefaults
     internal typealias IdType = Id
 

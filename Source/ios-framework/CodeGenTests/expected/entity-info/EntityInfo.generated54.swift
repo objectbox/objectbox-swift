@@ -20,9 +20,9 @@ extension Author: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = AuthorBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Author", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Author", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Author.self, id: 1, uid: 17664)
@@ -85,7 +85,7 @@ extension ObjectBox.Property where E == Author {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Author.EntityBindingType`.
-internal class AuthorBinding: ObjectBox.EntityBinding {
+internal final class AuthorBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Author
     internal typealias IdType = Id
 
@@ -150,9 +150,9 @@ extension Book: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = BookBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Book", id: 2)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Book", id: 2)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Book.self, id: 2, uid: 20736)
@@ -213,7 +213,7 @@ extension ObjectBox.Property where E == Book {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Book.EntityBindingType`.
-internal class BookBinding: ObjectBox.EntityBinding {
+internal final class BookBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Book
     internal typealias IdType = Id
 

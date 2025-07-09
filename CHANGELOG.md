@@ -4,7 +4,7 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
-## Next release
+## 4.4.0 - 2025-07-09
 
 - **Breaking API change: when using the Swift Package, make sure to run the generator again.**
   For Xcode projects, right-click your project in the Project navigator and click ObjectBoxGeneratorCommand.

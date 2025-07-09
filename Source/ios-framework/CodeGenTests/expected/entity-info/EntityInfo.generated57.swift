@@ -20,9 +20,9 @@ extension BusRoute: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = BusRouteBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "BusRoute", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "BusRoute", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: BusRoute.self, id: 1, uid: 17664)
@@ -88,7 +88,7 @@ extension ObjectBox.Property where E == BusRoute {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `BusRoute.EntityBindingType`.
-internal class BusRouteBinding: ObjectBox.EntityBinding {
+internal final class BusRouteBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = BusRoute
     internal typealias IdType = EntityId<BusRoute>
 

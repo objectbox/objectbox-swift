@@ -20,9 +20,9 @@ extension DataThing: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = DataThingBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "DataThing", id: 2)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "DataThing", id: 2)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: DataThing.self, id: 2, uid: 23552)
@@ -118,7 +118,7 @@ extension ObjectBox.Property where E == DataThing {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `DataThing.EntityBindingType`.
-internal class DataThingBinding: ObjectBox.EntityBinding {
+internal final class DataThingBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = DataThing
     internal typealias IdType = EntityId<DataThing>
 

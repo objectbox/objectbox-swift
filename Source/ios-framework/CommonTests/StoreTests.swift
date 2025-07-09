@@ -47,7 +47,7 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "4.3.0")
+        XCTAssertGreaterThanOrEqual(Store.version, "4.4.0")
         XCTAssertGreaterThanOrEqual(Store.versionLib, "4.3.0")
         XCTAssertGreaterThanOrEqual(Store.versionCore, "4.3.0-2025-05-12")
     }
@@ -60,6 +60,39 @@ class StoreTests: XCTestCase {
     func testCloseAndDeleteAllFilesTwice() throws {
         try store.closeAndDeleteAllFiles()
         try store.closeAndDeleteAllFiles()
+    }
+  
+    /// This test should be testing that the deinitializer of the Store works, however, it appears that it is called
+    /// later than anticipated. So instead this tests exists to notify us if this late deinit behavior ever changes.
+    func testDeinitializerRemainsLate() throws {
+        store.close()
+        
+        // If the deinitializer would work as expected (after last usage): to test it works and there is no
+        // "another store is still open" error: create a Store within a function that has the only reference to it.
+        // Then call that function twice.
+        // However, as deinit is currently called late, the second call is currently expected to produce the
+        // "another store is still open" error.
+        let tempDirectory = StoreHelper.newTemporaryDirectory()
+        try openAndDeinitOnExit(tempDirectory, expectedToError: false)
+        try openAndDeinitOnExit(tempDirectory, expectedToError: true)
+    }
+  
+  func openAndDeinitOnExit(_ directory: URL, expectedToError: Bool) throws {
+        var localStoreRef: Store
+        do {
+            localStoreRef = try Store(model: createTestModel(), directory: directory.path)
+        } catch {
+          if expectedToError {
+            return
+          } else {
+            throw error
+          }
+        }
+        // Just do something random so the database is actually used
+        _ = try localStoreRef.box(for: TestPerson.self).all()
+        // Once this line is reached, Store should be closed by deinit. But deinit appears
+        // to get called after this function is called again (verify by adding print to deinit).
+        // Consumers of the Swift API must therefore not rely on deinit and manually call Store.close().
     }
 
     func test32vs64BitForOs() {

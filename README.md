@@ -167,7 +167,7 @@ and search for the package URL:
 https://github.com/objectbox/objectbox-swift-spm
 ```
 
-For the Dependency Rule, we recommend to use "Up to Next Major Version" and version `4.3.0-beta.2`. To find the latest 
+For the Dependency Rule, we recommend to use "Up to Next Major Version". To find the latest 
 version to use view the [tags of the objectbox-swift-spm repository](https://github.com/objectbox/objectbox-swift-spm/tags).
 
 Finally, when asked, add the `ObjectBox.xcframework` to your app target. Or to use 
@@ -182,7 +182,7 @@ Now, you are all set to define your first ObjectBox entities! To continue check 
 In your `Swift.package` file, add the ObjectBox Swift Package repository to the `dependencies` block:
 
 ```swift
-.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "4.3.0-beta.2"),
+.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "4.4.0"),
 ```
 
 Add the `ObjectBox.xcframework` to the `dependencies` of the desired target in `targets`:

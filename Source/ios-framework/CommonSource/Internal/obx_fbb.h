@@ -161,9 +161,9 @@ bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t propertyOf
 
 /// @param self the OBX_fbr from which you want to read.
 /// @param propertyOffset the offset of the offset to the actual data.
-/// @param outBytes This struct is set to the pointer and size of an internal buffer holding the bytes read. Do not free the buffer, copy it to keep it around.
+/// @param outFloats This struct is set to the pointer and size of an internal buffer holding the floats read. Do not free the buffer, copy it to keep it around.
 /// @return false on NULL value, true if result was set to a value.
-bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* _Nonnull outBytes);
+bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_float_array* _Nonnull outFloats);
 
 #if __cplusplus
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 import Foundation
 
 /// Used by the code generator to associate a Swift class with its counterpart in the model of the ObjectBox database.
-public class EntityInfo {
+public final class EntityInfo: Sendable {
     /// The name of the entity in the database (may differ from the Swift class name).
-    private(set) public var entityName: String
+    public let entityName: String
     /// The local ID number assigned to this type of entity in the database.
-    private(set) public var entitySchemaId: UInt32 = 0
+    public let entitySchemaId: UInt32
     
     /// Create an EntityInfo for a class with the given name and ID in the database.
     public init(name entityName: String, id schemaId: UInt32) {

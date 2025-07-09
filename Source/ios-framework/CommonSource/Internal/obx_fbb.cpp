@@ -349,14 +349,14 @@ extern "C" bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t
     return true;
 }
 
-extern "C" bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* outBytes) {
+extern "C" bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_float_array* outFloats) {
     const flatbuffers::Vector<float> *vector = self->GetPointer<const flatbuffers::Vector<float> *>(propertyOffset);
     if (!vector) {
         return false;
     }
     
-    outBytes->data = vector->data();
-    outBytes->size = vector->size();
+    outFloats->items = vector->data();
+    outFloats->count = vector->size();
     
     return true;
 }

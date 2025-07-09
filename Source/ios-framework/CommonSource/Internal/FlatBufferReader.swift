@@ -187,11 +187,11 @@ public struct FlatBufferReader {
     /// - Returns: zero-length array if a value is not present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written).
     public func read(at index: UInt16) -> [Float] {
-        var result = OBX_bytes()
-        guard obx_fbr_read_floats(unwrapFBR(), index, &result), let data = result.data else { return [] }
-        
-        let unsafePointer = data.bindMemory(to: Float.self, capacity: result.size)
-        let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
+        var result = OBX_float_array()
+        guard obx_fbr_read_floats(unwrapFBR(), index, &result) else {
+            return []
+        }
+        let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
         return [Float](bufferPointer)
     }
     
@@ -360,11 +360,11 @@ public struct FlatBufferReader {
     /// - Returns: nil if the value isn't present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional).
     public func read(at index: UInt16) -> [Float]? {
-        var result = OBX_bytes()
-        guard obx_fbr_read_floats(unwrapFBR(), index, &result), let data = result.data else { return nil }
-        
-        let unsafePointer = data.bindMemory(to: Float.self, capacity: result.size)
-        let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
+        var result = OBX_float_array()
+        guard obx_fbr_read_floats(unwrapFBR(), index, &result) else {
+            return nil
+        }
+        let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
         return [Float](bufferPointer)
     }
 }
