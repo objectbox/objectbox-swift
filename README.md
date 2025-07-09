@@ -153,9 +153,6 @@ Pods/ObjectBox/setup.rb
 
 ### Swift Package
 
-> [!NOTE]
-> The Swift Package is currently in preview, we [welcome your feedback](https://github.com/objectbox/objectbox-swift/issues/19)!
-
 Instructions depend on whether you want to set up an Xcode project or a Swift Package Manager manifest.
 
 #### Set up an Xcode project
