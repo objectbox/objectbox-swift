@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -200,7 +200,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = ObjectBox;
 				TargetAttributes = {
 					5039EC9C2181DA350095204F = {
@@ -219,7 +219,6 @@
 				};
 			};
 			buildConfigurationList = 5070AAE7218066C0002305F8 /* Build configuration list for PBXProject "NotesExample" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -227,6 +226,7 @@
 				Base,
 			);
 			mainGroup = 5070AAE3218066C0002305F8;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 5070AAED218066C0002305F8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
