@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15C9FDDF2E29E0A300E02BD9 /* ObjectBox.xcframework in Frameworks */ = {isa = PBXBuildFile; productRef = 15C9FDDE2E29E0A300E02BD9 /* ObjectBox.xcframework */; };
+		15C9FDE12E29E0B000E02BD9 /* ObjectBox.xcframework in Frameworks */ = {isa = PBXBuildFile; productRef = 15C9FDE02E29E0B000E02BD9 /* ObjectBox.xcframework */; };
+		15C9FDEA2E29E26B00E02BD9 /* EntityInfo-NotesExample-iOS.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C9FDE72E29E26400E02BD9 /* EntityInfo-NotesExample-iOS.generated.swift */; };
+		15C9FDEB2E29E27100E02BD9 /* EntityInfo-NotesExample-macOS.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C9FDE82E29E26400E02BD9 /* EntityInfo-NotesExample-macOS.generated.swift */; };
 		5039ECA02181DA350095204F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039EC9F2181DA350095204F /* AppDelegate.swift */; };
 		5039ECA22181DA350095204F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5039ECA12181DA350095204F /* ViewController.swift */; };
 		5039ECA42181DA360095204F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5039ECA32181DA360095204F /* Assets.xcassets */; };
@@ -33,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		15C9FDE72E29E26400E02BD9 /* EntityInfo-NotesExample-iOS.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntityInfo-NotesExample-iOS.generated.swift"; sourceTree = "<group>"; };
+		15C9FDE82E29E26400E02BD9 /* EntityInfo-NotesExample-macOS.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EntityInfo-NotesExample-macOS.generated.swift"; sourceTree = "<group>"; };
 		5039EC9D2181DA350095204F /* NotesExample-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NotesExample-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5039EC9F2181DA350095204F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5039ECA12181DA350095204F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -53,7 +59,6 @@
 		5070AAFB218066C1002305F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5070AAFD218066C1002305F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5070AB1421809535002305F8 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
-		5070AB16218095DA002305F8 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		50DC4E822188617A00DF7253 /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		50DC4E862188963F00DF7253 /* NotesOverviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesOverviewViewController.swift; sourceTree = "<group>"; };
 		50DC4E9D2189961F00DF7253 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -68,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15C9FDE12E29E0B000E02BD9 /* ObjectBox.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,12 +81,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15C9FDDF2E29E0A300E02BD9 /* ObjectBox.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15C9FDE92E29E26400E02BD9 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				15C9FDE72E29E26400E02BD9 /* EntityInfo-NotesExample-iOS.generated.swift */,
+				15C9FDE82E29E26400E02BD9 /* EntityInfo-NotesExample-macOS.generated.swift */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
 		3DABC3C80306D2BD07D4938C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,7 +132,7 @@
 		5070AAE3218066C0002305F8 = {
 			isa = PBXGroup;
 			children = (
-				5070AB16218095DA002305F8 /* Podfile */,
+				15C9FDE92E29E26400E02BD9 /* generated */,
 				5039ECAD2181DA4D0095204F /* Shared */,
 				5070AAEE218066C0002305F8 /* NotesExample-iOS */,
 				5039EC9E2181DA350095204F /* NotesExample-macOS */,
@@ -226,6 +242,9 @@
 				Base,
 			);
 			mainGroup = 5070AAE3218066C0002305F8;
+			packageReferences = (
+				15C9FDDD2E29E0A300E02BD9 /* XCRemoteSwiftPackageReference "objectbox-swift-spm" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5070AAED218066C0002305F8 /* Products */;
 			projectDirPath = "";
@@ -264,6 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15C9FDEB2E29E27100E02BD9 /* EntityInfo-NotesExample-macOS.generated.swift in Sources */,
 				5039ECA22181DA350095204F /* ViewController.swift in Sources */,
 				5039ECBE2181E2C90095204F /* StoreHelper.swift in Sources */,
 				5039ECA02181DA350095204F /* AppDelegate.swift in Sources */,
@@ -277,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15C9FDEA2E29E26B00E02BD9 /* EntityInfo-NotesExample-iOS.generated.swift in Sources */,
 				5051DF2F2190806800E2595A /* PlaceholderViewController.swift in Sources */,
 				5039ECB52181DFFF0095204F /* Author.swift in Sources */,
 				5070AAF4218066C0002305F8 /* NoteEditingViewController.swift in Sources */,
@@ -553,6 +574,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		15C9FDDD2E29E0A300E02BD9 /* XCRemoteSwiftPackageReference "objectbox-swift-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/objectbox/objectbox-swift-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		15C9FDDE2E29E0A300E02BD9 /* ObjectBox.xcframework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15C9FDDD2E29E0A300E02BD9 /* XCRemoteSwiftPackageReference "objectbox-swift-spm" */;
+			productName = ObjectBox.xcframework;
+		};
+		15C9FDE02E29E0B000E02BD9 /* ObjectBox.xcframework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15C9FDDD2E29E0A300E02BD9 /* XCRemoteSwiftPackageReference "objectbox-swift-spm" */;
+			productName = ObjectBox.xcframework;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5070AAE4218066C0002305F8 /* Project object */;
 }
