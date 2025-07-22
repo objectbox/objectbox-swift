@@ -6,10 +6,7 @@ build_project:
   tags: [mac, x64, xcode]
   script:
     - cd Example
-    - pod repo update
-    - pod install
-    - Pods/ObjectBox/setup.rb
-    - xcodebuild clean build -workspace NotesExample.xcworkspace -scheme NotesExample-macOS -destination 'platform=OS X,arch=x86_64'
+    - xcodebuild clean build -scheme NotesExample-macOS -destination 'platform=OS X,arch=x86_64'
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive

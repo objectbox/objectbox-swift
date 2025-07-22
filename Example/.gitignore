@@ -1,4 +1,0 @@
-generated/
-
-# Do not pin pods so CI uses latest
-Podfile.lock
