@@ -1,12 +1,15 @@
-ObjectBox Carthage Binary Project Specification
-===============================================
+# ObjectBox Carthage Binary Project Specification
+
 This folder contains [ObjectBox.json](ObjectBox.json), a [Chartage "index" for binary frameworks](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#binary-project-specification).
 The advantage of using binary distribution is that those are slimmer than the "github" definition.
 Using "binary" instead, never causes Carthage to check out the Git repository.
 Thus updates are faster and less disk space is used.
 
-Add binary ObjectBox dependency
--------------------------------
+## Add binary ObjectBox dependency
+
+> [!WARNING]
+> The Carthage release is deprecated. See the root [README](/README.md) for more details.
+
 In your Cartfile, you typically add a line like this:
 
     binary "https://raw.githubusercontent.com/objectbox/objectbox-swift/master/cartspec/ObjectBox.json"
