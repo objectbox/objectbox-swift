@@ -18,10 +18,10 @@
   </a>
 </p>
 
-# ObjectBox Swift Database - swiftly persist objects and on-device vector database for iOS & macOS
+# ObjectBox Swift Database - swiftly persist objects & vector embeddings on iOS & macOS
 
-Powerful & superfast database for Swift that's also easy to use. Persist Swift objects quickly and reliably on-device on
-iOS and macOS.
+Powerful & superfast on-device vector database for Swift that's also easy to use. Persist Swift objects quickly and reliably locally on
+iOS and macOS for seamless offline-first apps. With fast local vector search for powerful Edge AI features - local, private, speedy. 
 
 ## Demo code
 
