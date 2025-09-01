@@ -9,17 +9,17 @@
       "name": "Building",
       "properties": [
         {
-          "flags": 1,
           "id": "1:14592",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
-          "flags": 2088,
           "id": "2:16640",
-          "indexId": "1:15616",
           "name": "buildingName",
-          "type": 9
+          "indexId": "1:15616",
+          "type": 9,
+          "flags": 2088
         },
         {
           "id": "3:17664",
@@ -27,11 +27,11 @@
           "type": 6
         },
         {
-          "flags": 34856,
           "id": "4:19712",
-          "indexId": "2:123456",
           "name": "stringId",
-          "type": 9
+          "indexId": "2:123456",
+          "type": 9,
+          "flags": 34856
         }
       ],
       "relations": []

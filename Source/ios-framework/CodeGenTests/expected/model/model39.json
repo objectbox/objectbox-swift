@@ -9,10 +9,10 @@
       "name": "Author",
       "properties": [
         {
-          "flags": 1,
           "id": "1:14592",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:15616",
@@ -28,10 +28,10 @@
       "name": "Book",
       "properties": [
         {
-          "flags": 1,
           "id": "1:17664",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:18688",
@@ -39,12 +39,12 @@
           "type": 9
         },
         {
-          "flags": 520,
           "id": "3:20736",
-          "indexId": "1:19712",
           "name": "author",
-          "relationTarget": "Author",
-          "type": 11
+          "indexId": "1:19712",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Author"
         }
       ],
       "relations": []

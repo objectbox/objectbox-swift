@@ -93,7 +93,7 @@ Check out the [installation section below](#add-objectbox-to-your-project). You 
 ObjectBox is available as a
 
 - [CocoaPods](#cocoapods) pod
-- [Swift Package](https://swift.objectbox.io/install#swift-package)
+- [Swift Package](#swift-package)
 
 ### CocoaPods
 
@@ -179,7 +179,7 @@ Now, you are all set to define your first ObjectBox entities! To continue check 
 In your `Swift.package` file, add the ObjectBox Swift Package repository to the `dependencies` block:
 
 ```swift
-.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "4.4.0"),
+.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "4.4.1"),
 ```
 
 Add the `ObjectBox.xcframework` to the `dependencies` of the desired target in `targets`:

@@ -9,10 +9,10 @@
       "name": "DataThing",
       "properties": [
         {
-          "flags": 1,
           "id": "1:18688",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:19712",

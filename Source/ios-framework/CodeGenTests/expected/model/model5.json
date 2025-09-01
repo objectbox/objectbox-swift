@@ -14,10 +14,10 @@
           "type": 6
         },
         {
-          "flags": 1,
           "id": "3:8757601619550207488",
           "name": "idTwo",
-          "type": 6
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []

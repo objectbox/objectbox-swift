@@ -26,8 +26,9 @@ generator_tests: fetch_dependencies g_tests
 
 g_tests: build_generator g_tests_run
 
-# This may be useful for iterating on the Generator directly from the main project
-g_tests_dirty: build_generator_dirty g_tests_run
+# Use to quickly test generator changes (see build_generator_debug).
+# Also might want to comment out unrelated tests in RunToolTests.sh for even faster testing.
+g_tests_debug: build_generator_debug g_tests_run
 
 build_generator:
 	@echo "$(GREEN)Building generator...$(NC)"
@@ -35,9 +36,10 @@ build_generator:
 	@echo "$(GREEN)Generator version:$(NC)"
 	../external/objectbox-swift-generator/bin/sourcery --version
 
-build_generator_dirty:
-	@echo "$(GREEN)Building generator (dirty)...$(NC)"
-	../external/objectbox-swift-generator/_build.command --dirty
+# Builds a debug version only for the architecture of this machine, does not clean cache
+build_generator_debug:
+	@echo "$(GREEN)Building generator (debug)...$(NC)"
+	../external/objectbox-swift-generator/_build.command --debug
 
 g_tests_run:
 	@echo "$(GREEN)Generator tests...$(NC)"

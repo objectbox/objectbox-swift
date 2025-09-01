@@ -9,10 +9,10 @@
       "name": "Building",
       "properties": [
         {
-          "flags": 1,
           "id": "1:19712",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:20736",
@@ -33,10 +33,10 @@
       "name": "BusRoute",
       "properties": [
         {
-          "flags": 1,
           "id": "1:23552",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:24576",

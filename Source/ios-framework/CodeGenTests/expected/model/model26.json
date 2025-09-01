@@ -9,10 +9,10 @@
       "name": "BusRoute",
       "properties": [
         {
-          "flags": 1,
           "id": "1:14592",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:16640",
@@ -20,11 +20,11 @@
           "type": 9
         },
         {
-          "flags": 2056,
           "id": "3:19712",
-          "indexId": "2:18688",
           "name": "destinationName",
-          "type": 9
+          "indexId": "2:18688",
+          "type": 9,
+          "flags": 2056
         }
       ],
       "relations": []

@@ -4,6 +4,13 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## 4.4.1 - 2025-09-01
+
+- Update ObjectBox database to version `4.3.1-2025-08-02`.
+- The Swift plugin accepts arguments for the generator, like `--visiblity public`. [#101](https://github.com/objectbox/objectbox-swift/issues/101)
+- The generator Swift plugin asks for the network permission to send anonymous statistics. Pass the
+  `--no-statistics` argument to not send them.
+
 ## 4.4.0 - 2025-07-09
 
 - **Breaking API change: when using the Swift Package, make sure to run the generator again.**
@@ -15,6 +22,7 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 
 ## 4.3.0 - 2025-05-21
 
+- Update ObjectBox database to version `4.3.0-2025-05-12`.
 - The generator supports Xcode 16 projects with buildable folders. [#94](https://github.com/objectbox/objectbox-swift/issues/94)
 - External property types and names (via [MongoDB connector Data Mapping](https://sync.objectbox.io/mongodb-sync-connector/mongodb-data-mapping))
 

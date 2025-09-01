@@ -9,10 +9,10 @@
       "name": "AnnotatedType",
       "properties": [
         {
-          "flags": 1,
           "id": "1:14592",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:15616",
@@ -53,10 +53,10 @@
       "name": "TypeTest",
       "properties": [
         {
-          "flags": 1,
           "id": "1:22528",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:23552",
@@ -84,34 +84,34 @@
           "type": 6
         },
         {
-          "flags": 8192,
           "id": "7:28672",
           "name": "uintValue",
-          "type": 6
+          "type": 6,
+          "flags": 8192
         },
         {
-          "flags": 8192,
           "id": "8:29696",
           "name": "uint8Value",
-          "type": 2
+          "type": 2,
+          "flags": 8192
         },
         {
-          "flags": 8192,
           "id": "9:30720",
           "name": "uint16Value",
-          "type": 3
+          "type": 3,
+          "flags": 8192
         },
         {
-          "flags": 8192,
           "id": "10:31744",
           "name": "uint32Value",
-          "type": 5
+          "type": 5,
+          "flags": 8192
         },
         {
-          "flags": 8192,
           "id": "11:32512",
           "name": "uint64Value",
-          "type": 6
+          "type": 6,
+          "flags": 8192
         },
         {
           "id": "12:33536",

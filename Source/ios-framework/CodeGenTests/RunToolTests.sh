@@ -19,6 +19,10 @@ if [ -z ${PROJECT_DIR} ]; then
   exit 1
 fi
 
+# Set this to true to update the expected files after comparing them found a difference.
+# This can be helpful to mass update changed model, schema dump and generated code files.
+UPDATE_EXPECTED_FILES=false
+
 MYDIR="${PROJECT_DIR}/CodeGenTests" # Xcode copies our script into DerivedData before running it, so hard-code our path.
 PARENT_DIR="$(dirname "$PROJECT_DIR")"
 SOURCERY_APP="${PARENT_DIR}/external/objectbox-swift-generator/bin/Sourcery.app"
@@ -73,13 +77,19 @@ test_target_num () {
             echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
-            diff "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
-            echo "opendiff \"$MODEL_FILE_ACTUAL\" \"$MODEL_FILE_EXPECTED\" -merge \"$MODEL_FILE_EXPECTED\""
+            # -C 1 to show 1 line of context around differences
+            diff -C 1 "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
 #             echo "===== $MODEL_FILE_ACTUAL ====="
 #             cat "$MODEL_FILE_ACTUAL"
 #             echo "===== $MODEL_FILE_EXPECTED ====="
 #             cat "$MODEL_FILE_EXPECTED"
             echo "====="
+
+            if [ "$UPDATE_EXPECTED_FILES" = true ]; then
+                echo "note: $2: $1: Updating expected model file."
+                cp "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
+            fi
+
             FAIL=1
         fi
     fi
@@ -92,13 +102,19 @@ test_target_num () {
             echo "error: $2: $1: Output files DIFFERENT!"
 
             echo "====="
-            diff "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
-#            echo "opendiff \"$ENTITY_INFO_FILE_ACTUAL\" \"$ENTITY_INFO_FILE_EXPECTED\" -merge \"$ENTITY_INFO_FILE_EXPECTED\""
+            # -C 1 to show 1 line of context around differences
+            diff -C 1 "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
 #             echo "===== $ENTITY_INFO_FILE_ACTUAL ====="
 #             cat "$ENTITY_INFO_FILE_ACTUAL"
 #             echo "===== $ENTITY_INFO_FILE_EXPECTED ====="
 #             cat "$ENTITY_INFO_FILE_EXPECTED"
             echo "====="
+
+            if [ "$UPDATE_EXPECTED_FILES" = true ]; then
+                echo "note: $2: $1: Updating expected entity info file."
+                cp "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
+            fi
+
             FAIL=1
         fi
     fi
@@ -111,12 +127,19 @@ test_target_num () {
             echo "error: $2: $1: Schema dumps DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$DUMP_FILE_ACTUAL\" \"$DUMP_FILE_EXPECTED\" -merge \"$DUMP_FILE_EXPECTED\""
+            # -C 1 to show 1 line of context around differences
+            diff -C 1 "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
 #             echo "===== $DUMP_FILE_ACTUAL ====="
 #             cat "$DUMP_FILE_ACTUAL"
 #             echo "===== $DUMP_FILE_EXPECTED ====="
 #             cat "$DUMP_FILE_EXPECTED"
             echo "====="
+
+            if [ "$UPDATE_EXPECTED_FILES" = true ]; then
+                echo "note: $2: $1: Updating expected schema dump file."
+                cp "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
+            fi
+
             FAIL=1
         fi
     fi
@@ -226,12 +249,19 @@ fail_codegen_target_num () {
             echo "error: $2: $1: Model files DIFFERENT!"
 
             echo "====="
-            echo "opendiff \"$MODEL_FILE_ACTUAL\" \"$MODEL_FILE_EXPECTED\" -merge \"$MODEL_FILE_EXPECTED\""
+            # -C 1 to show 1 line of context around differences
+            diff -C 1 "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
 #             echo "===== $MODEL_FILE_ACTUAL ====="
 #             cat "$MODEL_FILE_ACTUAL"
 #             echo "===== $MODEL_FILE_EXPECTED ====="
 #             cat "$MODEL_FILE_EXPECTED"
             echo "====="
+            
+            if [ "$UPDATE_EXPECTED_FILES" = true ]; then
+                echo "note: $2: $1: Updating expected model file."
+                cp "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
+            fi
+
             FAIL=1
         fi
     fi
@@ -253,7 +283,8 @@ fail_codegen_target_num () {
                 echo "error: $2: $1: Xcode log files DIFFERENT!"
 
                 echo "====="
-                echo "opendiff \"$TESTXCODELOGFILE\" \"$ORIGINALXCODELOGFILE\" -merge \"$ORIGINALXCODELOGFILE\""
+                # -C 1 to show 1 line of context around differences
+                diff -C 1 "$TESTXCODELOGFILE" "$ORIGINALXCODELOGFILE"
 #                 echo "===== $TESTXCODELOGFILE ====="
 #                 cat "$TESTXCODELOGFILE"
 #                 echo "===== $ORIGINALXCODELOGFILE ====="

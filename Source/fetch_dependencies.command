@@ -13,11 +13,11 @@ set -e
 
 # objectbox-swift release version on GitHub:
 # https://github.com/objectbox/objectbox-swift/releases/download/v${version}
-version=4.4.0
+version=4.4.1
 
 # C library version attached to the GitHub release:
 # ObjectBoxCore-static-${c_version}.zip
-c_version=4.3.0
+c_version=4.3.1
 
 # Params supported by apple-build-static-libs.sh
 if [ -n "$OBX_SKIP_STATIC_C_TESTS" ]; then

@@ -10,10 +10,10 @@
       "flags": 6,
       "properties": [
         {
-          "flags": 1,
           "id": "1:7895576389419683840",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []

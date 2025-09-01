@@ -9,10 +9,10 @@
       "name": "Author",
       "properties": [
         {
-          "flags": 1,
           "id": "1:14592",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:15616",
@@ -34,10 +34,10 @@
       "name": "Book",
       "properties": [
         {
-          "flags": 1,
           "id": "1:18688",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:19712",
