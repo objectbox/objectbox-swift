@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/objectbox/objectbox-swift-spm",
       "state" : {
-        "revision" : "58116eabfb2b70003fb355e7859e3e9c99cded13",
-        "version" : "4.4.0"
+        "revision" : "28c3261c9836cd3f4d64ab6419a3628d2b167811",
+        "version" : "4.4.1"
       }
     }
   ],

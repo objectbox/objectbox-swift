@@ -581,7 +581,7 @@
 			repositoryURL = "https://github.com/objectbox/objectbox-swift-spm";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.4.0;
+				minimumVersion = 4.4.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

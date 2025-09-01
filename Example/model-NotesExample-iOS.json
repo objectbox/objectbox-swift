@@ -9,10 +9,10 @@
       "name": "Author",
       "properties": [
         {
-          "flags": 1,
           "id": "1:6336800942024279296",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:5025387500910526208",
@@ -28,10 +28,10 @@
       "name": "Note",
       "properties": [
         {
-          "flags": 1,
           "id": "1:7180411752564202752",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:249105953415333376",
@@ -54,12 +54,12 @@
           "type": 10
         },
         {
-          "flags": 520,
           "id": "6:6001769173142034944",
-          "indexId": "1:6069708401898380544",
           "name": "author",
-          "relationTarget": "Author",
-          "type": 11
+          "indexId": "1:6069708401898380544",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Author"
         }
       ],
       "relations": []
