@@ -49,7 +49,7 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
 
 ## Development
 
-- Ensure the latest Xcode is installed (Swift 5.3+, command line tools should be included).
+- Ensure a recent Xcode version is installed (see section below, Swift 5.9+).
 - Ensure [homebrew](https://brew.sh/) is installed, e.g. setup.sh uses it.
 - Ensure [rbenv](https://github.com/rbenv/rbenv) and ruby is installed, see section below.
 - Run `./setup.sh` or see [setup.sh](setup.sh) and only run what is needed.
@@ -58,25 +58,27 @@ You look at and build the framework itself via `ios-framework/ObjectBox.xcodepro
 
 Open the Xcode project in `ios-framework/ObjectBox.xcodeproj`.
 
-From the command line:
+Then some typical commands to use:
 
 ```shell
 # Enter the framework directory
 cd ios-framework/
 
-# Build the generator
-make build_generator
+# Download the ObjectBox database libraries
+make fetch_dependencies
+
 # Build the framework
 make build_framework
+# Run unit tests
+make u_tests
 
-# Execute all tests
-make test
-# Execute specific tests
-make unit_tests
-make generator_tests
+# Build a debug version of the generator
+make build_generator_debug
+# Run generator tests
+make g_tests_run
 ```
 
-**To execute a specific test** change the last argument to specify your test. You can also execute a group/class by removing the last one/two parts of the filter.
+**To run a specific unit test** change the last argument to specify your test. You can also run a group/class by removing the last one/two parts of the filter.
 Note: `xcpretty` cleans up the output so you won't see all the compiler calls but it also hides failed tests output. So once you see a failure, run without `xcpretty` to read the error.
 
 ```shell
@@ -84,7 +86,9 @@ xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -sch
 xcodebuild -derivedDataPath ./DerivedData test -project ObjectBox.xcodeproj -scheme ObjectBox-iOS -destination 'platform=iOS Simulator,name=iPhone 11' -only-testing ObjectBoxTests-iOS/StoreTests/test32vs64BitForOs | xcpretty
 ```
 
-**To run tests with an in-memory database** set the following environment variable before running an xcodebuild command:
+**To run a specific generator test** comment out other tests in [the run script](ios-framework/CodeGenTests/RunToolTests.sh).
+
+**To run unit tests with an in-memory database** set the following environment variable before running an xcodebuild command:
 
 ```shell
 export OBX_IN_MEMORY=true
