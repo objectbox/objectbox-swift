@@ -3,6 +3,14 @@
 Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
+              
+## 5.0.0 - in development
+
+### Sync
+
+- Support Sync server version 5.0.
+    - **User-Specific Data Sync**: support configuring [Sync filter](https://sync.objectbox.io/sync-server/sync-filters)
+      variables on `SyncClient`.
 
 ## 4.4.1 - 2025-09-01
 
