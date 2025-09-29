@@ -6,6 +6,8 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
               
 ## 5.0.0 - 2025-09-29
 
+**Note: if you use the Swift Package, to receive this major version open your Xcode project settings and under "Package Dependencies" increase the version of objectbox-swift-spm to `5.0.0`.**
+
 - Update ObjectBox database to version `5.0.0-2025-09-27`.
   - ToOne relations: when deleting an object with an ID larger than the maximum 32-bit unsigned integer 
     (`4294967295`) that is used as the target object of a ToOne, correctly re-set the target ID of the ToOne to
