@@ -47,9 +47,9 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "4.4.1")
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "4.3.1")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "4.3.1-2025-08-02")
+        XCTAssertGreaterThanOrEqual(Store.version, "5.0.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "5.0.0")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "5.0.0-2025-09-27")
     }
 
     func testCloseTwice() {

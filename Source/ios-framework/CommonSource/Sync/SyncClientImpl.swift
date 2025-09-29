@@ -1,4 +1,4 @@
-//  Copyright © 2020-2021 ObjectBox. All rights reserved.
+//  Copyright © 2020-2025 ObjectBox. All rights reserved.
 
 import Foundation
 
@@ -76,14 +76,14 @@ class SyncClientImpl: SyncClient {
 
 
     public var updateRequestMode: RequestUpdatesMode {
+        get {
+            return updateRequestModeStorage
+        }
         set(newValue) {
             let cMode = OBXRequestUpdatesMode(newValue.rawValue)
             if cSync != nil && obx_sync_request_updates_mode(cSync, cMode) == OBX_SUCCESS {
                 updateRequestModeStorage = newValue
             }
-        }
-        get {
-            return updateRequestModeStorage
         }
     }
 
@@ -148,14 +148,69 @@ class SyncClientImpl: SyncClient {
         }
     }
 
+    public func putFilterVariable(name: String, value: String) throws {
+        try ensureValid()
+        try checkLastError(obx_sync_filter_variables_put(cSync, name, value))
+    }
+
+    public func removeFilterVariable(_ name: String) throws {
+        try ensureValid()
+        try checkLastError(obx_sync_filter_variables_remove(cSync, name))
+    }
+
+    public func removeAllFilterVariables() throws {
+        try ensureValid()
+        try checkLastError(obx_sync_filter_variables_remove_all(cSync))
+    }
+
     public func setCredentials(_ credentials: SyncCredentials) throws {
         try ensureValid()
         // Note: we don't store credentials in Swift memory for security reasons
-        let credentialsLength = credentials.data.count
-        try credentials.data.withUnsafeBytes { (rawBytes: UnsafeRawBufferPointer) -> Void in
+        if let data = credentials.data {
+            let credentialsLength = data.count
+            try data.withUnsafeBytes { (rawBytes: UnsafeRawBufferPointer) in
+                let cCredsType = OBXSyncCredentialsType(credentials.type.rawValue)
+                obx_sync_credentials(cSync, cCredsType, rawBytes.baseAddress, credentialsLength)
+                try checkLastError()
+                credentialsSet = true
+            }
+        } else if let username = credentials.username {
             let cCredsType = OBXSyncCredentialsType(credentials.type.rawValue)
-            obx_sync_credentials(cSync, cCredsType, rawBytes.baseAddress, credentialsLength)
+            obx_sync_credentials_user_password(cSync, cCredsType, username, credentials.password!)
             try checkLastError()
+            credentialsSet = true
+        } else {
+            throw ObjectBoxError.illegalArgument(message: "Credentials neither contain bytes data nor user/password")
+        }
+    }
+
+    public func setCredentials(_ credentials: [SyncCredentials]) throws {
+        try ensureValid()
+
+        var oneCredentialSet = false
+
+        for (index, credential) in credentials.enumerated() {
+            let isLast = index + 1 == credentials.count
+            if let data = credential.data {
+                let credentialsLength = data.count
+                try data.withUnsafeBytes { (rawBytes: UnsafeRawBufferPointer) in
+                    let cCredsType = OBXSyncCredentialsType(credential.type.rawValue)
+                    // TODO Need new C API
+                    obx_sync_credentials_add(cSync, cCredsType, rawBytes.baseAddress, credentialsLength, isLast)
+                    try checkLastError()
+                    oneCredentialSet = true
+                }
+            } else if let username = credential.username {
+                let cCredsType = OBXSyncCredentialsType(credential.type.rawValue)
+                obx_sync_credentials_add_user_password(cSync, cCredsType, username, credential.password!, isLast)
+                try checkLastError()
+                oneCredentialSet = true
+            } else {
+                throw ObjectBoxError.illegalArgument(
+                    message: "Credentials neither contain bytes data nor user/password")
+            }
+        }
+        if oneCredentialSet {
             credentialsSet = true
         }
     }
@@ -264,32 +319,32 @@ private func callWithSyncClient(_ userData: UnsafeMutableRawPointer?, action: @e
 }
 
 private func loginCallback(_ userData: UnsafeMutableRawPointer?) {
-    callWithSyncClient(userData, action: { (client: SyncClient) -> Void in
+    callWithSyncClient(userData, action: { (client: SyncClient) in
         client.loginListener?.loggedIn()
     })
 }
 
 private func loginFailureCallback(_ userData: UnsafeMutableRawPointer?, _ cCode: OBXSyncCode) {
     let code = SyncCode(rawValue: cCode.rawValue)!
-    callWithSyncClient(userData, action: { (client: SyncClient) -> Void in
+    callWithSyncClient(userData, action: { (client: SyncClient) in
         client.loginListener?.loginFailed(result: code)
     })
 }
 
 private func connectedCallback(_ userData: UnsafeMutableRawPointer?) {
-    callWithSyncClient(userData, action: { (client: SyncClient) -> Void in
+    callWithSyncClient(userData, action: { (client: SyncClient) in
         client.connectionListener?.connected()
     })
 }
 
 private func disconnectedCallback(_ userData: UnsafeMutableRawPointer?) {
-    callWithSyncClient(userData, action: { (client: SyncClient) -> Void in
+    callWithSyncClient(userData, action: { (client: SyncClient) in
         client.connectionListener?.disconnected()
     })
 }
 
 private func updatesCompletedCallback(_ userData: UnsafeMutableRawPointer?) {
-    callWithSyncClient(userData, action: { (client: SyncClient) -> Void in
+    callWithSyncClient(userData, action: { (client: SyncClient) in
         client.completedListener?.updatesCompleted()
     })
 }

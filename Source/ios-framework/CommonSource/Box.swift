@@ -177,7 +177,7 @@ extension Box {
     /// - Returns: List of IDs of the entities were written to.
     /// - Throws: ObjectBoxError errors for database write errors.
     @discardableResult
-    public func putAndReturnIDs <C: Collection>(_ entities: C, mode: PutMode = .put) throws
+    public func putAndReturnIDs<C: Collection>(_ entities: C, mode: PutMode = .put) throws
         -> [EntityType.EntityBindingType.IdType]
         where C.Element == EntityType {
             if entities.isEmpty {

@@ -102,6 +102,9 @@
 		2960DC0C2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
 		2960DC0D2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
 		2960DC0E2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
+		298B52D32E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
+		298B52D42E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
+		298B52D52E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
 		29AD6D6A2C32D0B70090961A /* HnswIndexTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AD6D692C32D0B70090961A /* HnswIndexTest.swift */; };
 		29AD6D6B2C32D0B70090961A /* HnswIndexTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AD6D692C32D0B70090961A /* HnswIndexTest.swift */; };
 		29AD6D6C2C32D0B70090961A /* HnswIndexTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AD6D692C32D0B70090961A /* HnswIndexTest.swift */; };
@@ -458,6 +461,7 @@
 		290F7CBD2C4663760021B611 /* ObjectWithScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectWithScore.swift; sourceTree = "<group>"; };
 		290F7CC12C4666930021B611 /* IdWithScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdWithScore.swift; sourceTree = "<group>"; };
 		2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalarVectorTests.swift; sourceTree = "<group>"; };
+		298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncClientImpl.swift; sourceTree = "<group>"; };
 		29AD6D692C32D0B70090961A /* HnswIndexTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HnswIndexTest.swift; sourceTree = "<group>"; };
 		29AE99DE2C3C17DB008A5461 /* HnswParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HnswParams.swift; sourceTree = "<group>"; };
 		29B3A7EB2C1701E200EDEBFC /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -894,6 +898,7 @@
 		BF8C92D6749DBFE23BBC43CD /* Sync */ = {
 			isa = PBXGroup;
 			children = (
+				298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */,
 				287B34FF25DE9D60004D312E /* SyncEnums.swift */,
 				BF8C9390023DD2CBB57081F4 /* SyncClient.swift */,
 				BF8C9C94D483FDC6D202550D /* SyncListener.swift */,
@@ -1497,6 +1502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50A28C73219B4C050024D1FC /* Box+BacklinkIds.swift in Sources */,
+				298B52D42E816FC20086F6E1 /* SyncClientImpl.swift in Sources */,
 				55D19CA2228036CD00BEAD37 /* EntityBinding.swift in Sources */,
 				50A28C76219B4C310024D1FC /* Box+Query.swift in Sources */,
 				55471212228C466100DB4136 /* StoreHelper.swift in Sources */,
@@ -1637,6 +1643,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7561E8D825CA0CA6003FD439 /* Box+BacklinkIds.swift in Sources */,
+				298B52D32E816FC20086F6E1 /* SyncClientImpl.swift in Sources */,
 				7561E8D925CA0CA6003FD439 /* EntityBinding.swift in Sources */,
 				7561E8DA25CA0CA6003FD439 /* Box+Query.swift in Sources */,
 				7561E8DB25CA0CA6003FD439 /* StoreHelper.swift in Sources */,
@@ -1697,6 +1704,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				506B093A2153775E0016C7AA /* LazyProxyRelation.swift in Sources */,
+				298B52D52E816FC20086F6E1 /* SyncClientImpl.swift in Sources */,
 				50F7EC0D2114481B0050D924 /* Query.swift in Sources */,
 				55D19CA1228036CD00BEAD37 /* EntityBinding.swift in Sources */,
 				5089AB3321368FC500CB7871 /* Query+SetParameter.swift in Sources */,

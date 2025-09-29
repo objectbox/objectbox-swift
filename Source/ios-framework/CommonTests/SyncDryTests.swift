@@ -6,6 +6,9 @@ import Foundation
 import XCTest
 @testable import ObjectBox
 
+// NOTE these tests have a different implementation on sync branch
+// which has an ObjectBox database library with Sync feature available to test.
+
 class SyncDryTests: XCTestCase {
 
     var store: Store!

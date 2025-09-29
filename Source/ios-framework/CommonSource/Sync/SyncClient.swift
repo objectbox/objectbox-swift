@@ -47,6 +47,30 @@ public protocol SyncClient: AnyObject {
     /// Does nothing if this sync client has already been closed.
     func close()
 
+    /// Adds or replaces a [Sync filter](https://sync.objectbox.io/sync-server/sync-filters) variable value for the
+    /// given name.
+    ///
+    /// Eventually, existing values for the same name are replaced.
+    ///
+    /// Sync client filter variables can be used in server-side Sync filters to filter out objects that do not match
+    /// the filters. Filter variables must be added before login, so before calling `start()`.
+    ///
+    /// - SeeAlso: `removeFilterVariable(_:)`
+    /// - SeeAlso: `removeAllFilterVariables()`
+    func putFilterVariable(name: String, value: String) throws
+
+    /// Removes a previously added Sync filter variable value.
+    ///
+    /// - SeeAlso: `putFilterVariable(name:value:)`
+    /// - SeeAlso: `removeAllFilterVariables()`
+    func removeFilterVariable(_ name: String) throws
+
+    /// Removes all previously added Sync filter variable values.
+    ///
+    /// - SeeAlso: `putFilterVariable(name:value:)`
+    /// - SeeAlso: `removeFilterVariable(_:)`
+    func removeAllFilterVariables() throws
+
     /// Sets credentials to authenticate the client with the server.
     /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
     func setCredentials(_ credentials: SyncCredentials) throws
@@ -54,7 +78,7 @@ public protocol SyncClient: AnyObject {
     /// Sets multiple credentials to authenticate the client with the server.
     /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
     func setCredentials(_ credentials: [SyncCredentials]) throws
-  
+
     /// Once the sync client is configured, you can "start" it to initiate synchronization.
     /// This method triggers communication in the background and will return immediately.
     /// If the synchronization destination is reachable, this background thread will connect to the server,

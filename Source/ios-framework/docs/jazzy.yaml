@@ -4,7 +4,7 @@ author: "ObjectBox"
 author_url: "https://objectbox.io"
 
 module: "ObjectBox"
-module_version: 4.4.1
+module_version: 5.0.0
 
 github_url: "https://github.com/objectbox/objectbox-swift"
 root_url: "https://objectbox.io/docfiles/swift/current/"

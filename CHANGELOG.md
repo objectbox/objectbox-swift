@@ -4,7 +4,12 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
               
-## 5.0.0 - in development
+## 5.0.0 - 2025-09-29
+
+- Update ObjectBox database to version `5.0.0-2025-09-27`.
+  - ToOne relations: when deleting an object with an ID larger than the maximum 32-bit unsigned integer 
+    (`4294967295`) that is used as the target object of a ToOne, correctly re-set the target ID of the ToOne to
+    `0`. [objectbox-dart#740](https://github.com/objectbox/objectbox-dart/issues/740) 
 
 ### Sync
 

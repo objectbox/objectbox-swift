@@ -25,13 +25,20 @@ public class Sync {
     ///
     /// Pass either a `url` or a `urlString` (auto-converted to `URL`).
     ///
+    /// To configure [Sync filter](https://sync.objectbox.io/sync-server/sync-filters) variables, pass
+    /// variable names mapped to their value to `filterVariables` .
+    ///
+    /// Sync client filter variables can be used in server-side Sync filters to filter out objects that do not match
+    /// the filter.
+    ///
     /// - Throws: `ObjectBoxError.sync` if sync is unavailable in this version of the library
     ///           or no valid URL was provided.
     public static func makeClient(
-            store: Store,
-            url: URL? = nil,
-            urlString: String? = nil,
-            credentials: SyncCredentials? = nil
+        store: Store,
+        url: URL? = nil,
+        urlString: String? = nil,
+        credentials: SyncCredentials? = nil,
+        filterVariables: [String: String]? = nil
     ) throws -> SyncClient {
         let client = try makeClient(store: store, url: url, urlString: urlString)
 
@@ -44,28 +51,57 @@ public class Sync {
 
     /// Like ``makeClient(store:url:urlString:credentials:)-6rikk``, but accepts multiple credentials.
     public static func makeClient(
-            store: Store,
-            url: URL,
-            urlString: String,
-            credentials: [SyncCredentials]
+        store: Store,
+        url: URL? = nil,
+        urlString: String? = nil,
+        credentials: [SyncCredentials],
+        filterVariables: [String: String]? = nil
     ) throws -> SyncClient {
         let client = try makeClient(store: store, url: url, urlString: urlString)
+
         try client.setCredentials(credentials)
+
         return client
     }
 
     private static func makeClient(
-            store: Store,
-            url: URL? = nil,
-            urlString: String? = nil
-    ) throws -> SyncClient {
+        store: Store,
+        url: URL? = nil,
+        urlString: String? = nil,
+        filterVariables: [String: String]? = nil
+    ) throws -> SyncClientImpl {
         guard isAvailable() else {
             throw ObjectBoxError.sync(
-                    message: "This library does not include ObjectBox Sync. " +
-                            "Please visit https://objectbox.io/sync/ for options.")
+                message: "This library does not include ObjectBox Sync. " +
+                "Please visit https://objectbox.io/sync/ for options.")
         }
-        throw ObjectBoxError.sync(
-                message:
-                "Cannot create a new sync client: no Swift implementation available (but linked library supports it)")
+        guard store.syncClient == nil else {
+            throw ObjectBoxError.sync(
+                message: "Cannot create a new sync client: the store is already associated with a sync client")
+        }
+        var urlToConnect = url
+        if urlToConnect == nil {
+            if urlString == nil {
+                throw ObjectBoxError.sync(message: "No URL provided")
+            } else {
+                urlToConnect = URL(string: urlString!)
+                if urlToConnect == nil {
+                    throw ObjectBoxError.sync(message: "Illegal URL given:" + urlString!)
+                }
+            }
+        }
+
+        let client = try SyncClientImpl(store: store, server: urlToConnect!)
+
+        // Associate store with the new client: keep the client alive and provide convenient access to it
+        store.syncClient = client  // This is not very atomic...
+
+        if let filterVariables = filterVariables {
+            for (name, value) in filterVariables {
+                try client.putFilterVariable(name: name, value: value)
+            }
+        }
+
+        return client
     }
 }
