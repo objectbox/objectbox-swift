@@ -92,68 +92,12 @@ Check out the [installation section below](#add-objectbox-to-your-project). You 
 
 ObjectBox is available as a
 
-- [CocoaPods](#cocoapods) pod
 - [Swift Package](#swift-package)
-
-### CocoaPods
-
-If you are new to CocoaPods, [check out their website](https://cocoapods.org) for an introduction and installation 
-instructions.
-
-To add the ObjectBox Swift dependency, add the following line to your `Podfile`:
-
-```
-pod 'ObjectBox'
-```
-
-Then install the pod and run the ObjectBox setup script:
-
-```bash
-pod install --repo-update
-Pods/ObjectBox/setup.rb
-```
-
-The `setup.rb` script will configure your Xcode project to run ObjectBox generator on every build by adding a build 
-phase (called "[OBX] Update Sourcery Generated Files") for every target with an executable.
-
-**Disable the User Script Sandboxing** option in your Xcode project build settings to allow the ObjectBox generator 
-script to run.
-
-> [!NOTE]
-> The ObjectBox code generator needs to run in the project directory and will generate files there. If this is executed
-> in a sandbox, the build phase will fail.
-
-Then, open your Xcode workspace (.xcworkspace) instead of the Xcode project (.xcodeproj).
-
-Now, you are all set to define your first ObjectBox entities! To continue check the 
-[Getting Started guide](https://swift.objectbox.io/getting-started) or [the example project](#example).
-
-#### Troubleshoot setup issues
-
-If installing the pod or configuring the project failed, try to update the xcodeproj and cocoapods gem:
-
-```bash
-gem update xcodeproj && gem update cocoapods && pod repo update
-```
-
-> [!NOTE]
-> On Apple Silicon (M1), ensure you have the latest gems for CocoaPods:
-> 
-> `gem update ffi ethon`
-
-#### Update to a new version
-
-After a new version of ObjectBox Swift is released, update the ObjectBox pod and run the setup script again:
-
-```bash
-pod repo update
-pod update ObjectBox
-Pods/ObjectBox/setup.rb
-```
+- [CocoaPods](#cocoapods) pod
 
 ### Swift Package
 
-Instructions depend on whether you want to set up an Xcode project or a Swift Package Manager manifest.
+Instructions depend on whether you want to set up an Xcode project (to build iOS and macOS apps) or a Swift Package Manager manifest.
 
 #### Set up an Xcode project
 
@@ -212,6 +156,62 @@ targets: [
 
 Now, you are all set to define your first ObjectBox entities! To continue check the 
 [Getting Started guide](https://swift.objectbox.io/getting-started) or [the example project](#example).
+
+### CocoaPods
+
+If you are new to CocoaPods, [check out their website](https://cocoapods.org) for an introduction and installation 
+instructions.
+
+To add the ObjectBox Swift dependency, add the following line to your `Podfile`:
+
+```
+pod 'ObjectBox'
+```
+
+Then install the pod and run the ObjectBox setup script:
+
+```bash
+pod install --repo-update
+Pods/ObjectBox/setup.rb
+```
+
+The `setup.rb` script will configure your Xcode project to run ObjectBox generator on every build by adding a build 
+phase (called "[OBX] Update Sourcery Generated Files") for every target with an executable.
+
+**Disable the User Script Sandboxing** option in your Xcode project build settings to allow the ObjectBox generator 
+script to run.
+
+> [!NOTE]
+> The ObjectBox code generator needs to run in the project directory and will generate files there. If this is executed
+> in a sandbox, the build phase will fail.
+
+Then, open your Xcode workspace (.xcworkspace) instead of the Xcode project (.xcodeproj).
+
+Now, you are all set to define your first ObjectBox entities! To continue check the 
+[Getting Started guide](https://swift.objectbox.io/getting-started) or [the example project](#example).
+
+#### Troubleshoot setup issues
+
+If installing the pod or configuring the project failed, try to update the xcodeproj and cocoapods gem:
+
+```bash
+gem update xcodeproj && gem update cocoapods && pod repo update
+```
+
+> [!NOTE]
+> On Apple Silicon (M1), ensure you have the latest gems for CocoaPods:
+> 
+> `gem update ffi ethon`
+
+#### Update to a new version
+
+After a new version of ObjectBox Swift is released, update the ObjectBox pod and run the setup script again:
+
+```bash
+pod repo update
+pod update ObjectBox
+Pods/ObjectBox/setup.rb
+```
 
 ### Recommended Xcode project settings
 
