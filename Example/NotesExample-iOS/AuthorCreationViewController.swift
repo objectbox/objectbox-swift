@@ -1,5 +1,6 @@
 //  Copyright © 2018 ObjectBox. All rights reserved.
 
+import ObjectBox
 import UIKit
 
 class AuthorCreationViewController: UITableViewController {
