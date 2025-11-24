@@ -7,6 +7,17 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 ## Next release
 
 - Requires at least macOS 11.0 or iOS 15.0.
+- Support string vector properties defined as Swift string arrays. For example: 
+
+  ```swift
+  var tags: [String]?
+  ```
+
+- Add `containsElement` condition for string vector properties. For example:
+
+  ```swift
+  box.query { ObxItem.tags.containsElement(element: "important", caseSensitive: true) }
+  ```
 
 ## 5.0.0 - 2025-09-29
 
