@@ -3,7 +3,11 @@
 Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
-              
+
+## Next release
+
+- Requires at least macOS 11.0 or iOS 15.0.
+
 ## 5.0.0 - 2025-09-29
 
 **Note: if you use the Swift Package, to receive this major version open your Xcode project settings and under "Package Dependencies" increase the version of objectbox-swift-spm to `5.0.0`.**
