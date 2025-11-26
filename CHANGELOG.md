@@ -19,6 +19,9 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
   box.query { ObxItem.tags.containsElement(element: "important", caseSensitive: true) }
   ```
 
+- `Observer` no longer crashes due to it being closed after the `Store` is closed. This might have occurred when
+  the associated `Store` was deinitialized by the system before the `Observer` (when used via the Combine APIs).
+
 ## 5.0.0 - 2025-09-29
 
 **Note: if you use the Swift Package, to receive this major version open your Xcode project settings and under "Package Dependencies" increase the version of objectbox-swift-spm to `5.0.0`.**
