@@ -123,7 +123,7 @@ Now, you are all set to define your first ObjectBox entities! To continue check 
 In your `Swift.package` file, add the ObjectBox Swift Package repository to the `dependencies` block:
 
 ```swift
-.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "4.4.1"),
+.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "5.1.0"),
 ```
 
 Add the `ObjectBox.xcframework` to the `dependencies` of the desired target in `targets`:
@@ -274,7 +274,7 @@ ObjectBox is a cross-platform database supporting sustainable app development in
 ## License
 
 ```text
-Copyright 2018-2025 ObjectBox Ltd. All rights reserved.
+Copyright 2018-2025 ObjectBox Ltd. All rights reserved. <https://objectbox.io>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
