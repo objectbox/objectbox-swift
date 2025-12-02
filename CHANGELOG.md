@@ -7,7 +7,7 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 ## Next release
 
 - Requires at least macOS 11.0 or iOS 15.0.
-- Support string vector properties defined as Swift string arrays. For example: 
+- Support string vectors defined as `[String]` properties. For example: 
 
   ```swift
   var tags: [String]?
@@ -19,6 +19,15 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
   box.query { ObxItem.tags.containsElement(element: "important", caseSensitive: true) }
   ```
 
+- Support integer vectors defined as `[Int32]` or `[Int64]` properties. For example:
+
+  ```swift
+  var ints: [Int32]?     
+  var longs: [Int64]?
+  ```
+
+- Support equal, less and greater query conditions on elements of `[Int32]` or `[Int64]` properties. Meaning they match
+  if any element of an array is equal, less or greater.
 - `Observer` no longer crashes due to it being closed after the `Store` is closed. This might have occurred when
   the associated `Store` was deinitialized by the system before the `Observer` (when used via the Combine APIs).
 
