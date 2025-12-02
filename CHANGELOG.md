@@ -6,6 +6,14 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 
 ## Next release
 
+### Sync
+
+- Sync client: add method `outgoingMessages()` to get the number of messages in the outgoing queue.
+- Sync client: add parameter `certificatePaths` to `makeClient` builder methods to pass certificate paths on the local
+  file system. This can be useful to use self-signed certificates in a local development environment or custom CAs.
+
+### Other changes
+
 - Requires at least macOS 11.0 or iOS 15.0.
 - Support string vectors defined as `[String]` properties. For example: 
 
