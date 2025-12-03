@@ -3,10 +3,10 @@ stages:
 
 build_project:
   stage: build
-  tags: [mac, x64, xcode]
+  tags: [mac, xcode]
   script:
     - cd Example
-    - xcodebuild clean build -scheme NotesExample-macOS -destination 'platform=OS X,arch=x86_64'
+    - xcodebuild clean build -scheme NotesExample-macOS -destination 'platform=macOS'
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
