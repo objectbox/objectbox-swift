@@ -11,6 +11,8 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 - Sync client: add method `outgoingMessages()` to get the number of messages in the outgoing queue.
 - Sync client: add parameter `certificatePaths` to `makeClient` builder methods to pass certificate paths on the local
   file system. This can be useful to use self-signed certificates in a local development environment or custom CAs.
+- Sync client: when passing [Sync filter](https://sync.objectbox.io/sync-server/sync-filters) variables to `makeClient`
+  they are actually applied.
 
 ### Other changes
 
