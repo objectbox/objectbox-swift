@@ -16,7 +16,7 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 
 ### Other changes
 
-- Requires at least macOS 11.0 or iOS 15.0.
+- Requires at least macOS 11.0 or iOS 15.0 and Swift 6.1 tools.
 - Avoid circular reference error [#109](https://github.com/objectbox/objectbox-swift/issues/109) for projects with 
   "Default Actor Isolation" set to "MainActor" (the default for new iOS projects in Xcode 26).
 - Support string vectors defined as `[String]` properties. For example: 
