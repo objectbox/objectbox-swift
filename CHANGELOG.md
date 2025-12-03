@@ -6,18 +6,9 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
 
 ## Next release
 
-### Sync
+Note: To support Xcode 26 and new Swift versions, the requirements have been raised to macOS 11.0 or iOS 15.0 and Swift 6.1 tools.
 
-- Sync client: add method `outgoingMessages()` to get the number of messages in the outgoing queue.
-- Sync client: add parameter `certificatePaths` to `makeClient` builder methods to pass certificate paths on the local
-  file system. This can be useful to use self-signed certificates in a local development environment or custom CAs.
-- Sync client: when passing [Sync filter](https://sync.objectbox.io/sync-server/sync-filters) variables to `makeClient`
-  they are actually applied.
-
-### Other changes
-
-- Requires at least macOS 11.0 or iOS 15.0 and Swift 6.1 tools.
-- Avoid circular reference error [#109](https://github.com/objectbox/objectbox-swift/issues/109) for projects with 
+- Fixes the circular reference error [#109](https://github.com/objectbox/objectbox-swift/issues/109) for projects with 
   "Default Actor Isolation" set to "MainActor" (the default for new iOS projects in Xcode 26).
 - Support string vectors defined as `[String]` properties. For example: 
 
@@ -42,6 +33,14 @@ For more insights into what changed in the ObjectBox C++ core, [check the Object
   if any element of an array is equal, less or greater.
 - `Observer` no longer crashes due to it being closed after the `Store` is closed. This might have occurred when
   the associated `Store` was deinitialized by the system before the `Observer` (when used via the Combine APIs).
+
+### Sync
+
+- Sync client: add method `outgoingMessages()` to get the number of messages in the outgoing queue.
+- Sync client: add parameter `certificatePaths` to `makeClient` builder methods to pass certificate paths on the local
+  file system. This can be useful to use self-signed certificates in a local development environment or custom CAs.
+- Sync client: when passing [Sync filter](https://sync.objectbox.io/sync-server/sync-filters) variables to `makeClient`
+  they are actually applied.
 
 ## 5.0.0 - 2025-09-29
 
