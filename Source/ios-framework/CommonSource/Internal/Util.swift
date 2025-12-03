@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 ObjectBox Ltd. All rights reserved.
+// Copyright © 2021-2025 ObjectBox Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,4 +37,48 @@ internal class Util {
     internal static func toInt64Array<T>(_ collection: [T]) -> [Int64] where T: FixedWidthInteger {
         return collection as? [Int64] ?? collection.map { Int64(truncatingIfNeeded: $0) }
     }
+
+    /// Like withCString but for String arrays
+    internal static func withArrayOfCStrings<R>(
+            _ strings: [String],
+            _ body: (UnsafePointer<UnsafePointer<CChar>?>?, Int) -> R
+    ) -> R {
+        // Result placeholder
+        var result: R?
+        let count = strings.count
+
+        // Array of C-string pointers (the “char*[]”)
+        var cPointers = [UnsafePointer<CChar>?](repeating: nil, count: count)
+
+        func recurse(_ index: Int) {
+            if index == count {
+                // All strings converted, call body with buffer pointer
+                cPointers.withUnsafeBufferPointer { buffer in
+                    result = body(buffer.baseAddress, count)
+                }
+                return
+            }
+
+            strings[index].withCString { cStr in
+                cPointers[index] = cStr
+                recurse(index + 1) // nested closure keeps all previous cStr alive
+            }
+        }
+
+        recurse(0)
+        return result!
+    }
+
+    /// Like withCString but for String arrays – mutable pointer variant
+    internal static func withArrayOfCStringsMutable<R>(
+        _ strings: [String],
+        _ body: (UnsafeMutablePointer<UnsafePointer<CChar>?>?, Int) -> R
+    ) -> R {
+        // Reuse the immutable version and cast the pointer
+        return withArrayOfCStrings(strings) { ptr, count in
+            let mutablePtr = ptr.map { UnsafeMutablePointer(mutating: $0) }
+            return body(mutablePtr, count)
+        }
+    }
+
 }

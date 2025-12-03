@@ -25,7 +25,8 @@ class OneToManyTestCase: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        store = Store.customerOrderStore()
+        // swiftlint:disable:next force_try
+        store = try! Store.testEntities()
         customerBox = store.box(for: Customer.self)
         orderBox = store.box(for: Order.self)
     }

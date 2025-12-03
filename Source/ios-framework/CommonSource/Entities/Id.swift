@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. https://objectbox.io/
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@
 // limitations under the License.
 //
 
-/// ID for objects (entities) stored in ObjectBox. Each entity class/struct must have an ID.
+/// Identifier (ID) for objects (instances of an entity) stored in ObjectBox.
+///
+/// Each entity class/struct must have an ID property.
+/// IDs are assigned by the framework automatically when persisting objects with `Box.put`.
+///
+/// A value of `0` indicates the object hasn't been persisted, yet.
 public typealias Id = UInt64
-
-// TODO get rid of the remaining file
 
 /// Protocol an ObjectBox ID must conform to. Currently, there are two major types that can be used as IDs:
 /// - `EntityId<E>` which is a generic, type-safe ID struct
@@ -61,13 +64,11 @@ extension IdBase {
     internal var needsIdGeneration: Bool { return value == 0 }
 }
 
-/// Object identifier type.
+/// Object identifier (ID) wrapper type.
 ///
-/// Object identifiers are wrappers for `Id` values which are `UInt64`. These are used for persisted objects.
-/// Identifiers are assigned by the framework automatically when you call `Box.put`.
-///
-/// A value of `0` indicates the object hasn't been persisted, yet.
-public struct EntityId<R: EntityInspectable & __EntityRelatable>: IdBase, Hashable {
+/// This is a wrapper for an ``Id`` value to allow attributing which entity it belongs to and which box it can be used
+/// with.
+public struct EntityId<R: Entity>: IdBase, Hashable {
     /// Numerical value of the ID.
     public let value: Id
 

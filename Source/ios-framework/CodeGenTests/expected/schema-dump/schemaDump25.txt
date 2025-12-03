@@ -173,7 +173,7 @@ Schema {
 	}
 , SchemaEntity {
 		modelId = Optional(2)
-		modelUid = Optional(42496)
+		modelUid = Optional(45568)
 		className = TypeTest
 		dbName = nil
 		properties = [SchemaProperty {
@@ -508,6 +508,42 @@ Schema {
 		}
 , SchemaProperty {
 			modelId = Optional(IdUid(20:41728))
+			propertyName = int32Array
+			propertyType = intVector
+			propertyFlags = []
+			propertySwiftType = Int32ArrayPropertyType
+			entityName = TypeTest
+			unwrappedPropertyType = [Int32]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			isScalarVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(21:42496))
+			propertyName = int64Array
+			propertyType = longVector
+			propertyFlags = []
+			propertySwiftType = Int64ArrayPropertyType
+			entityName = TypeTest
+			unwrappedPropertyType = [Int64]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			isScalarVectorType = true
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(22:43520))
 			propertyName = floatArray
 			propertyType = floatVector
 			propertyFlags = []
@@ -524,11 +560,29 @@ Schema {
 			isRelation = false
 			isScalarVectorType = true
 		}
+, SchemaProperty {
+			modelId = Optional(IdUid(23:44544))
+			propertyName = stringArray
+			propertyType = stringVector
+			propertyFlags = []
+			propertySwiftType = StringArrayPropertyType
+			entityName = TypeTest
+			unwrappedPropertyType = [String]
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = false
+			isStringType = false
+			isRelation = false
+			isStringVectorType = true
+		}
 ]
 		indexes = []
 		relations = []
 		toManyRelations = []
-		lastPropertyId = Optional(IdUid(20:41728))
+		lastPropertyId = Optional(IdUid(23:44544))
 		isEntitySubclass = true
 		isValueType = false
 		hasStringProperties = true
@@ -570,7 +624,7 @@ Schema {
 ]
 	}
 ]
-lastEntityId = IdUid(2:42496)
+lastEntityId = IdUid(2:45568)
 	lastRelationId = IdUid(0:0)
 	lastIndexId = IdUid(0:0)
 }

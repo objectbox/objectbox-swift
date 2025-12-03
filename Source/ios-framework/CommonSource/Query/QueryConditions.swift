@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -840,30 +840,6 @@ public func ∉ <E>(lhs: Property<E, Date?, Void>, rhs: [Date]) -> PropertyQuery
 }
 // swiftlint:enable identifier_name
 
-extension Property where Property.ValueType == HnswIndexPropertyType {
-    
-    /// Performs an approximate nearest neighbor (ANN) search to find objects near to the given `queryVector`.
-    ///
-    /// This requires the vector property to have an HNSW index.
-    ///
-    /// The dimensions of the query vector should be at least the dimensions of this vector property.
-    ///
-    /// Use `maxCount` to set the maximum number of objects to return by the ANN condition.
-    /// Hint: it can also be used as the "ef" HNSW parameter to increase the search quality in combination with a
-    /// query limit.
-    /// For example, use maxResultCount of 100 with a query limit of 10 to have 10 results that are of potentially 
-    /// better quality than just passing in 10 for maxResultCount (quality/performance tradeoff).
-    ///
-    /// To change the given parameters after building the query, use `Query.setParameter(_:to:)` with 
-    /// either a `[Float]` or `[Int]` or their alias equivalent.
-    public func nearestNeighbors(queryVector: [Float], maxCount: Int)
-    -> PropertyQueryCondition<EntityType, ValueType> {
-        return PropertyQueryCondition(expression: {
-            $0.nearestNeighbors(self, queryVector: queryVector, maxResultCount: maxCount)
-        })
-    }
-}
-
 extension Property where Property.ValueType == Date? {
     public func isEqual(to date: Date)
         -> PropertyQueryCondition<EntityType, ValueType> {
@@ -924,4 +900,120 @@ extension Property where Property.ValueType == Date? {
             return PropertyQueryCondition(expression: { $0.where(self, isAfter: other) })
     }
 
+}
+
+// MARK: - Int32 Vectors
+
+extension Property where Property.ValueType == Int32ArrayPropertyType {
+    public func isEqual(to int: Int32)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.isEqualTo(self, int: int)
+        })
+    }
+    
+    public func isLessThan(_ int: Int32)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessThan(self, int: int)
+        })
+    }
+
+    public func isGreaterThan(_ int: Int32)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterThan(self, int: int)
+        })
+    }
+
+    public func isGreaterOrEqual(_ int: Int32)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterOrEqual(self, int: int)
+        })
+    }
+
+    public func isLessOrEqual(_ int: Int32)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessOrEqual(self, int: int)
+        })
+    }
+}
+
+// MARK: - Int64 Vectors
+
+extension Property where Property.ValueType == Int64ArrayPropertyType {
+    public func isEqual(to int: Int64)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.isEqualTo(self, int: int)
+        })
+    }
+    
+    public func isLessThan(_ int: Int64)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessThan(self, int: int)
+        })
+    }
+
+    public func isGreaterThan(_ int: Int64)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterThan(self, int: int)
+        })
+    }
+
+    public func isGreaterOrEqual(_ int: Int64)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterOrEqual(self, int: int)
+        })
+    }
+
+    public func isLessOrEqual(_ int: Int64)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessOrEqual(self, int: int)
+        })
+    }
+}
+
+// MARK: - HNSW Index
+
+extension Property where Property.ValueType == HnswIndexPropertyType {
+    
+    /// Performs an approximate nearest neighbor (ANN) search to find objects near to the given `queryVector`.
+    ///
+    /// This requires the vector property to have an HNSW index.
+    ///
+    /// The dimensions of the query vector should be at least the dimensions of this vector property.
+    ///
+    /// Use `maxCount` to set the maximum number of objects to return by the ANN condition.
+    /// Hint: it can also be used as the "ef" HNSW parameter to increase the search quality in combination with a
+    /// query limit.
+    /// For example, use maxResultCount of 100 with a query limit of 10 to have 10 results that are of potentially
+    /// better quality than just passing in 10 for maxResultCount (quality/performance tradeoff).
+    ///
+    /// To change the given parameters after building the query, use `Query.setParameter(_:to:)` with
+    /// either a `[Float]` or `[Int]` or their alias equivalent.
+    public func nearestNeighbors(queryVector: [Float], maxCount: Int)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.nearestNeighbors(self, queryVector: queryVector, maxResultCount: maxCount)
+        })
+    }
+}
+
+// MARK: - String Vectors
+
+extension Property where Property.ValueType == StringArrayPropertyType {
+
+    /// Matches if at least one element of the array equals the given `element`.
+    public func containsElement(element: String, caseSensitive: Bool) -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.where(self, containsElement: element, caseSensitive: caseSensitive)
+        })
+    }
 }

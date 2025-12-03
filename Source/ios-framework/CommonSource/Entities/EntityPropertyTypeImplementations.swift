@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -90,6 +90,14 @@ extension Array: EntityPropertyTypeConvertible where Element == UInt8 {
 
 // MARK: Scalar vectors
 
+public class Int32ArrayPropertyType: EntityPropertyTypeConvertible {
+    public static var entityPropertyType: PropertyType { return .intVector }
+}
+
+public class Int64ArrayPropertyType: EntityPropertyTypeConvertible {
+    public static var entityPropertyType: PropertyType { return .longVector }
+}
+
 public class FloatArrayPropertyType: EntityPropertyTypeConvertible {
     public static var entityPropertyType: PropertyType { return .floatVector }
 }
@@ -97,6 +105,12 @@ public class FloatArrayPropertyType: EntityPropertyTypeConvertible {
 // MARK: HNSW index property
 
 public class HnswIndexPropertyType: FloatArrayPropertyType {}
+
+// MARK: String vector
+
+public class StringArrayPropertyType: EntityPropertyTypeConvertible {
+    public static var entityPropertyType: PropertyType { return .stringVector }
+}
 
 // MARK: - Entity Property Types
 

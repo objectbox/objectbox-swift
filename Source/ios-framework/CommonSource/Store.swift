@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// The version of this ObjectBox Swift SDK.
-    public static var version = "5.0.0"
+    public static var version = "5.1.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.
@@ -165,6 +165,10 @@ public class Store: CustomDebugStringConvertible {
     internal func ensureCStore() throws -> OpaquePointer {
         guard let openCStore = cStore else { throw ObjectBoxError.illegalState(message: "Store is already closed") }
         return openCStore
+    }
+    
+    internal func isClosed() -> Bool {
+        return cStore == nil
     }
 
     /// Clone a previously opened store; while a store instance is usable from multiple threads, situations may exist

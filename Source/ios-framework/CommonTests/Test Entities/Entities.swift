@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
 // limitations under the License.
 //
 
-// Note: Use the script generate.rb to manually update EntityInfo.generated.swift
-// TODO/Warning: This seems not to be used in our standard unit tests. Might make sense; check TestEntities too.
+// Note: the EntityInfo.generated.swift and model.json for this are generated using
+// the generate.sh script in this directory.
+//
+// TODO/Warning: Existing tests use a manually built model, check Helpers/TestEntities.swift!
 
 import Foundation
 import ObjectBox
@@ -222,6 +224,28 @@ class VectorTestEntity {
     var id: Id = 0
     var floatArray: [Float] = []
     var floatArrayNull: [Float]?
+    var stringArray: [String] = []
+    var stringArrayNull: [String]?
+    var int32Array: [Int32] = []
+    var int32ArrayNull: [Int32]?
+    var int64Array: [Int64] = []
+    var int64ArrayNull: [Int64]?
+
+    // For ObjectBox
+    init() {
+    }
+
+    init(stringArray: [String]) {
+        self.stringArray = stringArray
+    }
+    
+    init(int32Array: [Int32]) {
+        self.int32Array = int32Array
+    }
+    
+    init(int64Array: [Int64]) {
+        self.int64Array = int64Array
+    }
 }
 
 // objectbox: entity

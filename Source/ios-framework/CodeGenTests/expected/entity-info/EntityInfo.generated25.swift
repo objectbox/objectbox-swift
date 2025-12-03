@@ -213,7 +213,7 @@ extension TypeTest: ObjectBox.EntityInspectable {
     internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
-        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 42496)
+        let entityBuilder = try modelBuilder.entityBuilder(for: TypeTest.self, id: 2, uid: 45568)
         try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 22528)
         try entityBuilder.addProperty(name: "intValue", type: PropertyType.long, id: 2, uid: 23552)
         try entityBuilder.addProperty(name: "int8Value", type: PropertyType.byte, id: 3, uid: 24576)
@@ -233,9 +233,12 @@ extension TypeTest: ObjectBox.EntityInspectable {
         try entityBuilder.addProperty(name: "floatValue", type: PropertyType.float, id: 17, uid: 38656)
         try entityBuilder.addProperty(name: "doubleValue", type: PropertyType.double, id: 18, uid: 39680)
         try entityBuilder.addProperty(name: "dateValue", type: PropertyType.date, id: 19, uid: 40704)
-        try entityBuilder.addProperty(name: "floatArray", type: PropertyType.floatVector, id: 20, uid: 41728)
+        try entityBuilder.addProperty(name: "int32Array", type: PropertyType.intVector, id: 20, uid: 41728)
+        try entityBuilder.addProperty(name: "int64Array", type: PropertyType.longVector, id: 21, uid: 42496)
+        try entityBuilder.addProperty(name: "floatArray", type: PropertyType.floatVector, id: 22, uid: 43520)
+        try entityBuilder.addProperty(name: "stringArray", type: PropertyType.stringVector, id: 23, uid: 44544)
 
-        try entityBuilder.lastProperty(id: 20, uid: 41728)
+        try entityBuilder.lastProperty(id: 23, uid: 44544)
     }
 }
 
@@ -358,8 +361,26 @@ extension TypeTest {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { TypeTest.floatArray.isNotNil() }
-    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
+    ///     box.query { TypeTest.int32Array.isGreaterThan(value) }
+    internal static var int32Array: Property<TypeTest, Int32ArrayPropertyType, Void> { return Property<TypeTest, Int32ArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { TypeTest.int64Array.isGreaterThan(value) }
+    internal static var int64Array: Property<TypeTest, Int64ArrayPropertyType, Void> { return Property<TypeTest, Int64ArrayPropertyType, Void>(propertyId: 21, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { TypeTest.floatArray.isGreaterThan(value) }
+    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 22, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { TypeTest.stringArray.containsElement(element: "<value>", caseSensitive: true) }
+    internal static var stringArray: Property<TypeTest, StringArrayPropertyType, Void> { return Property<TypeTest, StringArrayPropertyType, Void>(propertyId: 23, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = EntityId(identifier)
@@ -523,9 +544,33 @@ extension ObjectBox.Property where E == TypeTest {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
+    ///     box.query { .int32Array.isNotNil() }
+
+    internal static var int32Array: Property<TypeTest, Int32ArrayPropertyType, Void> { return Property<TypeTest, Int32ArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .int64Array.isNotNil() }
+
+    internal static var int64Array: Property<TypeTest, Int64ArrayPropertyType, Void> { return Property<TypeTest, Int64ArrayPropertyType, Void>(propertyId: 21, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
     ///     box.query { .floatArray.isNotNil() }
 
-    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 20, isPrimaryKey: false) }
+    internal static var floatArray: Property<TypeTest, FloatArrayPropertyType, Void> { return Property<TypeTest, FloatArrayPropertyType, Void>(propertyId: 22, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .stringArray.containsElement(element: "<value>", caseSensitive: true) }
+
+    internal static var stringArray: Property<TypeTest, StringArrayPropertyType, Void> { return Property<TypeTest, StringArrayPropertyType, Void>(propertyId: 23, isPrimaryKey: false) }
 
 }
 
@@ -552,7 +597,10 @@ internal final class TypeTestBinding: ObjectBox.EntityBinding, Sendable {
         let propertyOffset_stringValue = propertyCollector.prepare(string: entity.stringValue)
         let propertyOffset_bytes = propertyCollector.prepare(bytes: entity.bytes)
         let propertyOffset_byteArray = propertyCollector.prepare(bytes: entity.byteArray)
+        let propertyOffset_int32Array = propertyCollector.prepare(values: entity.int32Array)
+        let propertyOffset_int64Array = propertyCollector.prepare(values: entity.int64Array)
         let propertyOffset_floatArray = propertyCollector.prepare(values: entity.floatArray)
+        let propertyOffset_stringArray = propertyCollector.prepare(values: entity.stringArray)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(entity.intValue, at: 2 + 2 * 2)
@@ -573,7 +621,10 @@ internal final class TypeTestBinding: ObjectBox.EntityBinding, Sendable {
         propertyCollector.collect(dataOffset: propertyOffset_stringValue, at: 2 + 2 * 13)
         propertyCollector.collect(dataOffset: propertyOffset_bytes, at: 2 + 2 * 15)
         propertyCollector.collect(dataOffset: propertyOffset_byteArray, at: 2 + 2 * 16)
-        propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 20)
+        propertyCollector.collect(dataOffset: propertyOffset_int32Array, at: 2 + 2 * 20)
+        propertyCollector.collect(dataOffset: propertyOffset_int64Array, at: 2 + 2 * 21)
+        propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 22)
+        propertyCollector.collect(dataOffset: propertyOffset_stringArray, at: 2 + 2 * 23)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
@@ -598,7 +649,10 @@ internal final class TypeTestBinding: ObjectBox.EntityBinding, Sendable {
         entity.floatValue = entityReader.read(at: 2 + 2 * 17)
         entity.doubleValue = entityReader.read(at: 2 + 2 * 18)
         entity.dateValue = entityReader.read(at: 2 + 2 * 19)
-        entity.floatArray = entityReader.read(at: 2 + 2 * 20)
+        entity.int32Array = entityReader.read(at: 2 + 2 * 20)
+        entity.int64Array = entityReader.read(at: 2 + 2 * 21)
+        entity.floatArray = entityReader.read(at: 2 + 2 * 22)
+        entity.stringArray = entityReader.read(at: 2 + 2 * 23)
 
         return entity
     }
@@ -617,7 +671,7 @@ fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
     try AnnotatedType.buildEntity(modelBuilder: modelBuilder)
     try TypeTest.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 2, uid: 42496)
+    modelBuilder.lastEntity(id: 2, uid: 45568)
     return modelBuilder.finish()
 }
 

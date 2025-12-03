@@ -28,9 +28,9 @@ extension Author: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = AuthorBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Author", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Author", id: 1)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Author.self, id: 1, uid: 3576167000524145664)
@@ -118,7 +118,7 @@ extension ObjectBox.Property where E == Author {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Author.EntityBindingType`.
-internal class AuthorBinding: ObjectBox.EntityBinding {
+internal final class AuthorBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Author
     internal typealias IdType = Id
 
@@ -198,9 +198,9 @@ extension AuthorStruct: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = AuthorStructBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "AuthorStruct", id: 2)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "AuthorStruct", id: 2)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: AuthorStruct.self, id: 2, uid: 1229901451922443520)
@@ -263,7 +263,7 @@ extension ObjectBox.Property where E == AuthorStruct {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `AuthorStruct.EntityBindingType`.
-internal class AuthorStructBinding: ObjectBox.EntityBinding {
+internal final class AuthorStructBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = AuthorStruct
     internal typealias IdType = Id
 
@@ -349,6 +349,134 @@ extension ObjectBox.Box where E == AuthorStruct {
 }
 
 
+extension Customer: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = Customer
+
+    internal var _id: EntityId<Customer> {
+        return EntityId<Customer>(self.id.value)
+    }
+}
+
+extension Customer: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = CustomerBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Customer", id: 11)
+
+    internal static let entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: Customer.self, id: 11, uid: 3108946752808668672)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 4599907934352290304)
+        try entityBuilder.addProperty(name: "name", type: PropertyType.string, id: 2, uid: 4753378302570674176)
+
+        try entityBuilder.lastProperty(id: 2, uid: 4753378302570674176)
+    }
+}
+
+extension Customer {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Customer.id == myId }
+    internal static var id: Property<Customer, Id, Id> { return Property<Customer, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Customer.name.startsWith("X") }
+    internal static var name: Property<Customer, String, Void> { return Property<Customer, String, Void>(propertyId: 2, isPrimaryKey: false) }
+    /// Use `Customer.orders` to refer to this ToMany relation property in queries,
+    /// like when using `QueryBuilder.and(property:, conditions:)`.
+
+    internal static var orders: ToManyProperty<Order> { return ToManyProperty(.valuePropertyId(3)) }
+
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == Customer {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<Customer, Id, Id> { return Property<Customer, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .name.startsWith("X") }
+
+    internal static var name: Property<Customer, String, Void> { return Property<Customer, String, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    /// Use `.orders` to refer to this ToMany relation property in queries, like when using
+    /// `QueryBuilder.and(property:, conditions:)`.
+
+    internal static var orders: ToManyProperty<Order> { return ToManyProperty(.valuePropertyId(3)) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `Customer.EntityBindingType`.
+internal final class CustomerBinding: ObjectBox.EntityBinding, Sendable {
+    internal typealias EntityType = Customer
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 2)
+    }
+
+    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
+        if entityId(of: entity) == 0 {  // New object was put? Attach relations now that we have an ID.
+            let orders = ToMany<Order>.backlink(
+                sourceBox: store.box(for: ToMany<Order>.ReferencedType.self),
+                sourceProperty: ToMany<Order>.ReferencedType.customer,
+                targetId: EntityId<Customer>(id.value))
+            if !entity.orders.isEmpty {
+                orders.replace(entity.orders)
+            }
+            entity.orders = orders
+            try entity.orders.applyToDb()
+        }
+    }
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = Customer()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.name = entityReader.read(at: 2 + 2 * 2)
+
+        entity.orders = ToMany<Order>.backlink(
+            sourceBox: store.box(for: ToMany<Order>.ReferencedType.self),
+            sourceProperty: ToMany<Order>.ReferencedType.customer,
+            targetId: EntityId<Customer>(entity.id.value))
+        return entity
+    }
+}
+
+
+
 extension HnswObject: ObjectBox.__EntityRelatable {
     internal typealias EntityType = HnswObject
 
@@ -361,9 +489,9 @@ extension HnswObject: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = HnswObjectBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "HnswObject", id: 9)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "HnswObject", id: 9)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: HnswObject.self, id: 9, uid: 5734988009570158080)
@@ -394,7 +522,7 @@ extension HnswObject {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { HnswObject.floatVector.isNotNil() }
+    ///     box.query { HnswObject.floatVector.isGreaterThan(value) }
     internal static var floatVector: Property<HnswObject, HnswIndexPropertyType, Void> { return Property<HnswObject, HnswIndexPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
     internal static var rel: Property<HnswObject, EntityId<ToOne<RelatedNamedEntity>.Target>, ToOne<RelatedNamedEntity>.Target> { return Property(propertyId: 4) }
 
@@ -435,7 +563,7 @@ extension ObjectBox.Property where E == HnswObject {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `HnswObject.EntityBindingType`.
-internal class HnswObjectBinding: ObjectBox.EntityBinding {
+internal final class HnswObjectBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = HnswObject
     internal typealias IdType = Id
 
@@ -501,9 +629,9 @@ extension Note: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = NoteBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Note", id: 3)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Note", id: 3)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Note.self, id: 3, uid: 8286413937822989568)
@@ -634,7 +762,7 @@ extension ObjectBox.Property where E == Note {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Note.EntityBindingType`.
-internal class NoteBinding: ObjectBox.EntityBinding {
+internal final class NoteBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Note
     internal typealias IdType = Id
 
@@ -708,9 +836,9 @@ extension NoteStruct: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = NoteStructBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "NoteStruct", id: 4)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "NoteStruct", id: 4)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: NoteStruct.self, id: 4, uid: 1267197271366405632)
@@ -811,7 +939,7 @@ extension ObjectBox.Property where E == NoteStruct {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `NoteStruct.EntityBindingType`.
-internal class NoteStructBinding: ObjectBox.EntityBinding {
+internal final class NoteStructBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = NoteStruct
     internal typealias IdType = Id
 
@@ -916,6 +1044,144 @@ extension ObjectBox.Box where E == NoteStruct {
 }
 
 
+extension Order: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = Order
+
+    internal var _id: EntityId<Order> {
+        return EntityId<Order>(self.id.value)
+    }
+}
+
+extension Order: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = OrderBinding
+
+    /// Generated metadata used by ObjectBox to persist the entity.
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Order", id: 12)
+
+    internal static let entityBinding = EntityBindingType()
+
+    fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
+        let entityBuilder = try modelBuilder.entityBuilder(for: Order.self, id: 12, uid: 4696988777145786880)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 7043323637153822208)
+        try entityBuilder.addProperty(name: "date", type: PropertyType.date, id: 2, uid: 1093928144598205440)
+        try entityBuilder.addProperty(name: "name", type: PropertyType.string, id: 4, uid: 8814640457730390784)
+        try entityBuilder.addToOneRelation(name: "customer", targetEntityInfo: ToOne<Customer>.Target.entityInfo, flags: [.indexed, .indexPartialSkipZero], id: 3, uid: 2829338735976216064, indexId: 6, indexUid: 6572619879603300096)
+
+        try entityBuilder.lastProperty(id: 4, uid: 8814640457730390784)
+    }
+}
+
+extension Order {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Order.id == myId }
+    internal static var id: Property<Order, Id, Id> { return Property<Order, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Order.date > 1234 }
+    internal static var date: Property<Order, Date, Void> { return Property<Order, Date, Void>(propertyId: 2, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { Order.name.startsWith("X") }
+    internal static var name: Property<Order, String, Void> { return Property<Order, String, Void>(propertyId: 4, isPrimaryKey: false) }
+    internal static var customer: Property<Order, EntityId<ToOne<Customer>.Target>, ToOne<Customer>.Target> { return Property(propertyId: 3) }
+
+
+    fileprivate func __setId(identifier: ObjectBox.Id) {
+        self.id = Id(identifier)
+    }
+}
+
+extension ObjectBox.Property where E == Order {
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .id == myId }
+
+    internal static var id: Property<Order, Id, Id> { return Property<Order, Id, Id>(propertyId: 1, isPrimaryKey: true) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .date > 1234 }
+
+    internal static var date: Property<Order, Date, Void> { return Property<Order, Date, Void>(propertyId: 2, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .name.startsWith("X") }
+
+    internal static var name: Property<Order, String, Void> { return Property<Order, String, Void>(propertyId: 4, isPrimaryKey: false) }
+
+    internal static var customer: Property<Order, ToOne<Customer>.Target.EntityBindingType.IdType, ToOne<Customer>.Target> { return Property<Order, ToOne<Customer>.Target.EntityBindingType.IdType, ToOne<Customer>.Target>(propertyId: 3) }
+
+}
+
+
+/// Generated service type to handle persisting and reading entity data. Exposed through `Order.EntityBindingType`.
+internal final class OrderBinding: ObjectBox.EntityBinding, Sendable {
+    internal typealias EntityType = Order
+    internal typealias IdType = Id
+
+    internal required init() {}
+
+    internal func generatorBindingVersion() -> Int { 1 }
+
+    internal func setEntityIdUnlessStruct(of entity: EntityType, to entityId: ObjectBox.Id) {
+        entity.__setId(identifier: entityId)
+    }
+
+    internal func entityId(of entity: EntityType) -> ObjectBox.Id {
+        return entity.id.value
+    }
+
+    internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
+                                  propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
+        let propertyOffset_name = propertyCollector.prepare(string: entity.name)
+
+        propertyCollector.collect(id, at: 2 + 2 * 1)
+        propertyCollector.collect(entity.date, at: 2 + 2 * 2)
+        try propertyCollector.collect(entity.customer, at: 2 + 2 * 3, store: store)
+        propertyCollector.collect(dataOffset: propertyOffset_name, at: 2 + 2 * 4)
+    }
+
+    internal func postPut(fromEntity entity: EntityType, id: ObjectBox.Id, store: ObjectBox.Store) throws {
+        if entityId(of: entity) == 0 {  // New object was put? Attach relations now that we have an ID.
+            entity.customer.attach(to: store.box(for: Customer.self))
+        }
+    }
+    internal func setToOneRelation(_ propertyId: obx_schema_id, of entity: EntityType, to entityId: ObjectBox.Id?) {
+        switch propertyId {
+            case 3:
+                entity.customer.targetId = (entityId != nil) ? EntityId<Customer>(entityId!) : nil
+            default:
+                fatalError("Attempt to change nonexistent ToOne relation with ID \(propertyId)")
+        }
+    }
+    internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
+        let entity = Order()
+
+        entity.id = entityReader.read(at: 2 + 2 * 1)
+        entity.date = entityReader.read(at: 2 + 2 * 2)
+        entity.name = entityReader.read(at: 2 + 2 * 4)
+
+        entity.customer = entityReader.read(at: 2 + 2 * 3, store: store)
+        return entity
+    }
+}
+
+
+
 extension RelatedNamedEntity: ObjectBox.__EntityRelatable {
     internal typealias EntityType = RelatedNamedEntity
 
@@ -928,9 +1194,9 @@ extension RelatedNamedEntity: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = RelatedNamedEntityBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "RelatedNamedEntity", id: 10)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "RelatedNamedEntity", id: 10)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: RelatedNamedEntity.self, id: 10, uid: 8024588008899966976)
@@ -981,7 +1247,7 @@ extension ObjectBox.Property where E == RelatedNamedEntity {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `RelatedNamedEntity.EntityBindingType`.
-internal class RelatedNamedEntityBinding: ObjectBox.EntityBinding {
+internal final class RelatedNamedEntityBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = RelatedNamedEntity
     internal typealias IdType = Id
 
@@ -1029,9 +1295,9 @@ extension Student: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = StudentBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Student", id: 5)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Student", id: 5)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Student.self, id: 5, uid: 7762515417864690432)
@@ -1094,7 +1360,7 @@ extension ObjectBox.Property where E == Student {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Student.EntityBindingType`.
-internal class StudentBinding: ObjectBox.EntityBinding {
+internal final class StudentBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Student
     internal typealias IdType = Id
 
@@ -1159,9 +1425,9 @@ extension Teacher: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = TeacherBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "Teacher", id: 6)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "Teacher", id: 6)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: Teacher.self, id: 6, uid: 4388202328849468160)
@@ -1222,7 +1488,7 @@ extension ObjectBox.Property where E == Teacher {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `Teacher.EntityBindingType`.
-internal class TeacherBinding: ObjectBox.EntityBinding {
+internal final class TeacherBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = Teacher
     internal typealias IdType = Id
 
@@ -1287,9 +1553,9 @@ extension UniqueEntity: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = UniqueEntityBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "UniqueEntity", id: 7)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "UniqueEntity", id: 7)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: UniqueEntity.self, id: 7, uid: 6258744021471265280)
@@ -2255,7 +2521,7 @@ extension ObjectBox.Property where E == UniqueEntity {
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `UniqueEntity.EntityBindingType`.
-internal class UniqueEntityBinding: ObjectBox.EntityBinding {
+internal final class UniqueEntityBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = UniqueEntity
     internal typealias IdType = Id
 
@@ -2486,17 +2752,23 @@ extension VectorTestEntity: ObjectBox.EntityInspectable {
     internal typealias EntityBindingType = VectorTestEntityBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static var entityInfo = ObjectBox.EntityInfo(name: "VectorTestEntity", id: 8)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "VectorTestEntity", id: 8)
 
-    internal static var entityBinding = EntityBindingType()
+    internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
         let entityBuilder = try modelBuilder.entityBuilder(for: VectorTestEntity.self, id: 8, uid: 7256288410204653312)
         try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 94097545351615488)
         try entityBuilder.addProperty(name: "floatArray", type: PropertyType.floatVector, id: 2, uid: 652568643967173888)
         try entityBuilder.addProperty(name: "floatArrayNull", type: PropertyType.floatVector, id: 3, uid: 3229707254718114048)
+        try entityBuilder.addProperty(name: "stringArray", type: PropertyType.stringVector, id: 4, uid: 6832556501902628096)
+        try entityBuilder.addProperty(name: "stringArrayNull", type: PropertyType.stringVector, id: 5, uid: 8947266429629784064)
+        try entityBuilder.addProperty(name: "int32Array", type: PropertyType.intVector, id: 6, uid: 4876094469932285952)
+        try entityBuilder.addProperty(name: "int32ArrayNull", type: PropertyType.intVector, id: 7, uid: 1377408736165648640)
+        try entityBuilder.addProperty(name: "int64Array", type: PropertyType.longVector, id: 8, uid: 6782936499305996288)
+        try entityBuilder.addProperty(name: "int64ArrayNull", type: PropertyType.longVector, id: 9, uid: 5070166049413543424)
 
-        try entityBuilder.lastProperty(id: 3, uid: 3229707254718114048)
+        try entityBuilder.lastProperty(id: 9, uid: 5070166049413543424)
     }
 }
 
@@ -2511,14 +2783,50 @@ extension VectorTestEntity {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { VectorTestEntity.floatArray.isNotNil() }
+    ///     box.query { VectorTestEntity.floatArray.isGreaterThan(value) }
     internal static var floatArray: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 2, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { VectorTestEntity.floatArrayNull.isNotNil() }
+    ///     box.query { VectorTestEntity.floatArrayNull.isGreaterThan(value) }
     internal static var floatArrayNull: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.stringArray.containsElement(element: "<value>", caseSensitive: true) }
+    internal static var stringArray: Property<VectorTestEntity, StringArrayPropertyType, Void> { return Property<VectorTestEntity, StringArrayPropertyType, Void>(propertyId: 4, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.stringArrayNull.containsElement(element: "<value>", caseSensitive: true) }
+    internal static var stringArrayNull: Property<VectorTestEntity, StringArrayPropertyType, Void> { return Property<VectorTestEntity, StringArrayPropertyType, Void>(propertyId: 5, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.int32Array.isGreaterThan(value) }
+    internal static var int32Array: Property<VectorTestEntity, Int32ArrayPropertyType, Void> { return Property<VectorTestEntity, Int32ArrayPropertyType, Void>(propertyId: 6, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.int32ArrayNull.isGreaterThan(value) }
+    internal static var int32ArrayNull: Property<VectorTestEntity, Int32ArrayPropertyType, Void> { return Property<VectorTestEntity, Int32ArrayPropertyType, Void>(propertyId: 7, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.int64Array.isGreaterThan(value) }
+    internal static var int64Array: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 8, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.int64ArrayNull.isGreaterThan(value) }
+    internal static var int64ArrayNull: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 9, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = Id(identifier)
@@ -2550,11 +2858,59 @@ extension ObjectBox.Property where E == VectorTestEntity {
 
     internal static var floatArrayNull: Property<VectorTestEntity, FloatArrayPropertyType, Void> { return Property<VectorTestEntity, FloatArrayPropertyType, Void>(propertyId: 3, isPrimaryKey: false) }
 
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .stringArray.containsElement(element: "<value>", caseSensitive: true) }
+
+    internal static var stringArray: Property<VectorTestEntity, StringArrayPropertyType, Void> { return Property<VectorTestEntity, StringArrayPropertyType, Void>(propertyId: 4, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .stringArrayNull.containsElement(element: "<value>", caseSensitive: true) }
+
+    internal static var stringArrayNull: Property<VectorTestEntity, StringArrayPropertyType, Void> { return Property<VectorTestEntity, StringArrayPropertyType, Void>(propertyId: 5, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .int32Array.isNotNil() }
+
+    internal static var int32Array: Property<VectorTestEntity, Int32ArrayPropertyType, Void> { return Property<VectorTestEntity, Int32ArrayPropertyType, Void>(propertyId: 6, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .int32ArrayNull.isNotNil() }
+
+    internal static var int32ArrayNull: Property<VectorTestEntity, Int32ArrayPropertyType, Void> { return Property<VectorTestEntity, Int32ArrayPropertyType, Void>(propertyId: 7, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .int64Array.isNotNil() }
+
+    internal static var int64Array: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 8, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .int64ArrayNull.isNotNil() }
+
+    internal static var int64ArrayNull: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 9, isPrimaryKey: false) }
+
 }
 
 
 /// Generated service type to handle persisting and reading entity data. Exposed through `VectorTestEntity.EntityBindingType`.
-internal class VectorTestEntityBinding: ObjectBox.EntityBinding {
+internal final class VectorTestEntityBinding: ObjectBox.EntityBinding, Sendable {
     internal typealias EntityType = VectorTestEntity
     internal typealias IdType = Id
 
@@ -2574,10 +2930,22 @@ internal class VectorTestEntityBinding: ObjectBox.EntityBinding {
                                   propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
         let propertyOffset_floatArray = propertyCollector.prepare(values: entity.floatArray)
         let propertyOffset_floatArrayNull = propertyCollector.prepare(values: entity.floatArrayNull)
+        let propertyOffset_stringArray = propertyCollector.prepare(values: entity.stringArray)
+        let propertyOffset_stringArrayNull = propertyCollector.prepare(values: entity.stringArrayNull)
+        let propertyOffset_int32Array = propertyCollector.prepare(values: entity.int32Array)
+        let propertyOffset_int32ArrayNull = propertyCollector.prepare(values: entity.int32ArrayNull)
+        let propertyOffset_int64Array = propertyCollector.prepare(values: entity.int64Array)
+        let propertyOffset_int64ArrayNull = propertyCollector.prepare(values: entity.int64ArrayNull)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 2)
         propertyCollector.collect(dataOffset: propertyOffset_floatArrayNull, at: 2 + 2 * 3)
+        propertyCollector.collect(dataOffset: propertyOffset_stringArray, at: 2 + 2 * 4)
+        propertyCollector.collect(dataOffset: propertyOffset_stringArrayNull, at: 2 + 2 * 5)
+        propertyCollector.collect(dataOffset: propertyOffset_int32Array, at: 2 + 2 * 6)
+        propertyCollector.collect(dataOffset: propertyOffset_int32ArrayNull, at: 2 + 2 * 7)
+        propertyCollector.collect(dataOffset: propertyOffset_int64Array, at: 2 + 2 * 8)
+        propertyCollector.collect(dataOffset: propertyOffset_int64ArrayNull, at: 2 + 2 * 9)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
@@ -2586,6 +2954,12 @@ internal class VectorTestEntityBinding: ObjectBox.EntityBinding {
         entity.id = entityReader.read(at: 2 + 2 * 1)
         entity.floatArray = entityReader.read(at: 2 + 2 * 2)
         entity.floatArrayNull = entityReader.read(at: 2 + 2 * 3)
+        entity.stringArray = entityReader.read(at: 2 + 2 * 4)
+        entity.stringArrayNull = entityReader.read(at: 2 + 2 * 5)
+        entity.int32Array = entityReader.read(at: 2 + 2 * 6)
+        entity.int32ArrayNull = entityReader.read(at: 2 + 2 * 7)
+        entity.int64Array = entityReader.read(at: 2 + 2 * 8)
+        entity.int64ArrayNull = entityReader.read(at: 2 + 2 * 9)
 
         return entity
     }
@@ -2604,16 +2978,18 @@ fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
     try Author.buildEntity(modelBuilder: modelBuilder)
     try AuthorStruct.buildEntity(modelBuilder: modelBuilder)
+    try Customer.buildEntity(modelBuilder: modelBuilder)
     try HnswObject.buildEntity(modelBuilder: modelBuilder)
     try Note.buildEntity(modelBuilder: modelBuilder)
     try NoteStruct.buildEntity(modelBuilder: modelBuilder)
+    try Order.buildEntity(modelBuilder: modelBuilder)
     try RelatedNamedEntity.buildEntity(modelBuilder: modelBuilder)
     try Student.buildEntity(modelBuilder: modelBuilder)
     try Teacher.buildEntity(modelBuilder: modelBuilder)
     try UniqueEntity.buildEntity(modelBuilder: modelBuilder)
     try VectorTestEntity.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 10, uid: 8024588008899966976)
-    modelBuilder.lastIndex(id: 5, uid: 8428673278937057024)
+    modelBuilder.lastEntity(id: 12, uid: 4696988777145786880)
+    modelBuilder.lastIndex(id: 6, uid: 6572619879603300096)
     modelBuilder.lastRelation(id: 3, uid: 417604695477796352)
     return modelBuilder.finish()
 }
@@ -2660,7 +3036,7 @@ extension ObjectBox.Store {
 
 // swiftlint:enable all
 
-// MARK: - Custom code for testing, re-add this after re-generating this file with generate.rb
+// MARK: - Custom code for testing, re-add this after re-generating this file with generate.sh
 extension ObjectBox.Store {
     static func testEntities() throws -> Store {
         return StoreHelper.tempStore(model: try cModel())

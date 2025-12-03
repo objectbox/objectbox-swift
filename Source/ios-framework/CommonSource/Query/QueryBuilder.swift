@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -323,6 +323,64 @@ extension QueryBuilder {
     }
 }
 
+// MARK: - Int32 Vectors
+
+extension QueryBuilder {
+    internal func isEqualTo<V, R>(_ property: Property<EntityType, V, R>, int: Int32)
+    -> PropertyQueryBuilderCondition where V: Int32ArrayPropertyType {
+        return wrap(obx_qb_equals_int(queryBuilder, property.propertyId, Int64(int)))
+    }
+    
+    internal func lessThan<V, R>(_ property: Property<EntityType, V, R>, int: Int32)
+    -> PropertyQueryBuilderCondition where V: Int32ArrayPropertyType {
+        return wrap(obx_qb_less_than_int(queryBuilder, property.propertyId, Int64(int)))
+    }
+
+    internal func greaterThan<V, R>(_ property: Property<EntityType, V, R>, int: Int32)
+    -> PropertyQueryBuilderCondition where V: Int32ArrayPropertyType {
+        return wrap(obx_qb_greater_than_int(queryBuilder, property.propertyId, Int64(int)))
+    }
+
+    internal func lessOrEqual<V, R>(_ property: Property<EntityType, V, R>, int: Int32)
+    -> PropertyQueryBuilderCondition where V: Int32ArrayPropertyType {
+        return wrap(obx_qb_less_or_equal_int(queryBuilder, property.propertyId, Int64(int)))
+    }
+
+    internal func greaterOrEqual<V, R>(_ property: Property<EntityType, V, R>, int: Int32)
+    -> PropertyQueryBuilderCondition where V: Int32ArrayPropertyType {
+        return wrap(obx_qb_greater_or_equal_int(queryBuilder, property.propertyId, Int64(int)))
+    }
+}
+
+// MARK: - Int64 Vectors
+
+extension QueryBuilder {
+    internal func isEqualTo<V, R>(_ property: Property<EntityType, V, R>, int: Int64)
+    -> PropertyQueryBuilderCondition where V: Int64ArrayPropertyType {
+        return wrap(obx_qb_equals_int(queryBuilder, property.propertyId, int))
+    }
+    
+    internal func lessThan<V, R>(_ property: Property<EntityType, V, R>, int: Int64)
+    -> PropertyQueryBuilderCondition where V: Int64ArrayPropertyType {
+        return wrap(obx_qb_less_than_int(queryBuilder, property.propertyId, int))
+    }
+
+    internal func greaterThan<V, R>(_ property: Property<EntityType, V, R>, int: Int64)
+    -> PropertyQueryBuilderCondition where V: Int64ArrayPropertyType {
+        return wrap(obx_qb_greater_than_int(queryBuilder, property.propertyId, int))
+    }
+
+    internal func lessOrEqual<V, R>(_ property: Property<EntityType, V, R>, int: Int64)
+    -> PropertyQueryBuilderCondition where V: Int64ArrayPropertyType {
+        return wrap(obx_qb_less_or_equal_int(queryBuilder, property.propertyId, int))
+    }
+
+    internal func greaterOrEqual<V, R>(_ property: Property<EntityType, V, R>, int: Int64)
+    -> PropertyQueryBuilderCondition where V: Int64ArrayPropertyType {
+        return wrap(obx_qb_greater_or_equal_int(queryBuilder, property.propertyId, int))
+    }
+}
+
 // MARK: - HNSW index property
 
 extension QueryBuilder {
@@ -333,6 +391,15 @@ extension QueryBuilder {
     }
 }
 
+// MARK: - String vector
+
+extension QueryBuilder {
+    internal func `where`<V, R>(_ queryProperty: Property<EntityType, V, R>,
+                                containsElement element: String, caseSensitive: Bool)
+    -> PropertyQueryBuilderCondition where V: StringArrayPropertyType {
+        return wrap(obx_qb_contains_element_string(queryBuilder, queryProperty.propertyId, element, caseSensitive))
+    }
+}
 
 // MARK: - String and Optional<String>
 

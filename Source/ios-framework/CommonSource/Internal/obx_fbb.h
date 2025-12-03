@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,9 +79,14 @@ void obx_fbb_collect_double(struct OBX_fbb* _Nonnull self, double value, uint16_
 void obx_fbb_collect_data_offset(struct OBX_fbb* _Nonnull self, OBXDataOffset dataOffset, uint16_t propertyOffset);
 
 OBXDataOffset obx_fbb_prepare_string(struct OBX_fbb* _Nonnull self, const char* _Nonnull string);
+
 OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, const void* _Nonnull bytes, size_t size);
+OBXDataOffset obx_fbb_prepare_ints(struct OBX_fbb* _Nonnull self, const void* _Nonnull ints, size_t size);
+OBXDataOffset obx_fbb_prepare_longs(struct OBX_fbb* _Nonnull self, const void* _Nonnull longs, size_t size);
 
 OBXDataOffset obx_fbb_prepare_floats(struct OBX_fbb* _Nonnull self, const void* _Nonnull floats, size_t size);
+
+OBXDataOffset obx_fbb_prepare_strings(struct OBX_fbb* _Nonnull self, const char* _Nonnull const * _Nonnull strings, size_t size);
 
 #pragma mark - Reading
 
@@ -153,17 +158,47 @@ bool obx_fbr_read_double(const struct OBX_fbr* _Nonnull self, uint16_t propertyO
 /// @param propertyOffset the offset of the offset to the actual data.
 /// @return a pointer to an internal buffer holding the string read, or NULL if it was a NULL value. Do not free the returned string, copy it to keep it around.
 const char * _Nullable obx_fbr_read_string(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset);
+
 /// @param self the OBX_fbr from which you want to read.
 /// @param propertyOffset the offset of the offset to the actual data.
 /// @param outBytes This struct is set to the pointer and size of an internal buffer holding the bytes read. Do not free the buffer, copy it to keep it around.
 /// @return false on NULL value, true if result was set to a value.
 bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_bytes* _Nonnull outBytes);
+bool obx_fbr_read_ints(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int32_array* _Nonnull outInts);
+bool obx_fbr_read_longs(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int64_array* _Nonnull outLongs);
 
 /// @param self the OBX_fbr from which you want to read.
 /// @param propertyOffset the offset of the offset to the actual data.
 /// @param outFloats This struct is set to the pointer and size of an internal buffer holding the floats read. Do not free the buffer, copy it to keep it around.
 /// @return false on NULL value, true if result was set to a value.
 bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_float_array* _Nonnull outFloats);
+
+/// @param self the OBX_fbr from which you want to read.
+/// @param propertyOffset the offset of the offset to the actual data.
+/// @param outInts This struct is set to the pointer and size of an internal buffer holding the ints read. Do not free the buffer, copy it to keep it around.
+/// @return false on NULL value, true if result was set to a value.
+bool obx_fbr_read_ints(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int32_array* _Nonnull outInts);
+
+/// @param self the OBX_fbr from which you want to read.
+/// @param propertyOffset the offset of the offset to the actual data.
+/// @param outLongs This struct is set to the pointer and size of an internal buffer holding the longs read. Do not free the buffer, copy it to keep it around.
+/// @return false on NULL value, true if result was set to a value.
+bool obx_fbr_read_longs(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int64_array* _Nonnull outLongs);
+
+/// Similar to OBX_string_array(_internal): we need an accessible vector to manage the memory for the string pointers.
+struct OBX_flat_strings {
+    /// Nullable pointer to an array of non-null C string pointers.
+    const char* _Nonnull const * _Nullable items;
+    size_t count;
+};
+
+/// @param self the OBX_fbr from which you want to read.
+/// @param propertyOffset the offset of the offset to the actual data.
+/// @return A nil-pointer on NULL value, otherwise a OBX_flat_strings struct that should be cleaned up after using it with ``obx_flat_strings_free(strings)``.
+struct OBX_flat_strings* _Nullable obx_fbr_read_strings(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset);
+
+/// To free the vector resources of the struct returned by ``obx_fbr_read_strings(self, propertyOffset)``.
+void obx_flat_strings_free(struct OBX_flat_strings* _Nullable strings);
 
 #if __cplusplus
 }

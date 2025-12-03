@@ -111,6 +111,24 @@ public protocol SyncClient: AnyObject {
     /// - Returns false if the request was not sent (and will not be sent in the future).
     @discardableResult
     func cancelUpdates() throws -> Bool
+    
+    /// Count the number of messages in the outgoing queue, i.e. those waiting to
+    /// be sent to the server.
+    ///
+    /// Counts all messages without any limitation. To apply a limit, use ``outgoingMessagesCount(limit:)``.
+    ///
+    /// Note: This call uses a (read) transaction internally:
+    ///   1) It's not just a "cheap" return of a single number. While this will
+    ///      still be fast, avoid calling this function excessively.
+    ///   2) The result follows transaction view semantics, thus it may not always
+    ///      match the actual value.
+    func outgoingMessagesCount() throws -> UInt
+    
+    /// Like ``outgoingMessagesCount()``, but counts messages up to a limit that's enough for your app logic.
+    ///
+    /// - Parameter limit: pass 0 to count all messages without any limitation or a number that's low enough for your
+    ///  app logic.
+    func outgoingMessagesCount(limit: UInt) throws -> UInt
 
     /// Experimental/Advanced API: requests a sync of all previous changes from the server.
     /// - Returns true if the request was likely sent (e.g. the sync client is in "logged in" state)

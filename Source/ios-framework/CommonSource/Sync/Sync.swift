@@ -31,6 +31,9 @@ public class Sync {
     /// Sync client filter variables can be used in server-side Sync filters to filter out objects that do not match
     /// the filter.
     ///
+    /// To for example use self-signed certificates in a local development environment or custom CAs, pass certificate
+    /// paths referring to the local file system to `certificatePaths`.
+    ///
     /// - Throws: `ObjectBoxError.sync` if sync is unavailable in this version of the library
     ///           or no valid URL was provided.
     public static func makeClient(
@@ -38,9 +41,11 @@ public class Sync {
         url: URL? = nil,
         urlString: String? = nil,
         credentials: SyncCredentials? = nil,
-        filterVariables: [String: String]? = nil
+        filterVariables: [String: String]? = nil,
+        certificatePaths: [String] = []
     ) throws -> SyncClient {
-        let client = try makeClient(store: store, url: url, urlString: urlString)
+        let client = try makeClient(store: store, url: url, urlString: urlString, filterVariables: filterVariables,
+            certificatePaths: certificatePaths)
 
         if credentials != nil {
             try client.setCredentials(credentials!)
@@ -55,9 +60,11 @@ public class Sync {
         url: URL? = nil,
         urlString: String? = nil,
         credentials: [SyncCredentials],
-        filterVariables: [String: String]? = nil
+        filterVariables: [String: String]? = nil,
+        certificatePaths: [String] = []
     ) throws -> SyncClient {
-        let client = try makeClient(store: store, url: url, urlString: urlString)
+        let client = try makeClient(store: store, url: url, urlString: urlString, filterVariables: filterVariables,
+            certificatePaths: certificatePaths)
 
         try client.setCredentials(credentials)
 
@@ -68,7 +75,8 @@ public class Sync {
         store: Store,
         url: URL? = nil,
         urlString: String? = nil,
-        filterVariables: [String: String]? = nil
+        filterVariables: [String: String]? = nil,
+        certificatePaths: [String] = []
     ) throws -> SyncClientImpl {
         guard isAvailable() else {
             throw ObjectBoxError.sync(
@@ -91,7 +99,7 @@ public class Sync {
             }
         }
 
-        let client = try SyncClientImpl(store: store, server: urlToConnect!)
+        let client = try SyncClientImpl(store: store, server: urlToConnect!, certificatePaths: certificatePaths)
 
         // Associate store with the new client: keep the client alive and provide convenient access to it
         store.syncClient = client  // This is not very atomic...

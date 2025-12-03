@@ -190,13 +190,21 @@ typedef void OBX_sync_listener_msg_objects(void* arg, const OBX_sync_msg_objects
 /// Creates a sync client associated with the given store and sync server URL.
 /// This does not initiate any connection attempts yet: call obx_sync_start() to do so.
 /// Before obx_sync_start(), you must configure credentials via obx_sync_credentials.
-/// By default a sync client automatically receives updates from the server once login succeeded.
+/// By default, a sync client automatically receives updates from the server once login succeeded.
 /// To configure this differently, call obx_sync_request_updates_mode() with the wanted mode.
 OBX_C_API OBX_sync* obx_sync(OBX_store* store, const char* server_url);
 
-/// Creates a sync client associated with the given store and a list of sync server URL.
-/// For details, see obx_sync()
+/// Creates a sync client associated with the given store and a list of sync server URLs (minimum: one URL).
+/// Passing multiple URLs allows high availability and load balancing (i.e. using a ObjectBox Sync Server Cluster).
+/// A random URL is selected for each connection attempt.
+/// For general details, see obx_sync()
 OBX_C_API OBX_sync* obx_sync_urls(OBX_store* store, const char* server_urls[], size_t server_urls_count);
+
+/// Creates a sync client associated with the given store, sync server URLs and SSL certificate paths.
+/// Like obx_sync_urls(), but also allows to pass SSL certificate paths referring to the local file system.
+/// Example use cases are using self-signed certificates in a local development environment and custom CAs.
+OBX_C_API OBX_sync* obx_sync_certs(OBX_store* store, const char* server_urls[], size_t server_urls_count,
+                                   const char* cert_paths[], size_t cert_paths_count);
 
 /// Stops and closes (deletes) the sync client, freeing its resources.
 OBX_C_API obx_err obx_sync_close(OBX_sync* sync);
@@ -262,6 +270,7 @@ OBX_C_API obx_err obx_sync_max_messages_in_flight(OBX_sync* sync, int value);
 /// Triggers a reconnection attempt immediately.
 /// By default, an increasing backoff interval is used for reconnection attempts.
 /// But sometimes the user of this API has additional knowledge and can initiate a reconnection attempt sooner.
+/// @return OBX_SUCCESS if a reconnect could be triggered, OBX_NO_SUCCESS if not, or an error code in exceptional cases.
 OBX_C_API obx_err obx_sync_trigger_reconnect(OBX_sync* sync);
 
 /// Sets the interval in which the client sends "heartbeat" messages to the server, keeping the connection alive.
@@ -327,7 +336,7 @@ OBX_C_API obx_err obx_sync_updates_cancel(OBX_sync* sync);
 
 /// Count the number of messages in the outgoing queue, i.e. those waiting to be sent to the server.
 /// @param limit pass 0 to count all messages without any limitation or a lower number that's enough for your app logic.
-/// @note This calls uses a (read) transaction internally: 1) it's not just a "cheap" return of a single number.
+/// @note This call uses a (read) transaction internally: 1) it's not just a "cheap" return of a single number.
 ///       While this will still be fast, avoid calling this function excessively.
 ///       2) the result follows transaction view semantics, thus it may not always match the actual value.
 OBX_C_API obx_err obx_sync_outgoing_message_count(OBX_sync* sync, uint64_t limit, uint64_t* out_count);

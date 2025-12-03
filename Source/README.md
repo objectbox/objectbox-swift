@@ -75,7 +75,7 @@ make u_tests
 # Build a debug version of the generator
 make build_generator_debug
 # Run generator tests
-make g_tests_run
+make g_tests
 ```
 
 **To run a specific unit test** change the last argument to specify your test. You can also run a group/class by removing the last one/two parts of the filter.

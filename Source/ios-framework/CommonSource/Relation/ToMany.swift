@@ -115,17 +115,17 @@ where S == S.EntityBindingType.EntityType {
 
     /// Used by the code generator to associate a to-many relation with its store and the model.
     /// `relationId` is the ID of the standalone to-many-relation connecting the entities.
-    public static func relation<OwningType>(sourceId: EntityId<OwningType>,
-                                            targetBox: Box<ReferencedType>,
-                                            relationId: obx_schema_id) -> ToMany<ReferencedType> {
+    public static func relation<OwningType: EntityInspectable>(sourceId: EntityId<OwningType>,
+                                                               targetBox: Box<ReferencedType>,
+                                                               relationId: obx_schema_id) -> ToMany<ReferencedType> {
         return ToMany(sourceId: sourceId, targetBox: targetBox, relationId: relationId)
     }
 
     /// Used by the code generator to associate a to-many backlink with its store and the model.
     /// `relationId` is the ID of the standalone to-many-relation connecting the entities.
-    public static func backlink<OwningType>(sourceBox: Box<ReferencedType>,
-                                            targetId: EntityId<OwningType>,
-                                            relationId: obx_schema_id) -> ToMany<ReferencedType>
+    public static func backlink<OwningType: EntityInspectable>(sourceBox: Box<ReferencedType>,
+                                                               targetId: EntityId<OwningType>,
+                                                               relationId: obx_schema_id) -> ToMany<ReferencedType>
         where OwningType == OwningType.EntityBindingType.EntityType {
         return ToMany(sourceBox: sourceBox, targetId: targetId, relationId: relationId)
     }
@@ -138,17 +138,17 @@ where S == S.EntityBindingType.EntityType {
         self.info = .toOneBacklink(propertyId: sourceProperty.propertyId, owningId: targetId.value)
     }
 
-    internal init<OwningType>(sourceId: EntityId<OwningType>,
-                              targetBox: Box<ReferencedType>,
-                              relationId: obx_schema_id) {
+    internal init<OwningType: EntityInspectable>(sourceId: EntityId<OwningType>,
+                                                 targetBox: Box<ReferencedType>,
+                                                 relationId: obx_schema_id) {
         self.owningBox = obx_box(targetBox.store.cStore, OwningType.entityInfo.entitySchemaId)
         self.referencedBox = targetBox
         self.info = .toMany(relationId: relationId, referencedId: sourceId.value)
     }
 
-    internal init<OwningType>(sourceBox: Box<ReferencedType>,
-                              targetId: EntityId<OwningType>,
-                              relationId: obx_schema_id)
+    internal init<OwningType: EntityInspectable>(sourceBox: Box<ReferencedType>,
+                                                 targetId: EntityId<OwningType>,
+                                                 relationId: obx_schema_id)
     where OwningType == OwningType.EntityBindingType.EntityType {
         referencedBox = sourceBox
         self.owningBox = obx_box(sourceBox.store.cStore, OwningType.entityInfo.entitySchemaId)

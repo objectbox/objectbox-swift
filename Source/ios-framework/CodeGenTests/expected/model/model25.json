@@ -48,8 +48,8 @@
       "relations": []
     },
     {
-      "id": "2:42496",
-      "lastPropertyId": "20:41728",
+      "id": "2:45568",
+      "lastPropertyId": "23:44544",
       "name": "TypeTest",
       "properties": [
         {
@@ -154,14 +154,29 @@
         },
         {
           "id": "20:41728",
+          "name": "int32Array",
+          "type": 26
+        },
+        {
+          "id": "21:42496",
+          "name": "int64Array",
+          "type": 27
+        },
+        {
+          "id": "22:43520",
           "name": "floatArray",
           "type": 28
+        },
+        {
+          "id": "23:44544",
+          "name": "stringArray",
+          "type": 30
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:42496",
+  "lastEntityId": "2:45568",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

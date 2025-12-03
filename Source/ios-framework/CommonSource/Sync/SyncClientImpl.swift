@@ -87,9 +87,14 @@ class SyncClientImpl: SyncClient {
         }
     }
 
-    init(store: Store, server: URL) throws {
+    init(store: Store, server: URL, certificatePaths: [String]) throws {
         self.store = store
-        cSync = obx_sync(store.cStore, server.absoluteString)
+        let urls = [server.absoluteString]
+        cSync = Util.withArrayOfCStringsMutable(urls) { urlsPtr, urlsCount in
+            return Util.withArrayOfCStringsMutable(certificatePaths) { certsPtr, certsCount in
+                return obx_sync_certs(store.cStore, urlsPtr, urlsCount, certsPtr, certsCount)
+            }
+        }
         if cSync == nil {
             try checkLastError()
             throw ObjectBoxError.sync(message: "Could not create")  // paranoia, checkLastError() should throw already
@@ -300,7 +305,17 @@ class SyncClientImpl: SyncClient {
         try ensureValid()
         try checkLastError(obx_sync_heartbeat_interval(cSync, UInt64(milliseconds)))
     }
+    
+    func outgoingMessagesCount() throws -> UInt {
+        try outgoingMessagesCount(limit: 0)
+    }
 
+    func outgoingMessagesCount(limit: UInt) throws -> UInt {
+        try ensureValid()
+        var count: UInt64 = 0
+        try checkLastError(obx_sync_outgoing_message_count(cSync, UInt64(limit), &count))
+        return UInt(count)
+    }
 }
 
 private func callWithSyncClient(_ userData: UnsafeMutableRawPointer?, action: @escaping (SyncClient) -> Void) {

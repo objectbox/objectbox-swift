@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
 //
 
 #include "obx_fbb.h"
+#include "assert.h"
+#include <vector>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdocumentation"
 #include "flatbuffers/flatbuffers.h"
@@ -209,6 +212,36 @@ extern "C" OBXDataOffset obx_fbb_prepare_bytes(struct OBX_fbb* _Nonnull self, co
     return result;
 }
 
+extern "C" OBXDataOffset obx_fbb_prepare_ints(struct OBX_fbb* _Nonnull self, const void* _Nonnull ints, size_t size) {
+    GUARD_IS_COLLECTING;
+    assert(!obx_is_started_fast(self)); // Must be collected before scalars.
+
+    OBXDataOffset result = 0;
+    try {
+        flatbuffers::Offset<flatbuffers::Vector<int32_t>> vectorOffset = self->fbb.CreateVector((int32_t *)ints, size);
+        result = vectorOffset.o;
+    } catch(std::bad_alloc& err) {
+        fprintf(stderr, "Unexpected bad_alloc error collecting int32 vector.");
+        result = 0;
+    }
+    return result;
+}
+
+extern "C" OBXDataOffset obx_fbb_prepare_longs(struct OBX_fbb* _Nonnull self, const void* _Nonnull longs, size_t size) {
+    GUARD_IS_COLLECTING;
+    assert(!obx_is_started_fast(self)); // Must be collected before scalars.
+
+    OBXDataOffset result = 0;
+    try {
+        flatbuffers::Offset<flatbuffers::Vector<int64_t>> vectorOffset = self->fbb.CreateVector((int64_t *)longs, size);
+        result = vectorOffset.o;
+    } catch(std::bad_alloc& err) {
+        fprintf(stderr, "Unexpected bad_alloc error collecting int64 vector.");
+        result = 0;
+    }
+    return result;
+}
+
 extern "C" OBXDataOffset obx_fbb_prepare_floats(struct OBX_fbb* _Nonnull self, const void* _Nonnull floats, size_t size) {
     GUARD_IS_COLLECTING;
     assert(!obx_is_started_fast(self)); // Must be collected before scalars.
@@ -219,6 +252,32 @@ extern "C" OBXDataOffset obx_fbb_prepare_floats(struct OBX_fbb* _Nonnull self, c
         result = vectorOffset.o;
     } catch(std::bad_alloc& err) {
         fprintf(stderr, "Unexpected bad_alloc error collecting float vector.");
+        result = 0;
+    }
+    return result;
+}
+
+extern "C" OBXDataOffset obx_fbb_prepare_strings(struct OBX_fbb* _Nonnull self, const char* _Nonnull const * _Nonnull strings, size_t size) {
+    GUARD_IS_COLLECTING;
+    assert(!obx_is_started_fast(self)); // Must be collected before scalars.
+
+    OBXDataOffset result = 0;
+    try {
+        // Create a vector to hold string offsets
+        std::vector<flatbuffers::Offset<flatbuffers::String>> stringOffsets;
+        stringOffsets.reserve(size);
+
+        // Create each string and store its offset
+        for (size_t i = 0; i < size; ++i) {
+            stringOffsets.push_back(self->fbb.CreateString(strings[i]));
+        }
+
+        // Create the vector of string offsets
+        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> vectorOffset =
+            self->fbb.CreateVector(stringOffsets);
+        result = vectorOffset.o;
+    } catch(std::bad_alloc& err) {
+        fprintf(stderr, "Unexpected bad_alloc error collecting string vector.");
         result = 0;
     }
     return result;
@@ -349,6 +408,30 @@ extern "C" bool obx_fbr_read_bytes(const struct OBX_fbr* _Nonnull self, uint16_t
     return true;
 }
 
+extern "C" bool obx_fbr_read_ints(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int32_array* outInts) {
+    const flatbuffers::Vector<int32_t> *vector = self->GetPointer<const flatbuffers::Vector<int32_t> *>(propertyOffset);
+    if (!vector) {
+        return false;
+    }
+
+    outInts->items = vector->data();
+    outInts->count = vector->size();
+
+    return true;
+}
+
+extern "C" bool obx_fbr_read_longs(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_int64_array* outLongs) {
+    const flatbuffers::Vector<int64_t> *vector = self->GetPointer<const flatbuffers::Vector<int64_t> *>(propertyOffset);
+    if (!vector) {
+        return false;
+    }
+
+    outLongs->items = vector->data();
+    outLongs->count = vector->size();
+
+    return true;
+}
+
 extern "C" bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset, OBX_float_array* outFloats) {
     const flatbuffers::Vector<float> *vector = self->GetPointer<const flatbuffers::Vector<float> *>(propertyOffset);
     if (!vector) {
@@ -359,4 +442,44 @@ extern "C" bool obx_fbr_read_floats(const struct OBX_fbr* _Nonnull self, uint16_
     outFloats->count = vector->size();
     
     return true;
+}
+
+/// Similar to OBX_string_array(_internal): we need an accessible vector to manage the memory for the string pointers.
+struct OBX_flat_strings_internal {
+    const char** items;
+    size_t count;
+    std::vector<const char*> vector_;
+};
+
+extern "C" OBX_flat_strings* _Nullable obx_fbr_read_strings(const struct OBX_fbr* _Nonnull self, uint16_t propertyOffset) {
+    const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *vector =
+        self->GetPointer<const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *>(propertyOffset);
+
+    if (!vector) {
+        return nullptr;
+    }
+
+    OBX_flat_strings_internal* strings = new OBX_flat_strings_internal();
+    if (!vector || vector->size() == 0) {
+        strings->items = nullptr;
+        strings->count = 0;
+        return (OBX_flat_strings*) strings;
+    }
+
+    // Copy all string pointers to the vector
+    strings->vector_.reserve(vector->size());
+    for (flatbuffers::uoffset_t i = 0; i < vector->size(); ++i) {
+        const flatbuffers::String *str = vector->Get(i);
+        // It seems that FlatBuffers vectors cannot contain "null" entries;
+        // still checking just in case (and adding an empty string).
+        strings->vector_.push_back(str ? str->c_str() : "");
+    }
+    strings->items = strings->vector_.data();
+    strings->count = vector->size();
+
+    return (OBX_flat_strings*) strings;
+}
+
+extern "C" void obx_flat_strings_free(struct OBX_flat_strings* _Nullable strings) {
+    delete (OBX_flat_strings_internal*) strings;
 }

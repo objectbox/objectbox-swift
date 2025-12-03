@@ -145,7 +145,16 @@ test_target_num () {
     fi
 
     if [ $FAIL -eq 0 ]; then
-        xcodebuild FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" -quiet -project "$TESTPROJECT" -target "ToolTestProject${2}" CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}"
+        echo "Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
+        xcodebuild \
+            FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" \
+            -quiet \
+            -project "$TESTPROJECT" \
+            -target "ToolTestProject${2}" \
+            CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}" \
+            ARCHS=$ARCHS \
+            ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH
+
         if [ $? -eq 0 ]; then
             echo "note: $2: $1: Built test target."
         else
@@ -268,8 +277,17 @@ fail_codegen_target_num () {
     
     if [ $FAIL -eq 0 ]; then
         if [ -e "$ORIGINALXCODELOGFILE" ]; then
-            xcodebuild FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" -quiet -project "$TESTPROJECT" -target "ToolTestProject${2}" CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}" > "$TESTXCODELOGFILE"
-        
+        echo "Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
+        xcodebuild \
+            FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" \
+            -quiet \
+            -project "$TESTPROJECT" \
+            -target "ToolTestProject${2}" \
+            CONFIGURATION_BUILD_DIR="${BUILT_PRODUCTS_DIR}" \
+            ARCHS=$ARCHS \
+            ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH \
+            > "$TESTXCODELOGFILE" 
+
             OLDPWD="`pwd`"
             cd "$MYDIR"
             GITROOT=`git rev-parse --show-toplevel`

@@ -66,8 +66,8 @@ public class PropertyQuery<E: EntityInspectable & __EntityRelatable, T: EntityPr
         let cPropertyQuery: OpaquePointer? = obx_query_prop(query.cQuery, propertyId)
         if cPropertyQuery == nil {
             // swiftlint:disable force_try
-            try! checkLastError() // Should always throw; runtime error is OK because is an dev error (wrong schema ID)
-            try! throwObxErr(0, message: "Should have thrown before")
+            // Force try to throw a runtime error. This is OK as this indicates a wrong schema ID.
+            try! checkLastError()
             // swiftlint:enable force_try
         }
         self.cQueryProp = cPropertyQuery!

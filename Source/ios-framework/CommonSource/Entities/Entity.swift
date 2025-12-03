@@ -1,5 +1,5 @@
 //
-// Copyright © 2018 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. https://objectbox.io/
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,52 @@
 // limitations under the License.
 //
 
-/// Types conforming to this protocol provide persistence metadata.
+/// Optional protocol to signal the ObjectBox code generator that a class/struct is an entity
+/// (part of the persisted ObjectBox data model).
 ///
-/// The code generator will make your `Entity` types conform to this for you and implement
-/// the requirements.
+/// ```swift
+/// class Person: Entity {
+///     var id: Id = 0
+///     init() { }
+/// }
+/// ```
+///
+/// While not enforced by this protocol, adopting classes or structs must at least provide an ID property of type
+/// ``Id``. Classes must also provide a no-argument constructor, like `init()` and all persisted properties must be
+/// mutable. For structs, a constructor that accepts all persisted properties must be available.
+///
+/// Instead of adopting this protocol, an annotation can be used:
+///
+/// ```swift
+/// // objectbox: entity
+/// class Person {
+///     var id: Id = 0
+///     init() { }
+/// }
+/// ```
+///
+/// ## Persisted Properties
+///
+/// All properties that have a supported type are persisted.
+///
+/// For numbers, ObjectBox supports `Bool`, `Int8`, `Int16`, `Int32`, `Int64`, `Int` and their unsigned variants,
+/// as well as `Float` and `Double`.
+///
+/// It also recognizes `String`, `[String]`, `Date` and `Data` (the latter of which may also be written as `[UInt8]`).
+///
+/// ## Relations
+///
+/// To create relations between entities, use `ToOne` and `ToMany` to wrap the target type,
+/// like `customer: ToOne<Customer>`.
+///
+/// ## More information
+///
+/// For more details see the [documentation](https://swift.objectbox.io/entity-annotations).
+public protocol Entity {}
+
+/// Protocol used in generated code to provide metadata required by ObjectBox.
+///
+/// The code generator will make your entity types conform to this and implement the requirements.
 public protocol EntityInspectable {
     /// The type of the generated `EntityBinding`-conformant class used for serializing
     /// and de-serializing this entity.
@@ -30,45 +72,28 @@ public protocol EntityInspectable {
     static var entityBinding: EntityBindingType { get }
 }
 
-// Entities have to be classes to make `OBXBox`'s Objective-C generics work.
-
-/// Base protocol of anything you want to persist in a box.
+/// Protocol used in generated code to provide an ID getter (wrapped as `EntityId<T>`) of an object.
 ///
-/// ## Persisted Properties
+/// The code generator will make your entity types conform to this and implement the requirements.
 ///
-/// All stored properties of a type that conforms to `Entity` will be persisted, if possible.
-/// For numbers, ObjectBox recognizes `Bool`, `Int8`, `Int16`, `Int32`, `Int64`, `Int` (plus their unsigned variants),
-/// `Float`, and `Double`.
-/// It also recognizes `String`, `Date` and `Data` (the latter of which may also be written as `[UInt8]`).
+/// Currently only used to check if the ID is 0 in `Box.remove` and the `LazyProxyRelation.State` constructor.
+/// The type information (`T` of `EntityId<T>`) is unused. Also note that IDs no longer have to implement `EntityId`.
 ///
-/// ## Relations
+/// For example:
 ///
-/// To create relations between entities, use `ToOne` and `ToMany` to wrap the target type,
-/// like `customer: ToOne<Customer>`.
-///
-/// Informal requirements: It is assumed that classes implementing this have an init() method
-/// and all properties to be serialized are mutable. For struct types, it is assumed that an
-/// init method exists that accepts all properties to be serialized.
-public protocol Entity {}
-
-/// :nodoc:
-///
-/// - Note: Used in Alpha 1 only to implement backlinks. When you operate on the level of
-///   "a type that conforms to Entity", that's not specific enough; you need to erase the type. This
-///   provides specification to get to the concrete EntityId<T>. Will be replaced in future versions.
+/// ```swift
+/// class Person: __EntityRelatable {
+///     typealias EntityType = Person
+///     var _id: EntityId<Person>  {
+///         return EntityId<Person>(self.id.value)
+///     }
+/// }
+/// ```
 public protocol __EntityRelatable {
+    /// Placeholder for the entity type to use with the `_id` getter.
+    associatedtype EntityType: Entity
     // swiftlint:disable identifier_name
-    /// - Note: Used in Alpha 1 only to implement backlinks and get to the _concrete_ type.
-    ///
-    /// For example:
-    ///
-    ///    class Person: Entity {
-    ///        typealias EntityType = Person
-    ///        // ...
-    ///    }
-    associatedtype EntityType: EntityInspectable & __EntityRelatable
-    /// - Note: Used in Alpha 1 only to implement backlinks and know which _concrete_ `Id` type
-    /// is used. Implement as e.g. `_id: EntityId<Person> { return self.id }`.
+    /// Used to get the ID value of an object of the associated entity type.
     var _id: EntityId<EntityType> { get }
     // swiftlint:enable identifier_name
 }

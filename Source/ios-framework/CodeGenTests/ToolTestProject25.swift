@@ -1,5 +1,5 @@
 //
-// Copyright © 2018-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2018-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,8 +48,11 @@ class TypeTest: Entity {
     var doubleValue: Double = -15301.06221
     var dateValue: Date = Date(timeIntervalSinceReferenceDate: 900.75)
 
-    var floatArray: [Float] = []
-    
+    var int32Array: [Int32] = []
+    var int64Array: [Int64] = []
+    var floatArray: [Float] = [2.3, 4.5, 6.7, 8.9]
+    var stringArray: [String] = ["Hello", "World"]
+
     required init() {}
 }
 
@@ -153,6 +156,12 @@ func main(_ args: [String]) throws -> Int32 {
         }
         if ((originalTypeTest.dateValue.timeIntervalSinceReferenceDate - readTypeTest.dateValue.timeIntervalSinceReferenceDate) > 0.001) {
             throw Error.ValueReadDoesntEqualValueWritten(property: "date", written: originalTypeTest.dateValue, read: readTypeTest.dateValue)
+        }
+        if (originalTypeTest.floatArray != readTypeTest.floatArray) {
+            throw Error.ValueReadDoesntEqualValueWritten(property: "floatArray", written: originalTypeTest.floatArray, read: readTypeTest.floatArray)
+        }
+        if (originalTypeTest.stringArray != readTypeTest.stringArray) {
+            throw Error.ValueReadDoesntEqualValueWritten(property: "stringArray", written: originalTypeTest.stringArray, read: readTypeTest.stringArray)
         }
     } else {
         throw Error.FailedToReadEntity

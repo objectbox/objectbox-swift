@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -185,6 +185,22 @@ public extension FlatBufferBuilder {
         }
     }
     
+    func prepare(values: [Int32]?) -> OBXDataOffset {
+        guard let values = values else { return 0 } // Don't collect nil values.
+        let size = values.count
+        return values.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
+            return obx_fbb_prepare_ints(fbb, bytes.baseAddress!, size)
+        }
+    }
+
+    func prepare(values: [Int64]?) -> OBXDataOffset {
+        guard let values = values else { return 0 } // Don't collect nil values.
+        let size = values.count
+        return values.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
+            return obx_fbb_prepare_longs(fbb, bytes.baseAddress!, size)
+        }
+    }
+    
     func prepare(values: [Float]?) -> OBXDataOffset {
         guard let values = values else { return 0 } // Don't collect nil values.
         let size = values.count
@@ -192,6 +208,18 @@ public extension FlatBufferBuilder {
             return obx_fbb_prepare_floats(fbb, bytes.baseAddress!, size)
         }
     }
+
+    func prepare(values: [String]?) -> OBXDataOffset {
+        guard let values = values else { return 0 } // Don't collect nil values.
+        let size = values.count
+        let cStringPointers = values.map { strdup($0) }
+        let dataOffset = cStringPointers.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
+            let baseAddress = bytes.baseAddress?.assumingMemoryBound(to: (UnsafePointer<CChar>).self)
+            return obx_fbb_prepare_strings(fbb, baseAddress!, size)
+        }
+        return dataOffset
+    }
+
 }
 
 // MARK: collect optionals

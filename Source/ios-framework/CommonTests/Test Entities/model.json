@@ -9,10 +9,10 @@
       "name": "Author",
       "properties": [
         {
-          "flags": 1,
           "id": "1:4782546707843525376",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:8205028904652262144",
@@ -39,10 +39,10 @@
       "name": "AuthorStruct",
       "properties": [
         {
-          "flags": 1,
           "id": "1:3324125320646150656",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:2629753880188920064",
@@ -64,10 +64,10 @@
       "name": "Note",
       "properties": [
         {
-          "flags": 1,
           "id": "1:8202191337322996480",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:1350315346983447296",
@@ -90,12 +90,12 @@
           "type": 10
         },
         {
-          "flags": 520,
           "id": "6:6448513910062322432",
-          "indexId": "1:1458654215934992896",
           "name": "author",
-          "relationTarget": "Author",
-          "type": 11
+          "indexId": "1:1458654215934992896",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Author"
         },
         {
           "id": "7:3390351202128481792",
@@ -103,10 +103,10 @@
           "type": 1
         },
         {
-          "flags": 8192,
           "id": "8:5856576790296241408",
           "name": "upvotes",
-          "type": 5
+          "type": 5,
+          "flags": 8192
         }
       ],
       "relations": []
@@ -117,10 +117,10 @@
       "name": "NoteStruct",
       "properties": [
         {
-          "flags": 1,
           "id": "1:2519416082326737408",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:551839225092133376",
@@ -143,12 +143,12 @@
           "type": 10
         },
         {
-          "flags": 520,
           "id": "6:2469372667932281088",
-          "indexId": "2:6342353045634752256",
           "name": "author",
-          "relationTarget": "Author",
-          "type": 11
+          "indexId": "2:6342353045634752256",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Author"
         }
       ],
       "relations": []
@@ -159,10 +159,10 @@
       "name": "Student",
       "properties": [
         {
-          "flags": 1,
           "id": "1:5805489249593327360",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:2830525844876407040",
@@ -184,10 +184,10 @@
       "name": "Teacher",
       "properties": [
         {
-          "flags": 1,
           "id": "1:2783284586616908288",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:5715806910771247872",
@@ -203,17 +203,17 @@
       "name": "UniqueEntity",
       "properties": [
         {
-          "flags": 1,
           "id": "1:8418474383607017216",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
-          "flags": 2088,
           "id": "2:6588651899515438336",
-          "indexId": "3:4943227758701996288",
           "name": "name",
-          "type": 9
+          "indexId": "3:4943227758701996288",
+          "type": 9,
+          "flags": 2088
         },
         {
           "id": "3:2295067898156422912",
@@ -525,14 +525,14 @@
     },
     {
       "id": "8:7256288410204653312",
-      "lastPropertyId": "3:3229707254718114048",
+      "lastPropertyId": "9:5070166049413543424",
       "name": "VectorTestEntity",
       "properties": [
         {
-          "flags": 1,
           "id": "1:94097545351615488",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:652568643967173888",
@@ -543,6 +543,36 @@
           "id": "3:3229707254718114048",
           "name": "floatArrayNull",
           "type": 28
+        },
+        {
+          "id": "4:6832556501902628096",
+          "name": "stringArray",
+          "type": 30
+        },
+        {
+          "id": "5:8947266429629784064",
+          "name": "stringArrayNull",
+          "type": 30
+        },
+        {
+          "id": "6:4876094469932285952",
+          "name": "int32Array",
+          "type": 26
+        },
+        {
+          "id": "7:1377408736165648640",
+          "name": "int32ArrayNull",
+          "type": 26
+        },
+        {
+          "id": "8:6782936499305996288",
+          "name": "int64Array",
+          "type": 27
+        },
+        {
+          "id": "9:5070166049413543424",
+          "name": "int64ArrayNull",
+          "type": 27
         }
       ],
       "relations": []
@@ -553,10 +583,10 @@
       "name": "HnswObject",
       "properties": [
         {
-          "flags": 1,
           "id": "1:4629567735796666112",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:5467400913620315904",
@@ -564,19 +594,19 @@
           "type": 9
         },
         {
-          "flags": 8,
           "id": "3:8547040095155761920",
-          "indexId": "5:8428673278937057024",
           "name": "floatVector",
-          "type": 28
+          "indexId": "5:8428673278937057024",
+          "type": 28,
+          "flags": 8
         },
         {
-          "flags": 520,
           "id": "4:8455771020134565632",
-          "indexId": "4:1470917669672942080",
           "name": "rel",
-          "relationTarget": "RelatedNamedEntity",
-          "type": 11
+          "indexId": "4:1470917669672942080",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "RelatedNamedEntity"
         }
       ],
       "relations": []
@@ -587,10 +617,10 @@
       "name": "RelatedNamedEntity",
       "properties": [
         {
-          "flags": 1,
           "id": "1:1397779065653875712",
           "name": "id",
-          "type": 6
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:2662932053839759616",
@@ -599,10 +629,61 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "11:3108946752808668672",
+      "lastPropertyId": "2:4753378302570674176",
+      "name": "Customer",
+      "properties": [
+        {
+          "id": "1:4599907934352290304",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4753378302570674176",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "12:4696988777145786880",
+      "lastPropertyId": "4:8814640457730390784",
+      "name": "Order",
+      "properties": [
+        {
+          "id": "1:7043323637153822208",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1093928144598205440",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "3:2829338735976216064",
+          "name": "customer",
+          "indexId": "6:6572619879603300096",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Customer"
+        },
+        {
+          "id": "4:8814640457730390784",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "10:8024588008899966976",
-  "lastIndexId": "5:8428673278937057024",
+  "lastEntityId": "12:4696988777145786880",
+  "lastIndexId": "6:6572619879603300096",
   "lastRelationId": "3:417604695477796352",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -99,9 +99,9 @@
 		290F7CC22C4666930021B611 /* IdWithScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F7CC12C4666930021B611 /* IdWithScore.swift */; };
 		290F7CC32C4666930021B611 /* IdWithScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F7CC12C4666930021B611 /* IdWithScore.swift */; };
 		290F7CC42C4666930021B611 /* IdWithScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290F7CC12C4666930021B611 /* IdWithScore.swift */; };
-		2960DC0C2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
-		2960DC0D2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
-		2960DC0E2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */; };
+		2960DC0C2C186E2200A817F2 /* VectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* VectorTests.swift */; };
+		2960DC0D2C186E2200A817F2 /* VectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* VectorTests.swift */; };
+		2960DC0E2C186E2200A817F2 /* VectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960DC0B2C186E2200A817F2 /* VectorTests.swift */; };
 		298B52D32E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
 		298B52D42E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
 		298B52D52E816FC20086F6E1 /* SyncClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */; };
@@ -460,7 +460,7 @@
 		28E90AED25C1DE5E008C55BC /* libObjectBoxCore-iOS-sim.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libObjectBoxCore-iOS-sim.a"; path = "../../external/objectbox-static/libObjectBoxCore-iOS-sim.a"; sourceTree = "<group>"; };
 		290F7CBD2C4663760021B611 /* ObjectWithScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectWithScore.swift; sourceTree = "<group>"; };
 		290F7CC12C4666930021B611 /* IdWithScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdWithScore.swift; sourceTree = "<group>"; };
-		2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalarVectorTests.swift; sourceTree = "<group>"; };
+		2960DC0B2C186E2200A817F2 /* VectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorTests.swift; sourceTree = "<group>"; };
 		298B52D22E816FC20086F6E1 /* SyncClientImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncClientImpl.swift; sourceTree = "<group>"; };
 		29AD6D692C32D0B70090961A /* HnswIndexTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HnswIndexTest.swift; sourceTree = "<group>"; };
 		29AE99DE2C3C17DB008A5461 /* HnswParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HnswParams.swift; sourceTree = "<group>"; };
@@ -777,7 +777,7 @@
 				BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */,
 				BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */,
 				BF8C9F2FECFA173905FD4726 /* UtilTests.swift */,
-				2960DC0B2C186E2200A817F2 /* ScalarVectorTests.swift */,
+				2960DC0B2C186E2200A817F2 /* VectorTests.swift */,
 				29AD6D692C32D0B70090961A /* HnswIndexTest.swift */,
 			);
 			path = CommonTests;
@@ -1222,7 +1222,6 @@
 				};
 			};
 			buildConfigurationList = CB3B3F2B20AB4B4B00418618 /* Build configuration list for PBXProject "ObjectBox" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1230,6 +1229,8 @@
 				Base,
 			);
 			mainGroup = CB3B3F2720AB4B4B00418618;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = CB3B3F3220AB4B4B00418618 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1346,7 +1347,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n\nset -e\n\nif which swiftlint > /dev/null; then\n  cd $SRCROOT\n  swiftlint lint --config .swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, install via 'brew install swiftlint' or download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "#!/bin/bash\n\nset -e\n\n# On Apple Silicon, Homebrew installs to /opt/homebrew/bin\n# https://github.com/realm/SwiftLint?tab=readme-ov-file#consideration-for-apple-silicon\nif [[ \"$(uname -m)\" == arm64 ]]\nthen\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif command -v swiftlint >/dev/null 2>&1\nthen\n    swiftlint lint --config .swiftlint.yml\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
 		};
 		5547123C228D630E00DB4136 /* Rename C Header */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1492,7 +1493,7 @@
 				28DAD55029784C20005EEF5D /* ToOneRelationTests.swift in Sources */,
 				28DAD55129784C20005EEF5D /* SyncDryTests.swift in Sources */,
 				28DAD55229784C20005EEF5D /* ToManyTests.swift in Sources */,
-				2960DC0E2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */,
+				2960DC0E2C186E2200A817F2 /* VectorTests.swift in Sources */,
 				28DAD55329784C20005EEF5D /* UtilTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1589,7 +1590,7 @@
 				5070A9F5217F4C72002305F8 /* ToOneRelationTests.swift in Sources */,
 				BF8C91B092CD113129CB87C4 /* SyncDryTests.swift in Sources */,
 				BF8C942D80421ED99E742308 /* ToManyTests.swift in Sources */,
-				2960DC0D2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */,
+				2960DC0D2C186E2200A817F2 /* VectorTests.swift in Sources */,
 				BF8C9DD8D645AEF77F50C9A5 /* UtilTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1625,7 +1626,7 @@
 				5070AA15217F4ECF002305F8 /* TestExceptionProducer.mm in Sources */,
 				BF8C991CF9374174D6302D71 /* SyncDryTests.swift in Sources */,
 				BF8C96DDB916B7A240B9435D /* ToManyTests.swift in Sources */,
-				2960DC0C2C186E2200A817F2 /* ScalarVectorTests.swift in Sources */,
+				2960DC0C2C186E2200A817F2 /* VectorTests.swift in Sources */,
 				BF8C9912D79207225494105D /* UtilTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1829,11 +1830,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1858,11 +1858,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1885,11 +1884,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "ObjectBoxiOSTestApp copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1914,11 +1912,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_ASSET_PATHS = "\"ObjectBoxiOSTestApp/Preview Content\"";
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "ObjectBoxiOSTestApp copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				INFOPLIST_FILE = ObjectBoxiOSTestApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1941,9 +1938,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
-				INFOPLIST_FILE = "ObjectBoxTests-iOS copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1975,9 +1971,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
-				INFOPLIST_FILE = "ObjectBoxTests-iOS copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2016,7 +2011,6 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2059,7 +2053,6 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2093,9 +2086,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2127,9 +2119,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4JF56U4GJ2;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ObjectBoxTests-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2188,7 +2179,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -2215,7 +2205,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -2232,7 +2221,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				EXCLUDED_ARCHS = "armv7 x86 arm64";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 			};
@@ -2242,7 +2230,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				EXCLUDED_ARCHS = "armv7 x86 arm64";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 			};
@@ -2269,7 +2256,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2300,7 +2286,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = io.objectbox.DummySourceryContainer;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -2326,7 +2311,6 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2369,7 +2353,6 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INFOPLIST_FILE = $TARGET_NAME/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2451,9 +2434,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LIBRARY_SEARCH_PATHS = "${PROJECT_DIR}/../external/objectbox-static/";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -2518,9 +2501,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LIBRARY_SEARCH_PATHS = "${PROJECT_DIR}/../external/objectbox-static/";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2563,7 +2546,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -2605,7 +2587,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,

@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2025 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -186,6 +186,18 @@ public struct FlatBufferReader {
     
     /// - Returns: zero-length array if a value is not present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written).
+    public func read(at index: UInt16) -> [Int32] {
+        return read(at: index) ?? []
+    }
+
+    /// - Returns: zero-length array if a value is not present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written).
+    public func read(at index: UInt16) -> [Int64] {
+        return read(at: index) ?? []
+    }
+    
+    /// - Returns: zero-length array if a value is not present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written).
     public func read(at index: UInt16) -> [Float] {
         var result = OBX_float_array()
         guard obx_fbr_read_floats(unwrapFBR(), index, &result) else {
@@ -194,7 +206,13 @@ public struct FlatBufferReader {
         let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
         return [Float](bufferPointer)
     }
-    
+
+    /// - Returns: zero-length String array if a value is not present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written).
+    public func read(at index: UInt16) -> [String] {
+        return read(at: index) ?? []
+    }
+
     /// - Returns: The ID read, if present, or the invalid ID of 0 if no ID was present.
     public func read<E>(at index: UInt16) -> EntityId<E> where E: EntityInspectable, E: __EntityRelatable,
         E == E.EntityBindingType.EntityType {
@@ -351,12 +369,30 @@ public struct FlatBufferReader {
     public func read(at index: UInt16) -> [UInt8]? {
         var result = OBX_bytes()
         guard obx_fbr_read_bytes(unwrapFBR(), index, &result), let data = result.data else { return nil }
-        
+
         let unsafePointer = data.bindMemory(to: UInt8.self, capacity: result.size)
         let bufferPointer = UnsafeBufferPointer(start: unsafePointer, count: result.size)
         return [UInt8](bufferPointer)
     }
     
+    public func read(at index: UInt16) -> [Int32]? {
+        var result = OBX_int32_array()
+        guard obx_fbr_read_ints(unwrapFBR(), index, &result) else {
+            return nil
+        }
+        let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
+        return [Int32](bufferPointer)
+    }
+
+    public func read(at index: UInt16) -> [Int64]? {
+        var result = OBX_int64_array()
+        guard obx_fbr_read_longs(unwrapFBR(), index, &result) else {
+            return nil
+        }
+        let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
+        return [Int64](bufferPointer)
+    }
+
     /// - Returns: nil if the value isn't present in the buffer
     ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional).
     public func read(at index: UInt16) -> [Float]? {
@@ -367,4 +403,27 @@ public struct FlatBufferReader {
         let bufferPointer = UnsafeBufferPointer(start: result.items, count: result.count)
         return [Float](bufferPointer)
     }
+
+    /// - Returns: nil if the value isn't present in the buffer
+    ///         (e.g. because it got added to the schema after this entity was written, or it just is an optional).
+    public func read(at index: UInt16) -> [String]? {
+        guard let result = obx_fbr_read_strings(unwrapFBR(), index) else {
+            return nil
+        }
+        defer { obx_flat_strings_free(result) }
+        let count = Int(result.pointee.count)
+        if count == 0 { return [] }
+        guard let items = result.pointee.items else { return [] }
+        let bufferPointer = UnsafeBufferPointer(start: items, count: count)
+        var strings: [String] = []
+        strings.reserveCapacity(count)
+        for i in 0..<count {
+            let cPtr = bufferPointer[i]
+            // Non-null; should be guaranteed by FlatBuffers vectors and our C wrapper; still do a paranoia check:
+            assert(cPtr != UnsafePointer<CChar>(bitPattern: 0))
+            strings.append(String(cString: cPtr))
+        }
+        return strings
+    }
+
 }

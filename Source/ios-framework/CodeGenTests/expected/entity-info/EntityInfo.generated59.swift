@@ -47,7 +47,7 @@ extension CityAllProperties {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { CityAllProperties.coordinates.isNotNil() }
+    ///     box.query { CityAllProperties.coordinates.isGreaterThan(value) }
     internal static var coordinates: Property<CityAllProperties, HnswIndexPropertyType, Void> { return Property<CityAllProperties, HnswIndexPropertyType, Void>(propertyId: 2, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
@@ -149,7 +149,7 @@ extension CityDefaults {
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { CityDefaults.coordinatesDefaults.isNotNil() }
+    ///     box.query { CityDefaults.coordinatesDefaults.isGreaterThan(value) }
     internal static var coordinatesDefaults: Property<CityDefaults, HnswIndexPropertyType, Void> { return Property<CityDefaults, HnswIndexPropertyType, Void>(propertyId: 2, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {

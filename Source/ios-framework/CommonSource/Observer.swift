@@ -32,6 +32,7 @@ internal func observerCallback(_ ptr: UnsafeMutableRawPointer?) {
 ///
 /// You obtain an Observer from one of a `Box`'s or `Query`'s `subscribe()` methods.
 public class Observer {
+    private let store: Store
     private var cObserver: OpaquePointer?
     internal var changeHandler: () -> Void
     internal var dispatchQueue: DispatchQueue
@@ -55,6 +56,7 @@ public class Observer {
     
     internal init(store: Store, entityId: obx_schema_id, dispatchQueue: DispatchQueue,
                   changeHandler: @escaping () -> Void) {
+        self.store = store
         self.dispatchQueue = dispatchQueue
         self.changeHandler = changeHandler
         cObserver = obx_observe_single_type(store.cStore, entityId, observerCallback,
@@ -71,6 +73,11 @@ public class Observer {
     public func unsubscribe() {
         if let observerToClose = cObserver {
             cObserver = nil
+            if store.isClosed() {
+                // Don't close. After the store is closed this is undefined behavior and may lead to a crash.
+                // This will leak a few bytes of memory, but this is preferable over a crash.
+                return
+            }
             let err = obx_observer_close(observerToClose)
             if err != OBX_SUCCESS {
                 cObserver = observerToClose  // We can (should) try again on error
