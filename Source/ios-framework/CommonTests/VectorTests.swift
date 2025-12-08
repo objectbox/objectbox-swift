@@ -17,7 +17,7 @@
 import ObjectBox
 import XCTest
 
-/// Tests float and string vector properties.
+/// Tests with vector properties.
 class VectorTests: XCTestCase {
     
     var store: Store!
@@ -75,7 +75,52 @@ class VectorTests: XCTestCase {
         XCTAssertEqual(read.stringArrayNull, nil)
     }
     
-    func testComparison_Int32Array() throws {
+    func testFind_ByteArray() throws {
+        let box = store.box(for: VectorTestEntity.self)
+        
+        let firstBytes = Data("CAROLSHAW".utf8)
+        let secondBytes = Data("EVELYNBOYDGRANVILLE".utf8)
+        let thirdBytes = Data("MARYKENNETHKELLER".utf8)
+        let entity1 = VectorTestEntity(byteArray: firstBytes)
+        let entity2 = VectorTestEntity(byteArrayNull: firstBytes, byteArray: secondBytes)
+        let entity3 = VectorTestEntity(byteArrayNull: secondBytes, byteArray: thirdBytes)
+        try box.put([entity1, entity2, entity3])
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArrayNull.isNil()
+        }).build().find().count, 1)
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArrayNull.isNotNil()
+        }).build().find().count, 2)
+
+        let queryEqual = try box.query({ VectorTestEntity.byteArrayNull == secondBytes }).build()
+        XCTAssertEqual(try queryEqual.findUnique()!.id, entity3.id)
+        queryEqual.setParameter(VectorTestEntity.byteArrayNull, to: firstBytes)
+        XCTAssertEqual(try queryEqual.findUnique()!.id, entity2.id)
+
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArrayNull < secondBytes
+        }).build().find().count, 1)
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArrayNull > firstBytes
+        }).build().find().count, 1)
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArray == secondBytes
+        }).build().find().count, 1)
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArray < firstBytes
+        }).build().find().count, 0)
+        
+        XCTAssertEqual(try box.query({
+            VectorTestEntity.byteArray > firstBytes
+        }).build().find().count, 2)
+    }
+    
+    func testFind_Int32Array() throws {
         let box: Box<VectorTestEntity> = store.box(for: VectorTestEntity.self)
 
         XCTAssertNoThrow(try box.put([
@@ -107,7 +152,7 @@ class VectorTests: XCTestCase {
         try checkQueryCount(box, condition: VectorTestEntity.int32Array.isLessThan(Int32.min), expectedCount: 0)
     }
     
-    func testComparison_Int64Array() throws {
+    func testFind_Int64Array() throws {
         let box: Box<VectorTestEntity> = store.box(for: VectorTestEntity.self)
 
         XCTAssertNoThrow(try box.put([

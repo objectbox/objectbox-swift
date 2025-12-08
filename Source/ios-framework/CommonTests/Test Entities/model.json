@@ -525,7 +525,7 @@
     },
     {
       "id": "8:7256288410204653312",
-      "lastPropertyId": "9:5070166049413543424",
+      "lastPropertyId": "11:8052203815268268032",
       "name": "VectorTestEntity",
       "properties": [
         {
@@ -573,6 +573,16 @@
           "id": "9:5070166049413543424",
           "name": "int64ArrayNull",
           "type": 27
+        },
+        {
+          "id": "10:5694547019965635072",
+          "name": "byteArray",
+          "type": 23
+        },
+        {
+          "id": "11:8052203815268268032",
+          "name": "byteArrayNull",
+          "type": 23
         }
       ],
       "relations": []

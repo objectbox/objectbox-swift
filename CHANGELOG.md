@@ -4,6 +4,10 @@ Notable changes to the ObjectBox Swift library.
 
 For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
 
+## 5.1.1 - 2025-12-08
+
+- Sync client: fix for encrypted (`wss://`) connections on iOS devices
+
 ## 5.1.0 - 2025-12-03
 
 Note: To support Xcode 26 and new Swift versions, the requirements have been raised to macOS 11.0 or iOS 15.0 and Swift 6.1 tools.

@@ -2767,8 +2767,10 @@ extension VectorTestEntity: ObjectBox.EntityInspectable {
         try entityBuilder.addProperty(name: "int32ArrayNull", type: PropertyType.intVector, id: 7, uid: 1377408736165648640)
         try entityBuilder.addProperty(name: "int64Array", type: PropertyType.longVector, id: 8, uid: 6782936499305996288)
         try entityBuilder.addProperty(name: "int64ArrayNull", type: PropertyType.longVector, id: 9, uid: 5070166049413543424)
+        try entityBuilder.addProperty(name: "byteArray", type: PropertyType.byteVector, id: 10, uid: 5694547019965635072)
+        try entityBuilder.addProperty(name: "byteArrayNull", type: PropertyType.byteVector, id: 11, uid: 8052203815268268032)
 
-        try entityBuilder.lastProperty(id: 9, uid: 5070166049413543424)
+        try entityBuilder.lastProperty(id: 11, uid: 8052203815268268032)
     }
 }
 
@@ -2827,6 +2829,18 @@ extension VectorTestEntity {
     ///
     ///     box.query { VectorTestEntity.int64ArrayNull.isGreaterThan(value) }
     internal static var int64ArrayNull: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 9, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.byteArray > 1234 }
+    internal static var byteArray: Property<VectorTestEntity, Data, Void> { return Property<VectorTestEntity, Data, Void>(propertyId: 10, isPrimaryKey: false) }
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { VectorTestEntity.byteArrayNull > 1234 }
+    internal static var byteArrayNull: Property<VectorTestEntity, Data?, Void> { return Property<VectorTestEntity, Data?, Void>(propertyId: 11, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = Id(identifier)
@@ -2906,6 +2920,22 @@ extension ObjectBox.Property where E == VectorTestEntity {
 
     internal static var int64ArrayNull: Property<VectorTestEntity, Int64ArrayPropertyType, Void> { return Property<VectorTestEntity, Int64ArrayPropertyType, Void>(propertyId: 9, isPrimaryKey: false) }
 
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .byteArray > 1234 }
+
+    internal static var byteArray: Property<VectorTestEntity, Data, Void> { return Property<VectorTestEntity, Data, Void>(propertyId: 10, isPrimaryKey: false) }
+
+    /// Generated entity property information.
+    ///
+    /// You may want to use this in queries to specify fetch conditions, for example:
+    ///
+    ///     box.query { .byteArrayNull > 1234 }
+
+    internal static var byteArrayNull: Property<VectorTestEntity, Data?, Void> { return Property<VectorTestEntity, Data?, Void>(propertyId: 11, isPrimaryKey: false) }
+
 }
 
 
@@ -2936,6 +2966,8 @@ internal final class VectorTestEntityBinding: ObjectBox.EntityBinding, Sendable 
         let propertyOffset_int32ArrayNull = propertyCollector.prepare(values: entity.int32ArrayNull)
         let propertyOffset_int64Array = propertyCollector.prepare(values: entity.int64Array)
         let propertyOffset_int64ArrayNull = propertyCollector.prepare(values: entity.int64ArrayNull)
+        let propertyOffset_byteArray = propertyCollector.prepare(bytes: entity.byteArray)
+        let propertyOffset_byteArrayNull = propertyCollector.prepare(bytes: entity.byteArrayNull)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
         propertyCollector.collect(dataOffset: propertyOffset_floatArray, at: 2 + 2 * 2)
@@ -2946,6 +2978,8 @@ internal final class VectorTestEntityBinding: ObjectBox.EntityBinding, Sendable 
         propertyCollector.collect(dataOffset: propertyOffset_int32ArrayNull, at: 2 + 2 * 7)
         propertyCollector.collect(dataOffset: propertyOffset_int64Array, at: 2 + 2 * 8)
         propertyCollector.collect(dataOffset: propertyOffset_int64ArrayNull, at: 2 + 2 * 9)
+        propertyCollector.collect(dataOffset: propertyOffset_byteArray, at: 2 + 2 * 10)
+        propertyCollector.collect(dataOffset: propertyOffset_byteArrayNull, at: 2 + 2 * 11)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
@@ -2960,6 +2994,8 @@ internal final class VectorTestEntityBinding: ObjectBox.EntityBinding, Sendable 
         entity.int32ArrayNull = entityReader.read(at: 2 + 2 * 7)
         entity.int64Array = entityReader.read(at: 2 + 2 * 8)
         entity.int64ArrayNull = entityReader.read(at: 2 + 2 * 9)
+        entity.byteArray = entityReader.read(at: 2 + 2 * 10)
+        entity.byteArrayNull = entityReader.read(at: 2 + 2 * 11)
 
         return entity
     }

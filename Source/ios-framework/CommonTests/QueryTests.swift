@@ -20,6 +20,7 @@ import XCTest
 // TODO can we have something like XCTAssertThrowsError but for fatal errors?
 //      E.g. https://marcosantadev.com/test-swift-fatalerror
 
+/// Tests the ``Query`` class. Note that tests for find and query conditions are in ``QueryBuilderTests``.
 class QueryTests: XCTestCase {
     var store: Store!
 
@@ -34,8 +35,8 @@ class QueryTests: XCTestCase {
         store = nil
         super.tearDown()
     }
-
-    // MARK: - setParameter
+    
+    // MARK: - Big objects
 
     func testBigObjects() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
@@ -68,6 +69,8 @@ class QueryTests: XCTestCase {
         XCTAssertEqual(2, Int(try box.removeAll()))
         XCTAssertEqual(try box.count(), 0)
     }
+    
+    // MARK: - Visitor
 
     func testFind_visitor() throws {
         let useVisitorValues = [true, false]
@@ -94,6 +97,8 @@ class QueryTests: XCTestCase {
             XCTAssertEqual(resultsContiguous[1].aLong, 200)
         }
     }
+    
+    // MARK: - setParameter
 
     func testSetParameter_Long_SingleParameter() throws {
         let box = store.box(for: AllTypesEntity.self)
@@ -577,6 +582,8 @@ class QueryTests: XCTestCase {
         query.setParameter("minAge", to: 21)
         XCTAssertEqual(try query.count(), 2)
     }
+    
+    // MARK: - Other
 
     func testRemoveQuery() throws {
         let personBox: Box<TestPerson> = store.box()

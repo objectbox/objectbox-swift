@@ -230,6 +230,9 @@ class VectorTestEntity {
     var int32ArrayNull: [Int32]?
     var int64Array: [Int64] = []
     var int64ArrayNull: [Int64]?
+    
+    var byteArray: Data = Data()
+    var byteArrayNull: Data?
 
     // For ObjectBox
     init() {
@@ -245,6 +248,15 @@ class VectorTestEntity {
     
     init(int64Array: [Int64]) {
         self.int64Array = int64Array
+    }
+    
+    init (byteArray: Data) {
+        self.byteArray = byteArray
+    }
+    
+    init (byteArrayNull: Data, byteArray: Data) {
+        self.byteArrayNull = byteArrayNull
+        self.byteArray = byteArray
     }
 }
 

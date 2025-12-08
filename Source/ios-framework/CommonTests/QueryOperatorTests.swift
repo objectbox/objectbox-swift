@@ -17,6 +17,7 @@
 import XCTest
 @testable import ObjectBox
 
+/// These are legacy query condition tests. They have mostly been ported to `QueryBuilderTests.swift`.
 class QueryOperatorTests: XCTestCase {
 
     var store: Store!

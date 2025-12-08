@@ -198,13 +198,13 @@ OBX_C_API OBX_sync* obx_sync(OBX_store* store, const char* server_url);
 /// Passing multiple URLs allows high availability and load balancing (i.e. using a ObjectBox Sync Server Cluster).
 /// A random URL is selected for each connection attempt.
 /// For general details, see obx_sync()
-OBX_C_API OBX_sync* obx_sync_urls(OBX_store* store, const char* server_urls[], size_t server_urls_count);
+OBX_C_API OBX_sync* obx_sync_urls(OBX_store* store, const char* const server_urls[], size_t server_urls_count);
 
 /// Creates a sync client associated with the given store, sync server URLs and SSL certificate paths.
 /// Like obx_sync_urls(), but also allows to pass SSL certificate paths referring to the local file system.
 /// Example use cases are using self-signed certificates in a local development environment and custom CAs.
-OBX_C_API OBX_sync* obx_sync_certs(OBX_store* store, const char* server_urls[], size_t server_urls_count,
-                                   const char* cert_paths[], size_t cert_paths_count);
+OBX_C_API OBX_sync* obx_sync_certs(OBX_store* store, const char* const server_urls[], size_t server_urls_count,
+                                   const char* const cert_paths[], size_t cert_paths_count);
 
 /// Stops and closes (deletes) the sync client, freeing its resources.
 OBX_C_API obx_err obx_sync_close(OBX_sync* sync);

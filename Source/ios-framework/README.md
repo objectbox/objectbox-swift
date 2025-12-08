@@ -9,7 +9,7 @@
 This is the ObjectBox Swift **API reference**.
 Check **[the documentation](https://swift.objectbox.io/)** on how to install and use ObjectBox Swift.
 
-This documents API version: 5.1.0
+This documents API version: 5.1.1
 
 ## Most Important Types
 

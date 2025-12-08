@@ -17,6 +17,7 @@
 import XCTest
 @testable import ObjectBox
 
+/// Tests property queries, so those created from a regular query with `Query.property()`.
 class PropertyQueryTests: XCTestCase {
 
     var store: Store!
@@ -459,51 +460,6 @@ class PropertyQueryTests: XCTestCase {
         query = nil  // Deref, propertyQuery should still hold on to Query
         let uniqueResult = try propertyQuery.findUniqueString()!
         XCTAssertEqual(uniqueResult, "hold me tight")
-    }
-
-    // MARK: - ByteVector
-
-    func testByteVectorQueries() throws {
-        let firstBytes = Data("CAROLSHAW".utf8)
-        let secondBytes = Data("EVELYNBOYDGRANVILLE".utf8)
-        let thirdBytes = Data("MARYKENNETHKELLER".utf8)
-        let entity1 = NullablePropertyEntity(byteVector: firstBytes)
-        let entity2 = NullablePropertyEntity(maybeByteVector: firstBytes, byteVector: secondBytes)
-        let entity3 = NullablePropertyEntity(maybeByteVector: secondBytes, byteVector: thirdBytes)
-        try box.put([entity1, entity2, entity3])
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.maybeByteVector.isNil()
-        }).build().find().count, 1)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.maybeByteVector.isNotNil()
-        }).build().find().count, 2)
-
-        let queryEqual = try box.query({ NullablePropertyEntity.maybeByteVector == secondBytes }).build()
-        XCTAssertEqual(try queryEqual.findUnique()!.id, entity3.id)
-        queryEqual.setParameter(NullablePropertyEntity.maybeByteVector, to: firstBytes)
-        XCTAssertEqual(try queryEqual.findUnique()!.id, entity2.id)
-
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.maybeByteVector < secondBytes
-        }).build().find().count, 1)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.maybeByteVector > firstBytes
-        }).build().find().count, 1)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.byteVector == secondBytes
-        }).build().find().count, 1)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.byteVector < firstBytes
-        }).build().find().count, 0)
-        
-        XCTAssertEqual(try box.query({
-            NullablePropertyEntity.byteVector > firstBytes
-        }).build().find().count, 2)
     }
     
 }

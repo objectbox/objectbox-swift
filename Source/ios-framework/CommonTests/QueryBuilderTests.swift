@@ -21,6 +21,7 @@ func rethrow(_ error: Error) throws {
     throw error
 }
 
+/// Tests find variants and query conditions. Legacy tests exist in ``QueryOperatorTests``, but have been ported here.
 class QueryBuilderTests: XCTestCase {
 
     var store: Store!
@@ -163,7 +164,7 @@ class QueryBuilderTests: XCTestCase {
         }
     }
     
-    // MARK: - Find unique
+    // MARK: - Count
     
     func testCount_EmptyResults() throws {
         let personBox: Box<TestPerson> = store.box(for: TestPerson.self)
@@ -234,7 +235,7 @@ class QueryBuilderTests: XCTestCase {
     }
 }
 
-// MARK: - Find by property: Equals
+// MARK: - Query conditions: Equals
 
 class QueryBuilderFindByPropertyEqualTests: XCTestCase {
     
@@ -390,7 +391,7 @@ class QueryBuilderFindByPropertyEqualTests: XCTestCase {
     
 }
 
-// MARK: - Find by property: Greater/Less
+// MARK: - Query conditions: Greater/Less
 
 class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
     
@@ -587,6 +588,8 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
 
 }
 
+// MARK: - Query conditions: Between
+
 class QueryBuilderRangeTests: XCTestCase {
     
     var store: Store!
@@ -772,6 +775,8 @@ class QueryBuilderRangeTests: XCTestCase {
     }
     
 }
+
+// MARK: - Query conditions: In/StartsWith/EndsWith/Contains
 
 class QueryBuilderCollectionTests: XCTestCase {
     
