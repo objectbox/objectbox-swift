@@ -419,4 +419,32 @@ class EntityNullablePropertyTests: XCTestCase {
         }
     }
 
+    func testNullableByteVectorEmptyData() throws {
+        // Regression test: FlatBufferReader optional Data read with nil data pointer
+        // Tests that empty Data is handled correctly without crashing
+        XCTAssert(try box.isEmpty())
+
+        // Store empty Data (not nil)
+        let originalEntity = NullablePropertyEntity(maybeByteVector: Data())
+        let entityId = try box.put(originalEntity)
+
+        if let obj = try box.get(entityId) {
+            // Empty Data should be read back as empty Data (not nil, not crash)
+            XCTAssertNotNil(obj.maybeByteVector)
+            XCTAssertEqual(obj.maybeByteVector?.count, 0)
+        } else {
+            XCTFail("Get failed"); return
+        }
+
+        // Also test with actual data to ensure normal path still works
+        originalEntity.maybeByteVector = Data([0x01, 0x02, 0x03])
+        try box.put(originalEntity)
+
+        if let obj = try box.get(entityId) {
+            XCTAssertEqual(obj.maybeByteVector, Data([0x01, 0x02, 0x03]))
+        } else {
+            XCTFail("Get failed"); return
+        }
+    }
+
 }

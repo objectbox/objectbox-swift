@@ -1,4 +1,4 @@
-//  Copyright © 2020-2025 ObjectBox. All rights reserved.
+//  Copyright © 2020-2026 ObjectBox. https://objectbox.io
 
 import Foundation
 
@@ -11,6 +11,15 @@ class SyncClientImpl: SyncClient {
     private var isStarted = false
     private var credentialsSet = false
     private var store: Store?
+
+    /// Enable debug logging for sync client lifecycle and callbacks
+    public let debugLogging: Bool
+
+    private func debugLog(_ message: String) {
+        if debugLogging {
+            print("[Client] \(message)")
+        }
+    }
 
     // Listener notes:
     // 1) we pass self (SyncClient) as user data to C-style callbacks:
@@ -26,9 +35,16 @@ class SyncClientImpl: SyncClient {
     public var loginListener: SyncLoginListener? {
         didSet {
             if cSync != nil {
-                let userData = Unmanaged.passUnretained(self).toOpaque()
-                obx_sync_listener_login(cSync, loginCallback, userData)
-                obx_sync_listener_login_failure(cSync, loginFailureCallback, userData)
+                if loginListener != nil {
+                    debugLog("loginListener set, registering callbacks")
+                    let userData = Unmanaged.passUnretained(self).toOpaque()
+                    obx_sync_listener_login(cSync, loginCallback, userData)
+                    obx_sync_listener_login_failure(cSync, loginFailureCallback, userData)
+                } else {
+                    debugLog("loginListener set to nil, deregistering callbacks")
+                    obx_sync_listener_login(cSync, nil, nil)
+                    obx_sync_listener_login_failure(cSync, nil, nil)
+                }
             }
         }
     }
@@ -36,19 +52,29 @@ class SyncClientImpl: SyncClient {
     public var completedListener: SyncCompletedListener? {
         didSet {
             if cSync != nil {
-                let userData = Unmanaged.passUnretained(self).toOpaque()
-                obx_sync_listener_complete(cSync, updatesCompletedCallback, userData)
+                if completedListener != nil {
+                    debugLog("completedListener set, registering callback")
+                    let userData = Unmanaged.passUnretained(self).toOpaque()
+                    obx_sync_listener_complete(cSync, updatesCompletedCallback, userData)
+                } else {
+                    debugLog("completedListener set to nil, deregistering callback")
+                    obx_sync_listener_complete(cSync, nil, nil)
+                }
             }
         }
     }
 
-    // TODO: Not used yet: not public
-    var changeListener: SyncChangeListener? {
+    public var changeListener: SyncChangeListener? {
         didSet {
             if cSync != nil {
-                let userData = Unmanaged.passUnretained(self).toOpaque()
-                // TODO do not pass nil
-                obx_sync_listener_change(cSync, nil, userData)
+                if changeListener != nil {
+                    debugLog("changeListener set, registering callback")
+                    let userData = Unmanaged.passUnretained(self).toOpaque()
+                    obx_sync_listener_change(cSync, changesCallback, userData)
+                } else {  // remove by setting to nil
+                    debugLog("changeListener set to nil, deregistering callback")
+                    obx_sync_listener_change(cSync, nil, nil)
+                }
             }
         }
     }
@@ -56,9 +82,16 @@ class SyncClientImpl: SyncClient {
     public var connectionListener: SyncConnectionListener? {
         didSet {
             if cSync != nil {
-                let userData = Unmanaged.passUnretained(self).toOpaque()
-                obx_sync_listener_connect(cSync, connectedCallback, userData)
-                obx_sync_listener_disconnect(cSync, disconnectedCallback, userData)
+                if connectionListener != nil {
+                    debugLog("connectionListener set, registering callbacks")
+                    let userData = Unmanaged.passUnretained(self).toOpaque()
+                    obx_sync_listener_connect(cSync, connectedCallback, userData)
+                    obx_sync_listener_disconnect(cSync, disconnectedCallback, userData)
+                } else {
+                    debugLog("connectionListener set to nil, deregistering callbacks")
+                    obx_sync_listener_connect(cSync, nil, nil)
+                    obx_sync_listener_disconnect(cSync, nil, nil)
+                }
             }
         }
     }
@@ -87,22 +120,64 @@ class SyncClientImpl: SyncClient {
         }
     }
 
-    init(store: Store, server: URL, certificatePaths: [String]) throws {
-        self.store = store
-        let urls = [server.absoluteString]
-        cSync = Util.withArrayOfCStringsMutable(urls) { urlsPtr, urlsCount in
-            return Util.withArrayOfCStringsMutable(certificatePaths) { certsPtr, certsCount in
-                return obx_sync_certs(store.cStore, urlsPtr, urlsCount, certsPtr, certsCount)
+    init(configuration: Sync.Configuration) throws {
+        self.debugLogging = configuration.debugLogging
+        self.store = configuration.store
+
+        // Create sync options
+        guard let opt = obx_sync_opt(configuration.store.cStore) else {
+            try checkLastError()
+            throw ObjectBoxError.sync(message: "Could not create sync options")
+        }
+
+        // Track whether obx_sync_create consumed the options (it always frees them on success or failure)
+        var optConsumed = false
+        defer {
+            if !optConsumed {
+                obx_sync_opt_free(opt)
             }
         }
+
+        // Add URLs (at least one required, validated by Sync.makeClient)
+        for url in configuration.urls {
+            try checkLastError(obx_sync_opt_add_url(opt, url))
+        }
+
+        // Add certificate paths
+        for certPath in configuration.certificatePaths {
+            try checkLastError(obx_sync_opt_add_cert_path(opt, certPath))
+        }
+
+        // Set flags if any
+        if configuration.flags.rawValue != 0 {
+            try checkLastError(obx_sync_opt_flags(opt, configuration.flags.rawValue))
+        }
+
+        // Create sync client from options (obx_sync_create always frees opt, even on error)
+        optConsumed = true
+        cSync = obx_sync_create(opt)
         if cSync == nil {
             try checkLastError()
-            throw ObjectBoxError.sync(message: "Could not create")  // paranoia, checkLastError() should throw already
+            throw ObjectBoxError.sync(message: "Could not create sync client")
         }
+
         obx_sync_request_updates_mode(cSync, OBXRequestUpdatesMode(updateRequestModeStorage.rawValue))
+
+        // Set credentials if provided
+        if !configuration.credentials.isEmpty {
+            try setCredentials(configuration.credentials)
+        }
+
+        // Set filter variables if provided
+        for (name, value) in configuration.filterVariables {
+            try putFilterVariable(name: name, value: value)
+        }
+
+        debugLog("init completed, cSync=\(String(describing: cSync))")
     }
 
     deinit {
+        debugLog("deinit called")
         close()
     }
 
@@ -132,6 +207,7 @@ class SyncClientImpl: SyncClient {
     }
 
     public func close() {
+        debugLog("closing, cSync=\(String(describing: cSync))")
         let cSyncToClose = cSync
         if cSyncToClose != nil {
             cSync = nil
@@ -140,16 +216,22 @@ class SyncClientImpl: SyncClient {
             if associate != nil {
                 if associate! === self {
                     store!.syncClient = nil
-                } // else log error?
+                } else {
+                    debugLog("closing: store.syncClient is not self")
+                }
             }
 
             store = nil  // A closed client should release the store
 
-            SyncClientImpl.removeAllListeners(cSyncToClose: cSyncToClose!)
+            removeAllListeners(cSyncToClose: cSyncToClose!)
+            debugLog("closing C sync")
             let err = obx_sync_close(cSyncToClose)
             if err != OBX_SUCCESS {
-                // TODO log err?
+                debugLog("close(): obx_sync_close returned error \(err)")
             }
+            debugLog("close completed")
+        } else {
+            debugLog("already closed")
         }
     }
 
@@ -221,6 +303,7 @@ class SyncClientImpl: SyncClient {
     }
 
     public func start() throws {
+        debugLog("start() called")
         try ensureValid()
         if !credentialsSet {
             throw ObjectBoxError.illegalState(message: "You must set credentials before starting")
@@ -228,11 +311,16 @@ class SyncClientImpl: SyncClient {
 
         try checkLastError(obx_sync_start(cSync))
         isStarted = true
+        debugLog("start() completed")
     }
 
     public func stop() throws {
+        debugLog("stop() called")
         if cSync != nil {
             try checkLastError(obx_sync_stop(cSync))
+            debugLog("stop() completed")
+        } else {
+            debugLog("stop(): cSync was nil")
         }
     }
 
@@ -270,11 +358,12 @@ class SyncClientImpl: SyncClient {
         }
     }
 
-    static func removeAllListeners(cSyncToClose: OpaquePointer) {
+    func removeAllListeners(cSyncToClose: OpaquePointer) {
+        debugLog("removing all listeners")
         obx_sync_listener_login(cSyncToClose, nil, nil)
         obx_sync_listener_login_failure(cSyncToClose, nil, nil)
         obx_sync_listener_complete(cSyncToClose, nil, nil)
-        // obx_sync_listener_change(cSyncToClose, nil, nil)
+        obx_sync_listener_change(cSyncToClose, nil, nil)
         obx_sync_listener_connect(cSyncToClose, nil, nil)
         obx_sync_listener_disconnect(cSyncToClose, nil, nil)
     }
@@ -364,26 +453,34 @@ private func updatesCompletedCallback(_ userData: UnsafeMutableRawPointer?) {
     })
 }
 
-//private func syncChangeCallback(_ userData: UnsafeMutableRawPointer?,
-//                                 _ changeArray: UnsafePointer<OBX_sync_change_array>?) {
-//    let syncListener = userData!.load(as: SyncListener.self)
-//    if let changeArray = changeArray {
-//        var result = [obx_schema_id: SyncChange]()
-//        for changeIdx in 0 ..< changeArray.pointee.count {
-//            let currChangeC = changeArray.pointee.list[changeIdx]
-//            var currChangeObject = SyncChange(puts: [], removals: [])
-//            for putIdx in 0 ..< (currChangeC.puts?.pointee.count ?? 0) {
-//                currChangeObject.puts.append(currChangeC.puts!.pointee.ids[putIdx])
-//            }
-//            for removalIdx in 0 ..< (currChangeC.removals?.pointee.count ?? 0) {
-//                currChangeObject.removals.append(currChangeC.removals!.pointee.ids[removalIdx])
-//            }
-//            result[currChangeC.entity_id] = currChangeObject
-//        }
-//        DispatchQueue.main.async {
-//            syncListener.changed(result)
-//        }
-//    } else {
-//        print("No change info")
-//    }
-//}
+private func changesCallback(
+    _ userData: UnsafeMutableRawPointer?,
+    _ cSyncChangeArray: UnsafePointer<OBX_sync_change_array>?
+) {
+    guard let cSyncChangeArray = cSyncChangeArray else { return }
+    let count = cSyncChangeArray.pointee.count
+    guard count > 0, let list = cSyncChangeArray.pointee.list else { return }
+    var syncChanges: [obx_schema_id: SyncChange] = [:]
+    for i in (0 ..< count) {
+        let cSyncChange = list[i]
+        var putEntityIds: [Id] = []
+        var removeEntityIds: [Id] = []
+        let entityId = cSyncChange.entity_id
+        if let cPutsArrayPtr = cSyncChange.puts, let arr = cPutsArrayPtr.pointee.ids {
+            let size = cPutsArrayPtr.pointee.count
+            for k in (0 ..< size) {
+                putEntityIds.append(arr[k] as Id)
+            }
+        }
+        if let cRemovalsArrayPtr = cSyncChange.removals, let arr = cRemovalsArrayPtr.pointee.ids {
+            let size = cRemovalsArrayPtr.pointee.count
+            for k in (0 ..< size) {
+                removeEntityIds.append(arr[k] as Id)
+            }
+        }
+        syncChanges[entityId] = SyncChange(puts: putEntityIds, removals: removeEntityIds)
+    }
+    callWithSyncClient(userData, action: { (client: SyncClient) in
+        client.changeListener?.changed(syncChanges)
+    })
+}

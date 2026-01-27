@@ -17,7 +17,7 @@ class SyncDryTests: XCTestCase {
         super.setUp()
         store = StoreHelper.tempStore(model: createTestModel())
     }
-    
+
     override func tearDown() {
         super.tearDown()
         // swiftlint:disable:next force_try
@@ -57,6 +57,9 @@ class SyncDryTests: XCTestCase {
         }
 
         func disconnected() {
+        }
+
+        func changed(_ changes: [obx_schema_id: SyncChange]) {
         }
 
     }

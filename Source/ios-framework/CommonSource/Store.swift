@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2025 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2026 ObjectBox Ltd. https://objectbox.io
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class Store: CustomDebugStringConvertible {
     internal(set) public var directoryPath: String
 
     /// The version of this ObjectBox Swift SDK.
-    public static var version = "5.1.1"
+    public static var version = "5.2.0"
 
     /// Pass this together with a String identifier as the directory path to use
     /// a file-less in-memory database.
@@ -154,6 +154,10 @@ public class Store: CustomDebugStringConvertible {
     /// tests.
     public func close() {
         if let cStore = cStore {
+            // Close sync client first to properly release native resources
+            syncClient?.close()
+            syncClient = nil
+            
             self.cStore = nil
             let err = obx_store_close(cStore)
             if err != OBX_SUCCESS {
@@ -189,6 +193,9 @@ public class Store: CustomDebugStringConvertible {
     public func box<T>(for entityType: T.Type = T.self) -> Box<T> where T: EntityInspectable & __EntityRelatable {
         guard T.entityInfo.entitySchemaId != 0 else {
             fatalError("entitySchemaId shouldn't be 0") // Swift doesn't know raise() never returns.
+        }
+        guard !isClosed() else {
+            fatalError("Cannot create a box from a closed Store.")
         }
 
         boxesLock.wait()

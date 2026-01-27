@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2025 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2026 ObjectBox Ltd. https://objectbox.io
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,9 +47,9 @@ class StoreTests: XCTestCase {
         // Update the expected versions every now and then.
         // TODO XCTAssertGreaterThanOrEqual doesn't respect semantic versioning:
         //      e.g. 0.10.0 will be evaluated as lower than 0.9.1
-        XCTAssertGreaterThanOrEqual(Store.version, "5.1.1")
-        XCTAssertGreaterThanOrEqual(Store.versionLib, "5.0.0")
-        XCTAssertGreaterThanOrEqual(Store.versionCore, "5.0.0-2025-12-08")
+        XCTAssertGreaterThanOrEqual(Store.version, "5.2.0")
+        XCTAssertGreaterThanOrEqual(Store.versionLib, "5.1.0")
+        XCTAssertGreaterThanOrEqual(Store.versionCore, "5.1.1-2026-01-21")
     }
 
     func testCloseTwice() {

@@ -529,6 +529,29 @@ class BoxTests: XCTestCase {
         XCTAssertEqual(2, personCount)
     }
 
+    func testVisitInReturnsCorrectEntities() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+
+        var persons = [TestPerson]()
+        for i in 0..<5 {
+            persons.append(TestPerson(name: "Person \(i)", age: i * 10))
+        }
+        try box.put(persons)
+
+        // Visit specific IDs in reverse order and verify we get the correct entities
+        let idsToVisit = [persons[3].id, persons[1].id, persons[4].id]
+        var visitedAges = [Int]()
+        try box.visit(idsToVisit) { person in
+            if let person = person {
+                visitedAges.append(person.age)
+            }
+            return true
+        }
+
+        // Must get the entities matching the requested IDs, not just the first entities
+        XCTAssertEqual(visitedAges, [30, 10, 40])
+    }
+
     func testBoxDescription() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
 

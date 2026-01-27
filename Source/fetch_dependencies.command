@@ -182,8 +182,12 @@ cd ${dest_dir}
 for filename in ./*.a; do
   echo ""
   ls -lha "$filename"
-  # Match our version/date pattern like "2.6.1-2020-06-09"
-  obx_version=$(strings "$filename" | grep "[0-9]\.[0-9]\.[0-9]-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")
+  # Match our version/date pattern like "2.6.1-2020-06-09" or "2.6.1-beta1-2020-06-09"
+  obx_version=$(strings "$filename" | grep "[0-9]\.[0-9]\.[0-9]-[a-zA-Z0-9]*-*[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" || true)
+  if [ -z "$obx_version" ]; then
+    echo "  >> ERROR: No version found in $filename"
+    exit 1
+  fi
   echo "  >> Version found: $obx_version"
   obx_symbols=$(nm -gj "$filename" | grep -c obx_) || true
   obx_sync_symbols=$(nm -gj "$filename" | grep -c obx_sync_) || true

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2025 ObjectBox Ltd. All rights reserved.
+ * Copyright 2018-2026 ObjectBox Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ extern "C" {
 /// When using ObjectBox as a dynamic library, you should verify that a compatible version was linked using
 /// obx_version() or obx_version_is_at_least().
 #define OBX_VERSION_MAJOR 5
-#define OBX_VERSION_MINOR 0
+#define OBX_VERSION_MINOR 1
 #define OBX_VERSION_PATCH 0  // values >= 100 are reserved for dev releases leading to the next minor/major increase
 
 //----------------------------------------------
@@ -2284,6 +2284,8 @@ struct OBX_query;  // doxygen (only) picks up the typedef struct below
 /// you may want to create clonse using obx_query_clone().
 typedef struct OBX_query OBX_query;
 
+/// Builds a query from the given query builder (with the query conditions previously called on the query builder).
+/// Note: this does not release the query builder, you still need to call obx_qb_close() on it.
 /// @returns NULL if the operation failed, see functions like obx_last_error_code() to get error details
 OBX_C_API OBX_query* obx_query(OBX_query_builder* builder);
 

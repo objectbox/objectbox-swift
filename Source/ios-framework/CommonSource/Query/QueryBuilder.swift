@@ -180,6 +180,18 @@ extension QueryBuilder {
         return wrap(obx_qb_greater_than_int(queryBuilder, queryProperty.propertyId, Int64(truncatingIfNeeded: integer)))
     }
 
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isGreaterOrEqual integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_greater_or_equal_int(queryBuilder, queryProperty.propertyId,
+                Int64(truncatingIfNeeded: integer)))
+    }
+
+    internal func `where`<R, VALUE>(_ queryProperty: Property<EntityType, VALUE, R>, isLessOrEqual integer: VALUE)
+                    -> PropertyQueryBuilderCondition where VALUE: FixedWidthInteger {
+        return wrap(obx_qb_less_or_equal_int(queryBuilder, queryProperty.propertyId,
+                Int64(truncatingIfNeeded: integer)))
+    }
+
     /// Matches all property values between `lowerBound` and `upperBound`,
     /// including the bounds themselves. The order of the bounds does not matter.
     ///
@@ -305,6 +317,26 @@ extension QueryBuilder {
         return wrap(obx_qb_greater_than_double(queryBuilder, queryProperty.propertyId, Double(value)))
     }
 
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP, R>, isLessOrEqual value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_less_or_equal_double(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP?, R>, isLessOrEqual value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_less_or_equal_double(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP, R>, isGreaterOrEqual value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_greater_or_equal_double(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
+    internal func `where`<FP, R>(_ queryProperty: Property<EntityType, FP?, R>, isGreaterOrEqual value: FP)
+                    -> PropertyQueryBuilderCondition where FP: BinaryFloatingPoint {
+        return wrap(obx_qb_greater_or_equal_double(queryBuilder, queryProperty.propertyId, Double(value)))
+    }
+
     /// Matches all property values between `lowerBound` and `upperBound`,
     /// including the bounds themselves. The order of the bounds does not matter.
     ///
@@ -381,6 +413,30 @@ extension QueryBuilder {
     }
 }
 
+// MARK: - Float Vectors
+
+extension QueryBuilder {
+    internal func greaterThan<V, R>(_ property: Property<EntityType, V, R>, float: Float)
+    -> PropertyQueryBuilderCondition where V: FloatArrayPropertyType {
+        return wrap(obx_qb_greater_than_double(queryBuilder, property.propertyId, Double(float)))
+    }
+
+    internal func lessThan<V, R>(_ property: Property<EntityType, V, R>, float: Float)
+    -> PropertyQueryBuilderCondition where V: FloatArrayPropertyType {
+        return wrap(obx_qb_less_than_double(queryBuilder, property.propertyId, Double(float)))
+    }
+    
+    internal func greaterOrEqual<V, R>(_ property: Property<EntityType, V, R>, float: Float)
+    -> PropertyQueryBuilderCondition where V: FloatArrayPropertyType {
+        return wrap(obx_qb_greater_or_equal_double(queryBuilder, property.propertyId, Double(float)))
+    }
+
+    internal func lessOrEqual<V, R>(_ property: Property<EntityType, V, R>, float: Float)
+    -> PropertyQueryBuilderCondition where V: FloatArrayPropertyType {
+        return wrap(obx_qb_less_or_equal_double(queryBuilder, property.propertyId, Double(float)))
+    }
+}
+
 // MARK: - HNSW index property
 
 extension QueryBuilder {
@@ -436,14 +492,8 @@ extension QueryBuilder {
     internal func `where`<S, R>(_ property: Property<EntityType, S, R>, isContainedIn collection: [String],
                                 caseSensitive: Bool = true) -> PropertyQueryBuilderCondition
         where S: StringPropertyType {
-            var strings: [UnsafePointer?] = collection.map { str -> UnsafePointer<Int8> in
-                return (str as NSString).utf8String!
-            }
-            var result: obx_qb_cond = 0
-            let numStrings = Int(strings.count)
-            strings.withContiguousMutableStorageIfAvailable { ptr in
-                result = obx_qb_in_strings(queryBuilder, property.propertyId, ptr.baseAddress, numStrings,
-                                           caseSensitive)
+            let result = Util.withArrayOfCStrings(collection) { cStrings, count in
+                return obx_qb_in_strings(queryBuilder, property.propertyId, cStrings, count, caseSensitive)
             }
             return wrap(result)
     }

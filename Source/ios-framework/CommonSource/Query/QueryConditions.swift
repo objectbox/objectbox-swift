@@ -241,6 +241,18 @@ public func > <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
         return lhs.isGreaterThan(rhs)
 }
 
+/// :nodoc:
+public func <= <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+        return lhs.isLessOrEqual(rhs)
+}
+
+/// :nodoc:
+public func >= <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: VALUE)
+    -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+        return lhs.isGreaterOrEqual(rhs)
+}
+
 // swiftlint:disable identifier_name
 /// :nodoc:
 public func ∈ <E, VALUE>(lhs: Property<E, VALUE, Void>, rhs: Range<VALUE>)
@@ -290,6 +302,18 @@ extension Property where Property.ValueType: FixedWidthInteger {
     /// Equivalent to the > operator in query blocks.
     public func isGreaterThan(_ value: ValueType) -> PropertyQueryCondition<EntityType, ValueType> {
             return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
+    }
+
+    /// Equivalent to the >= operator in query blocks.
+    public func isGreaterOrEqual(_ value: ValueType)
+        -> PropertyQueryCondition<EntityType, ValueType> {
+            return PropertyQueryCondition(expression: { $0.where(self, isGreaterOrEqual: value) })
+    }
+
+    /// Equivalent to the <= operator in query blocks.
+    public func isLessOrEqual(_ value: ValueType)
+        -> PropertyQueryCondition<EntityType, ValueType> {
+            return PropertyQueryCondition(expression: { $0.where(self, isLessOrEqual: value) })
     }
     
     /// Matches all property values between `lowerBound` and `upperBound`,
@@ -357,6 +381,18 @@ public func > <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
     return nonOptional(lhs).isGreaterThan(rhs)
 }
 
+/// :nodoc:
+public func <= <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isLessOrEqual(rhs)
+}
+
+/// :nodoc:
+public func >= <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: VALUE)
+                -> PropertyQueryCondition<E, VALUE> where E: Entity, VALUE: FixedWidthInteger {
+    return nonOptional(lhs).isGreaterOrEqual(rhs)
+}
+
 // swiftlint:disable identifier_name
 /// :nodoc:
 public func ∈ <E, VALUE>(lhs: Property<E, VALUE?, Void>, rhs: Range<VALUE>)
@@ -410,6 +446,30 @@ public func > <FP, E>(lhs: Property<E, FP?, Void>, rhs: FP) -> PropertyQueryCond
     return nonOptional(lhs).isGreaterThan(rhs)
 }
 
+/// :nodoc:
+public func <= <FP, E>(lhs: Property<E, FP, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return lhs.isLessOrEqual(rhs)
+}
+
+/// :nodoc:
+public func <= <FP, E>(lhs: Property<E, FP?, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return nonOptional(lhs).isLessOrEqual(rhs)
+}
+
+/// :nodoc:
+public func >= <FP, E>(lhs: Property<E, FP, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return lhs.isGreaterOrEqual(rhs)
+}
+
+/// :nodoc:
+public func >= <FP, E>(lhs: Property<E, FP?, Void>, rhs: FP) -> PropertyQueryCondition<E, FP>
+        where E: Entity, FP: BinaryFloatingPoint {
+    return nonOptional(lhs).isGreaterOrEqual(rhs)
+}
+
 extension Property where Property.ValueType: BinaryFloatingPoint {
     /// Equivalent to the == operator in query blocks.
     public func isEqual(to other: ValueType, tolerance: ValueType)
@@ -427,6 +487,18 @@ extension Property where Property.ValueType: BinaryFloatingPoint {
     public func isGreaterThan(_ value: ValueType)
         -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: { $0.where(self, isGreaterThan: value) })
+    }
+
+    /// Equivalent to the <= operator in query blocks.
+    public func isLessOrEqual(_ value: ValueType)
+        -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: { $0.where(self, isLessOrEqual: value) })
+    }
+
+    /// Equivalent to the >= operator in query blocks.
+    public func isGreaterOrEqual(_ value: ValueType)
+        -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: { $0.where(self, isGreaterOrEqual: value) })
     }
 
     /// Matches all property values between `lowerBound` and `upperBound`,
@@ -976,6 +1048,38 @@ extension Property where Property.ValueType == Int64ArrayPropertyType {
     -> PropertyQueryCondition<EntityType, ValueType> {
         return PropertyQueryCondition(expression: {
             $0.lessOrEqual(self, int: int)
+        })
+    }
+}
+
+// MARK: - Float Vectors
+
+extension Property where Property.ValueType == FloatArrayPropertyType {
+    public func isLessThan(_ float: Float)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessThan(self, float: float)
+        })
+    }
+
+    public func isGreaterThan(_ float: Float)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterThan(self, float: float)
+        })
+    }
+
+    public func isGreaterOrEqual(_ float: Float)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.greaterOrEqual(self, float: float)
+        })
+    }
+
+    public func isLessOrEqual(_ float: Float)
+    -> PropertyQueryCondition<EntityType, ValueType> {
+        return PropertyQueryCondition(expression: {
+            $0.lessOrEqual(self, float: float)
         })
     }
 }

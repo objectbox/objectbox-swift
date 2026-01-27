@@ -38,8 +38,8 @@ public struct SyncChange {
 ///
 /// See also `SyncCompletedListener` for the general sync listener.
 public protocol SyncChangeListener {
-//    /// Called each time when data `changes` from sync were applied locally.
-//    func changed(_ changes: [obx_schema_id: SyncChange])
+    /// Called each time when data `changes` from sync were applied locally.
+    func changed(_ changes: [obx_schema_id: SyncChange])
 }
 
 /// Listens to sync connection events.

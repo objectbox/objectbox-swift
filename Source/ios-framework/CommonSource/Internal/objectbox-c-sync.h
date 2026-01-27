@@ -34,7 +34,7 @@
 #include "objectbox-c.h"
 
 #if defined(static_assert) || defined(__cplusplus)
-static_assert(OBX_VERSION_MAJOR == 5 && OBX_VERSION_MINOR == 0 && OBX_VERSION_PATCH == 0,  // NOLINT
+static_assert(OBX_VERSION_MAJOR == 5 && OBX_VERSION_MINOR == 1 && OBX_VERSION_PATCH == 0,  // NOLINT
               "Versions of objectbox.h and objectbox-sync.h files do not match, please update");
 #endif
 
@@ -186,6 +186,81 @@ typedef void OBX_sync_listener_change(void* arg, const OBX_sync_change_array* ch
 typedef void OBX_sync_listener_server_time(void* arg, int64_t timestamp_ns);
 
 typedef void OBX_sync_listener_msg_objects(void* arg, const OBX_sync_msg_objects* msg_objects);
+
+/// Flags to adjust sync client behavior.
+typedef enum {
+    /// Enable (rather extensive) logging on how IDs are mapped (local <-> global)
+    OBXSyncFlags_DebugLogIdMapping = 1,
+
+    /// If the client gets in a state that does not allow any further synchronization, this flag instructs Sync to
+    /// keep local data nevertheless. While this preserves data, you need to resolve the situation manually.
+    /// For example, you could backup the data and start with a fresh database.
+    /// Note that the default behavior (this flag is not set) is to wipe existing data from all sync-enabled types and
+    /// sync from scratch from the server.
+    /// Client-only: setting this flag for Sync server has no effect.
+    OBXSyncFlags_KeepDataOnSyncError = 2,
+
+    /// Logs sync filter variables used for each client, e.g. values provided by JWT or the client's login message.
+    OBXSyncFlags_DebugLogFilterVariables = 4,
+
+    /// When set, remove operations will include the full object data in the TX log (REMOVE_OBJECT command).
+    /// This allows sync filters to filter out remove operations based on the object content.
+    /// Without this flag, remove operations only contain the object ID and cannot be filtered.
+    /// Note: this increases the size of TX logs for remove operations.
+    OBXSyncFlags_RemoveWithObjectData = 8,
+
+    /// Enables debug logging of TX log processing.
+    /// For now, this only has an effect on SyncClients (Sync Server has extensive debug logs already).
+    OBXSyncFlags_DebugLogTxLogs = 16,
+
+    /// Skips invalid (put object) operations in the TX log instead of failing.
+    OBXSyncFlags_SkipInvalidTxOps = 32,
+} OBXSyncFlags;
+
+//----------------------------------------------
+// Sync Client Options
+//----------------------------------------------
+
+struct OBX_sync_options;
+typedef struct OBX_sync_options OBX_sync_options;
+
+/// Creates a sync client options object, which is used to configure and create a sync client.
+/// The options must be used with obx_sync_create() to create a sync client.
+/// @param store the store to sync; a store can only have one sync client associated with it.
+/// @returns NULL if the options could not be created (e.g. store is NULL)
+OBX_C_API OBX_sync_options* obx_sync_opt(OBX_store* store);
+
+/// Adds a server URL to the sync options; at least one URL must be added before opening the sync client.
+/// Passing multiple URLs allows high availability and load balancing (i.e. using a ObjectBox Sync Server Cluster).
+/// A random URL is selected for each connection attempt.
+OBX_C_API obx_err obx_sync_opt_add_url(OBX_sync_options* opt, const char* url);
+
+/// Adds an SSL certificate path to the sync options.
+/// This allows to pass SSL certificate paths referring to the local file system.
+/// Example use cases are using self-signed certificates in a local development environment and custom CAs.
+OBX_C_API obx_err obx_sync_opt_add_cert_path(OBX_sync_options* opt, const char* cert_path);
+
+/// Sets sync flags to adjust sync behavior; see OBXSyncFlags for available flags.
+/// Combine multiple flags using bitwise OR.
+OBX_C_API obx_err obx_sync_opt_flags(OBX_sync_options* opt, uint32_t flags);
+
+/// Creates a sync client with the given options.
+/// This does not initiate any connection attempts yet: call obx_sync_start() to do so.
+/// Before obx_sync_start(), you must configure credentials via obx_sync_credentials.
+/// By default, a sync client automatically receives updates from the server once login succeeded.
+/// To configure this differently, call obx_sync_request_updates_mode() with the wanted mode.
+/// Note: the given options are always freed by this function, including when an error occurs.
+/// @param opt required parameter holding the sync options (at least one URL must be set)
+/// @returns NULL if the operation failed, see functions like obx_last_error_code() to get error details
+OBX_C_API OBX_sync* obx_sync_create(OBX_sync_options* opt);
+
+/// Frees the sync options object.
+/// Note: Only free *unused* options, obx_sync_create() frees the options internally.
+OBX_C_API void obx_sync_opt_free(OBX_sync_options* opt);
+
+//----------------------------------------------
+// Sync Client Creation (convenience functions)
+//----------------------------------------------
 
 /// Creates a sync client associated with the given store and sync server URL.
 /// This does not initiate any connection attempts yet: call obx_sync_start() to do so.

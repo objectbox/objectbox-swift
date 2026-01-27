@@ -76,7 +76,9 @@ internal class Cursor<E: __EntityRelatable & EntityInspectable> where E == E.Ent
     func get(_ entityId: Id) throws -> OBX_bytes {
         var bytes = OBX_bytes(data: nil, size: 0)
         var ptr: UnsafeRawPointer?
-        try checkLastError(obx_cursor_first(cCursor, &ptr, &bytes.size))
+        let err = obx_cursor_get(cCursor, entityId, &ptr, &bytes.size)
+        if err == OBX_NOT_FOUND { obx_last_error_clear(); return bytes }
+        try checkLastError(err)
         bytes.data = UnsafeRawPointer(ptr)
         return bytes
     }

@@ -211,13 +211,11 @@ public extension FlatBufferBuilder {
 
     func prepare(values: [String]?) -> OBXDataOffset {
         guard let values = values else { return 0 } // Don't collect nil values.
-        let size = values.count
-        let cStringPointers = values.map { strdup($0) }
-        let dataOffset = cStringPointers.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> OBXDataOffset in
-            let baseAddress = bytes.baseAddress?.assumingMemoryBound(to: (UnsafePointer<CChar>).self)
-            return obx_fbb_prepare_strings(fbb, baseAddress!, size)
+        return Util.withArrayOfCStrings(values) { cStrings, count in
+            // withArrayOfCStrings guarantees a valid pointer even for empty arrays
+            let ptr = UnsafeRawPointer(cStrings).assumingMemoryBound(to: UnsafePointer<CChar>.self)
+            return obx_fbb_prepare_strings(fbb, ptr, count)
         }
-        return dataOffset
     }
 
 }

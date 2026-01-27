@@ -169,7 +169,7 @@ public struct FlatBufferReader {
     ///         (e.g. because it got added to the schema after this entity was written)
     public func read(at index: UInt16) -> Data {
         var result = OBX_bytes()
-        if !obx_fbr_read_bytes(unwrapFBR(), index, &result) { return Data() }
+        guard obx_fbr_read_bytes(unwrapFBR(), index, &result), result.data != nil else { return Data() }
         return Data(bytes: result.data, count: result.size)
     }
     
@@ -361,7 +361,8 @@ public struct FlatBufferReader {
     public func read(at index: UInt16) -> Data? {
         var result = OBX_bytes()
         if !obx_fbr_read_bytes(unwrapFBR(), index, &result) { return nil }
-        return Data(bytes: result.data, count: result.size)
+        guard let data = result.data else { return Data() }
+        return Data(bytes: data, count: result.size)
     }
 
     /// - Returns: nil if the value isn't present in the buffer

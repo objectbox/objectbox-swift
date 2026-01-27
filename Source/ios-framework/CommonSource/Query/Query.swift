@@ -493,11 +493,9 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
     }
 
     internal func setParametersInternal(property: PropertyDescriptor, to collection: [String]) {
-        let numStrings = Int(collection.count)
-        var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
-        strings.withContiguousMutableStorageIfAvailable { ptr in
-            let typeId = EntityType.entityInfo.entitySchemaId
-            let err = obx_query_param_strings(cQuery, typeId, property.propertyId, ptr.baseAddress, numStrings)
+        let typeId = EntityType.entityInfo.entitySchemaId
+        Util.withArrayOfCStrings(collection) { ptr, count in
+            let err = obx_query_param_strings(cQuery, typeId, property.propertyId, ptr, count)
             checkFatalErrorParam(err)
         }
     }
@@ -510,10 +508,8 @@ public class Query<E: EntityInspectable & __EntityRelatable>: CustomDebugStringC
     ///   - alias: Condition's alias.
     ///   - collection: New collection of values for the condition.
     public func setParameters(_ alias: String, to collection: [String]) {
-        let numStrings = Int(collection.count)
-        var strings: [UnsafePointer?] = collection.map { ($0 as NSString).utf8String }
-        strings.withContiguousMutableStorageIfAvailable { ptr in
-            let err = obx_query_param_alias_strings(cQuery, alias, ptr.baseAddress, numStrings)
+        Util.withArrayOfCStrings(collection) { ptr, count in
+            let err = obx_query_param_alias_strings(cQuery, alias, ptr, count)
             checkFatalErrorParam(err)
         }
     }

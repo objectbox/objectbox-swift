@@ -1,5 +1,5 @@
 //
-// Copyright © 2019 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2026 ObjectBox Ltd. https://objectbox.io
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,13 @@ where E == E.EntityBindingType.EntityType {
     /// AsyncBox to place requests on.
     public init(box: Box<EntityType>, enqueueTimeout: TimeInterval) {
         self.box = box
-		self.cAsyncBox = obx_async_create(box.cBox, UInt64(enqueueTimeout * 1000.0))
+        let created = obx_async_create(box.cBox, UInt64(enqueueTimeout * 1000.0))
+        if created == nil {
+            let message = String(utf8String: obx_last_error_message()) ?? "Unknown"
+            obx_last_error_clear()
+            fatalError("Failed to create AsyncBox: \(message)")
+        }
+		self.cAsyncBox = created
         self.ownsAsyncBox = true
     }
 
@@ -51,9 +57,18 @@ where E == E.EntityBindingType.EntityType {
             self.cAsyncBox = nil
         }
     }
+
+    /// Returns the C handle for the async box, throwing if the box is closed.
+    private func cHandle() throws -> OpaquePointer {
+        guard let cAsyncBox = cAsyncBox else {
+            throw ObjectBoxError.illegalState(message: "AsyncBox is closed")
+        }
+        return cAsyncBox
+    }
     
     internal func putOne(_ entity: EntityType, binding: EntityType.EntityBindingType,
                          flatBuffer: FlatBufferBuilder, mode: PutMode) throws -> Id {
+        let cAsyncBox = try cHandle()
         flatBuffer.isCollecting = true
         defer { flatBuffer.clear(); flatBuffer.isCollecting = false }
         
@@ -158,23 +173,24 @@ where E == E.EntityBindingType.EntityType {
         
     /// Queue up the entity with the given ID to be deleted from the database asynchronously.
     public func remove(_ entityId: EntityId<EntityType>) throws {
-        try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
+        try checkLastError(obx_async_remove(try cHandle(), entityId.value))
     }
 
     /// Queue up the entity with the given ID to be deleted from the database asynchronously.
     public func remove<I: UntypedIdBase>(_ entityId: I) throws {
-        try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
+        try checkLastError(obx_async_remove(try cHandle(), entityId.value))
     }
 
     /// Queue up the given entity to be deleted from the database asynchronously.
     public func remove(_ entity: EntityType) throws {
-        try checkLastError(obx_async_remove(cAsyncBox, EntityType.entityBinding.entityId(of: entity)))
+        try checkLastError(obx_async_remove(try cHandle(), EntityType.entityBinding.entityId(of: entity)))
     }
 
     /// Queue up the given entities to be deleted from the database asynchronously.
     public func remove<C: Collection>(_ entities: C) throws
         where C.Element == EntityType {
         let binding = EntityType.entityBinding
+        let cAsyncBox = try cHandle()
         for entity in entities {
             try checkLastError(obx_async_remove(cAsyncBox, binding.entityId(of: entity)))
         }
@@ -189,6 +205,7 @@ where E == E.EntityBindingType.EntityType {
     /// Queue up the entities with the given IDs to be deleted from the database asynchronously.
     public func remove<C: Collection>(_ entityIDs: C) throws
         where C.Element == EntityId<EntityType> {
+        let cAsyncBox = try cHandle()
         for entityId in entityIDs {
             try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
         }
@@ -197,6 +214,7 @@ where E == E.EntityBindingType.EntityType {
     /// Queue up the entities with the given IDs to be deleted from the database asynchronously.
     public func remove<I: UntypedIdBase, C: Collection>(_ entityIDs: C) throws
         where C.Element == I {
+        let cAsyncBox = try cHandle()
         for entityId in entityIDs {
             try checkLastError(obx_async_remove(cAsyncBox, entityId.value))
         }
@@ -222,6 +240,7 @@ extension Store {
     /// AsyncBox in this store has been processed.
     @discardableResult
     public func awaitAsyncSubmitted() -> Bool {
+        guard let cStore = cStore else { return false }
         return obx_store_await_async_submitted(cStore)
     }
 
@@ -229,6 +248,7 @@ extension Store {
     /// because nothing has been queued up for a while.
     @discardableResult
     public func awaitAsyncCompleted() -> Bool {
+        guard let cStore = cStore else { return false }
         return obx_store_await_async_completion(cStore)
     }
 }

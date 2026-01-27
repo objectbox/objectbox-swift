@@ -238,6 +238,10 @@ class VectorTestEntity {
     init() {
     }
 
+    init(floatArray: [Float]) {
+        self.floatArray = floatArray
+    }
+
     init(stringArray: [String]) {
         self.stringArray = stringArray
     }

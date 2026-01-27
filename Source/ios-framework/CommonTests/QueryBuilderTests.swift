@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright (c) 2019-2026 ObjectBox Ltd. https://objectbox.io
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -397,6 +397,12 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
     
     var store: Store!
     
+    private func makeNullableStore() throws -> Store {
+        let modelBuilder = try ModelBuilder()
+        try NullablePropertyEntity.buildEntity(modelBuilder: modelBuilder)
+        return StoreHelper.tempStore(model: modelBuilder.finish())
+    }
+    
     override func setUp() {
         super.setUp()
         store = StoreHelper.tempStore(model: createTestModel())
@@ -426,6 +432,43 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         }))
     }
     
+    func testFind_Less_Or_Equal_Integer() throws {
+        let personBox: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Isaac", age: 98)
+        let person2 = TestPerson(name: "Asimov", age: 12)
+        let person3 = TestPerson(name: "Foundation", age: 1000)
+        XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
+        
+        let query = try personBox.query { TestPerson.age <= 12 }.build()
+        let result: [TestPerson] = try query.find()
+        XCTAssertEqual(result.count, 1)
+        
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.name == "Asimov" && obj.age == 12
+        }))
+    }
+
+    func testFind_Less_Or_Equal_Optional_Integer() throws {
+        let optionalStore = try makeNullableStore()
+        defer { try? optionalStore.closeAndDeleteAllFiles() }
+        let box: Box<NullablePropertyEntity> = optionalStore.box(for: NullablePropertyEntity.self)
+
+        XCTAssertNoThrow(try box.put([
+            NullablePropertyEntity(maybeInt32: 10),
+            NullablePropertyEntity(maybeInt32: 20),
+            NullablePropertyEntity(maybeInt32: nil)
+        ]))
+
+        let query = try box.query { NullablePropertyEntity.maybeInt32 <= Int32(10) }.build()
+        let result: [NullablePropertyEntity] = try query.find()
+        XCTAssertEqual(result.count, 1)
+
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.maybeInt32 == 10
+        }))
+    }
+    
     func testFind_Less_Double() throws {
         let personBox: Box<AllTypesEntity> = store.box(for: AllTypesEntity.self)
         
@@ -435,6 +478,23 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
         
         let query = try personBox.query { AllTypesEntity.double.isLessThan(123.457) }.build()
+        let result: [AllTypesEntity] = try query.find()
+        XCTAssertEqual(result.count, 1)
+        
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.aDouble == 123.456
+        }))
+    }
+    
+    func testFind_Less_Or_Equal_Double() throws {
+        let personBox: Box<AllTypesEntity> = store.box(for: AllTypesEntity.self)
+        
+        let person1 = AllTypesEntity.create(double: 123.456)
+        let person2 = AllTypesEntity.create(double: 200.99)
+        let person3 = AllTypesEntity.create(double: 123.457)
+        XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
+        
+        let query = try personBox.query { AllTypesEntity.double.isLessOrEqual(123.456) }.build()
         let result: [AllTypesEntity] = try query.find()
         XCTAssertEqual(result.count, 1)
         
@@ -515,6 +575,43 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         }))
     }
     
+    func testFind_Greater_Or_Equal_Integer() throws {
+        let personBox: Box<TestPerson> = store.box(for: TestPerson.self)
+        
+        let person1 = TestPerson(name: "Isaac", age: 98)
+        let person2 = TestPerson(name: "Asimov", age: 12)
+        let person3 = TestPerson(name: "Foundation", age: 1000)
+        XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
+        
+        let query = try personBox.query { TestPerson.age >= 1000 }.build()
+        let result: [TestPerson] = try query.find()
+        XCTAssertEqual(result.count, 1)
+        
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.name == "Foundation" && obj.age == 1000
+        }))
+    }
+
+    func testFind_Greater_Or_Equal_Optional_Integer() throws {
+        let optionalStore = try makeNullableStore()
+        defer { try? optionalStore.closeAndDeleteAllFiles() }
+        let box: Box<NullablePropertyEntity> = optionalStore.box(for: NullablePropertyEntity.self)
+
+        XCTAssertNoThrow(try box.put([
+            NullablePropertyEntity(maybeInt32: 10),
+            NullablePropertyEntity(maybeInt32: 20),
+            NullablePropertyEntity(maybeInt32: nil)
+        ]))
+
+        let query = try box.query { NullablePropertyEntity.maybeInt32 >= Int32(20) }.build()
+        let result: [NullablePropertyEntity] = try query.find()
+        XCTAssertEqual(result.count, 1)
+
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.maybeInt32 == 20
+        }))
+    }
+    
     func testFind_Greater_Double() throws {
         let personBox: Box<AllTypesEntity> = store.box(for: AllTypesEntity.self)
         
@@ -532,6 +629,29 @@ class QueryBuilderFindByPropertyGrLessTests: XCTestCase {
         }))
         XCTAssert(result.contains(where: { obj -> Bool in
             obj.aDouble == 123.457
+        }))
+    }
+
+    func testFind_Greater_Or_Equal_Double() throws {
+        let personBox: Box<AllTypesEntity> = store.box(for: AllTypesEntity.self)
+        
+        let person1 = AllTypesEntity.create(double: 123.456)
+        let person2 = AllTypesEntity.create(double: 200.99)
+        let person3 = AllTypesEntity.create(double: 123.457)
+        XCTAssertNoThrow(try personBox.put([person1, person2, person3]))
+        
+        let query = personBox.query { AllTypesEntity.double.isGreaterOrEqual(123.456) }
+        let result: [AllTypesEntity] = try query.build().find()
+        XCTAssertEqual(result.count, 3)
+        
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.aDouble == 200.99
+        }))
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.aDouble == 123.457
+        }))
+        XCTAssert(result.contains(where: { obj -> Bool in
+            obj.aDouble == 123.456
         }))
     }
     
@@ -1331,5 +1451,30 @@ class QueryBuilderAndOrOperatorTests: XCTestCase {
         XCTAssert(result.contains(where: { obj -> Bool in
             obj.string == "Three" && obj.integer == 300 && obj.aDouble == 3.3
         }))
+    }
+
+    func testFind_InCollection_String_ManyStrings() throws {
+        // Regression test: no temporary string pointers in isIn([String])
+        // Tests with many strings to stress the memory handling
+        let personBox: Box<TestPerson> = store.box(for: TestPerson.self)
+
+        var persons = [TestPerson]()
+        for i in 0..<20 {
+            persons.append(TestPerson(name: "Person_\(i)", age: i))
+        }
+        try personBox.put(persons)
+
+        // Search for a subset using isIn with many strings
+        let searchNames = (5..<15).map { "Person_\($0)" }
+        let query = try personBox.query { TestPerson.name.isIn(searchNames) }.build()
+        let result = try query.find()
+
+        XCTAssertEqual(result.count, 10)
+        for person in result {
+            guard let name = person.name else { XCTFail("Name is nil"); continue }
+            XCTAssertTrue(name.hasPrefix("Person_"))
+            let num = Int(name.replacingOccurrences(of: "Person_", with: ""))!
+            XCTAssertTrue(num >= 5 && num < 15)
+        }
     }
 }

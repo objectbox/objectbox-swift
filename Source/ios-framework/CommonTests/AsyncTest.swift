@@ -1,5 +1,5 @@
 //
-// Copyright © 2019-2024 ObjectBox Ltd. All rights reserved.
+// Copyright © 2019-2026 ObjectBox Ltd. https://objectbox.io
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -200,6 +200,15 @@ class AsyncBoxTests: XCTestCase {
         XCTAssertEqual(try box.get(aimee.id)?.name, "Aimee Allen")
     }
 
+    func testAsyncBoxThrowsWhenClosed() {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        let asyncBox = AsyncBox<TestPerson>(box: box, unownedAsyncBox: nil)
+        let entity = TestPerson(name: "Broken", age: 1)
+
+        XCTAssertThrowsError(try asyncBox.put(entity))
+        XCTAssertThrowsError(try asyncBox.remove(entity))
+    }
+
     func testVarArgPutGetRemove() throws {
         let box: Box<TestPerson> = store.box(for: TestPerson.self)
         
@@ -225,5 +234,18 @@ class AsyncBoxTests: XCTestCase {
         try box.async.remove(person5.id.value, person6.id.value)
         store.awaitAsyncCompleted()
         XCTAssertEqual(try box.count(), 0)
+    }
+
+    func testAwaitAsyncOnClosedStore() throws {
+        let box: Box<TestPerson> = store.box(for: TestPerson.self)
+        try box.async.put(TestPerson(name: "Test", age: 1))
+        store.awaitAsyncSubmitted()
+
+        // Close the store
+        store.close()
+
+        // Should return false (not crash) when store is closed
+        XCTAssertFalse(store.awaitAsyncSubmitted())
+        XCTAssertFalse(store.awaitAsyncCompleted())
     }
 }

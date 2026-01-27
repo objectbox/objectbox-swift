@@ -38,10 +38,11 @@ internal class Util {
         return collection as? [Int64] ?? collection.map { Int64(truncatingIfNeeded: $0) }
     }
 
-    /// Like withCString but for String arrays
+    /// Like withCString but for String arrays.
+    /// Always provides a valid (non-nil) pointer, even for empty arrays.
     internal static func withArrayOfCStrings<R>(
             _ strings: [String],
-            _ body: (UnsafePointer<UnsafePointer<CChar>?>?, Int) -> R
+            _ body: (UnsafePointer<UnsafePointer<CChar>?>, Int) -> R
     ) -> R {
         // Result placeholder
         var result: R?
@@ -50,11 +51,19 @@ internal class Util {
         // Array of C-string pointers (the “char*[]”)
         var cPointers = [UnsafePointer<CChar>?](repeating: nil, count: count)
 
+        // For empty arrays, provide a valid pointer (required by some C APIs marked _Nonnull)
+        if count == 0 {
+            var empty: UnsafePointer<CChar>?
+            return withUnsafePointer(to: &empty) { ptr in
+                return body(ptr, 0)
+            }
+        }
+
         func recurse(_ index: Int) {
             if index == count {
                 // All strings converted, call body with buffer pointer
                 cPointers.withUnsafeBufferPointer { buffer in
-                    result = body(buffer.baseAddress, count)
+                    result = body(buffer.baseAddress!, count)
                 }
                 return
             }
@@ -69,15 +78,15 @@ internal class Util {
         return result!
     }
 
-    /// Like withCString but for String arrays – mutable pointer variant
+    /// Like withCString but for String arrays – mutable pointer variant.
+    /// Always provides a valid (non-nil) pointer, even for empty arrays.
     internal static func withArrayOfCStringsMutable<R>(
         _ strings: [String],
-        _ body: (UnsafeMutablePointer<UnsafePointer<CChar>?>?, Int) -> R
+        _ body: (UnsafeMutablePointer<UnsafePointer<CChar>?>, Int) -> R
     ) -> R {
         // Reuse the immutable version and cast the pointer
         return withArrayOfCStrings(strings) { ptr, count in
-            let mutablePtr = ptr.map { UnsafeMutablePointer(mutating: $0) }
-            return body(mutablePtr, count)
+            return body(UnsafeMutablePointer(mutating: ptr), count)
         }
     }
 

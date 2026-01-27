@@ -184,6 +184,35 @@ class VectorTests: XCTestCase {
         try checkQueryCount(box, condition: VectorTestEntity.int64Array.isLessThan(Int64.min), expectedCount: 0)
     }
 
+    func testComparison_FloatArray() throws {
+        let box: Box<VectorTestEntity> = store.box(for: VectorTestEntity.self)
+
+        XCTAssertNoThrow(try box.put([
+            VectorTestEntity(floatArray: [-10.5, 0.0, 10.5]),
+            VectorTestEntity(floatArray: [5.5, 15.5]),
+            VectorTestEntity(floatArray: [-20.0, -15.0])
+        ]))
+        
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterThan(-16.0), expectedCount: 3)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterThan(5.0), expectedCount: 2)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterThan(10.5), expectedCount: 1)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterThan(20.0), expectedCount: 0)
+
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterOrEqual(-20.0), expectedCount: 3)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterOrEqual(0.0), expectedCount: 2)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterOrEqual(15.5), expectedCount: 1)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isGreaterOrEqual(20.0), expectedCount: 0)
+
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessThan(0.0), expectedCount: 2)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessThan(-15.0), expectedCount: 1)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessThan(-20.0), expectedCount: 0)
+
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessOrEqual(15.5), expectedCount: 3)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessOrEqual(-10.5), expectedCount: 2)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessOrEqual(-20.0), expectedCount: 1)
+        try checkQueryCount(box, condition: VectorTestEntity.floatArray.isLessOrEqual(-25.0), expectedCount: 0)
+    }
+
 
     func testFind_StringArray() throws {
         let box: Box<VectorTestEntity> = store.box(for: VectorTestEntity.self)
@@ -211,5 +240,29 @@ class VectorTests: XCTestCase {
         }).build().find()
         XCTAssertEqual(resultCaseSensitive.count, 1)
         XCTAssertEqual(resultCaseSensitive[0].stringArray, ["apple", "banana", "cherry"])
+    }
+
+    func testStringArrayMemoryHandling() throws {
+        // Regression test: don't leak memory in FlatBufferBuilder.prepare(values: [String]?)
+        // Put entities with string arrays to verify memory handling
+        let box: Box<VectorTestEntity> = store.box()
+
+        var entities = [VectorTestEntity]()
+        for i in 0..<50 {
+            let entity = VectorTestEntity()
+            entity.stringArray = (0..<10).map { "String_\(i)_\($0)" }
+            entity.stringArrayNull = entity.stringArray
+            entities.append(entity)
+        }
+        try box.put(entities)
+
+        XCTAssertEqual(try box.count(), 50)
+
+        // Verify data integrity
+        let allEntities = try box.all()
+        for entity in allEntities {
+            XCTAssertEqual(entity.stringArray.count, 10)
+            XCTAssertEqual(entity.stringArrayNull?.count, 10)
+        }
     }
 }
