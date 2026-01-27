@@ -2,7 +2,20 @@
 
 Notable changes to the ObjectBox Swift library.
 
-For more insights into what changed in the ObjectBox C++ core, [check the ObjectBox C changelog](https://github.com/objectbox/objectbox-c/blob/main/CHANGELOG.md).
+## 5.2.0 - 2026-01-27
+
+- Queries: add inequality comparisons for floating point properties
+- Queries: add single-element conditions for float vector data
+- Various fixes in Store, Query, AsyncBox, ... 
+
+### Sync
+
+- New Sync protocol V8: using new clients also require a server update
+- Add Sync.Configuration to configure Sync client creation
+- Add various SyncFlags (via Sync.Configuration)
+- Add debugLogging flag (via Sync.Configuration)
+- Previous Sync.makeClient() are now deprecated, switch to the one with Sync.Configuration instead
+- Various fixes in SyncClient
 
 ## 5.1.1 - 2025-12-08
 
