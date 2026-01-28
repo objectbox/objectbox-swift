@@ -67,7 +67,7 @@ Want details? **[Read the guide](https://swift.objectbox.io/)** or
 ## Why use ObjectBox for Swift data persistence?
 
 Simple but powerful; frugal but fast: The ObjectBox NoSQL database offers an intuitive Swift API that's easy to pick up,
-fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal recource use (CPU, memory, 
+fun to work with, and incredibly fast, making it sustainable in many ways. Its frugal resource use (CPU, memory, 
 battery / power) makes ObjectBox an ideal and sustainable choice for iOS apps. So why not give it a try right away? 
 Check out the [installation section below](#add-objectbox-to-your-project). You can also star this repository for later 🌟
 
@@ -120,10 +120,10 @@ Now, you are all set to define your first ObjectBox entities! To continue check 
 
 #### Set up a Swift Package Manager manifest
 
-In your `Swift.package` file, add the ObjectBox Swift Package repository to the `dependencies` block:
+In your `Package.swift` file, add the ObjectBox Swift Package repository to the `dependencies` block:
 
 ```swift
-.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "5.1.0"),
+.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "5.2.0"),
 ```
 
 Add the `ObjectBox.xcframework` to the `dependencies` of the desired target in `targets`:
@@ -139,7 +139,7 @@ Or to use [ObjectBox Sync](https://objectbox.io/sync/) (requires access to the S
 .product(name: "ObjectBox-Sync.xcframework", package: "objectbox-swift-spm")
 ```
 
-Your `Swift.package` file should then contain sections similar to this:
+Your `Package.swift` file should then contain sections similar to this:
 
 ```swift
 dependencies: [
@@ -150,7 +150,7 @@ targets: [
     name: "YourApp",
     dependencies: [
         .product(name: "ObjectBox.xcframework", package: "objectbox-swift-spm")
-    ],
+    ]),
 ]
 ```
 
@@ -247,14 +247,15 @@ It uses [a fork of Sourcery](https://github.com/objectbox/objectbox-swift-genera
 
 ## Already using ObjectBox?
 
-We're on a mission to bring joy, delight and sustainability to app developers. **To do this, we need your help:** Please
+We want to bring joy, delight and sustainability to app developers.
+**To do this, we need your help:** Please
 fill in this 2-minute [Anonymous Feedback Form](https://forms.gle/LvVjN6jfFHuivxZX6). Let us know what you love and what is amiss, so we can improve.
 
 **We're looking forward to receiving your comments and requests:**
 
 - Add [GitHub issues](https://github.com/ObjectBox/objectbox-swift/issues)
 - Upvote issues you find important by hitting the 👍 reaction button
-- Drop us a line via contact📧objectbox.io
+
 - ⭐ this repository, if you like what you see
 
 Thank you! 🙏
@@ -274,7 +275,7 @@ ObjectBox is a cross-platform database supporting sustainable app development in
 ## License
 
 ```text
-Copyright 2018-2025 ObjectBox Ltd. All rights reserved. <https://objectbox.io>
+Copyright 2018-2026 ObjectBox Ltd. All rights reserved. <https://objectbox.io>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
