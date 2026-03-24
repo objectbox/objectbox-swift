@@ -309,6 +309,7 @@
 		BF8C94E237CAA82658D5567E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C65B080ECCC315F356B /* Util.swift */; };
 		BF8C95490B6D2F15D7CF17EF /* PropertyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C994E21CD7EDBA9FE9488 /* PropertyType.swift */; };
 		BF8C956792966164A0FEC0F6 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9D11BF05507D6023D8A8 /* Box.swift */; };
+		BF8C95762F011EF868524ED3 /* SyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */; };
 		BF8C95CE952702EA9A371CB9 /* SyncCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C457A5B462183A38CB8 /* SyncCredentials.swift */; };
 		BF8C96DDB916B7A240B9435D /* ToManyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */; };
 		BF8C97511346CD595B3FA067 /* ConfigFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C92496E83A61E092E1E5C /* ConfigFlags.swift */; };
@@ -322,6 +323,7 @@
 		BF8C99D4E42BC7921B251860 /* SyncClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9390023DD2CBB57081F4 /* SyncClient.swift */; };
 		BF8C9A612B788BB09237EF11 /* objectbox-c.h in Headers */ = {isa = PBXBuildFile; fileRef = BF8C9EA6E957FA5A04F3F548 /* objectbox-c.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF8C9A84B4ED0DF45E93972F /* SyncListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9C94D483FDC6D202550D /* SyncListener.swift */; };
+		BF8C9AE62C27CE3D001A687A /* SyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */; };
 		BF8C9B0C28D633B99C367399 /* OrderFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9B5A6915DCD75D4C08B6 /* OrderFlags.swift */; };
 		BF8C9B214F0FC48D35DDCAA1 /* PutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */; };
 		BF8C9B502C827ECD75B2FB53 /* PutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */; };
@@ -550,6 +552,7 @@
 		BF8C92496E83A61E092E1E5C /* ConfigFlags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigFlags.swift; sourceTree = "<group>"; };
 		BF8C92ADFF3FD72654FA6EAE /* Sync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		BF8C9390023DD2CBB57081F4 /* SyncClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncClient.swift; sourceTree = "<group>"; };
+		BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncTests.swift; sourceTree = "<group>"; };
 		BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncDryTests.swift; sourceTree = "<group>"; };
 		BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToManyTests.swift; sourceTree = "<group>"; };
 		BF8C9861BDF4F15624ABD4F4 /* PutMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PutMode.swift; sourceTree = "<group>"; };
@@ -777,6 +780,7 @@
 				BF8C95A6D4560D27C44FAAF3 /* SyncDryTests.swift */,
 				BF8C96EC25D5705F5CA2FD3C /* ToManyTests.swift */,
 				BF8C9F2FECFA173905FD4726 /* UtilTests.swift */,
+				BF8C9486B2D0F1E663D427B1 /* SyncTests.swift */,
 				2960DC0B2C186E2200A817F2 /* VectorTests.swift */,
 				29AD6D692C32D0B70090961A /* HnswIndexTest.swift */,
 			);
@@ -1592,6 +1596,7 @@
 				BF8C942D80421ED99E742308 /* ToManyTests.swift in Sources */,
 				2960DC0D2C186E2200A817F2 /* VectorTests.swift in Sources */,
 				BF8C9DD8D645AEF77F50C9A5 /* UtilTests.swift in Sources */,
+				BF8C9AE62C27CE3D001A687A /* SyncTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1628,6 +1633,7 @@
 				BF8C96DDB916B7A240B9435D /* ToManyTests.swift in Sources */,
 				2960DC0C2C186E2200A817F2 /* VectorTests.swift in Sources */,
 				BF8C9912D79207225494105D /* UtilTests.swift in Sources */,
+				BF8C95762F011EF868524ED3 /* SyncTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

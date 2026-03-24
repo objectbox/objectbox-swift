@@ -26,28 +26,62 @@ else
   build_params=""
 fi
 
-# Skips building/fetching, only copy header files and print details
-if [ "${1:-}" == "--verify-only" ]; then
-    verify_only=true
-    shift
-else
-    verify_only=false
-fi
+# Copies objectbox headers from the given source dir into our Swift source tree, renaming them and adjusting includes.
+# Note: not using `sed -i` so it can run on Linux too.
+updateHeaders() {
+  local src_dir="$1"
+  local c_header_dir="ios-framework/CommonSource/Internal"
+  cp "$src_dir/objectbox.h" "${c_header_dir}/objectbox-c.h"
+  cp "$src_dir/objectbox-sync.h" "${c_header_dir}/objectbox-c-sync.h"
+  sed 's/#include "objectbox.h"/#include "objectbox-c.h"/' "${c_header_dir}/objectbox-c-sync.h" > "${c_header_dir}/objectbox-c-sync.h.tmp"
+  mv "${c_header_dir}/objectbox-c-sync.h.tmp" "${c_header_dir}/objectbox-c-sync.h"
+  echo "Headers updated in ${c_header_dir} from ${src_dir}"
+}
 
-# Never builds and downloads release from objectbox-swift-spec-staging GitHub repo instead
-if [ "${1:-}" == "--staging" ]; then
-    staging_repo=true
-    shift
-else
-    staging_repo=false
-fi
-
+verify_only=false
+staging_repo=false
+update_headers_only=false
 # Clean by default: after an update, there were issues with standard C includes not found and cleaning helped
 clean_build=true
-if [ "${1:-}" == "--dirty" ]; then
-  clean_build=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --verify-only)
+      verify_only=true
+      ;;
+    --staging)
+      staging_repo=true
+      ;;
+    --dirty)
+      clean_build=false
+      ;;
+    --update-headers-only)
+      update_headers_only=true
+      ;;
+    --help|-h|\?|-\?)
+      echo "Usage: $(basename "$0") [OPTIONS]"
+      echo ""
+      echo "Builds or downloads the ObjectBox C static library and updates headers."
+      echo ""
+      echo "Options:"
+      echo "  --verify-only          Skip building/fetching, only copy headers and verify libs"
+      echo "  --staging              Download from the staging repo instead of building"
+      echo "  --dirty                Skip cleaning the build directory before building"
+      echo "  --update-headers-only  Only update header files from the code repo (no build/download)"
+      echo "  --help, -h, ?, -?      Show this help message"
+      echo ""
+      echo "Environment variables:"
+      echo "  OBX_SKIP_STATIC_C_TESTS  Set to skip C library tests during build"
+      echo "  OBX_FEATURES             Set to enable additional features (e.g. VectorSearch)"
+      exit 0
+      ;;
+    *)
+      echo "Unknown parameter: $1"
+      exit 1
+      ;;
+  esac
   shift
-fi
+done
 
 # macOS does not have realpath and readlink does not have -f option, so do this instead:
 my_dir=$( cd "$(dirname "$0")" ; pwd -P )
@@ -58,9 +92,11 @@ dest_dir="${my_dir}/external/objectbox-static"
 
 if [ "$verify_only" = true ]; then
   echo "Skipping fetch, only verifying"
-else
-
-if [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an existing code repo? Then build it...
+elif [ "$update_headers_only" = true ]; then
+  echo "Updating header files only from $code_dir"
+  updateHeaders "$code_dir/objectbox-c/include"
+  exit 0
+elif [ -d "$code_dir" ] && [ "$staging_repo" != "true" ]; then # Do we have an existing code repo? Then build it...
     pushd "$code_dir" # note: this also "fixed" building into cbuild dir in "our" objectbox-swift dir
 
     echo "-----------------------------------------"
@@ -166,13 +202,9 @@ else # Download static public release and unzip into $dest
         rm "${archive_path}"
     fi
 fi
-fi # verify_only
 
 # Update the header file actually used by our Swift sources
-c_header_dir="ios-framework/CommonSource/Internal"
-cp "$dest_dir/objectbox.h" "${c_header_dir}/objectbox-c.h"
-cp "$dest_dir/objectbox-sync.h" "${c_header_dir}/objectbox-c-sync.h"
-sed -i '' 's/#include "objectbox.h"/#include "objectbox-c.h"/' "${c_header_dir}/objectbox-c-sync.h"
+updateHeaders "$dest_dir"
 
 # Print versions for allow verification of built libs (is it the one we expect?)
 echo "============================================================================================"

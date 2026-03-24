@@ -5,7 +5,8 @@
 import Foundation
 
 /// Credentials for authenticating the client when connecting to a sync server/peer.
-/// E.g. use `SyncCredentials.makeSharedSecret(secret)`.
+///
+/// Create credentials using factory methods like `SyncCredentials.makeSharedSecret(secret)`.
 public class SyncCredentials {
     var type: SyncCredentialsType
     var data: Data?
@@ -33,7 +34,7 @@ public class SyncCredentials {
         return SyncCredentials(type: SyncCredentialsType.sharedSecret, data: data)
     }
 
-    /// Authenticate with a pre-shared key. The given string will be UTF-8 encoded.
+    /// Authenticate with a pre-shared secret. The given string will be UTF-8 encoded.
     public static func makeSharedSecret(_ string: String) -> SyncCredentials {
         return makeSharedSecret(string.data(using: .utf8)!)
     }

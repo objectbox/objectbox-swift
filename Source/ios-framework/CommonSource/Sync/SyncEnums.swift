@@ -37,44 +37,62 @@ public enum SyncCredentialsType: UInt32 {
          jwtCustomToken = 10
 }
 
-/// Once logged in, do we request updates?
+/// Configures how the sync client receives updates from the server after login.
 public enum RequestUpdatesMode: UInt32 {
-    /// Do not request any updates automatically
-    case manual = 0,
-        /// Request updates automatically including subsequent pushes for data changes
-         auto = 1,
-        /// Request updates automatically once without subsequent pushes for data changes
-         autoNoPushes = 2
+    /// No updates by default; `requestUpdates()` must be called manually.
+    case manual = 0
+    /// Automatically request updates on login and subscribe for future pushes (default).
+    case auto = 1
+    /// Automatically request updates on login, but do not subscribe for future pushes.
+    case autoNoPushes = 2
 }
 
+/// The current state of a sync client.
 public enum SyncState: UInt32 {
-    case
-            created = 1,
-            started = 2,
-            connected = 3,
-            loggedIn = 4,
-            disconnected = 5,
-            stopped = 6,
-            dead = 7
+    /// Initial state after creation, before `start()` is called.
+    case created = 1
+    /// The client is trying to connect to the server.
+    case started = 2
+    /// Connection established; authentication (login) is pending.
+    case connected = 3
+    /// Logged in and operational; data can be sent and received.
+    case loggedIn = 4
+    /// Disconnected from the server; will typically reconnect automatically.
+    case disconnected = 5
+    /// Stopped by explicit `stop()` call; can be restarted.
+    case stopped = 6
+    /// The client is closed or in an unrecoverable error state.
+    case dead = 7
 }
 
+/// Result codes returned by the sync server, e.g. on login failure.
 public enum SyncCode: UInt32 {
-    case
-            ok = 20,
-            reqRejected = 40,
-            credentialsRejected = 43,
-            unknown = 50,
-            authUnreachable = 53,
-            badVersion = 55,
-            clientIdTaken = 61,
-            txViolatedUnique = 71
+    /// Success.
+    case ok = 20
+    /// The request was rejected by the server.
+    case reqRejected = 40
+    /// Authentication failed; credentials were rejected.
+    case credentialsRejected = 43
+    /// An unknown error occurred.
+    case unknown = 50
+    /// The authentication provider is unreachable.
+    case authUnreachable = 53
+    /// Protocol version mismatch; client or server needs to be updated.
+    case badVersion = 55
+    /// The client ID is already in use by another client.
+    case clientIdTaken = 61
+    /// A transaction violated a unique constraint.
+    case txViolatedUnique = 71
 }
 
+/// Result of a timed wait operation, e.g. `waitForLoggedInState()`.
 public enum SuccessTimeOut {
-    case
-            success,
-            failure,
-            timeout
+    /// The expected state was reached.
+    case success
+    /// A state was reached that indicates the operation will not succeed.
+    case failure
+    /// The timeout was reached before a conclusive state change.
+    case timeout
 }
 
 /// Flags to adjust sync client behavior.
@@ -90,9 +108,9 @@ public struct SyncFlags: OptionSet {
     public static let debugLogIdMapping = SyncFlags(rawValue: 1)
 
     /// If the client gets in a state that does not allow any further synchronization, this flag instructs Sync to
-    /// keep local data nevertheless. While this preserves data, you need to resolve the situation manually.
-    /// Note that the default behavior (this flag is not set) is to wipe existing data from all sync-enabled types and
-    /// sync from scratch from the server.
+    /// keep local data nevertheless. While this preserves data, you need to resolve the situation manually
+    /// (e.g. backup the data and start with a fresh database).
+    /// The default behavior (flag not set) is to wipe existing data from all sync-enabled types and sync from scratch.
     public static let keepDataOnSyncError = SyncFlags(rawValue: 2)
 
     /// Logs sync filter variables used for each client, e.g. values provided by JWT or the client's login message.

@@ -2,6 +2,11 @@
 
 Notable changes to the ObjectBox Swift library.
 
+## 5.2.1 - 2026-03-24
+
+- Make SyncChange properties accessible
+- Update ObjectBox database to version `5.3.0-2026-03-23`.
+
 ## 5.2.0 - 2026-01-27
 
 - Queries: add inequality comparisons for floating point properties

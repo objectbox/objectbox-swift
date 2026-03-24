@@ -4,6 +4,7 @@
 /// The sync client will start trying to connect after start() is called.
 public protocol SyncClient: AnyObject {
 
+    /// If `true`, listener callbacks are dispatched to the main thread. Default is `false`.
     var callListenersInMainThread: Bool { get set }
 
     /// Sets a listener to observe login events. Replaces a previously set listener.
@@ -73,10 +74,14 @@ public protocol SyncClient: AnyObject {
 
     /// Sets credentials to authenticate the client with the server.
     /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
+    ///
+    /// If the client was waiting for credentials (e.g. after a failed login), this can trigger a reconnection attempt.
     func setCredentials(_ credentials: SyncCredentials) throws
 
     /// Sets multiple credentials to authenticate the client with the server.
     /// Build credentials using e.g. `SyncCredentials.makeSharedSecret(secret)`.
+    ///
+    /// If the client was waiting for credentials (e.g. after a failed login), this can trigger a reconnection attempt.
     func setCredentials(_ credentials: [SyncCredentials]) throws
 
     /// Once the sync client is configured, you can "start" it to initiate synchronization.
@@ -130,9 +135,11 @@ public protocol SyncClient: AnyObject {
     ///  app logic.
     func outgoingMessagesCount(limit: UInt) throws -> UInt
 
-    /// Experimental/Advanced API: requests a sync of all previous changes from the server.
-    /// - Returns true if the request was likely sent (e.g. the sync client is in "logged in" state)
-    /// - Returns false if the request was not sent (and will not be sent in the future).
+    /// Experimental/Advanced API: quickly brings the database up-to-date in a single transaction,
+    /// without transmitting all the history. Good for initial sync of new clients.
+    ///
+    /// - Returns `true` if the request was likely sent (e.g. the sync client is in "logged in" state)
+    /// - Returns `false` if the request was not sent (and will not be sent in the future).
     @discardableResult
     func fullSync() throws -> Bool
 

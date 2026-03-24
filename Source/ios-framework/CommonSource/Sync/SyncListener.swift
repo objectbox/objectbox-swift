@@ -16,8 +16,8 @@ public protocol SyncLoginListener {
 
 /// Listens to sync completed events.
 public protocol SyncCompletedListener {
-    /// Called each time a sync was "completed", in the sense that the client 
-    /// caught up with the current server state. The client is "up-to-date".
+    /// Called each time a sync was "completed", meaning the client caught up with the current server state.
+    /// At this point, the client is "up-to-date" with all data available on the server.
     func updatesCompleted()
 }
 
@@ -27,9 +27,9 @@ public protocol SyncCompletedListener {
 /// IDs of changed objects are available via `puts` and those of removed objects via `removals`.
 public struct SyncChange {
     /// IDs of objects that have been changed; e.g. have been put/updated/inserted.
-    var puts = [Id]()
+    public var puts = [Id]()
     /// IDs of objects that have been removed.
-    var removals = [Id]()
+    public var removals = [Id]()
 }
 
 /// Notifies of fine granular changes on the object level happening during sync.
@@ -44,7 +44,7 @@ public protocol SyncChangeListener {
 
 /// Listens to sync connection events.
 public protocol SyncConnectionListener {
-    /// 
+    /// Called when connection to the server is established (before login).
     func connected()
     /// Called when the client is disconnected from the sync server, e.g. due to a network error.
     /// 
