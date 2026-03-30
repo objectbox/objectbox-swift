@@ -346,4 +346,15 @@ class StoreTests: XCTestCase {
     func testClone() throws {
         try testAttachOrClone(clone: true)
     }
+
+    // MARK: - Semaphore Prefix
+
+    func testSemaphorePrefix() {
+        // Appends "/" and checks total length <= 20
+        XCTAssertEqual(Store.semaphorePrefix(from: ["ABCDEFGHIJ.12345678"]), "ABCDEFGHIJ.12345678/") // 19 + "/" = 20, OK
+        XCTAssertNil(Store.semaphorePrefix(from: ["ABCDEFGHIJ.123456789"])) // 20 + "/" = 21, too long
+        XCTAssertEqual(Store.semaphorePrefix(from: ["ABCDEFGHIJ.1234567/"]), "ABCDEFGHIJ.1234567/") // already has "/", no double slash
+        XCTAssertEqual(Store.semaphorePrefix(from: ["ABCDEFGHIJ.123456789", "SHORT.id"]), "SHORT.id/") // skips first, picks second
+        XCTAssertNil(Store.semaphorePrefix(from: [])) // empty
+    }
 }

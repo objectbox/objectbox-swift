@@ -258,15 +258,11 @@ public class Store: CustomDebugStringConvertible {
                let entitlements = signingInfo[kSecCodeInfoEntitlementsDict] as? [NSString: NSObject],
                let applicationGroups = entitlements["com.apple.security.application-groups"] as? [NSString] {
 
-                // Semaphore names in macOS are limited to 31 characters.
-                // Internally, we need up to 11 chars to identify the semaphore,
-                // thus the prefix (group ID + "/") must be at most 20 characters,
-                // meaning the group ID itself must be at most 19 characters.
-                if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 19 }) {
-                    obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
-                    // print("found appGroupIdentifier \(appGroupIdentifier)")
+                if let prefix = Store.semaphorePrefix(from: applicationGroups.map { $0 as String }) {
+                    obx_posix_sem_prefix_set(prefix)
+                    // print("found appGroupIdentifier \(prefix)")
                 } else {
-                    print("Could not find an application group identifier of 20 characters or fewer.")
+                    print("Could not find an application group identifier that fits within the 20-character prefix limit.")
                 }
             } else if err3 != noErr { // noErr means app has no entitlements, likely not sandboxed.
                 print("Error reading entitlements: \(err3)")
@@ -375,5 +371,20 @@ public class Store: CustomDebugStringConvertible {
         try obx_runInTransaction(writable: false, { _ in
             try block()
         })
+    }
+
+    // MARK: - POSIX Semaphore Prefix
+
+    /// Finds the first application group identifier that fits within the POSIX semaphore name budget.
+    ///
+    /// Semaphore names in macOS are limited to 31 characters. Internally, ObjectBox needs up to 11 characters
+    /// to identify the semaphore, so the prefix (group ID + "/") must be at most 20 characters.
+    ///
+    /// The trailing "/" is appended if not already present before checking the length, matching the behavior
+    /// of the Dart API.
+    static func semaphorePrefix(from applicationGroups: [String]) -> String? {
+        return applicationGroups.lazy
+            .map { $0.hasSuffix("/") ? $0 : $0.appending("/") }
+            .first(where: { $0.count <= 20 })
     }
 }
