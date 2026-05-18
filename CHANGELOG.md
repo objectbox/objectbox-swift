@@ -2,6 +2,13 @@
 
 Notable changes to the ObjectBox Swift library.
 
+## Next release
+
+### Sync
+
+- **Customizable conflict resolution** via the new annotations `syncClock` and `syncPrecedence` (see 
+  [docs](https://sync.objectbox.io/syncing-concurrent-changes) for details)
+
 ## 5.2.1 - 2026-03-24
 
 - Make SyncChange properties accessible
