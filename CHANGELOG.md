@@ -4,10 +4,11 @@ Notable changes to the ObjectBox Swift library.
 
 ## Next release
 
+- Sandboxed macOS apps: the application group identifier check uses the correct maximum length. Thanks, @taichino! [#113](https://github.com/objectbox/objectbox-swift/pull/113)
+
 ### Sync
 
-- **Customizable conflict resolution** via the new annotations `syncClock` and `syncPrecedence` (see 
-  [docs](https://sync.objectbox.io/syncing-concurrent-changes) for details)
+- **Customizable conflict resolution** via the new annotations `syncClock` and `syncPrecedence` (see [docs](https://sync.objectbox.io/syncing-concurrent-changes) for details)
 
 ## 5.2.1 - 2026-03-24
 
