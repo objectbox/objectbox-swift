@@ -123,8 +123,10 @@ Now, you are all set to define your first ObjectBox entities! To continue check 
 In your `Package.swift` file, add the ObjectBox Swift Package repository to the `dependencies` block:
 
 ```swift
-.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "5.2.0"),
+.package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "INSERT_VERSION"),
 ```
+
+Replace `INSERT_VERSION` with the latest [tag of the objectbox-swift-spm repository](https://github.com/objectbox/objectbox-swift-spm/tags).
 
 Add the `ObjectBox.xcframework` to the `dependencies` of the desired target in `targets`:
 
@@ -143,7 +145,7 @@ Your `Package.swift` file should then contain sections similar to this:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "<version>"),
+    .package(url: "https://github.com/objectbox/objectbox-swift-spm.git", from: "INSERT_VERSION"),
 ],
 targets: [
   .executableTarget(
