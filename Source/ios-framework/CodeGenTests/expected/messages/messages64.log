@@ -1,0 +1,1 @@
+error: BadPropertyAnnotation(property: "syncClockProp: String", message: "syncClock can only be used on Int64 (PropertyType.long) properties")

@@ -7,105 +7,92 @@ import Foundation
 
 // MARK: - Entity metadata
 
+extension BusRoute: ObjectBox.Entity {}
 
-extension Building: ObjectBox.__EntityRelatable {
-    internal typealias EntityType = Building
+extension BusRoute: ObjectBox.__EntityRelatable {
+    internal typealias EntityType = BusRoute
 
-    internal var _id: EntityId<Building> {
-        return EntityId<Building>(self.id.value)
+    internal var _id: EntityId<BusRoute> {
+        return EntityId<BusRoute>(self.id.value)
     }
 }
 
-extension Building: ObjectBox.EntityInspectable {
-    internal typealias EntityBindingType = BuildingBinding
+extension BusRoute: ObjectBox.EntityInspectable {
+    internal typealias EntityBindingType = BusRouteBinding
 
     /// Generated metadata used by ObjectBox to persist the entity.
-    internal static let entityInfo = ObjectBox.EntityInfo(name: "Building", id: 1)
+    internal static let entityInfo = ObjectBox.EntityInfo(name: "BusRoute", id: 3)
 
     internal static let entityBinding = EntityBindingType()
 
     fileprivate static func buildEntity(modelBuilder: ObjectBox.ModelBuilder) throws {
-        let entityBuilder = try modelBuilder.entityBuilder(for: Building.self, id: 1, uid: 18688)
-        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 14592)
-        try entityBuilder.addProperty(name: "buildingName", type: PropertyType.string, flags: [.indexed, .indexHash, .unique], id: 2, uid: 16640, indexId: 1, indexUid: 15616)
-        try entityBuilder.addProperty(name: "buildingNumber", type: PropertyType.long, id: 3, uid: 17664)
-        try entityBuilder.addProperty(name: "stringId", type: PropertyType.string, flags: [.indexed, .indexHash, .unique, .uniqueOnConflictReplace], id: 4, uid: 19712, indexId: 2, indexUid: 123456)
+        let entityBuilder = try modelBuilder.entityBuilder(for: BusRoute.self, id: 3, uid: 23552)
+        try entityBuilder.flags(.syncEnabled)
+        try entityBuilder.addProperty(name: "id", type: PropertyType.long, flags: [.id], id: 1, uid: 20736)
+        try entityBuilder.addProperty(name: "syncClockProp", type: PropertyType.long, flags: [.syncClock], id: 2, uid: 21504)
+        try entityBuilder.addProperty(name: "syncPrecedenceProp", type: PropertyType.long, flags: [.syncPrecedence], id: 3, uid: 22528)
 
-        try entityBuilder.lastProperty(id: 4, uid: 19712)
+        try entityBuilder.lastProperty(id: 3, uid: 22528)
     }
 }
 
-extension Building {
+extension BusRoute {
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { Building.id == myId }
-    internal static var id: Property<Building, EntityId<Building>, EntityId<Building>> { return Property<Building, EntityId<Building>, EntityId<Building>>(propertyId: 1, isPrimaryKey: true) }
+    ///     box.query { BusRoute.id == myId }
+    internal static var id: Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>> { return Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { Building.buildingName.startsWith("X") }
-    internal static var buildingName: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 2, isPrimaryKey: false) }
+    ///     box.query { BusRoute.syncClockProp > 1234 }
+    internal static var syncClockProp: Property<BusRoute, Int64, Void> { return Property<BusRoute, Int64, Void>(propertyId: 2, isPrimaryKey: false) }
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { Building.buildingNumber > 1234 }
-    internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
-    /// Generated entity property information.
-    ///
-    /// You may want to use this in queries to specify fetch conditions, for example:
-    ///
-    ///     box.query { Building.stringId.startsWith("X") }
-    internal static var stringId: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 4, isPrimaryKey: false) }
+    ///     box.query { BusRoute.syncPrecedenceProp > 1234 }
+    internal static var syncPrecedenceProp: Property<BusRoute, Int64, Void> { return Property<BusRoute, Int64, Void>(propertyId: 3, isPrimaryKey: false) }
 
     fileprivate func __setId(identifier: ObjectBox.Id) {
         self.id = EntityId(identifier)
     }
 }
 
-extension ObjectBox.Property where E == Building {
+extension ObjectBox.Property where E == BusRoute {
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
     ///     box.query { .id == myId }
 
-    internal static var id: Property<Building, EntityId<Building>, EntityId<Building>> { return Property<Building, EntityId<Building>, EntityId<Building>>(propertyId: 1, isPrimaryKey: true) }
+    internal static var id: Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>> { return Property<BusRoute, EntityId<BusRoute>, EntityId<BusRoute>>(propertyId: 1, isPrimaryKey: true) }
 
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { .buildingName.startsWith("X") }
+    ///     box.query { .syncClockProp > 1234 }
 
-    internal static var buildingName: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 2, isPrimaryKey: false) }
-
-    /// Generated entity property information.
-    ///
-    /// You may want to use this in queries to specify fetch conditions, for example:
-    ///
-    ///     box.query { .buildingNumber > 1234 }
-
-    internal static var buildingNumber: Property<Building, Int, Void> { return Property<Building, Int, Void>(propertyId: 3, isPrimaryKey: false) }
+    internal static var syncClockProp: Property<BusRoute, Int64, Void> { return Property<BusRoute, Int64, Void>(propertyId: 2, isPrimaryKey: false) }
 
     /// Generated entity property information.
     ///
     /// You may want to use this in queries to specify fetch conditions, for example:
     ///
-    ///     box.query { .stringId.startsWith("X") }
+    ///     box.query { .syncPrecedenceProp > 1234 }
 
-    internal static var stringId: Property<Building, String, Void> { return Property<Building, String, Void>(propertyId: 4, isPrimaryKey: false) }
+    internal static var syncPrecedenceProp: Property<BusRoute, Int64, Void> { return Property<BusRoute, Int64, Void>(propertyId: 3, isPrimaryKey: false) }
 
 }
 
 
-/// Generated service type to handle persisting and reading entity data. Exposed through `Building.EntityBindingType`.
-internal final class BuildingBinding: ObjectBox.EntityBinding, Sendable {
-    internal typealias EntityType = Building
-    internal typealias IdType = EntityId<Building>
+/// Generated service type to handle persisting and reading entity data. Exposed through `BusRoute.EntityBindingType`.
+internal final class BusRouteBinding: ObjectBox.EntityBinding, Sendable {
+    internal typealias EntityType = BusRoute
+    internal typealias IdType = EntityId<BusRoute>
 
     internal required init() {}
 
@@ -121,22 +108,18 @@ internal final class BuildingBinding: ObjectBox.EntityBinding, Sendable {
 
     internal func collect(fromEntity entity: EntityType, id: ObjectBox.Id,
                                   propertyCollector: ObjectBox.FlatBufferBuilder, store: ObjectBox.Store) throws {
-        let propertyOffset_buildingName = propertyCollector.prepare(string: entity.buildingName)
-        let propertyOffset_stringId = propertyCollector.prepare(string: entity.stringId)
 
         propertyCollector.collect(id, at: 2 + 2 * 1)
-        propertyCollector.collect(entity.buildingNumber, at: 2 + 2 * 3)
-        propertyCollector.collect(dataOffset: propertyOffset_buildingName, at: 2 + 2 * 2)
-        propertyCollector.collect(dataOffset: propertyOffset_stringId, at: 2 + 2 * 4)
+        propertyCollector.collect(entity.syncClockProp, at: 2 + 2 * 2)
+        propertyCollector.collect(entity.syncPrecedenceProp, at: 2 + 2 * 3)
     }
 
     internal func createEntity(entityReader: ObjectBox.FlatBufferReader, store: ObjectBox.Store) -> EntityType {
-        let entity = Building()
+        let entity = BusRoute()
 
         entity.id = entityReader.read(at: 2 + 2 * 1)
-        entity.buildingName = entityReader.read(at: 2 + 2 * 2)
-        entity.buildingNumber = entityReader.read(at: 2 + 2 * 3)
-        entity.stringId = entityReader.read(at: 2 + 2 * 4)
+        entity.syncClockProp = entityReader.read(at: 2 + 2 * 2)
+        entity.syncPrecedenceProp = entityReader.read(at: 2 + 2 * 3)
 
         return entity
     }
@@ -153,9 +136,8 @@ fileprivate func optConstruct<T: RawRepresentable>(_ type: T.Type, rawValue: T.R
 
 fileprivate func cModel() throws -> OpaquePointer {
     let modelBuilder = try ObjectBox.ModelBuilder()
-    try Building.buildEntity(modelBuilder: modelBuilder)
-    modelBuilder.lastEntity(id: 1, uid: 18688)
-    modelBuilder.lastIndex(id: 2, uid: 123456)
+    try BusRoute.buildEntity(modelBuilder: modelBuilder)
+    modelBuilder.lastEntity(id: 3, uid: 23552)
     return modelBuilder.finish()
 }
 

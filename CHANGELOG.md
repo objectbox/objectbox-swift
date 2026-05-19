@@ -2,18 +2,21 @@
 
 Notable changes to the ObjectBox Swift library.
 
-## Next release
+## 5.3.0 - 2026-05-19
 
+- Update ObjectBox database to version `5.3.2-next-2026-05-16`
 - Sandboxed macOS apps: the application group identifier check uses the correct maximum length. Thanks, @taichino! [#113](https://github.com/objectbox/objectbox-swift/pull/113)
 
 ### Sync
 
+- Sync protocol version 10
 - **Customizable conflict resolution** via the new annotations `syncClock` and `syncPrecedence` (see [docs](https://sync.objectbox.io/syncing-concurrent-changes) for details)
-
-## 5.2.1 - 2026-03-24
-
-- Make SyncChange properties accessible
-- Update ObjectBox database to version `5.3.0-2026-03-23`.
+- Update client sync filters variables when online
+- Clients report errors to the server
+- Add `SyncFlags.skipInvalidTxOps`
+- Fix bad Sync client state after multiple full sync messages were interrupted
+- Fix adding indexes to Sync types
+- For [SyncChangeListener](https://sync.objectbox.io/sync-client#listening-to-incoming-data-changes), make `SyncChange` properties accessible
 
 ## 5.2.0 - 2026-01-27
 

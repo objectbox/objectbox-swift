@@ -1,0 +1,1 @@
+error: BadPropertyAnnotation(property: "syncClockProp2: Int64", message: "Entity \'BusRoute\': only one property can be annotated with syncClock, but found multiple: syncClockProp, syncClockProp2")

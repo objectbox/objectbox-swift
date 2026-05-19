@@ -4,10 +4,16 @@
 #  it has a dependency and also relies on variables set by Xcode.
 #  See README for details.
 
-echo -n "note: Starting tests at $(date)"
+# Terminal style options
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+echo " "
+echo "${BOLD}** Starting generator tests at $(date) **${NORMAL}"
+echo " "
 
 if [ -z ${PROJECT_DIR} ]; then
-  echo "PROJECT_DIR unavailable; please run from Xcode"
+  echo "error: PROJECT_DIR unavailable; please run from Xcode"
 
   # TODO: In the future we could also setup the vars for derived data etc. to make it work; until then exit...
 
@@ -33,18 +39,15 @@ TESTPROJECT="${MYDIR}/ToolTestProject.xcodeproj"
 MYOUTPUTDIR="${MYDIR}/generated/"
 
 mkdir -p $MYOUTPUTDIR
-
-echo ""
-echo "====="
-echo "Test projects are written to: $MYOUTPUTDIR"
-echo "====="
+echo "note: Test projects are written to: $MYOUTPUTDIR"
 
 cd ${BUILT_PRODUCTS_DIR}
 
 test_target_num () {
     local FAIL=0  # yuck, FAIL is also a global var
 
-    echo "note: ******************** $2: $1 ********************"
+    echo " "
+    echo "**** Running test $2: $1 ****"
 
     MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
     MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
@@ -66,16 +69,19 @@ test_target_num () {
 
     echo "// Ensure there's no leftover code from previous tests." > "$ENTITY_INFO_FILE_ACTUAL"
 
+    echo " "
+    echo "note: Running generator:"
     echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
     $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache
+    echo " "
 
     if [ -f "$MODEL_FILE_EXPECTED" ]; then
         cmp --silent "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Model files match."
+            echo "note: Model files match."
         else
-            echo "error: $2: $1: Model files DIFFERENT!"
-
+            echo "error: Model files DIFFERENT!"
+            echo " "
             echo "====="
             # -C 1 to show 1 line of context around differences
             diff -C 1 "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
@@ -86,7 +92,8 @@ test_target_num () {
             echo "====="
 
             if [ "$UPDATE_EXPECTED_FILES" = true ]; then
-                echo "note: $2: $1: Updating expected model file."
+                echo " "
+                echo "note: Updating expected model file."
                 cp "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
             fi
 
@@ -97,10 +104,10 @@ test_target_num () {
     if [ -e "$ENTITY_INFO_FILE_EXPECTED" ]; then
         cmp --silent "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Output files match."
+            echo "note: Output files match."
         else
-            echo "error: $2: $1: Output files DIFFERENT!"
-
+            echo "error: Output files DIFFERENT!"
+            echo " "
             echo "====="
             # -C 1 to show 1 line of context around differences
             diff -C 1 "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
@@ -111,7 +118,8 @@ test_target_num () {
             echo "====="
 
             if [ "$UPDATE_EXPECTED_FILES" = true ]; then
-                echo "note: $2: $1: Updating expected entity info file."
+                echo " "
+                echo "note: Updating expected entity info file."
                 cp "$ENTITY_INFO_FILE_ACTUAL" "$ENTITY_INFO_FILE_EXPECTED"
             fi
 
@@ -122,10 +130,10 @@ test_target_num () {
     if [ -e "$DUMP_FILE_EXPECTED" ]; then
         cmp --silent "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Schema dumps match."
+            echo "note: Schema dumps match."
         else
-            echo "error: $2: $1: Schema dumps DIFFERENT!"
-
+            echo "error: Schema dumps DIFFERENT!"
+            echo " "
             echo "====="
             # -C 1 to show 1 line of context around differences
             diff -C 1 "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
@@ -136,7 +144,8 @@ test_target_num () {
             echo "====="
 
             if [ "$UPDATE_EXPECTED_FILES" = true ]; then
-                echo "note: $2: $1: Updating expected schema dump file."
+                echo " "
+                echo "note: Updating expected schema dump file."
                 cp "$DUMP_FILE_ACTUAL" "$DUMP_FILE_EXPECTED"
             fi
 
@@ -145,7 +154,8 @@ test_target_num () {
     fi
 
     if [ $FAIL -eq 0 ]; then
-        echo "Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
+        echo " "
+        echo "note: Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
         xcodebuild \
             FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" \
             -quiet \
@@ -155,35 +165,36 @@ test_target_num () {
             ARCHS=$ARCHS \
             ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH
 
+        echo " "
         if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Built test target."
+            echo "note: Built test target."
         else
-            echo "error: $2: $1: Build failed."
+            echo "error: Build failed."
             FAIL=1
         fi
     else
-        echo "error: $2: $1: Skipping build."
+        echo "error: Skipping build."
     fi
 
     TEST_EXECUTABLE="${BUILT_PRODUCTS_DIR}/ToolTestProject${2}"
 
     if [ $FAIL -eq 0 ]; then
         if [[ ! -f "${TEST_EXECUTABLE}" ]]; then
-            echo "error: $2: $1: Can't find executable '${TEST_EXECUTABLE}'."
+            echo "error: Can't find executable '${TEST_EXECUTABLE}'."
             FAIL=1
         else
             echo "DYLD_FRAMEWORK_PATH=\"${BUILT_PRODUCTS_DIR}\" \"${TEST_EXECUTABLE}\" \"$1\""
             DYLD_FRAMEWORK_PATH="${BUILT_PRODUCTS_DIR}" "${TEST_EXECUTABLE}" "$1"
             RESULT=$?
             if [ $RESULT -eq 0 ]; then
-                echo "note: $2: $1: Ran test executable."
+                echo "note: Ran test executable."
             else
-                echo "error: $2: $1: Running test failed with $RESULT ."
+                echo "error: Running test failed with $RESULT ."
                 FAIL=1
             fi
         fi
     else
-        echo "error: $2: $1: Skipping execution, build already failed."
+        echo "error: Skipping execution, build already failed."
     fi
 
     if [ $FAIL == 0 ]; then
@@ -192,9 +203,9 @@ test_target_num () {
         rm -f "$ENTITY_INFO_FILE_ACTUAL"
         rm -f "$DUMP_FILE_ACTUAL"
         
-        echo "note: $2: $1: Cleaning up."
+        echo "note: Cleaning up."
     else
-        echo "note: $2: $1: Failed with result $FAIL ."
+        echo "note: Failed with result $FAIL ."
     fi
 
     return $FAIL
@@ -203,7 +214,8 @@ test_target_num () {
 fail_codegen_target_num () {
     local FAIL=0  # yuck, FAIL is also a global var
 
-    echo "note: ******************** $2: $1 ********************"
+    echo " "
+    echo "**** Running test $2: $1 ****"
 
     MODEL_FILE_EXPECTED="${EXPECTED_DIR}/model/model${2}.json"
     MODEL_FILE_BEFORE="${EXPECTED_DIR}/model/model${2}.before.json"
@@ -227,8 +239,11 @@ fail_codegen_target_num () {
 
     # Setting --debug-parsetree for the generator also makes it generate non-random UIDs,
     # see objectbox-swift-generator/Sourcery/main.swift runCLI().
+    echo " "
+    echo "note: Running generator:"
     echo "$SOURCERY --xcode-project \"$TESTPROJECT\" --xcode-target \"ToolTestProject${2}\" --model-json \"$MODEL_FILE_ACTUAL\" --debug-parsetree \"$DUMP_FILE_ACTUAL\" --output \"${ENTITY_INFO_FILE_ACTUAL}\" --disableCache"
     $SOURCERY --xcode-project "$TESTPROJECT" --xcode-target "ToolTestProject${2}" --model-json "$MODEL_FILE_ACTUAL" --debug-parsetree "$DUMP_FILE_ACTUAL" --output "${ENTITY_INFO_FILE_ACTUAL}" --disableCache > "$GENERATOR_LOG_FILE" 2>&1
+    echo " "
 
     if [ -e "$EXPECTED_MESSAGES_FILE" ]; then
         # Check if the generator output contains the expected messages.
@@ -238,13 +253,15 @@ fail_codegen_target_num () {
         # Use grep --fixed-strings to avoid interpreting the expected string as a regex.
         # Use --quiet to only return an exit code (0 if there is a match, 1 or greater otherwise).
         if echo "$FULL_OUTPUT" | grep --quiet --fixed-strings "$EXPECTED_MESSAGES"; then
-            echo "note: $2: $1: Generator logs contain the expected messages."
+            echo "note: Generator logs contain the expected messages."
         else
-            echo "error: $2: $1: Generator logs do NOT contain the expected messages!"
+            echo "error: Generator logs do NOT contain the expected messages!"
+            echo " "
             echo "===== Generator logs $GENERATOR_LOG_FILE ====="
             cat "$GENERATOR_LOG_FILE"
             echo "===== Expected to contain $EXPECTED_MESSAGES_FILE ====="
             cat "$EXPECTED_MESSAGES_FILE"
+            echo " "
             echo "====="
             FAIL=1
         fi
@@ -253,10 +270,10 @@ fail_codegen_target_num () {
     if [[ -f "$MODEL_FILE_BEFORE" ]]; then
         cmp --silent "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
         if [ $? -eq 0 ]; then
-            echo "note: $2: $1: Model files match."
+            echo "note: Model files match."
         else
-            echo "error: $2: $1: Model files DIFFERENT!"
-
+            echo "error: Model files DIFFERENT!"
+            echo " "
             echo "====="
             # -C 1 to show 1 line of context around differences
             diff -C 1 "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
@@ -267,7 +284,8 @@ fail_codegen_target_num () {
             echo "====="
             
             if [ "$UPDATE_EXPECTED_FILES" = true ]; then
-                echo "note: $2: $1: Updating expected model file."
+                echo " "
+                echo "note: Updating expected model file."
                 cp "$MODEL_FILE_ACTUAL" "$MODEL_FILE_EXPECTED"
             fi
 
@@ -277,7 +295,8 @@ fail_codegen_target_num () {
     
     if [ $FAIL -eq 0 ]; then
         if [ -e "$ORIGINALXCODELOGFILE" ]; then
-        echo "Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
+        echo " "
+        echo "note: Running xcodebuild with ARCHS=$ARCHS ONLY_ACTIVE_ARCH=$ONLY_ACTIVE_ARCH"
         xcodebuild \
             FRAMEWORK_SEARCH_PATHS="${BUILT_PRODUCTS_DIR}" \
             -quiet \
@@ -295,11 +314,12 @@ fail_codegen_target_num () {
             #sed -i "$TESTXCODELOGFILE" 's:$GITROOT:ROOT:'
         
             cmp --silent "$TESTXCODELOGFILE" "$ORIGINALXCODELOGFILE"
+            echo " "
             if [ $? -eq 0 ]; then
-                echo "note: $2: $1: Xcode log files match."
+                echo "note: Xcode log files match."
             else
-                echo "error: $2: $1: Xcode log files DIFFERENT!"
-
+                echo "error: Xcode log files DIFFERENT!"
+                echo " "
                 echo "====="
                 # -C 1 to show 1 line of context around differences
                 diff -C 1 "$TESTXCODELOGFILE" "$ORIGINALXCODELOGFILE"
@@ -311,10 +331,10 @@ fail_codegen_target_num () {
                 FAIL=1
             fi
         else
-            echo "note: $2: $1: Skipping build. No file at $ORIGINALXCODELOGFILE."
+            echo "note: Skipping build. No file at $ORIGINALXCODELOGFILE."
         fi
     else
-        echo "note: $2: $1: Skipping build. Failed previously"
+        echo "note: Skipping build. Failed previously"
     fi
 
     if [ $FAIL == 0 ]; then
@@ -324,9 +344,9 @@ fail_codegen_target_num () {
         rm -f "$GENERATOR_LOG_FILE"
         rm -f "$TESTXCODELOGFILE"
         
-        echo "note: $2: $1: Cleaning up."
+        echo "note: Cleaning up."
     else
-        echo "note: $2: $1: Failed with result $FAIL ."
+        echo "note: Failed with result $FAIL ."
     fi
 
     return $FAIL
@@ -401,6 +421,13 @@ fail_codegen_target_num "HNSW index not on float array" 58 || ((FAIL++))
 test_target_num "HNSW index" 59 || ((FAIL++))
 test_target_num "ExternalType and ExternalName annotations" 60 || ((FAIL++))
 
-echo "note: Finished tests with $FAIL failures"
+test_target_num "syncClock and syncPrecedence annotations" 61 || ((FAIL++))
+fail_codegen_target_num "syncClock and syncPrecedence annotations on the same property" 62 || ((FAIL++))
+fail_codegen_target_num "syncClock and syncPrecedence annotations on properties of a non-Sync entity" 63 || ((FAIL++))
+fail_codegen_target_num "syncClock and syncPrecedence annotations on non-Int64 properties" 64 || ((FAIL++))
+fail_codegen_target_num "syncClock annotations on multiple properties in the same entity" 65 || ((FAIL++))
+
+echo " "
+echo "${BOLD}** Finished generator tests at $(date) with $FAIL failures **${NORMAL}"
 
 exit $FAIL

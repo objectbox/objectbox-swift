@@ -1,0 +1,1 @@
+error: BadPropertyAnnotation(property: "syncClockProp: Int64", message: "syncClock can only be used on a property of a synced entity (annotated with \'sync\')")

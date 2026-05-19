@@ -4,35 +4,50 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:5107964062888457216",
-      "lastPropertyId": "2:6687926154759915520",
+      "id": "3:23552",
+      "lastPropertyId": "3:22528",
       "name": "BusRoute",
       "flags": 2,
       "properties": [
         {
-          "id": "1:7895576389419683840",
+          "id": "1:20736",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:6687926154759915520",
-          "name": "lineName",
-          "type": 9
+          "id": "2:21504",
+          "name": "syncClockProp",
+          "type": 6,
+          "flags": 131072
+        },
+        {
+          "id": "3:22528",
+          "name": "syncPrecedenceProp",
+          "type": 6,
+          "flags": 262144
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "1:5107964062888457216",
+  "lastEntityId": "3:23552",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 4,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    19712,
+    16640
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    15616,
+    18688,
+    17664,
+    14592
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

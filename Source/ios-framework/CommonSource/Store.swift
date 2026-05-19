@@ -260,12 +260,13 @@ public class Store: CustomDebugStringConvertible {
 
                 // Semaphore names in macOS are limited to 31 characters.
                 // Internally, we need up to 11 chars to identify the semaphore,
-                // thus the group ID must be equal or less than 20 (ASCII) charaters.
-                if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 20 }) {
+                // thus the prefix (group ID + "/") must be at most 20 (ASCII) characters,
+                // meaning the group ID itself must be at most 19 characters.
+                if let appGroupIdentifier = applicationGroups.first(where: { $0.length <= 19 }) {
                     obx_posix_sem_prefix_set(appGroupIdentifier.appending("/"))
                     // print("found appGroupIdentifier \(appGroupIdentifier)")
                 } else {
-                    print("Could not find an application group identifier of 20 characters or fewer.")
+                    print("Could not find an application group identifier of 19 characters or fewer.")
                 }
             } else if err3 != noErr { // noErr means app has no entitlements, likely not sandboxed.
                 print("Error reading entitlements: \(err3)")

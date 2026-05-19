@@ -1,0 +1,1 @@
+error: BadPropertyAnnotation(property: "syncClockProp: Int64", message: "syncClock and syncPrecedence cannot be used on the same property")

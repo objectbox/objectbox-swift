@@ -1,0 +1,107 @@
+Schema {
+	entities = [SchemaEntity {
+		modelId = Optional(3)
+		modelUid = Optional(23552)
+		className = BusRoute
+		dbName = nil
+		properties = [SchemaProperty {
+			modelId = Optional(IdUid(1:20736))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = EntityId<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(2:21504))
+			propertyName = syncClockProp
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.syncClock]
+			propertySwiftType = Int64
+			entityName = BusRoute
+			unwrappedPropertyType = Int64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+, SchemaProperty {
+			modelId = Optional(IdUid(3:22528))
+			propertyName = syncPrecedenceProp
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.syncPrecedence]
+			propertySwiftType = Int64
+			entityName = BusRoute
+			unwrappedPropertyType = Int64
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = false
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+		indexes = []
+		relations = []
+		toManyRelations = []
+		lastPropertyId = Optional(IdUid(3:22528))
+		isEntitySubclass = false
+		isValueType = false
+		hasStringProperties = false
+		idProperty = Optional(SchemaProperty {
+			modelId = Optional(IdUid(1:20736))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = EntityId<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+)
+		idCandidates = [SchemaProperty {
+			modelId = Optional(IdUid(1:20736))
+			propertyName = id
+			propertyType = long
+			propertyFlags = [SourceryLib.PropertyFlags.id]
+			propertySwiftType = EntityId<BusRoute>
+			entityName = BusRoute
+			unwrappedPropertyType = EntityId<BusRoute>
+			dbName = nil
+			modelIndexId = nil
+			backlinkName = nil
+			backlinkType = nil
+			isObjectId = true
+			isBuiltInType = true
+			isStringType = false
+			isRelation = false
+		}
+]
+	}
+]
+lastEntityId = IdUid(3:23552)
+	lastRelationId = IdUid(0:0)
+	lastIndexId = IdUid(0:0)
+}

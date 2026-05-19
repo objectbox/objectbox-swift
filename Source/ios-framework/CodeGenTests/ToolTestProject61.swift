@@ -1,4 +1,4 @@
-// Copyright © 2018 ObjectBox Ltd. <https://objectbox.io>
+// Copyright © 2026 ObjectBox Ltd. <https://objectbox.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,18 +14,21 @@
 
 import ObjectBox
 
-class BusRoute: Entity {
+// objectbox: entity, sync
+class BusRoute {
     var id: EntityId<BusRoute> = 0
-    var lineName: String = ""
+
+    // objectbox: syncClock
+    var syncClockProp: Int64 = 0
+
+    // objectbox: syncPrecedence
+    var syncPrecedenceProp: Int64 = 0
     
     required init() {}
 }
 
 func main(_ args: [String]) throws -> Int32 {
-    let testRoute = BusRoute()
-    testRoute.lineName = "U6"
-    
-    print("line: \(testRoute.lineName)")
-    
+    // Just asserting the generator works and the schema dump is as expected,
+    // nothing to do here.
     return 0
 }
